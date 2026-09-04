@@ -1,0 +1,14 @@
+# Copy to compatibility.local.yaml after selecting the revisions under test.
+# context is normative; this file only records a tested implementation combination.
+contextRevision: REPLACE_WITH_CONTEXT_COMMIT
+
+services:
+  coreApi:
+    path: ../api/refinvest
+    revision: REPLACE_WITH_CORE_COMMIT
+  computeApi:
+    path: ../compute-api/refinvest
+    revision: REPLACE_WITH_COMPUTE_COMMIT
+  web:
+    path: ../web/web
+    revision: REPLACE_WITH_WEB_COMMIT

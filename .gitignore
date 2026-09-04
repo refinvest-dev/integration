@@ -1,0 +1,4 @@
+.env.local
+compatibility.local.yaml
+.integration-data/
+PR_BODY.md
