@@ -53,6 +53,19 @@ function Set-CoreIntegrationEnvironment {
     foreach ($name in 'REFINVEST_JWT_ISSUER', 'REFINVEST_JWT_AUDIENCE', 'REFINVEST_JWT_SECRET', 'REFINVEST_WEB_ORIGIN', 'REFINVEST_COOKIE_SECURE', 'REFINVEST_COOKIE_SAME_SITE', 'REFINVEST_COMPUTE_ENABLED') {
         if ($Values.ContainsKey($name)) { Set-Item "Env:$name" $Values[$name] }
     }
+
+    $oauthEnabled = $Values['REFINVEST_OAUTH_ENABLED'] -eq 'true'
+    if (-not $oauthEnabled) { return }
+
+    Assert-IntegrationEnvironment $Values @(
+        'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET',
+        'KAKAO_CLIENT_ID', 'KAKAO_CLIENT_SECRET',
+        'NAVER_CLIENT_ID', 'NAVER_CLIENT_SECRET'
+    )
+    $env:SPRING_PROFILES_ACTIVE = 'oauth'
+    foreach ($name in 'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'KAKAO_CLIENT_ID', 'KAKAO_CLIENT_SECRET', 'NAVER_CLIENT_ID', 'NAVER_CLIENT_SECRET') {
+        Set-Item "Env:$name" $Values[$name]
+    }
 }
 
 function Set-ComputeIntegrationEnvironment {
