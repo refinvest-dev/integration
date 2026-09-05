@@ -27,5 +27,5 @@ if ($values['REFINVEST_WEB_ORIGIN'] -and $values['REFINVEST_WEB_ORIGIN'].TrimEnd
 
 $logDir = Join-Path $PSScriptRoot '..\.integration-data\logs'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
-$process = Start-Process -FilePath 'pnpm.cmd' -ArgumentList @('dev', '--', '--port', $port) -WorkingDirectory $WebPath -RedirectStandardOutput (Join-Path $logDir 'web.out.log') -RedirectStandardError (Join-Path $logDir 'web.err.log') -WindowStyle Hidden -PassThru
+$process = Start-Process -FilePath 'pnpm.cmd' -ArgumentList @('dev', '--port', $port) -WorkingDirectory $WebPath -RedirectStandardOutput (Join-Path $logDir 'web.out.log') -RedirectStandardError (Join-Path $logDir 'web.err.log') -WindowStyle Hidden -PassThru
 [pscustomobject]@{ processId = $process.Id; webUrl = "http://localhost:$port"; apiBaseUrl = $env:NEXT_PUBLIC_API_BASE_URL }
