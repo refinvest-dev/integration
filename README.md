@@ -67,8 +67,46 @@ The smoke uses normal HS256 Access JWT verification plus a CSRF cookie/header
 pair. It requires Strategy creation, StrategyVersion creation, Compute
 dispatch, and a `COMPLETED` result with `datasetSnapshotId=integration-e2e-v1`.
 
-No OAuth provider credential is required for this automated API flow. OAuth
-login remains a separate manual browser acceptance check.
+## Web and authentication acceptance
+
+Use the same `localhost` host for Web and Core. With the integration default
+`SameSite=Lax`, `localhost` and `127.0.0.1` are different sites, so a Web app
+on `localhost` cannot reliably send Core cookies at `127.0.0.1`.
+
+```powershell
+# Starts Web with NEXT_PUBLIC_API_BASE_URL=http://localhost:8080 by default.
+.\scripts\start-web.ps1
+```
+
+`run-auth-smoke.ps1` checks actual Core HTTP/Cookie behavior after a real OAuth
+login has issued a refresh cookie. Supply a fresh token for each scenario; a
+refresh-replay check intentionally revokes that token family. The script never
+prints token values.
+
+```powershell
+.\scripts\run-auth-smoke.ps1 -Scenario RefreshRotation -RefreshToken '<fresh token>'
+.\scripts\run-auth-smoke.ps1 -Scenario Logout -RefreshToken '<different fresh token>'
+```
+
+For manual provider acceptance, set `REFINVEST_OAUTH_ENABLED=true` and all six
+provider credentials in `.env.local`, then start Core. Register each provider
+callback as `http://localhost:8080/login/oauth2/code/{provider}`. Verify that
+Kakao, Naver, and Google each return a provider authorization `302`, that a
+normal `returnTo` (for example `/strategies?tab=active`) survives the callback,
+and that external URLs, `//host/path`, and backslash paths are rejected or
+normalized to `/`. Do not add fake providers, callback routes, or credentials
+to automate this step.
+
+After credentials are configured, the authorization-start portion is repeatable:
+
+```powershell
+.\scripts\run-oauth-start-smoke.ps1
+```
+
+It checks each provider authorization redirect and that the redirect includes
+OAuth state. It also expects unsafe `returnTo` values to receive the contract's
+`400` response. Callback completion remains a browser/manual check because it
+requires a real provider account and registered callback.
 
 ## Service topology
 
