@@ -108,6 +108,23 @@ OAuth state. It also expects unsafe `returnTo` values to receive the contract's
 `400` response. Callback completion remains a browser/manual check because it
 requires a real provider account and registered callback.
 
+For each configured provider, use this browser acceptance checklist without
+copying Cookie or token values from browser tools:
+
+1. Open `http://localhost:3001/login?returnTo=%2Fstrategies%3Ftab%3Dactive`
+   and complete the provider login.
+2. Confirm the callback returns to `/strategies?tab=active`.
+3. Use **Account** -> **Sign out** and confirm the Web app moves to `/login`.
+4. Reopen `http://localhost:3001/strategies?tab=active`; it must move to
+   `/login?returnTo=%2Fstrategies%3Ftab%3Dactive` after the protected request
+   cannot refresh the session.
+
+The final step verifies the actual browser path: Core clears the OAuth HTTP
+session as well as its Access/Refresh cookies and Refresh Token family; Web
+then handles the protected-request `401`, failed refresh `401`, and preserved
+`returnTo`. A refresh `403` caused by a missing or invalid CSRF header remains
+a security error and must not be treated as a successful refresh or retried.
+
 ## Service topology
 
 ```text
