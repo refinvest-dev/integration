@@ -9,6 +9,11 @@ if ([string]::IsNullOrWhiteSpace($AccessToken)) { throw 'Pass the token printed 
 
 $csrf = 'integration-smoke-csrf'
 $cookie = "REFINVEST_ACCESS_TOKEN=$AccessToken; XSRF-TOKEN=$csrf"
+$curl = @(
+    (Get-Command curl.exe -ErrorAction SilentlyContinue).Source,
+    (Get-Command curl -ErrorAction SilentlyContinue).Source
+) | Where-Object { $_ } | Select-Object -First 1
+if ([string]::IsNullOrWhiteSpace($curl)) { throw 'curl must be available to run the API smoke.' }
 
 function Invoke-Json([string]$Method, [string]$Path, [object]$Body = $null) {
     $bodyFile = $null
@@ -29,7 +34,7 @@ function Invoke-Json([string]$Method, [string]$Path, [object]$Body = $null) {
             )
             $arguments += '--data-binary', "@$bodyFile"
         }
-        $response = & curl.exe @arguments
+        $response = & $curl @arguments
         if ($LASTEXITCODE -ne 0) { throw "API request failed: $Method $Path`n$response" }
         $response | ConvertFrom-Json
     } finally {
