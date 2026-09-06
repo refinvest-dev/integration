@@ -6,6 +6,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Set-ComputeIntegrationEnvironment $values (Join-Path $PSScriptRoot '..')
 $port = if ($values['INTEGRATION_COMPUTE_PORT']) { $values['INTEGRATION_COMPUTE_PORT'] } else { '8000' }
@@ -14,4 +15,5 @@ if (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyCon
 $logDir = Join-Path $PSScriptRoot '..\.integration-data\logs'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 $process = Start-Process -FilePath (Join-Path $ComputeApiPath '.venv\Scripts\python.exe') -ArgumentList "-m uvicorn refinvest.app.main:app --host 127.0.0.1 --port $port" -WorkingDirectory $ComputeApiPath -RedirectStandardOutput (Join-Path $logDir 'compute-api.out.log') -RedirectStandardError (Join-Path $logDir 'compute-api.err.log') -WindowStyle Hidden -PassThru
+Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'compute-api' -Process $process -Port $port -HealthUrl "http://127.0.0.1:$port/health" -LogPath (Join-Path $logDir 'compute-api.out.log')
 [pscustomobject]@{ processId = $process.Id; healthUrl = "http://127.0.0.1:$port/health" }
