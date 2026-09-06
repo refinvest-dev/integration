@@ -21,7 +21,7 @@ function Invoke-Json([string]$Method, [string]$Path, [object]$Body = $null) {
             '-H', 'Content-Type: application/json'
         )
         if ($null -ne $Body) {
-            $bodyFile = Join-Path $env:TEMP "refinvest-smoke-$([guid]::NewGuid()).json"
+            $bodyFile = Join-Path ([IO.Path]::GetTempPath()) "refinvest-smoke-$([guid]::NewGuid()).json"
             [System.IO.File]::WriteAllText(
                 $bodyFile,
                 ($Body | ConvertTo-Json -Depth 10),
