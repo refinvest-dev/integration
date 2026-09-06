@@ -34,9 +34,62 @@ function Get-IntegrationPostgresHost {
 function Get-IntegrationPsql {
     $candidate = @(
         (Get-Command psql.exe -ErrorAction SilentlyContinue).Source,
+        (Get-Command psql -ErrorAction SilentlyContinue).Source,
         'C:\Program Files\PostgreSQL\17\bin\psql.exe'
     ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
     return $candidate
+}
+
+function Get-IntegrationPython {
+    param(
+        [Parameter(Mandatory)][string]$ComputeApiPath
+    )
+
+    $isWindows = [System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT
+    $candidate = if ($isWindows) {
+        Join-Path $ComputeApiPath '.venv\Scripts\python.exe'
+    } else {
+        Join-Path $ComputeApiPath '.venv/bin/python'
+    }
+    if (-not (Test-Path -LiteralPath $candidate)) {
+        throw "Compute virtual environment Python does not exist: $candidate"
+    }
+    return $candidate
+}
+
+function Get-IntegrationGradleWrapper {
+    param(
+        [Parameter(Mandatory)][string]$CoreApiPath
+    )
+
+    $isWindows = [System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT
+    $candidate = if ($isWindows) {
+        Join-Path $CoreApiPath 'gradlew.bat'
+    } else {
+        Join-Path $CoreApiPath 'gradlew'
+    }
+    if (-not (Test-Path -LiteralPath $candidate)) {
+        throw "Core Gradle wrapper does not exist: $candidate"
+    }
+    return $candidate
+}
+
+function Test-IntegrationTcpListener {
+    param([Parameter(Mandatory)][int]$Port)
+
+    if (Get-Command Get-NetTCPConnection -ErrorAction SilentlyContinue) {
+        return $null -ne (Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1)
+    }
+
+    $client = [System.Net.Sockets.TcpClient]::new()
+    try {
+        $client.Connect('127.0.0.1', $Port)
+        return $true
+    } catch {
+        return $false
+    } finally {
+        $client.Dispose()
+    }
 }
 
 function Set-CoreIntegrationEnvironment {
@@ -80,4 +133,4 @@ function Set-ComputeIntegrationEnvironment {
     $env:REFINVEST_SNAPSHOT_STORAGE_ROOT = [IO.Path]::GetFullPath((Join-Path $WorkspacePath $Values['REFINVEST_SNAPSHOT_STORAGE_ROOT']))
 }
 
-Export-ModuleMember -Function Get-IntegrationEnvironment, Assert-IntegrationEnvironment, Get-IntegrationPostgresHost, Get-IntegrationPsql, Set-CoreIntegrationEnvironment, Set-ComputeIntegrationEnvironment
+Export-ModuleMember -Function Get-IntegrationEnvironment, Assert-IntegrationEnvironment, Get-IntegrationPostgresHost, Get-IntegrationPsql, Get-IntegrationPython, Get-IntegrationGradleWrapper, Test-IntegrationTcpListener, Set-CoreIntegrationEnvironment, Set-ComputeIntegrationEnvironment

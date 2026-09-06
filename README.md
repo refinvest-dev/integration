@@ -180,6 +180,19 @@ repositories. It does not receive OAuth credentials, database passwords, or
 internal API keys. Pull requests from forks are skipped because repository
 secrets are intentionally unavailable to them.
 
+## GitHub Actions API smoke
+
+`.github/workflows/api-smoke.yml` uses an ephemeral PostgreSQL service and the
+same deterministic Compute fixture as the local harness. It installs no OAuth
+credentials and runs the actual Core-to-Compute path: strategy creation,
+dispatch, worker execution, and terminal-result persistence. The workflow
+first repeats the mandatory OpenAPI snapshot check, then uploads Core, Compute,
+and worker logs as `api-smoke-logs` on both success and failure.
+
+The workflow uses the same read-only GitHub App configuration as contract
+sync. It is intentionally skipped for fork pull requests because the App
+private key is unavailable there.
+
 ## Next scope
 
 Web browser acceptance testing can be added once the API smoke remains stable.
