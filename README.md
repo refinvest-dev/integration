@@ -52,6 +52,21 @@ Start the backend processes in this order:
 .\scripts\start-core-api.ps1
 ```
 
+The start scripts record only the processes they launch in the ignored
+`.integration-data/processes.json` registry. Use the lifecycle helpers to
+inspect or stop those recorded processes:
+
+```powershell
+.\scripts\status-integration.ps1
+.\scripts\stop-integration.ps1
+# Or stop only a recorded service.
+.\scripts\stop-integration.ps1 -Service core-api
+```
+
+`stop-integration.ps1` verifies the recorded launcher PID and start time
+before stopping its process tree. It never stops a listener or worker that was
+not recorded by an integration start script.
+
 Wait for both health endpoints, then seed the test Member and execute the API
 smoke flow.
 
