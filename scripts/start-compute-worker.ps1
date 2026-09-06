@@ -12,6 +12,15 @@ Set-ComputeIntegrationEnvironment $values (Join-Path $PSScriptRoot '..')
 $env:REFINVEST_WORKER_ID = 'integration-e2e-worker'
 $logDir = Join-Path $PSScriptRoot '..\.integration-data\logs'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
-$process = Start-Process -FilePath (Join-Path $ComputeApiPath '.venv\Scripts\python.exe') -ArgumentList '-c "from refinvest.app.worker import worker_main; worker_main()"' -WorkingDirectory $ComputeApiPath -RedirectStandardOutput (Join-Path $logDir 'compute-worker.out.log') -RedirectStandardError (Join-Path $logDir 'compute-worker.err.log') -WindowStyle Hidden -PassThru
+$startParameters = @{
+    FilePath = Get-IntegrationPython -ComputeApiPath $ComputeApiPath
+    ArgumentList = '-c "from refinvest.app.worker import worker_main; worker_main()"'
+    WorkingDirectory = $ComputeApiPath
+    RedirectStandardOutput = Join-Path $logDir 'compute-worker.out.log'
+    RedirectStandardError = Join-Path $logDir 'compute-worker.err.log'
+    PassThru = $true
+}
+if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) { $startParameters.WindowStyle = 'Hidden' }
+$process = Start-Process @startParameters
 Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'compute-worker' -Process $process -LogPath (Join-Path $logDir 'compute-worker.out.log')
 [pscustomobject]@{ processId = $process.Id; log = (Join-Path $logDir 'compute-worker.out.log') }
