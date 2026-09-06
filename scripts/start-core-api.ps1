@@ -24,8 +24,8 @@ $startParameters = @{
     RedirectStandardError = Join-Path $logDir 'core-api.err.log'
     PassThru = $true
 }
-$isWindows = [System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT
-if ($isWindows) {
+$runningOnWindows = [System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT
+if ($runningOnWindows) {
     $startParameters.WindowStyle = 'Hidden'
 } else {
     $startParameters.FilePath = (Get-Command bash -ErrorAction Stop).Source
