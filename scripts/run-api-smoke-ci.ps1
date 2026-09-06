@@ -17,7 +17,9 @@ $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'wait-for-http.ps1') -Uri 'http://127.0.0.1:8000/health'
 
 & (Join-Path $PSScriptRoot 'start-core-api.ps1') -EnvironmentFile $EnvironmentFile -CoreApiPath $CoreApiPath
-& (Join-Path $PSScriptRoot 'wait-for-http.ps1') -Uri 'http://127.0.0.1:8080/actuator/health' -TimeoutSeconds 180
+# A cold GitHub runner first downloads Gradle and compiles all Core modules before
+# Spring can expose its health endpoint. Keep the CI limit above that one-time cost.
+& (Join-Path $PSScriptRoot 'wait-for-http.ps1') -Uri 'http://127.0.0.1:8080/actuator/health' -TimeoutSeconds 600
 
 $accessToken = & (Join-Path $PSScriptRoot 'seed-core-member.ps1') -EnvironmentFile $EnvironmentFile | Select-Object -Last 1
 if ([string]::IsNullOrWhiteSpace($accessToken)) { throw 'Could not mint the API smoke Access Token.' }
