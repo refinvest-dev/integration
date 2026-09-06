@@ -1,0 +1,61 @@
+name: Contract sync
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify Context/Core/Compute snapshots
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout integration
+        uses: actions/checkout@v4
+        with:
+          path: integration
+
+      - name: Create read-only sibling checkout token
+        id: sibling-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.REFINVEST_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            context
+            core-api
+            compute-api
+          permission-contents: read
+
+      - name: Checkout context
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/context
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: context
+
+      - name: Checkout Core API
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/core-api
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: api/refinvest
+
+      - name: Checkout Compute API
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/compute-api
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: compute-api/refinvest
+
+      - name: Verify OpenAPI snapshots
+        shell: pwsh
+        working-directory: integration
+        run: ./scripts/verify-contract-sync.ps1
