@@ -161,6 +161,25 @@ After a successful run, copy `compatibility.example.yaml` to
 `compatibility.local.yaml` and record the exact Core, Compute, Web, and context
 revisions tested together. This is evidence only; it never supersedes context.
 
+## GitHub Actions contract sync
+
+`.github/workflows/contract-sync.yml` runs the mandatory OpenAPI snapshot check
+for integration pull requests, pushes to `main`, and manual dispatches. It
+checks out `context`, `core-api`, and `compute-api` beside this repository using
+the same sibling paths as the local harness.
+
+Before enabling the workflow for private sibling repositories, install a GitHub
+App on exactly `integration`, `context`, `core-api`, and `compute-api` with
+`Contents: Read` permission. Configure the integration repository with:
+
+- Actions variable `REFINVEST_CI_APP_CLIENT_ID`
+- Actions secret `REFINVEST_CI_APP_PRIVATE_KEY`
+
+The workflow creates a short-lived token scoped to the three sibling
+repositories. It does not receive OAuth credentials, database passwords, or
+internal API keys. Pull requests from forks are skipped because repository
+secrets are intentionally unavailable to them.
+
 ## Next scope
 
 Web browser acceptance testing can be added once the API smoke remains stable.
