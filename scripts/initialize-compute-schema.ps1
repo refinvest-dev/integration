@@ -2,7 +2,8 @@
 param(
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot "..\.env.local"),
     [string]$ComposeFile = (Join-Path $PSScriptRoot "..\compose.yaml"),
-    [string]$ComputeApiPath = (Join-Path $PSScriptRoot "..\..\compute-api\refinvest")
+    [string]$ComputeApiPath = (Join-Path $PSScriptRoot "..\..\compute-api\refinvest"),
+    [string]$Schema
 )
 
 $ErrorActionPreference = "Stop"
@@ -21,6 +22,12 @@ if ($psql) {
     $env:PGPASSWORD = $values.POSTGRES_PASSWORD
     $hostName = Get-IntegrationPostgresHost $values
     $arguments = @('-h', $hostName, '-p', $values.INTEGRATION_POSTGRES_PORT, '-U', $values.POSTGRES_USER, '-d', $values.POSTGRES_DB, '-v', 'ON_ERROR_STOP=1')
+    if (-not [string]::IsNullOrWhiteSpace($Schema)) {
+        if ($Schema -notmatch '^[a-z][a-z0-9_]*$') { throw 'Schema must be a lowercase PostgreSQL identifier.' }
+        & $psql @arguments -c "CREATE SCHEMA IF NOT EXISTS $Schema;"
+        if ($LASTEXITCODE -ne 0) { throw "Could not initialize schema $Schema." }
+        $env:PGOPTIONS = "-c search_path=$Schema"
+    }
     & $psql @arguments -c 'CREATE TABLE IF NOT EXISTS integration_schema_migrations (filename TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);'
     if ($LASTEXITCODE -ne 0) { throw 'Could not initialize integration migration metadata.' }
 
@@ -41,6 +48,9 @@ if ($psql) {
 }
 
 if (-not (Test-Path -LiteralPath $ComposeFile)) { throw "Docker Compose file does not exist: $ComposeFile" }
+if (-not [string]::IsNullOrWhiteSpace($Schema)) {
+    throw 'Named schema initialization requires local psql.'
+}
 
 $compose = @('compose', '--env-file', $EnvironmentFile, '-f', $ComposeFile)
 & docker @compose 'exec' '-T' 'postgres' 'psql' '-v' 'ON_ERROR_STOP=1' '-U' $values.POSTGRES_USER '-d' $values.POSTGRES_DB '-c' 'CREATE TABLE IF NOT EXISTS integration_schema_migrations (filename TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);'

@@ -67,6 +67,10 @@ inspect or stop those recorded processes:
 before stopping its process tree. It never stops a listener or worker that was
 not recorded by an integration start script.
 
+`start-core-api.ps1` also sets Gradle's user home to the ignored
+`.integration-data/gradle` directory. This avoids a global Gradle cache and
+keeps wrapper downloads and lock files writable in restricted local shells.
+
 Wait for both health endpoints, then seed the test Member and execute the API
 smoke flow.
 
@@ -76,11 +80,28 @@ Invoke-RestMethod http://127.0.0.1:8080/actuator/health
 
 $token = .\scripts\seed-core-member.ps1
 .\scripts\run-api-smoke.ps1 -AccessToken ($token | Select-Object -Last 1)
+
+# Run this after the default API smoke: it publishes two additional immutable
+# provenance-test snapshots to the same isolated database.
+.\scripts\verify-binance-public-data-fixture.ps1
 ```
 
 The smoke uses normal HS256 Access JWT verification plus a CSRF cookie/header
 pair. It requires Strategy creation, StrategyVersion creation, Compute
 dispatch, and a `COMPLETED` result with `datasetSnapshotId=integration-e2e-v1`.
+
+`verify-binance-public-data-fixture.ps1` is separate from the cross-service
+smoke so it can exercise the real Compute PostgreSQL archive-revision and
+DatasetSnapshot storage path without calling an external vendor. It serves two
+fixed, checksum-valid monthly BTCUSDT ZIP fixtures for the same Binance URI:
+one original and one revised payload. It confirms that the verified URI,
+SHA-256, and retrieval timestamp are stored in each snapshot's provenance,
+that a matching hash is reusable, and that a changed hash creates a second
+immutable revision without changing the first snapshot. It uses the separate
+`integration_binance_fixture` schema in the isolated integration database, so
+its provenance-test snapshots cannot become the default snapshot selected by
+the Core-to-Compute API smoke. Its artifacts are likewise isolated under the
+ignored `.integration-data/binance-fixture-snapshots` directory.
 
 ## Web and authentication acceptance
 
