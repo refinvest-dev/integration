@@ -57,6 +57,24 @@ function Get-IntegrationPython {
     return $candidate
 }
 
+function Normalize-IntegrationProcessPathEnvironment {
+    # Some Windows hosts expose both PATH and Path in the process environment.
+    # PowerShell's Start-Process rejects that duplicate key when it builds the
+    # child-process environment dictionary. Keep a single canonical Path value.
+    if ([System.Environment]::OSVersion.Platform -ne [System.PlatformID]::Win32NT) {
+        return
+    }
+
+    $pathValue = [System.Environment]::GetEnvironmentVariable('Path', 'Process')
+    if ([string]::IsNullOrWhiteSpace($pathValue)) {
+        $pathValue = [System.Environment]::GetEnvironmentVariable('PATH', 'Process')
+    }
+    [System.Environment]::SetEnvironmentVariable('PATH', $null, 'Process')
+    if (-not [string]::IsNullOrWhiteSpace($pathValue)) {
+        [System.Environment]::SetEnvironmentVariable('Path', $pathValue, 'Process')
+    }
+}
+
 function Get-IntegrationGradleWrapper {
     param(
         [Parameter(Mandatory)][string]$CoreApiPath
@@ -122,15 +140,26 @@ function Set-CoreIntegrationEnvironment {
 }
 
 function Set-ComputeIntegrationEnvironment {
-    param([hashtable]$Values, [string]$WorkspacePath)
+    param(
+        [hashtable]$Values,
+        [string]$WorkspacePath,
+        [string]$DatabaseSchema
+    )
     Assert-IntegrationEnvironment $Values @('INTEGRATION_POSTGRES_PORT', 'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 'REFINVEST_INTERNAL_API_KEY', 'REFINVEST_SNAPSHOT_STORAGE_ROOT')
 
     $user = [uri]::EscapeDataString($Values['POSTGRES_USER'])
     $password = [uri]::EscapeDataString($Values['POSTGRES_PASSWORD'])
-    $env:REFINVEST_DATABASE_URL = "postgresql://${user}:${password}@$(Get-IntegrationPostgresHost $Values):$($Values['INTEGRATION_POSTGRES_PORT'])/$($Values['POSTGRES_DB'])"
+    $databaseUrl = "postgresql://${user}:${password}@$(Get-IntegrationPostgresHost $Values):$($Values['INTEGRATION_POSTGRES_PORT'])/$($Values['POSTGRES_DB'])"
+    if (-not [string]::IsNullOrWhiteSpace($DatabaseSchema)) {
+        if ($DatabaseSchema -notmatch '^[a-z][a-z0-9_]*$') {
+            throw 'Compute integration database schema must be a lowercase PostgreSQL identifier.'
+        }
+        $databaseUrl += "?options=$([uri]::EscapeDataString("-c search_path=$DatabaseSchema"))"
+    }
+    $env:REFINVEST_DATABASE_URL = $databaseUrl
     $env:REFINVEST_INTERNAL_API_KEY = $Values['REFINVEST_INTERNAL_API_KEY']
     $env:REFINVEST_SNAPSHOT_STORAGE_BACKEND = 'filesystem'
     $env:REFINVEST_SNAPSHOT_STORAGE_ROOT = [IO.Path]::GetFullPath((Join-Path $WorkspacePath $Values['REFINVEST_SNAPSHOT_STORAGE_ROOT']))
 }
 
-Export-ModuleMember -Function Get-IntegrationEnvironment, Assert-IntegrationEnvironment, Get-IntegrationPostgresHost, Get-IntegrationPsql, Get-IntegrationPython, Get-IntegrationGradleWrapper, Test-IntegrationTcpListener, Set-CoreIntegrationEnvironment, Set-ComputeIntegrationEnvironment
+Export-ModuleMember -Function Get-IntegrationEnvironment, Assert-IntegrationEnvironment, Get-IntegrationPostgresHost, Get-IntegrationPsql, Get-IntegrationPython, Normalize-IntegrationProcessPathEnvironment, Get-IntegrationGradleWrapper, Test-IntegrationTcpListener, Set-CoreIntegrationEnvironment, Set-ComputeIntegrationEnvironment

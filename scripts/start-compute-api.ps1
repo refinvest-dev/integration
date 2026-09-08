@@ -23,6 +23,7 @@ $startParameters = @{
     PassThru = $true
 }
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) { $startParameters.WindowStyle = 'Hidden' }
+Normalize-IntegrationProcessPathEnvironment
 $process = Start-Process @startParameters
 Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'compute-api' -Process $process -Port $port -HealthUrl "http://127.0.0.1:$port/health" -LogPath (Join-Path $logDir 'compute-api.out.log')
 [pscustomobject]@{ processId = $process.Id; healthUrl = "http://127.0.0.1:$port/health" }
