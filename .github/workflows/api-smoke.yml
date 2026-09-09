@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   smoke:
-    name: Core to Compute API smoke
+    name: Core to Compute API smoke and Web browser acceptance
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
     services:
@@ -51,6 +51,7 @@ jobs:
             context
             core-api
             compute-api
+            web
           permission-contents: read
 
       - name: Checkout context
@@ -73,6 +74,31 @@ jobs:
           repository: ${{ github.repository_owner }}/compute-api
           token: ${{ steps.sibling-token.outputs.token }}
           path: compute-api/refinvest
+
+      - name: Checkout Web
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/web
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: web/web
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: web/web/pnpm-lock.yaml
+
+      - name: Install Web dependencies and Chromium
+        working-directory: web/web
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec playwright install --with-deps chromium
 
       - name: Set up Java 25
         uses: actions/setup-java@v4
@@ -100,17 +126,17 @@ jobs:
       - name: Install PostgreSQL client
         run: sudo apt-get update && sudo apt-get install --yes postgresql-client
 
-      - name: Run isolated API smoke
+      - name: Run isolated API smoke and Web browser acceptance
         shell: pwsh
         working-directory: integration
         run: |
           ./scripts/new-ci-environment.ps1
-          ./scripts/run-api-smoke-ci.ps1
+          ./scripts/run-web-acceptance-ci.ps1
 
       - name: Upload integration logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: api-smoke-logs
+          name: api-smoke-and-web-acceptance-logs
           path: integration/.integration-data/logs
           if-no-files-found: warn

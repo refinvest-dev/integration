@@ -9,7 +9,7 @@ Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 $port = if ($values['INTEGRATION_WEB_PORT']) { $values['INTEGRATION_WEB_PORT'] } else { '3001' }
-if (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue) { throw "Port $port is already in use." }
+if (Test-IntegrationTcpListener -Port $port) { throw "Port $port is already in use." }
 if (-not (Test-Path -LiteralPath (Join-Path $WebPath 'package.json'))) { throw "Web checkout does not exist: $WebPath" }
 
 $corePort = if ($values['INTEGRATION_CORE_PORT']) { $values['INTEGRATION_CORE_PORT'] } else { '8080' }
@@ -28,6 +28,18 @@ if ($values['REFINVEST_WEB_ORIGIN'] -and $values['REFINVEST_WEB_ORIGIN'].TrimEnd
 
 $logDir = Join-Path $PSScriptRoot '..\.integration-data\logs'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
-$process = Start-Process -FilePath 'pnpm.cmd' -ArgumentList @('dev', '--port', $port) -WorkingDirectory $WebPath -RedirectStandardOutput (Join-Path $logDir 'web.out.log') -RedirectStandardError (Join-Path $logDir 'web.err.log') -WindowStyle Hidden -PassThru
+$pnpm = if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) { 'pnpm.cmd' } else { 'pnpm' }
+$startParameters = @{
+    FilePath = $pnpm
+    ArgumentList = @('dev', '--port', $port)
+    WorkingDirectory = $WebPath
+    RedirectStandardOutput = Join-Path $logDir 'web.out.log'
+    RedirectStandardError = Join-Path $logDir 'web.err.log'
+    PassThru = $true
+}
+if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+    $startParameters.WindowStyle = 'Hidden'
+}
+$process = Start-Process @startParameters
 Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'web' -Process $process -Port $port -HealthUrl "http://localhost:$port/login" -LogPath (Join-Path $logDir 'web.out.log')
 [pscustomobject]@{ processId = $process.Id; webUrl = "http://localhost:$port"; apiBaseUrl = $env:NEXT_PUBLIC_API_BASE_URL }
