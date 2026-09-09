@@ -9,7 +9,7 @@ Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 $port = if ($values['INTEGRATION_WEB_PORT']) { $values['INTEGRATION_WEB_PORT'] } else { '3001' }
-if (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue) { throw "Port $port is already in use." }
+if (Test-IntegrationTcpListener -Port $port) { throw "Port $port is already in use." }
 if (-not (Test-Path -LiteralPath (Join-Path $WebPath 'package.json'))) { throw "Web checkout does not exist: $WebPath" }
 
 $corePort = if ($values['INTEGRATION_CORE_PORT']) { $values['INTEGRATION_CORE_PORT'] } else { '8080' }
