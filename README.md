@@ -124,6 +124,31 @@ on `localhost` cannot reliably send Core cookies at `127.0.0.1`.
 .\scripts\start-web.ps1
 ```
 
+### Automated result-restoration browser acceptance
+
+The Web repository owns the Playwright test. The integration harness only
+starts the real local stack, seeds an isolated PRO member, and supplies its
+short-lived integration token to the browser process without logging it. The
+test creates its own `BTCUSDT` signal → `TQQQ` strategy version and a completed
+run using the immutable `integration-e2e-v1` fixture with `commission: 0.02`.
+It opens the version URL directly, verifies the visible Equity Curve, Drawdown,
+Strategy/Buy & Hold comparison, timeline, and negative MDD, then verifies the
+same result after reload.
+
+After completing the Quick start setup, install the Web test dependency and
+Chromium once, then run the combined acceptance command:
+
+```powershell
+pnpm --dir ..\web\web install
+pnpm --dir ..\web\web exec playwright install chromium
+.\scripts\run-web-acceptance-ci.ps1
+```
+
+This command first executes `verify-contract-sync` and the Core→Compute API
+smoke. It uses response polling and visible-page conditions instead of fixed
+browser sleeps. Run `stop-integration.ps1` afterwards when using the local
+harness.
+
 `run-auth-smoke.ps1` checks actual Core HTTP/Cookie behavior after a real OAuth
 login has issued a refresh cookie. Supply a fresh token for each scenario; a
 refresh-replay check intentionally revokes that token family. The script never
@@ -226,5 +251,5 @@ private key is unavailable there.
 
 ## Next scope
 
-Web browser acceptance testing can be added once the API smoke remains stable.
-Web must continue to call Core only, never Compute directly.
+Web browser acceptance now runs alongside the API smoke. Web continues to call
+Core only, never Compute directly.

@@ -1,12 +1,18 @@
 [CmdletBinding()]
-param([string]$EnvironmentFile = (Join-Path $PSScriptRoot "..\.env.local"))
+param(
+    [string]$EnvironmentFile = (Join-Path $PSScriptRoot "..\.env.local"),
+    [string]$MemberId,
+    [ValidateSet('FREE', 'PRO')]
+    [string]$Tier = 'FREE'
+)
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 $values.Keys | ForEach-Object { Set-Item "Env:$_" $values[$_] }
-$memberId = if ($env:INTEGRATION_MEMBER_ID) { $env:INTEGRATION_MEMBER_ID } else { '900000000000001' }
+$memberId = if ($MemberId) { $MemberId } elseif ($env:INTEGRATION_MEMBER_ID) { $env:INTEGRATION_MEMBER_ID } else { '900000000000001' }
+if ($memberId -notmatch '^\d+$') { throw 'Integration member ID must be a positive numeric identifier.' }
 $env:INTEGRATION_MEMBER_ID = $memberId
-$sql = "INSERT INTO members (id, role, created_at) VALUES ($memberId, 'MEMBER', CURRENT_TIMESTAMP) ON CONFLICT (id) DO NOTHING; INSERT INTO subscriptions (member_id, tier) VALUES ($memberId, 'FREE') ON CONFLICT (member_id) DO NOTHING;"
+$sql = "INSERT INTO members (id, role, created_at) VALUES ($memberId, 'MEMBER', CURRENT_TIMESTAMP) ON CONFLICT (id) DO NOTHING; INSERT INTO subscriptions (member_id, tier) VALUES ($memberId, '$Tier') ON CONFLICT (member_id) DO UPDATE SET tier = EXCLUDED.tier;"
 $psql = Get-IntegrationPsql
 
 if ($psql) {
