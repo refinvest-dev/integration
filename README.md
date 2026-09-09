@@ -98,7 +98,10 @@ Compute regression that forward-fills across their different calendars fails
 the smoke. A third Cross-Market scenario uses a fixed 2% entry/exit commission
 against the same immutable price fixture; it verifies a negative strategy MDD
 and an equity point below its running peak, providing deterministic evidence
-for Drawdown visualization without changing production or fixture data.
+for Drawdown visualization without changing production or fixture data. It then
+replays the identical request and requires the requested/actual period, fee
+model, snapshot, engine version, and every result field except the per-run ID
+to be identical.
 
 `verify-binance-public-data-fixture.ps1` is separate from the cross-service
 smoke so it can exercise the real Compute PostgreSQL archive-revision and
