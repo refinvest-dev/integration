@@ -147,7 +147,9 @@ function Assert-NegativeStrategyDrawdown([object]$Status) {
     $hasNegativeDrawdownPoint = $false
     foreach ($point in @(Get-RequiredProperty $result 'equityCurve' 'Backtest result')) {
         $equity = [decimal](Get-RequiredProperty $point 'value' 'Strategy equityCurve point')
-        $runningPeak = [decimal]::Max($runningPeak, $equity)
+        if ($equity -gt $runningPeak) {
+            $runningPeak = $equity
+        }
         if (($equity / $runningPeak) - 1 -lt 0) {
             $hasNegativeDrawdownPoint = $true
             break
@@ -155,6 +157,49 @@ function Assert-NegativeStrategyDrawdown([object]$Status) {
     }
     if (-not $hasNegativeDrawdownPoint) {
         throw 'Strategy equityCurve did not contain a point below its running peak.'
+    }
+}
+
+function Assert-DeterministicBacktestReplay([object]$Original, [object]$Replay) {
+    $originalRunId = Get-RequiredProperty $Original 'id' 'Original completed run'
+    $replayRunId = Get-RequiredProperty $Replay 'id' 'Replay completed run'
+    if ($originalRunId -eq $replayRunId) {
+        throw 'Determinism replay must create a distinct BacktestRun.'
+    }
+
+    foreach ($property in @('requestedPeriod', 'actualPeriod', 'feeModel', 'datasetSnapshotId', 'engineVersion')) {
+        $originalValue = Get-RequiredProperty $Original $property 'Original completed run'
+        $replayValue = Get-RequiredProperty $Replay $property 'Replay completed run'
+        if (($originalValue | ConvertTo-Json -Depth 20 -Compress) -cne ($replayValue | ConvertTo-Json -Depth 20 -Compress)) {
+            throw "Determinism replay changed completed-run $property."
+        }
+    }
+
+    $originalResult = Get-RequiredProperty $Original 'result' 'Original completed run'
+    $replayResult = Get-RequiredProperty $Replay 'result' 'Replay completed run'
+    if ((Get-RequiredProperty $originalResult 'backtestRunId' 'Original result') -ne $originalRunId) {
+        throw 'Original result backtestRunId does not match its completed run.'
+    }
+    if ((Get-RequiredProperty $replayResult 'backtestRunId' 'Replay result') -ne $replayRunId) {
+        throw 'Replay result backtestRunId does not match its completed run.'
+    }
+
+    # backtestRunId is intentionally run-specific. Every other persisted result
+    # field must be identical for the same version, fixture snapshot, and fees.
+    $originalComparableResult = [ordered]@{}
+    foreach ($property in $originalResult.PSObject.Properties) {
+        if ($property.Name -ne 'backtestRunId') {
+            $originalComparableResult[$property.Name] = $property.Value
+        }
+    }
+    $replayComparableResult = [ordered]@{}
+    foreach ($property in $replayResult.PSObject.Properties) {
+        if ($property.Name -ne 'backtestRunId') {
+            $replayComparableResult[$property.Name] = $property.Value
+        }
+    }
+    if (($originalComparableResult | ConvertTo-Json -Depth 100 -Compress) -cne ($replayComparableResult | ConvertTo-Json -Depth 100 -Compress)) {
+        throw 'Determinism replay changed the BacktestResult payload.'
     }
 }
 
@@ -219,10 +264,11 @@ $drawdownVersion = Invoke-Json POST "/strategies/$($drawdownStrategy.id)/version
     )
     exit = @{ holdingSignalSessions = 3 }
 }
-$drawdownRun = Invoke-Json POST "/strategy-versions/$($drawdownVersion.id)/backtests" @{
+$drawdownRequest = @{
     period = @{ start = '2025-01-02'; end = '2025-01-08' }
     feeModel = @{ commission = 0.02; slippage = 0 }
 }
+$drawdownRun = Invoke-Json POST "/strategy-versions/$($drawdownVersion.id)/backtests" $drawdownRequest
 $drawdownStatus = Wait-ForCompletedBacktest $drawdownRun.id
 $drawdownAssertion = @{
     Status = $drawdownStatus
@@ -236,8 +282,16 @@ $drawdownAssertion = @{
 Assert-VisualizationResult @drawdownAssertion
 Assert-NegativeStrategyDrawdown $drawdownStatus
 
+# Replay the identical logical request against the same immutable fixture.
+# The durable run IDs differ, but all execution metadata and result values must
+# remain stable to prove end-to-end determinism through Core and Compute.
+$drawdownReplayRun = Invoke-Json POST "/strategy-versions/$($drawdownVersion.id)/backtests" $drawdownRequest
+$drawdownReplayStatus = Wait-ForCompletedBacktest $drawdownReplayRun.id
+Assert-DeterministicBacktestReplay $drawdownStatus $drawdownReplayStatus
+
 [pscustomobject]@{
     sameMarket = $sameMarketStatus
     crossMarket = $crossMarketStatus
     drawdown = $drawdownStatus
+    drawdownReplay = $drawdownReplayStatus
 } | ConvertTo-Json -Depth 10
