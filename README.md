@@ -78,7 +78,7 @@ smoke flow.
 Invoke-RestMethod http://127.0.0.1:8000/health
 Invoke-RestMethod http://127.0.0.1:8080/actuator/health
 
-$token = .\scripts\seed-core-member.ps1
+$token = .\scripts\seed-core-member.ps1 -Tier PRO
 .\scripts\run-api-smoke.ps1 -AccessToken ($token | Select-Object -Last 1)
 
 # Run this after the default API smoke: it publishes two additional immutable
@@ -88,7 +88,17 @@ $token = .\scripts\seed-core-member.ps1
 
 The smoke uses normal HS256 Access JWT verification plus a CSRF cookie/header
 pair. It requires Strategy creation, StrategyVersion creation, Compute
-dispatch, and a `COMPLETED` result with `datasetSnapshotId=integration-e2e-v1`.
+dispatch, and `COMPLETED` results with `datasetSnapshotId=integration-e2e-v1`.
+It first preserves the trade-free same-market empty-state path, then runs a
+deterministic Cross-Market scenario (`BTCUSDT` signal → `TQQQ` execution). The
+second path requires realized trades, strategy and Buy & Hold equity curves,
+signal/entry/exit timestamps, and the `CROSS_MARKET` relation. It asserts the
+distinct BTCUSDT and TQQQ benchmark date sequences directly, so a Core or
+Compute regression that forward-fills across their different calendars fails
+the smoke. A third Cross-Market scenario uses a fixed 2% entry/exit commission
+against the same immutable price fixture; it verifies a negative strategy MDD
+and an equity point below its running peak, providing deterministic evidence
+for Drawdown visualization without changing production or fixture data.
 
 `verify-binance-public-data-fixture.ps1` is separate from the cross-service
 smoke so it can exercise the real Compute PostgreSQL archive-revision and
