@@ -101,7 +101,10 @@ and an equity point below its running peak, providing deterministic evidence
 for Drawdown visualization without changing production or fixture data. It then
 replays the identical request and requires the requested/actual period, fee
 model, snapshot, engine version, and every result field except the per-run ID
-to be identical.
+to be identical. It also calls the version-specific latest-completed endpoint
+before execution, after the initial run, and after the replay. This verifies
+the no-result `run: null` response and that the replay becomes the displayed
+latest completed result without relying on a paginated strategy-level history.
 
 `verify-binance-public-data-fixture.ps1` is separate from the cross-service
 smoke so it can exercise the real Compute PostgreSQL archive-revision and

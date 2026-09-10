@@ -203,6 +203,45 @@ function Assert-DeterministicBacktestReplay([object]$Original, [object]$Replay) 
     }
 }
 
+function Assert-LatestCompletedBacktestRun(
+    [string]$StrategyId,
+    [string]$StrategyVersionId,
+    [object]$ExpectedRun,
+    [bool]$ExpectRun
+) {
+    $latest = Invoke-Json GET "/strategy-versions/$StrategyVersionId/backtest-runs/latest-completed"
+    $runProperty = $latest.PSObject.Properties['run']
+    if ($null -eq $runProperty) {
+        throw 'Latest completed backtest response is missing run.'
+    }
+
+    if (-not $ExpectRun) {
+        if ($null -ne $runProperty.Value) {
+            throw 'StrategyVersion without a completed run must return run: null.'
+        }
+        return
+    }
+
+    $run = $runProperty.Value
+    if ($null -eq $run) {
+        throw 'Expected the latest completed backtest response to contain a run.'
+    }
+
+    $expectedRunId = [string](Get-RequiredProperty $ExpectedRun 'id' 'Expected completed run')
+    if ([string](Get-RequiredProperty $run 'id' 'Latest completed backtest run') -cne $expectedRunId) {
+        throw "Latest completed run differs. Expected id=$expectedRunId, actual=$($run.id)."
+    }
+    if ([string](Get-RequiredProperty $run 'strategyId' 'Latest completed backtest run') -cne $StrategyId) {
+        throw "Latest completed run has an unexpected strategyId: $($run.strategyId)."
+    }
+    if ([string](Get-RequiredProperty $run 'strategyVersionId' 'Latest completed backtest run') -cne $StrategyVersionId) {
+        throw "Latest completed run has an unexpected strategyVersionId: $($run.strategyVersionId)."
+    }
+    if ((Get-RequiredProperty $run 'status' 'Latest completed backtest run') -cne 'COMPLETED') {
+        throw "Latest completed run must have COMPLETED status, actual=$($run.status)."
+    }
+}
+
 # Preserve the original trade-free same-market path. It verifies empty-state results
 # still include the benchmark and required visualization contract fields.
 $sameMarketStrategy = Invoke-Json POST '/strategies' @{ name = "Integration same-market smoke $(Get-Date -Format yyyyMMddHHmmss)" }
@@ -264,6 +303,11 @@ $drawdownVersion = Invoke-Json POST "/strategies/$($drawdownStrategy.id)/version
     )
     exit = @{ holdingSignalSessions = 3 }
 }
+Assert-LatestCompletedBacktestRun `
+    ([string]$drawdownStrategy.id) `
+    ([string]$drawdownVersion.id) `
+    $null `
+    $false
 $drawdownRequest = @{
     period = @{ start = '2025-01-02'; end = '2025-01-08' }
     feeModel = @{ commission = 0.02; slippage = 0 }
@@ -281,6 +325,11 @@ $drawdownAssertion = @{
 }
 Assert-VisualizationResult @drawdownAssertion
 Assert-NegativeStrategyDrawdown $drawdownStatus
+Assert-LatestCompletedBacktestRun `
+    ([string]$drawdownStrategy.id) `
+    ([string]$drawdownVersion.id) `
+    $drawdownStatus `
+    $true
 
 # Replay the identical logical request against the same immutable fixture.
 # The durable run IDs differ, but all execution metadata and result values must
@@ -288,6 +337,11 @@ Assert-NegativeStrategyDrawdown $drawdownStatus
 $drawdownReplayRun = Invoke-Json POST "/strategy-versions/$($drawdownVersion.id)/backtests" $drawdownRequest
 $drawdownReplayStatus = Wait-ForCompletedBacktest $drawdownReplayRun.id
 Assert-DeterministicBacktestReplay $drawdownStatus $drawdownReplayStatus
+Assert-LatestCompletedBacktestRun `
+    ([string]$drawdownStrategy.id) `
+    ([string]$drawdownVersion.id) `
+    $drawdownReplayStatus `
+    $true
 
 [pscustomobject]@{
     sameMarket = $sameMarketStatus
