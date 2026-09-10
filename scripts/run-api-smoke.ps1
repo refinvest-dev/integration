@@ -2,7 +2,9 @@
 param(
     [string]$CoreBaseUrl = 'http://localhost:8080',
     [string]$AccessToken,
-    [int]$TimeoutSeconds = 90
+    [int]$TimeoutSeconds = 90,
+    [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
+    [string]$ForeignMemberId = '900000000000003'
 )
 $ErrorActionPreference = 'Stop'
 if ([string]::IsNullOrWhiteSpace($AccessToken)) { throw 'Pass the token printed by seed-core-member.ps1 as -AccessToken.' }
@@ -301,7 +303,6 @@ function Assert-LatestTerminalBacktestRun(
         throw "Latest terminal run must have $expectedStatus status, actual=$($run.status)."
     }
 }
-
 function Assert-NotFoundForForeignMember([string]$Path, [string]$ForeignAccessToken) {
     $responseFile = Join-Path ([IO.Path]::GetTempPath()) "refinvest-smoke-$([guid]::NewGuid()).response"
     try {
@@ -444,7 +445,6 @@ Assert-LatestTerminalBacktestRun `
     ([string]$drawdownVersion.id) `
     $failedStatus `
     $true
-
 # A valid JWT for a different integration member must not disclose whether this
 # StrategyVersion has a completed run. The public contract intentionally uses
 # 404 for both absent and foreign-owned versions.
