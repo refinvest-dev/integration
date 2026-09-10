@@ -107,6 +107,11 @@ the no-result `run: null` response and that the replay becomes the displayed
 latest completed result without relying on a paginated strategy-level history.
 It additionally uses a separate integration member with a valid JWT to verify
 that a foreign-owned StrategyVersion returns the contract's `404` response.
+Finally, it starts a fixture-range-missing request and requires a terminal
+`FAILED` result with `CALENDAR_RESOLUTION_FAILED`; the latest-completed endpoint
+must still return the earlier successful run, while latest-terminal returns the
+failed run. This prevents a refresh from hiding either the last usable chart or
+the most recent failure.
 
 `verify-binance-public-data-fixture.ps1` is separate from the cross-service
 smoke so it can exercise the real Compute PostgreSQL archive-revision and
@@ -141,7 +146,10 @@ test creates its own `BTCUSDT` signal → `TQQQ` strategy version and a complete
 run using the immutable `integration-e2e-v1` fixture with `commission: 0.02`.
 It opens the version URL directly, verifies the visible Equity Curve, Drawdown,
 Strategy/Buy & Hold comparison, timeline, and negative MDD, then verifies the
-same result after reload.
+same result after reload. It then creates a deterministic calendar-resolution
+failure for the same version and verifies direct entry and reload retain the
+earlier successful charts while showing a user-safe failure message and its
+structured failure code.
 
 After completing the Quick start setup, install the Web test dependency and
 Chromium once, then run the combined acceptance command:

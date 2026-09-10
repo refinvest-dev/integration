@@ -62,6 +62,26 @@ function Wait-ForCompletedBacktest([string]$RunId) {
     return $status
 }
 
+function Wait-ForFailedBacktest([string]$RunId, [string]$ExpectedErrorCode) {
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    do {
+        Start-Sleep -Seconds 2
+        $status = Invoke-Json GET "/backtest-runs/$RunId"
+    } while ($status.status -in @('PENDING', 'RUNNING') -and (Get-Date) -lt $deadline)
+
+    if ($status.status -ne 'FAILED') {
+        throw "Backtest did not fail: $($status | ConvertTo-Json -Depth 8)"
+    }
+    if ([string]::IsNullOrWhiteSpace([string]$status.failureReason)) {
+        throw 'Failed run did not preserve a failureReason.'
+    }
+    if ($status.errorCode -cne $ExpectedErrorCode) {
+        throw "Failed run errorCode differs. Expected $ExpectedErrorCode, actual=$($status.errorCode)."
+    }
+
+    return $status
+}
+
 function Get-RequiredProperty([object]$Object, [string]$Property, [string]$Context) {
     if ($null -eq $Object) { throw "$Context is missing." }
     $value = $Object.PSObject.Properties[$Property]
@@ -244,6 +264,45 @@ function Assert-LatestCompletedBacktestRun(
     }
 }
 
+function Assert-LatestTerminalBacktestRun(
+    [string]$StrategyId,
+    [string]$StrategyVersionId,
+    [object]$ExpectedRun,
+    [bool]$ExpectRun
+) {
+    $latest = Invoke-Json GET "/strategy-versions/$StrategyVersionId/backtest-runs/latest-terminal"
+    $runProperty = $latest.PSObject.Properties['run']
+    if ($null -eq $runProperty) {
+        throw 'Latest terminal backtest response is missing run.'
+    }
+
+    if (-not $ExpectRun) {
+        if ($null -ne $runProperty.Value) {
+            throw 'StrategyVersion without a terminal run must return run: null.'
+        }
+        return
+    }
+
+    $run = $runProperty.Value
+    if ($null -eq $run) {
+        throw 'Expected the latest terminal backtest response to contain a run.'
+    }
+
+    $expectedRunId = [string](Get-RequiredProperty $ExpectedRun 'id' 'Expected terminal run')
+    if ([string](Get-RequiredProperty $run 'id' 'Latest terminal backtest run') -cne $expectedRunId) {
+        throw "Latest terminal run differs. Expected id=$expectedRunId, actual=$($run.id)."
+    }
+    if ([string](Get-RequiredProperty $run 'strategyId' 'Latest terminal backtest run') -cne $StrategyId) {
+        throw "Latest terminal run has an unexpected strategyId: $($run.strategyId)."
+    }
+    if ([string](Get-RequiredProperty $run 'strategyVersionId' 'Latest terminal backtest run') -cne $StrategyVersionId) {
+        throw "Latest terminal run has an unexpected strategyVersionId: $($run.strategyVersionId)."
+    }
+    $expectedStatus = Get-RequiredProperty $ExpectedRun 'status' 'Expected terminal run'
+    if ((Get-RequiredProperty $run 'status' 'Latest terminal backtest run') -cne $expectedStatus) {
+        throw "Latest terminal run must have $expectedStatus status, actual=$($run.status)."
+    }
+}
 function Assert-NotFoundForForeignMember([string]$Path, [string]$ForeignAccessToken) {
     $responseFile = Join-Path ([IO.Path]::GetTempPath()) "refinvest-smoke-$([guid]::NewGuid()).response"
     try {
@@ -266,7 +325,6 @@ function Assert-NotFoundForForeignMember([string]$Path, [string]$ForeignAccessTo
         Remove-Item -LiteralPath $responseFile -Force -ErrorAction SilentlyContinue
     }
 }
-
 # Preserve the original trade-free same-market path. It verifies empty-state results
 # still include the benchmark and required visualization contract fields.
 $sameMarketStrategy = Invoke-Json POST '/strategies' @{ name = "Integration same-market smoke $(Get-Date -Format yyyyMMddHHmmss)" }
@@ -368,6 +426,25 @@ Assert-LatestCompletedBacktestRun `
     $drawdownReplayStatus `
     $true
 
+# The immutable fixture has no common signal/execution calendar for this
+# period. Compute must make the accepted run terminal with its structured
+# CALENDAR_RESOLUTION_FAILED code; Core must preserve both that code and the
+# user-safe failure reason.
+$failedRun = Invoke-Json POST "/strategy-versions/$($drawdownVersion.id)/backtests" @{
+    period = @{ start = '2024-01-02'; end = '2024-01-08' }
+    feeModel = @{ commission = 0; slippage = 0 }
+}
+$failedStatus = Wait-ForFailedBacktest $failedRun.id 'CALENDAR_RESOLUTION_FAILED'
+Assert-LatestCompletedBacktestRun `
+    ([string]$drawdownStrategy.id) `
+    ([string]$drawdownVersion.id) `
+    $drawdownReplayStatus `
+    $true
+Assert-LatestTerminalBacktestRun `
+    ([string]$drawdownStrategy.id) `
+    ([string]$drawdownVersion.id) `
+    $failedStatus `
+    $true
 # A valid JWT for a different integration member must not disclose whether this
 # StrategyVersion has a completed run. The public contract intentionally uses
 # 404 for both absent and foreign-owned versions.
@@ -381,10 +458,13 @@ if ([string]::IsNullOrWhiteSpace($foreignAccessToken)) {
 Assert-NotFoundForForeignMember `
     "/strategy-versions/$($drawdownVersion.id)/backtest-runs/latest-completed" `
     $foreignAccessToken
-
+Assert-NotFoundForForeignMember `
+    "/strategy-versions/$($drawdownVersion.id)/backtest-runs/latest-terminal" `
+    $foreignAccessToken
 [pscustomobject]@{
     sameMarket = $sameMarketStatus
     crossMarket = $crossMarketStatus
     drawdown = $drawdownStatus
     drawdownReplay = $drawdownReplayStatus
+    failed = $failedStatus
 } | ConvertTo-Json -Depth 10
