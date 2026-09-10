@@ -105,6 +105,8 @@ to be identical. It also calls the version-specific latest-completed endpoint
 before execution, after the initial run, and after the replay. This verifies
 the no-result `run: null` response and that the replay becomes the displayed
 latest completed result without relying on a paginated strategy-level history.
+It additionally uses a separate integration member with a valid JWT to verify
+that a foreign-owned StrategyVersion returns the contract's `404` response.
 
 `verify-binance-public-data-fixture.ps1` is separate from the cross-service
 smoke so it can exercise the real Compute PostgreSQL archive-revision and

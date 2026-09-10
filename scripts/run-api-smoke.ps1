@@ -2,7 +2,9 @@
 param(
     [string]$CoreBaseUrl = 'http://localhost:8080',
     [string]$AccessToken,
-    [int]$TimeoutSeconds = 90
+    [int]$TimeoutSeconds = 90,
+    [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
+    [string]$ForeignMemberId = '900000000000003'
 )
 $ErrorActionPreference = 'Stop'
 if ([string]::IsNullOrWhiteSpace($AccessToken)) { throw 'Pass the token printed by seed-core-member.ps1 as -AccessToken.' }
@@ -242,6 +244,29 @@ function Assert-LatestCompletedBacktestRun(
     }
 }
 
+function Assert-NotFoundForForeignMember([string]$Path, [string]$ForeignAccessToken) {
+    $responseFile = Join-Path ([IO.Path]::GetTempPath()) "refinvest-smoke-$([guid]::NewGuid()).response"
+    try {
+        $foreignCookie = "REFINVEST_ACCESS_TOKEN=$ForeignAccessToken; XSRF-TOKEN=$csrf"
+        $statusCode = & $curl @(
+            '-sS', '--connect-timeout', '5', '--max-time', '15',
+            '-o', $responseFile, '-w', '%{http_code}',
+            '-X', 'GET', "$CoreBaseUrl$Path",
+            '-H', "Cookie: $foreignCookie",
+            '-H', "X-XSRF-TOKEN: $csrf",
+            '-H', 'Content-Type: application/json'
+        )
+        if ($LASTEXITCODE -ne 0) {
+            throw "Foreign-member request failed for GET $Path."
+        }
+        if ($statusCode.Trim() -cne '404') {
+            throw "Expected foreign member to receive 404 for GET $Path, actual=$($statusCode.Trim())."
+        }
+    } finally {
+        Remove-Item -LiteralPath $responseFile -Force -ErrorAction SilentlyContinue
+    }
+}
+
 # Preserve the original trade-free same-market path. It verifies empty-state results
 # still include the benchmark and required visualization contract fields.
 $sameMarketStrategy = Invoke-Json POST '/strategies' @{ name = "Integration same-market smoke $(Get-Date -Format yyyyMMddHHmmss)" }
@@ -342,6 +367,20 @@ Assert-LatestCompletedBacktestRun `
     ([string]$drawdownVersion.id) `
     $drawdownReplayStatus `
     $true
+
+# A valid JWT for a different integration member must not disclose whether this
+# StrategyVersion has a completed run. The public contract intentionally uses
+# 404 for both absent and foreign-owned versions.
+$foreignAccessToken = & (Join-Path $PSScriptRoot 'seed-core-member.ps1') `
+    -EnvironmentFile $EnvironmentFile `
+    -MemberId $ForeignMemberId `
+    -Tier PRO | Select-Object -Last 1
+if ([string]::IsNullOrWhiteSpace($foreignAccessToken)) {
+    throw 'Could not mint the foreign integration member Access Token.'
+}
+Assert-NotFoundForForeignMember `
+    "/strategy-versions/$($drawdownVersion.id)/backtest-runs/latest-completed" `
+    $foreignAccessToken
 
 [pscustomobject]@{
     sameMarket = $sameMarketStatus
