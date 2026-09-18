@@ -1,14 +1,20 @@
 [CmdletBinding()]
 param(
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
-    [string]$ComputeApiPath = (Join-Path $PSScriptRoot '..\..\compute-api\refinvest')
+    [string]$ComputeApiPath = (Join-Path $PSScriptRoot '..\..\compute-api\refinvest'),
+    [string]$Schema,
+    [string]$SnapshotStorageRoot
 )
 
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
-Set-ComputeIntegrationEnvironment $values (Join-Path $PSScriptRoot '..')
+Set-ComputeIntegrationEnvironment $values (Join-Path $PSScriptRoot '..') $Schema
+if (-not [string]::IsNullOrWhiteSpace($SnapshotStorageRoot)) {
+    $env:REFINVEST_SNAPSHOT_STORAGE_ROOT = Resolve-IntegrationWorkspacePath `
+        (Join-Path $PSScriptRoot '..') $SnapshotStorageRoot
+}
 $port = if ($values['INTEGRATION_COMPUTE_PORT']) { $values['INTEGRATION_COMPUTE_PORT'] } else { '8000' }
 if (Test-IntegrationTcpListener -Port $port) { throw "Port $port is already in use." }
 

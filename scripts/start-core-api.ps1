@@ -1,7 +1,9 @@
 [CmdletBinding()]
 param(
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
-    [string]$CoreApiPath = (Join-Path $PSScriptRoot '..\..\api\refinvest')
+    [string]$CoreApiPath = (Join-Path $PSScriptRoot '..\..\api\refinvest'),
+    [string]$ComputeBaseUrl,
+    [string]$DatabaseSchema
 )
 
 $ErrorActionPreference = 'Stop'
@@ -9,6 +11,18 @@ Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Set-CoreIntegrationEnvironment $values
+if (-not [string]::IsNullOrWhiteSpace($ComputeBaseUrl)) {
+    $env:COMPUTE_API_BASE_URL = $ComputeBaseUrl
+}
+if (-not [string]::IsNullOrWhiteSpace($DatabaseSchema)) {
+    if ($DatabaseSchema -notmatch '^[a-z][a-z0-9_]*$') {
+        throw 'Core integration database schema must be a lowercase PostgreSQL identifier.'
+    }
+    if ($values['POSTGRES_DB'] -cne 'refinvest_integration') {
+        throw 'Core reliability schema is allowed only inside refinvest_integration.'
+    }
+    $env:DATABASE_NAME = "$($values['POSTGRES_DB'])?currentSchema=$DatabaseSchema"
+}
 $port = if ($values['INTEGRATION_CORE_PORT']) { $values['INTEGRATION_CORE_PORT'] } else { '8080' }
 if (Test-IntegrationTcpListener -Port $port) { throw "Port $port is already in use." }
 

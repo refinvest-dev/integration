@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('compute-api', 'compute-worker', 'core-api', 'web')]
-    [string[]]$Service = @('compute-api', 'compute-worker', 'core-api', 'web')
+    [ValidateSet('compute-api', 'compute-worker', 'compute-fault-proxy', 'core-api', 'web')]
+    [string[]]$Service = @('compute-api', 'compute-worker', 'compute-fault-proxy', 'core-api', 'web')
 )
 
 $ErrorActionPreference = 'Stop'
