@@ -102,13 +102,14 @@ function Get-IntegrationServiceStatus {
     )
 
     $records = Get-IntegrationProcessRecords $RootPath
-    $knownServices = @('compute-api', 'compute-worker', 'core-api', 'web')
+    $knownServices = @('compute-api', 'compute-worker', 'compute-fault-proxy', 'core-api', 'web')
     foreach ($name in $knownServices) {
         $record = $records[$name]
         $ownership = if ($null -ne $record) { Get-IntegrationProcessOwnership $record } else { $null }
         $defaultPort = switch ($name) {
             'compute-api' { if ($EnvironmentValues['INTEGRATION_COMPUTE_PORT']) { [int]$EnvironmentValues['INTEGRATION_COMPUTE_PORT'] } else { 8000 } }
             'core-api' { if ($EnvironmentValues['INTEGRATION_CORE_PORT']) { [int]$EnvironmentValues['INTEGRATION_CORE_PORT'] } else { 8080 } }
+            'compute-fault-proxy' { 8001 }
             'web' { if ($EnvironmentValues['INTEGRATION_WEB_PORT']) { [int]$EnvironmentValues['INTEGRATION_WEB_PORT'] } else { 3001 } }
             default { $null }
         }
@@ -116,6 +117,7 @@ function Get-IntegrationServiceStatus {
         $defaultHealthUrl = switch ($name) {
             'compute-api' { "http://127.0.0.1:$port/health" }
             'core-api' { "http://127.0.0.1:$port/actuator/health" }
+            'compute-fault-proxy' { "http://127.0.0.1:$port/__faults__/status" }
             'web' { "http://localhost:$port/login" }
             default { $null }
         }

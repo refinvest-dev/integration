@@ -126,6 +126,29 @@ its provenance-test snapshots cannot become the default snapshot selected by
 the Core-to-Compute API smoke. Its artifacts are likewise isolated under the
 ignored `.integration-data/binance-fixture-snapshots` directory.
 
+## Durable dispatch and idempotency reliability
+
+The reliability harness uses the real Compute and Core HTTP endpoints, isolated
+per-run PostgreSQL schemas inside `refinvest_integration`, and integration-owned
+processes. It also starts a local fault proxy that forwards the first Compute
+submission, observes its `202`, and closes the Core connection before returning
+the response.
+
+```powershell
+.\scripts\run-durable-dispatch-reliability.ps1 `
+  -Concurrency 20 -Rounds 20 -DispatchRuns 10
+```
+
+The command verifies contract sync before and after the run, executes the
+Compute PostgreSQL integration tests, performs a fresh insert race in every
+concurrency round, checks payload conflicts, submits Core runs while Compute is
+down, then starts Compute and waits for terminal recovery. Machine-readable
+results and partial failure artifacts are written under the ignored
+`.integration-data/reports/durable-dispatch-*` directory. The command stops
+only processes registered by this harness. See
+`docs/DURABLE_DISPATCH_RELIABILITY.md` for assertions, safety boundaries, and
+report semantics.
+
 ## Web and authentication acceptance
 
 Use the same `localhost` host for Web and Core. With the integration default

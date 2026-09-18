@@ -92,6 +92,20 @@ function Get-IntegrationGradleWrapper {
     return $candidate
 }
 
+function Resolve-IntegrationWorkspacePath {
+    param(
+        [Parameter(Mandatory)][string]$WorkspacePath,
+        [Parameter(Mandatory)][string]$Path
+    )
+
+    $root = [IO.Path]::GetFullPath($WorkspacePath).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    $candidate = [IO.Path]::GetFullPath((Join-Path $WorkspacePath $Path))
+    if (-not $candidate.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "Integration path must stay inside the workspace: $Path"
+    }
+    return $candidate
+}
+
 function Test-IntegrationTcpListener {
     param([Parameter(Mandatory)][int]$Port)
 
@@ -162,4 +176,4 @@ function Set-ComputeIntegrationEnvironment {
     $env:REFINVEST_SNAPSHOT_STORAGE_ROOT = [IO.Path]::GetFullPath((Join-Path $WorkspacePath $Values['REFINVEST_SNAPSHOT_STORAGE_ROOT']))
 }
 
-Export-ModuleMember -Function Get-IntegrationEnvironment, Assert-IntegrationEnvironment, Get-IntegrationPostgresHost, Get-IntegrationPsql, Get-IntegrationPython, Normalize-IntegrationProcessPathEnvironment, Get-IntegrationGradleWrapper, Test-IntegrationTcpListener, Set-CoreIntegrationEnvironment, Set-ComputeIntegrationEnvironment
+Export-ModuleMember -Function Get-IntegrationEnvironment, Assert-IntegrationEnvironment, Get-IntegrationPostgresHost, Get-IntegrationPsql, Get-IntegrationPython, Normalize-IntegrationProcessPathEnvironment, Get-IntegrationGradleWrapper, Resolve-IntegrationWorkspacePath, Test-IntegrationTcpListener, Set-CoreIntegrationEnvironment, Set-ComputeIntegrationEnvironment
