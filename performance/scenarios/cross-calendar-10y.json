@@ -1,0 +1,25 @@
+{
+  "scenarioId": "cross-calendar-10y",
+  "scenarioVersion": 1,
+  "description": "BTCUSDT signal sessions, including weekends, resolved to later TQQQ execution sessions.",
+  "fixtureId": "performance-mvp-daily-v1",
+  "cacheModes": ["COLD", "WARM"],
+  "canonicalizationVersion": 1,
+  "expectedTerminalStatus": "COMPLETED",
+  "request": {
+    "strategyVersionId": "benchmark-cross-calendar-10y-v1",
+    "strategyVersion": {
+      "primarySignalAsset": "BTCUSDT",
+      "conditions": [
+        {"operator": "GT", "logicalCombinator": null, "operandA": {"asset": "BTCUSDT", "metric": "RETURN", "window": 3}, "operandB": 0.01}
+      ],
+      "executionAsset": "TQQQ",
+      "lag": 1,
+      "exit": {"holdingSignalSessions": 7},
+      "positionPolicy": {"longOnly": true, "singlePosition": true, "duplicateEntry": "IGNORE"}
+    },
+    "feeModel": {"commission": 0.001, "slippage": 0.0005},
+    "period": {"start": "2015-02-01", "end": "2024-11-30"},
+    "datasetSnapshotId": "performance-mvp-daily-v1"
+  }
+}

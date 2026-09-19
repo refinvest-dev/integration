@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "performance-mvp-daily-v1",
+  "fixtureDefinitionVersion": 1,
+  "createdAt": "2025-01-01T00:00:00Z",
+  "period": {
+    "start": "2015-01-01",
+    "end": "2024-12-31"
+  },
+  "frequency": "DAILY_BAR",
+  "source": "integration-synthetic-performance-fixture",
+  "adjustmentPolicy": "split-adjusted-ohlcv-cash-dividends-unadjusted",
+  "corporateActionsApplied": true,
+  "pointInTimeValidationPassed": true,
+  "calendar": {
+    "usEquity": {
+      "generator": "refinvest.ingestion.calendars.us_equity.generate_us_equity_calendar",
+      "calendar": "XNYS",
+      "officialOverrides": {}
+    },
+    "cryptoUtc": {
+      "generator": "refinvest.ingestion.calendars.crypto_utc.build_crypto_utc_calendar",
+      "ruleVersion": 1
+    }
+  },
+  "generator": {
+    "name": "refinvest-integration-performance-fixture",
+    "version": 1,
+    "priceScale": 2,
+    "cycleSessions": 240,
+    "halfCycleSessions": 120,
+    "regimeSessions": 480,
+    "regimeBasisPoints": [0, 425, -275, 650, -150],
+    "assets": [
+      {"symbol": "QQQ", "baseMinorUnits": 20000, "phase": 7, "waveBasisPoints": 17, "volumeBase": 51000000},
+      {"symbol": "SPY", "baseMinorUnits": 30000, "phase": 43, "waveBasisPoints": 13, "volumeBase": 67000000},
+      {"symbol": "TQQQ", "baseMinorUnits": 5000, "phase": 89, "waveBasisPoints": 31, "volumeBase": 82000000},
+      {"symbol": "SOXL", "baseMinorUnits": 3000, "phase": 131, "waveBasisPoints": 38, "volumeBase": 59000000},
+      {"symbol": "BTCUSDT", "baseMinorUnits": 3000000, "phase": 173, "waveBasisPoints": 24, "volumeBase": 24000}
+    ]
+  }
+}

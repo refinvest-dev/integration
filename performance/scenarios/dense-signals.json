@@ -1,0 +1,25 @@
+{
+  "scenarioId": "dense-signals",
+  "scenarioVersion": 1,
+  "description": "Always-positive close condition with a short holding period to exercise duplicate-entry ignore and trade realization paths.",
+  "fixtureId": "performance-mvp-daily-v1",
+  "cacheModes": ["COLD", "WARM"],
+  "canonicalizationVersion": 1,
+  "expectedTerminalStatus": "COMPLETED",
+  "request": {
+    "strategyVersionId": "benchmark-dense-signals-v1",
+    "strategyVersion": {
+      "primarySignalAsset": "SPY",
+      "conditions": [
+        {"operator": "GT", "logicalCombinator": null, "operandA": {"asset": "SPY", "metric": "SIMPLE", "window": null}, "operandB": 0}
+      ],
+      "executionAsset": "SPY",
+      "lag": 0,
+      "exit": {"holdingSignalSessions": 2},
+      "positionPolicy": {"longOnly": true, "singlePosition": true, "duplicateEntry": "IGNORE"}
+    },
+    "feeModel": {"commission": 0.001, "slippage": 0.0005},
+    "period": {"start": "2015-01-01", "end": "2024-11-30"},
+    "datasetSnapshotId": "performance-mvp-daily-v1"
+  }
+}

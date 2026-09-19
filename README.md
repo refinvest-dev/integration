@@ -16,6 +16,12 @@ own product contracts, domain rules, or service business code.
 `context` is the normative source. `compatibility.local.yaml` only records a
 specific implementation combination that was tested against it.
 
+## Performance fixture
+
+The deterministic ten-year, five-asset synthetic fixture and six future benchmark scenarios are
+documented in [`performance/README.md`](performance/README.md). They are separate from the short
+API-smoke fixture and do not include benchmark timings or result-hash baselines.
+
 ## Quick start: API integration smoke
 
 Copy `.env.example` to `.env.local`. Use an isolated database named
