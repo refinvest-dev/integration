@@ -1,0 +1,25 @@
+{
+  "scenarioId": "simple-10y",
+  "scenarioVersion": 1,
+  "description": "Ten-year form of the simple scenario for period-scaling comparisons.",
+  "fixtureId": "performance-mvp-daily-v1",
+  "cacheModes": ["COLD", "WARM"],
+  "canonicalizationVersion": 1,
+  "expectedTerminalStatus": "COMPLETED",
+  "request": {
+    "strategyVersionId": "benchmark-simple-10y-v1",
+    "strategyVersion": {
+      "primarySignalAsset": "QQQ",
+      "conditions": [
+        {"operator": "LT", "logicalCombinator": null, "operandA": {"asset": "QQQ", "metric": "RETURN", "window": 5}, "operandB": -0.02}
+      ],
+      "executionAsset": "QQQ",
+      "lag": 1,
+      "exit": {"holdingSignalSessions": 10},
+      "positionPolicy": {"longOnly": true, "singlePosition": true, "duplicateEntry": "IGNORE"}
+    },
+    "feeModel": {"commission": 0.001, "slippage": 0.0005},
+    "period": {"start": "2015-02-01", "end": "2024-11-30"},
+    "datasetSnapshotId": "performance-mvp-daily-v1"
+  }
+}

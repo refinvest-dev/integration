@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "performance-mvp-daily-v1",
+  "fixtureDefinitionVersion": 1,
+  "fixtureDefinitionSha256": "2ab8428a63e370e19159abd1cb56bb426f3e542a152b08b27d2bb1a1827194cc",
+  "createdAt": "2025-01-01T00:00:00Z",
+  "period": {
+    "start": "2015-01-01",
+    "end": "2024-12-31"
+  },
+  "frequency": "DAILY_BAR",
+  "assets": ["QQQ", "SPY", "TQQQ", "SOXL", "BTCUSDT"],
+  "expectedSessionCounts": {
+    "QQQ": 2516,
+    "SPY": 2516,
+    "TQQQ": 2516,
+    "SOXL": 2516,
+    "BTCUSDT": 3653
+  },
+  "adjustmentPolicy": "split-adjusted-ohlcv-cash-dividends-unadjusted",
+  "calendar": {
+    "source": "composite-calendar",
+    "version": "1",
+    "contentHash": "202deb2b966bd1569a6173c5a02c106c474ab8af7102927be20aea7b6b3c49f4",
+    "components": [
+      {
+        "calendar": "US_EQUITY",
+        "assets": ["QQQ", "SPY", "TQQQ", "SOXL"],
+        "source": "exchange_calendars:XNYS+official-overrides",
+        "version": "4.13.2",
+        "contentHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "calendar": "CRYPTO_UTC",
+        "assets": ["BTCUSDT"],
+        "source": "fixed:CRYPTO_UTC",
+        "version": "1",
+        "contentHash": "b6319b8913e8e13f8b9a6b5faf38c09a778351311ea01834bfd26cbbe8ca5783"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "name": "calendar.json",
+      "sha256": "f20c5168027b7a7ac59ecb8e4ae363343b5941a2030d6305adb7cccc0a7cb8e5",
+      "sizeBytes": 1744691
+    },
+    {
+      "name": "daily-bars.ndjson",
+      "sha256": "7799690e956e8b5dfe9c38281f2095c711d522b96f3959b9577929846134fe7b",
+      "sizeBytes": 1760718
+    },
+    {
+      "name": "manifest.json",
+      "sha256": "e019ed4e266079f93b8d2cbf861d39f4b75ae15a27aa0a303ab5a5dafb499e6e",
+      "sizeBytes": 375
+    }
+  ],
+  "storageIndependentManifestSha256": "e019ed4e266079f93b8d2cbf861d39f4b75ae15a27aa0a303ab5a5dafb499e6e",
+  "generator": {
+    "name": "refinvest-integration-performance-fixture",
+    "version": 1,
+    "computeRevision": "7250bd1218e827c4ed52153e5ba4f78a8898b56f",
+    "computeDependencyLock": "uv.lock",
+    "computeDependencyLockSha256": "518badd0e58a336ab8ae74ae1aa41b902bbc6b952518d529bafe6255875b047c"
+  }
+}
