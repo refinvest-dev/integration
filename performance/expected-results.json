@@ -1,0 +1,63 @@
+{
+  "fixture": {
+    "id": "performance-mvp-daily-v1",
+    "version": 1,
+    "manifestSha256": "sha256:e019ed4e266079f93b8d2cbf861d39f4b75ae15a27aa0a303ab5a5dafb499e6e"
+  },
+  "scenarios": [
+    {
+      "scenarioId": "cross-calendar-10y",
+      "fixtureId": "performance-mvp-daily-v1",
+      "canonicalizationVersion": 1,
+      "terminalStatus": "COMPLETED",
+      "tradeCount": 182,
+      "sampleSizeWarning": "NONE",
+      "resultHash": "sha256:c48d6ef97c4e0d415f1d4341e8d11c8a1871163bec6ead7bb8275bd52a5ed1e7"
+    },
+    {
+      "scenarioId": "dense-signals",
+      "fixtureId": "performance-mvp-daily-v1",
+      "canonicalizationVersion": 1,
+      "terminalStatus": "COMPLETED",
+      "tradeCount": 166,
+      "sampleSizeWarning": "NONE",
+      "resultHash": "sha256:1162ddf4d768c1cf215582f5dbb8c0f107a2826882cdab36cbf4dd333f5d0e1e"
+    },
+    {
+      "scenarioId": "relative-multi-condition-10y",
+      "fixtureId": "performance-mvp-daily-v1",
+      "canonicalizationVersion": 1,
+      "terminalStatus": "COMPLETED",
+      "tradeCount": 211,
+      "sampleSizeWarning": "NONE",
+      "resultHash": "sha256:2851a618bac7d5f8cf996c3a257e4b522be9570fd0b077d87fb5cb72d8e39d0d"
+    },
+    {
+      "scenarioId": "simple-10y",
+      "fixtureId": "performance-mvp-daily-v1",
+      "canonicalizationVersion": 1,
+      "terminalStatus": "COMPLETED",
+      "tradeCount": 2,
+      "sampleSizeWarning": "LOW",
+      "resultHash": "sha256:537098e7e1da8d6d930ea00166ffcc18e0b57cba53cb1c0a2e6f2a1b5ee0fc96"
+    },
+    {
+      "scenarioId": "simple-1y",
+      "fixtureId": "performance-mvp-daily-v1",
+      "canonicalizationVersion": 1,
+      "terminalStatus": "COMPLETED",
+      "tradeCount": 0,
+      "sampleSizeWarning": "ZERO",
+      "resultHash": "sha256:86b518b99c07585a38dfef7a970e5f03a67ba33227b1d55c61c46026968ef9ce"
+    },
+    {
+      "scenarioId": "zero-trades",
+      "fixtureId": "performance-mvp-daily-v1",
+      "canonicalizationVersion": 1,
+      "terminalStatus": "COMPLETED",
+      "tradeCount": 0,
+      "sampleSizeWarning": "ZERO",
+      "resultHash": "sha256:997e2a83e5c986734a2c2fe8dcfb35b45f1e2bdade4da7fdfe968341340315fe"
+    }
+  ]
+}

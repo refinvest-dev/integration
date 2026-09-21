@@ -80,6 +80,8 @@ $python = ..\compute-api\refinvest\.venv\Scripts\python.exe
 The verifier checks fixed identity/time/range, all five assets, per-asset session coverage, the
 weekend crypto/equity difference, OHLCV validity, calendar provenance, integrity flags, every
 artifact hash, Compute loader replay, unique scenario IDs, and Compute transport/domain validation.
+It checks the recorded dependency lock against the fixture generator's Compute revision, so later
+Compute dependency changes do not invalidate an otherwise unchanged immutable fixture.
 The generation path imports no vendor adapter or network client. Publication uses only the local
 PostgreSQL connection supplied by the integration environment.
 
@@ -92,8 +94,10 @@ PostgreSQL connection supplied by the integration environment.
   weekend signals resolved to a later US-equity session.
 - `relative-multi-condition-10y`: two AND-combined MetricReference-to-MetricReference conditions
   with both crypto and US-equity operands.
-- `dense-signals`: a condition guaranteed true by positive prices and a two-session holding period,
-  designed to exercise duplicate-entry ignore, entry/exit, and trade realization frequently.
+- `dense-signals`: a SPY close-above-320 condition and a two-session holding period, designed to
+  exercise duplicate-entry ignore, entry/exit, and trade realization frequently. The fixed fixture
+  has no qualifying signal after 2024-11-20, leaving room for the last trade to exit inside the
+  scenario period.
 - `zero-trades`: a condition guaranteed false by positive prices. Its expected terminal status is
   `COMPLETED` and expected sample warning is `ZERO`.
 
@@ -101,8 +105,8 @@ All scenarios target both future cold- and warm-cache series. Cache preparation 
 belong to the benchmark runner, not this fixture stage.
 
 Trade-producing scenarios leave fixed leading lookback and trailing lag/holding buffers inside the
-fixture coverage. This prevents a valid strategy from requesting sessions outside the immutable
-artifact solely because its benchmark period touches a fixture boundary.
+fixture coverage. The dense-signals condition also leaves a signal-free tail inside its requested
+period, so the last trade can finish before the period ends.
 
 ## Git and version lifecycle
 

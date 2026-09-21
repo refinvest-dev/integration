@@ -1,17 +1,17 @@
 {
   "scenarioId": "dense-signals",
   "scenarioVersion": 1,
-  "description": "Always-positive close condition with a short holding period to exercise duplicate-entry ignore and trade realization paths.",
+  "description": "Frequent SPY close-above-320 signals with a short holding period; the fixed fixture has no qualifying signal near the period end.",
   "fixtureId": "performance-mvp-daily-v1",
   "cacheModes": ["COLD", "WARM"],
   "canonicalizationVersion": 1,
   "expectedTerminalStatus": "COMPLETED",
   "request": {
-    "strategyVersionId": "benchmark-dense-signals-v1",
+    "strategyVersionId": "benchmark-dense-signals-v2",
     "strategyVersion": {
       "primarySignalAsset": "SPY",
       "conditions": [
-        {"operator": "GT", "logicalCombinator": null, "operandA": {"asset": "SPY", "metric": "SIMPLE", "window": null}, "operandB": 0}
+        {"operator": "GT", "logicalCombinator": null, "operandA": {"asset": "SPY", "metric": "SIMPLE", "window": null}, "operandB": 320}
       ],
       "executionAsset": "SPY",
       "lag": 0,
