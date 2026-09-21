@@ -16,6 +16,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+function Write-BaselineJson([object]$Value, [string]$Path) {
+    $json = $Value | ConvertTo-Json -Depth 5
+    [IO.File]::WriteAllText($Path, "$json`n", [Text.UTF8Encoding]::new($false))
+}
 $workspace = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $compute = [IO.Path]::GetFullPath($ComputeApiPath)
 $context = [IO.Path]::GetFullPath($ContextPath)
@@ -39,12 +43,12 @@ $official = $Mode -eq 'Official' -and $effectiveWarmups -eq $protocol.warmupsPer
 if ($Mode -eq 'Official' -and -not $official) { throw 'Official mode cannot use protocol overrides.' }
 
 & (Join-Path $PSScriptRoot 'verify-contract-sync.ps1') -ContextPath $context -CoreApiPath $core -ComputeApiPath $compute
-if ($LASTEXITCODE -ne 0) { throw 'Contract sync verification failed.' }
+if (-not $?) { throw 'Contract sync verification failed.' }
 $storageRoot = Resolve-IntegrationWorkspacePath $workspace $SnapshotStorageRoot
 $snapshotPath = Join-Path $storageRoot 'performance-mvp-daily-v1'
 if (-not (Test-Path -LiteralPath $snapshotPath)) {
     & (Join-Path $PSScriptRoot 'publish-performance-fixture.ps1') -EnvironmentFile $EnvironmentFile -ComputeApiPath $compute -Schema $Schema -SnapshotStorageRoot $SnapshotStorageRoot
-    if ($LASTEXITCODE -ne 0) { throw 'Performance fixture publication failed.' }
+    if (-not $?) { throw 'Performance fixture publication failed.' }
 }
 $python = Get-IntegrationPython -ComputeApiPath $compute
 & $python (Join-Path $PSScriptRoot 'verify-performance-fixture.py') --definition (Join-Path $workspace 'performance\fixture-definition.json') --fixture-manifest $manifestPath --scenario-directory $scenarioDirectory --snapshot-path $snapshotPath --compute-api-path $compute
@@ -58,6 +62,7 @@ if (Test-Path -LiteralPath $runDirectory) { throw "Baseline output already exist
 $reportsDirectory = Join-Path $runDirectory 'reports'
 New-Item -ItemType Directory -Path $reportsDirectory | Out-Null
 
+$packageVersion = (& $python -c "from importlib.metadata import version; print(version('refinvest'))").Trim()
 $environment = [ordered]@{
     os = [System.Environment]::OSVersion.VersionString
     platform = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
@@ -66,13 +71,13 @@ $environment = [ordered]@{
     logicalCpuCount = [System.Environment]::ProcessorCount
     memoryBytes = (Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue | Select-Object -ExpandProperty TotalPhysicalMemory)
     pythonVersion = (& $python --version 2>&1).ToString().Replace('Python ', '')
-    engineVersion = (& $python -c 'from importlib.metadata import version; print(version("refinvest"))').Trim()
-    computePackageVersion = (& $python -c 'from importlib.metadata import version; print(version("refinvest"))').Trim()
+    engineVersion = $packageVersion
+    computePackageVersion = $packageVersion
     dependencyLockSha256 = 'sha256:' + (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $compute 'uv.lock')).Hash.ToLowerInvariant()
 }
-$environment | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 -LiteralPath (Join-Path $runDirectory 'environment.json')
+Write-BaselineJson $environment (Join-Path $runDirectory 'environment.json')
 $revisions = [ordered]@{ integration = (& git -C $workspace rev-parse HEAD).Trim(); context = (& git -C $context rev-parse HEAD).Trim(); compute = (& git -C $compute rev-parse HEAD).Trim(); core = if (Test-Path (Join-Path $core '.git')) { (& git -C $core rev-parse HEAD).Trim() } else { $null }; web = if (Test-Path (Join-Path $web '.git')) { (& git -C $web rev-parse HEAD).Trim() } else { $null } }
-$revisions | ConvertTo-Json | Set-Content -Encoding utf8 -LiteralPath (Join-Path $runDirectory 'revisions.json')
+Write-BaselineJson $revisions (Join-Path $runDirectory 'revisions.json')
 
 $scenarioFiles = Get-ChildItem -LiteralPath $scenarioDirectory -Filter '*.json' | Sort-Object BaseName
 $invocationFailures = @()
@@ -90,7 +95,7 @@ try {
     }
 } finally { Pop-Location }
 $failureDocument = [ordered]@{ failures = @($invocationFailures) }
-$failureDocument | ConvertTo-Json -Depth 4 | Set-Content -Encoding utf8 -LiteralPath (Join-Path $runDirectory 'invocation-failures.json')
+Write-BaselineJson $failureDocument (Join-Path $runDirectory 'invocation-failures.json')
 
 $builderArguments = @((Join-Path $PSScriptRoot 'build-performance-baseline-report.py'), '--protocol', $protocolPath, '--expected-results', $expectedPath, '--fixture-manifest', $manifestPath, '--scenario-directory', $scenarioDirectory, '--reports-directory', $reportsDirectory, '--environment', (Join-Path $runDirectory 'environment.json'), '--revisions', (Join-Path $runDirectory 'revisions.json'), '--output-json', (Join-Path $runDirectory 'baseline.json'), '--output-markdown', (Join-Path $runDirectory 'baseline.md'), '--baseline-id', $baselineId, '--cache-mode', $CacheMode, '--warmups', $effectiveWarmups, '--iterations', $effectiveIterations, '--batches', $effectiveBatches)
 if ($official) { $builderArguments += '--official' }

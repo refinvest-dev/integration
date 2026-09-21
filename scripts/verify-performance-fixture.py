@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import re
+import subprocess
 from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
@@ -71,7 +74,29 @@ def _verify_metadata(definition, manifest, assembly, compute_api_path: Path) -> 
         if calendar.get(field) != expected:
             raise ValueError(f"Fixture manifest calendar {field} does not match generated data.")
     generator = manifest.get("generator", {})
-    if generator.get("computeDependencyLockSha256") != sha256_file(compute_api_path / "uv.lock"):
+    _verify_generator_lock(generator, compute_api_path)
+
+
+def _verify_generator_lock(generator: dict, compute_api_path: Path) -> None:
+    revision = generator.get("computeRevision")
+    expected = generator.get("computeDependencyLockSha256")
+    if not isinstance(revision, str) or re.fullmatch(r"[0-9a-f]{40}", revision) is None:
+        raise ValueError("Fixture generator Compute revision is invalid.")
+    if not isinstance(expected, str) or re.fullmatch(r"[0-9a-f]{64}", expected) is None:
+        raise ValueError("Fixture generator dependency lock hash is invalid.")
+    try:
+        lock = subprocess.check_output(
+            ["git", "show", f"{revision}:uv.lock"], cwd=compute_api_path, stderr=subprocess.PIPE
+        )
+    except (OSError, subprocess.CalledProcessError) as error:
+        raise ValueError("Fixture generator Compute revision is unavailable.") from error
+    # Git stores LF; the recorded fingerprint may come from a Windows CRLF checkout.
+    normalized = lock.replace(b"\r\n", b"\n")
+    valid_hashes = {
+        hashlib.sha256(normalized).hexdigest(),
+        hashlib.sha256(normalized.replace(b"\n", b"\r\n")).hexdigest(),
+    }
+    if expected not in valid_hashes:
         raise ValueError("Compute dependency lock differs from the fixture provenance.")
 
 
