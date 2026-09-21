@@ -18,9 +18,11 @@ specific implementation combination that was tested against it.
 
 ## Performance fixture
 
-The deterministic ten-year, five-asset synthetic fixture and six future benchmark scenarios are
-documented in [`performance/README.md`](performance/README.md). They are separate from the short
-API-smoke fixture and do not include benchmark timings or result-hash baselines.
+The deterministic ten-year, five-asset synthetic fixture, six benchmark scenarios, expected-result
+review, and baseline protocol are documented in [`performance/README.md`](performance/README.md).
+They are separate from the short API-smoke fixture. Check wiring with
+`.\scripts\run-performance-baseline.ps1 -Mode Smoke`; use `-Mode Official` only for the fixed,
+long-running protocol. Absolute timing reports remain under `.integration-data/`.
 
 ## Quick start: API integration smoke
 
