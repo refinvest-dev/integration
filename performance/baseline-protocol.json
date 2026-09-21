@@ -1,0 +1,12 @@
+{
+  "protocolVersion": 1,
+  "canonicalizationVersion": 1,
+  "cacheModes": ["warm"],
+  "warmupsPerBatch": 3,
+  "iterationsPerBatch": 10,
+  "batches": 2,
+  "p95Method": "nearest-rank",
+  "failurePolicy": "fail-entire-scenario",
+  "environmentPolicy": "same-machine-and-runtime",
+  "executionOrder": "scenario-id-ascending-then-batch-ascending"
+}
