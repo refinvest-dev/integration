@@ -163,6 +163,9 @@ Use the fixed defaults for an official baseline:
 .\scripts\run-performance-baseline.ps1 -Mode Official `
   -EnvironmentFile .\.env.local `
   -ComputeApiPath ..\compute-api\refinvest `
+  -EnvironmentId local-workstation-1 `
+  -StorageProfile local-ssd `
+  -ResourceProfile unrestricted `
   -SnapshotStorageRoot .integration-data\performance-fixture-v1-verify
 ```
 
@@ -170,6 +173,12 @@ Use the fixed defaults for an official baseline:
 `Schema`, and `SnapshotStorageRoot` are explicit parameters. Overrides are recorded in the report;
 Official mode rejects values that differ from the protocol. Smoke defaults to zero warm-ups, one
 iteration, and one batch and always reports `official=false`.
+Official mode requires a stable, non-sensitive `EnvironmentId` for the same physical machine or
+controlled dedicated environment, `StorageProfile` for the same snapshot storage conditions, and
+`ResourceProfile` for CPU/memory limits (for example `unrestricted` or `cpu4-memory8g`).
+The script records CPU and physical memory as scalar values; it fails if they cannot be read.
+Use the same identifiers only when those conditions truly match. The benchmark runner reads the
+prepared snapshot directly; Core, Worker, and the database are outside the measured boundary.
 
 Each invocation creates a new directory under `.integration-data/performance/baselines/`, with raw
 runner reports, `environment.json`, `revisions.json`, `baseline.json`, and `baseline.md`. JSON
@@ -185,3 +194,41 @@ metadata; Core and Web are not on the direct Compute benchmark path.
 An official baseline is neither a production SLO nor evidence from user traffic. No performance
 threshold is established here. Absolute values from shared runners or different machines are not
 directly comparable; candidate comparisons should use the same machine/runtime and exact protocol.
+
+## Manual baseline–candidate comparison
+
+Run `scripts/verify-contract-sync.ps1` first, then generate two official reports on the same
+machine and storage, with the same fixture and protocol. Repeat close in time or alternate the
+revisions when investigating a warning. The report directories are never overwritten.
+
+```powershell
+.\scripts\compare-performance-baselines.ps1 `
+  -Baseline .\.integration-data\performance\baselines\BASELINE_RUN\baseline.json `
+  -Candidate .\.integration-data\performance\baselines\CANDIDATE_RUN\baseline.json
+```
+
+The comparator reuses the baseline verifier, checks official status, completeness, correctness,
+revisions, timestamps, protocol, fixture, expected results, and matching environment metadata.
+The wrapper runs contract sync first; sibling checkout paths are optional parameters.
+`VALIDATION_FAILED` exits 2 for missing/failed/corrupt input or correctness failure. A valid but
+incomparable pair reports `NOT_COMPARABLE` and exits 0 without performance numbers. A comparable
+pair reports `COMPARABLE` and exits 0; a single-run median or p95 slowdown of at least 20% is a
+provisional investigation warning, never a build failure. A zero baseline denominator yields a
+null percent change. JSON and Markdown are written to a new timestamped directory under
+`.integration-data/performance/comparisons/`; inputs remain untouched. Duration values in JSON
+are nanoseconds. The Markdown displays milliseconds and identifies the Compute runner boundary.
+Stage times must not be added to total time. Peak memory is Python allocation bytes.
+
+The optional `Manual performance comparison` workflow runs only through `workflow_dispatch`.
+It accepts two existing Actions run IDs, each containing an artifact named
+`performance-baseline` with `baseline.json` at the artifact root. It verifies contract sync,
+tests comparison decisions, downloads and compares the two reports, and uploads both raw inputs
+and the JSON/Markdown result even when comparison fails. It runs on Linux because this path uses
+Python and the already Linux-compatible contract check; it does not invoke the Windows-oriented
+official benchmark launcher. This repository currently has no CI producer for official benchmark
+artifacts, so local official runs and local comparison are the supported end-to-end procedure.
+Shared CI runner timing, if such artifacts are supplied later, is not evidence of a precise
+regression. The workflow does not use a performance warning as a failure gate.
+
+Steady/burst load-test reports under `.integration-data/performance/load-tests/` are separate
+runtime observations. Their percentiles are not merged with these fixed-fixture results.

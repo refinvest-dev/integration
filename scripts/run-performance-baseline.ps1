@@ -9,6 +9,9 @@ param(
     [string]$Schema,
     [string]$SnapshotStorageRoot = '.integration-data\performance-snapshots',
     [string]$OutputRoot = '.integration-data\performance\baselines',
+    [string]$EnvironmentId,
+    [string]$StorageProfile,
+    [string]$ResourceProfile,
     [Nullable[int]]$Warmups,
     [Nullable[int]]$Iterations,
     [Nullable[int]]$Batches,
@@ -41,6 +44,12 @@ $effectiveBatches = if ($null -ne $Batches) { $Batches } elseif ($Mode -eq 'Offi
 if ($effectiveWarmups -lt 0 -or $effectiveIterations -lt 1 -or $effectiveBatches -lt 1) { throw 'Invalid execution counts.' }
 $official = $Mode -eq 'Official' -and $effectiveWarmups -eq $protocol.warmupsPerBatch -and $effectiveIterations -eq $protocol.iterationsPerBatch -and $effectiveBatches -eq $protocol.batches -and $CacheMode -eq $protocol.cacheModes[0]
 if ($Mode -eq 'Official' -and -not $official) { throw 'Official mode cannot use protocol overrides.' }
+if ($Mode -eq 'Official' -and ([string]::IsNullOrWhiteSpace($EnvironmentId) -or [string]::IsNullOrWhiteSpace($StorageProfile) -or [string]::IsNullOrWhiteSpace($ResourceProfile))) {
+    throw 'Official mode requires -EnvironmentId, -StorageProfile, and -ResourceProfile for comparability.'
+}
+foreach ($value in @($EnvironmentId, $StorageProfile, $ResourceProfile)) {
+    if ($value -and $value -notmatch '^[A-Za-z0-9_.-]{1,64}$') { throw 'Environment identifiers must use 1-64 letters, digits, underscores, dots, or hyphens.' }
+}
 
 & (Join-Path $PSScriptRoot 'verify-contract-sync.ps1') -ContextPath $context -CoreApiPath $core -ComputeApiPath $compute
 if (-not $?) { throw 'Contract sync verification failed.' }
@@ -63,17 +72,32 @@ $reportsDirectory = Join-Path $runDirectory 'reports'
 New-Item -ItemType Directory -Path $reportsDirectory | Out-Null
 
 $packageVersion = (& $python -c "from importlib.metadata import version; print(version('refinvest'))").Trim()
+$cpuName = Get-CimInstance Win32_Processor -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Name
+$totalMemory = Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty TotalPhysicalMemory
+if (-not $cpuName) {
+    $cpuName = (Get-ItemProperty -Path 'HKLM:\HARDWARE\DESCRIPTION\System\CentralProcessor\0' -Name ProcessorNameString -ErrorAction SilentlyContinue).ProcessorNameString
+}
+if (-not $totalMemory) {
+    Add-Type -AssemblyName Microsoft.VisualBasic
+    $totalMemory = [Microsoft.VisualBasic.Devices.ComputerInfo]::new().TotalPhysicalMemory
+}
 $environment = [ordered]@{
+    environmentId = $EnvironmentId
+    storageProfile = $StorageProfile
+    resourceProfile = $ResourceProfile
     os = [System.Environment]::OSVersion.VersionString
     platform = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
     machine = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString()
-    cpu = (Get-CimInstance Win32_Processor -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Name)
+    cpu = if ($cpuName) { [string]$cpuName } else { $null }
     logicalCpuCount = [System.Environment]::ProcessorCount
-    memoryBytes = (Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue | Select-Object -ExpandProperty TotalPhysicalMemory)
+    memoryBytes = if ($totalMemory) { [long]$totalMemory } else { $null }
     pythonVersion = (& $python --version 2>&1).ToString().Replace('Python ', '')
     engineVersion = $packageVersion
     computePackageVersion = $packageVersion
     dependencyLockSha256 = 'sha256:' + (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $compute 'uv.lock')).Hash.ToLowerInvariant()
+}
+if ($Mode -eq 'Official' -and (-not $environment.cpu -or -not $environment.memoryBytes)) {
+    throw 'Official mode requires readable CPU and memory metadata.'
 }
 Write-BaselineJson $environment (Join-Path $runDirectory 'environment.json')
 $revisions = [ordered]@{ integration = (& git -C $workspace rev-parse HEAD).Trim(); context = (& git -C $context rev-parse HEAD).Trim(); compute = (& git -C $compute rev-parse HEAD).Trim(); core = if (Test-Path (Join-Path $core '.git')) { (& git -C $core rev-parse HEAD).Trim() } else { $null }; web = if (Test-Path (Join-Path $web '.git')) { (& git -C $web rev-parse HEAD).Trim() } else { $null } }
