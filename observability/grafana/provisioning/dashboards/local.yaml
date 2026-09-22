@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+  - name: RefInvest local
+    orgId: 1
+    folder: RefInvest local
+    type: file
+    disableDeletion: true
+    editable: false
+    options:
+      path: ./observability/grafana/dashboards

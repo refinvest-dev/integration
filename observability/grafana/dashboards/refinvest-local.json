@@ -1,0 +1,91 @@
+{
+  "uid": "refinvest-local",
+  "title": "RefInvest local flow and timing",
+  "tags": ["local", "integration"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "time": {"from": "now-30m", "to": "now"},
+  "panels": [
+    {
+      "id": 1, "type": "timeseries", "title": "Scrape health by process (1 = UP)",
+      "gridPos": {"x": 0, "y": 0, "w": 12, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [{"refId": "A", "expr": "up{job=~\"core-api|compute-api|compute-worker\"}", "legendFormat": "{{job}}"}],
+      "fieldConfig": {"defaults": {"min": 0, "max": 1, "unit": "none"}, "overrides": []}
+    },
+    {
+      "id": 2, "type": "timeseries", "title": "Core submissions and terminal transitions (runs / 5 min; Core only)",
+      "gridPos": {"x": 12, "y": 0, "w": 12, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [
+        {"refId": "A", "expr": "increase(refinvest_backtest_submissions_total{job=\"core-api\"}[5m])", "legendFormat": "submitted"},
+        {"refId": "B", "expr": "increase(refinvest_backtest_terminal_total{job=\"core-api\"}[5m])", "legendFormat": "terminal {{status}}"}
+      ],
+      "fieldConfig": {"defaults": {"min": 0, "unit": "none"}, "overrides": []}
+    },
+    {
+      "id": 3, "type": "timeseries", "title": "Compute API acceptance and replay (jobs / 5 min; API only)",
+      "gridPos": {"x": 0, "y": 7, "w": 12, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [
+        {"refId": "A", "expr": "increase(refinvest_compute_backtest_jobs_accepted_total{job=\"compute-api\"}[5m])", "legendFormat": "accepted"},
+        {"refId": "B", "expr": "increase(refinvest_compute_backtest_idempotency_replays_total{job=\"compute-api\"}[5m])", "legendFormat": "replayed"},
+        {"refId": "C", "expr": "increase(refinvest_compute_backtest_capacity_rejections_total{job=\"compute-api\"}[5m])", "legendFormat": "capacity rejected"}
+      ],
+      "fieldConfig": {"defaults": {"min": 0, "unit": "none"}, "overrides": []}
+    },
+    {
+      "id": 4, "type": "timeseries", "title": "Compute Worker terminal and failures (transitions / 5 min; Worker only)",
+      "gridPos": {"x": 12, "y": 7, "w": 12, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [
+        {"refId": "A", "expr": "increase(refinvest_compute_worker_terminal_transitions_total{job=\"compute-worker\"}[5m])", "legendFormat": "terminal {{status}}"},
+        {"refId": "B", "expr": "increase(refinvest_compute_worker_failures_total{job=\"compute-worker\"}[5m])", "legendFormat": "failed {{error_code}}"}
+      ],
+      "fieldConfig": {"defaults": {"min": 0, "unit": "none"}, "overrides": []}
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Compute API HTTP (requests / s; API only)",
+      "gridPos": {"x": 0, "y": 14, "w": 12, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [{"refId": "A", "expr": "sum by (operation,status_class) (rate(refinvest_compute_http_requests_total{job=\"compute-api\"}[5m]))", "legendFormat": "{{operation}} {{status_class}}"}],
+      "fieldConfig": {"defaults": {"min": 0, "unit": "reqps"}, "overrides": []}
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Core to Compute HTTP p95 (seconds; Core only)",
+      "gridPos": {"x": 12, "y": 14, "w": 12, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [
+        {"refId": "A", "expr": "histogram_quantile(0.95, sum by (le,operation,outcome) (rate(refinvest_core_compute_client_seconds_bucket{job=\"core-api\"}[5m])))", "legendFormat": "{{operation}} {{outcome}} p95"}
+      ],
+      "fieldConfig": {"defaults": {"min": 0, "unit": "s"}, "overrides": []}
+    },
+    {
+      "id": 7, "type": "timeseries", "title": "Worker queue wait p95 (seconds; claims only)",
+      "gridPos": {"x": 0, "y": 21, "w": 12, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum by (le) (rate(refinvest_compute_worker_queue_wait_seconds_bucket{job=\"compute-worker\"}[5m])))", "legendFormat": "p95"}],
+      "fieldConfig": {"defaults": {"min": 0, "unit": "s"}, "overrides": []}
+    },
+    {
+      "id": 8, "type": "timeseries", "title": "Worker attempt duration p95 (seconds; includes IPC and heartbeat)",
+      "gridPos": {"x": 12, "y": 21, "w": 12, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum by (le) (rate(refinvest_compute_worker_attempt_duration_seconds_bucket{job=\"compute-worker\"}[5m])))", "legendFormat": "p95"}],
+      "fieldConfig": {"defaults": {"min": 0, "unit": "s"}, "overrides": []}
+    },
+    {
+      "id": 9, "type": "timeseries", "title": "Duration histogram samples (observations / 5 min; process separated)",
+      "gridPos": {"x": 0, "y": 28, "w": 24, "h": 7},
+      "datasource": {"type": "prometheus", "uid": "refinvest-local-prometheus"},
+      "targets": [
+        {"refId": "A", "expr": "sum by (operation,outcome) (increase(refinvest_core_compute_client_seconds_count{job=\"core-api\"}[5m]))", "legendFormat": "Core {{operation}} {{outcome}}"},
+        {"refId": "B", "expr": "increase(refinvest_compute_worker_queue_wait_seconds_count{job=\"compute-worker\"}[5m])", "legendFormat": "Worker queue wait"},
+        {"refId": "C", "expr": "increase(refinvest_compute_worker_attempt_duration_seconds_count{job=\"compute-worker\"}[5m])", "legendFormat": "Worker attempt"}
+      ],
+      "fieldConfig": {"defaults": {"min": 0, "unit": "none"}, "overrides": []}
+    }
+  ]
+}

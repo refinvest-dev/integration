@@ -24,6 +24,52 @@ They are separate from the short API-smoke fixture. Check wiring with
 `.\scripts\run-performance-baseline.ps1 -Mode Smoke`; use `-Mode Official` only for the fixed,
 long-running protocol. Absolute timing reports remain under `.integration-data/`.
 
+## Local observability (optional)
+
+Use host-native Prometheus and Grafana on Windows. This keeps the Compute API and
+Worker metrics listeners on their required loopback addresses; a Docker container's
+`localhost` cannot scrape the host's `127.0.0.1`. Install Prometheus and Grafana
+locally, then pass their executable paths to the launch script. The existing
+PostgreSQL Compose service is unchanged. Prometheus and Grafana run only when
+requested and bind to `127.0.0.1:9090` and `127.0.0.1:3002`. Prometheus scrapes
+every 5 seconds and keeps two days of data under ignored `.integration-data/`.
+
+```powershell
+# After the normal database/fixture setup, in separate local terminals:
+.\scripts\start-compute-api.ps1 -Observability
+.\scripts\start-compute-worker.ps1 -Observability
+.\scripts\start-core-api.ps1 -Observability
+
+# Supply locally installed binaries and a private password; never commit the password.
+$password = Read-Host 'Local Grafana admin password' -AsSecureString
+.\scripts\start-observability.ps1 -PrometheusExe 'C:\tools\prometheus\prometheus.exe' `
+  -GrafanaExe 'C:\tools\grafana\bin\grafana.exe' -GrafanaAdminPassword $password
+Remove-Variable password
+
+# Inspect http://127.0.0.1:9090/targets and open http://127.0.0.1:3002.
+# Grafana's provisioned "RefInvest local flow and timing" dashboard is in RefInvest local.
+.\scripts\stop-observability.ps1
+.\scripts\stop-integration.ps1
+```
+
+The three scrape jobs are `core-api`, `compute-api`, and `compute-worker`.
+Compute API and Worker metrics are separate process-local registries on
+`127.0.0.1:9101` and `127.0.0.1:9102`. The launch switches enable metrics only
+for those local processes. Do not expose these ports, Prometheus, or Grafana on
+another interface. The dashboard uses 5-minute windows; allow at least two
+scrapes and run the normal API smoke to produce observations. A blank series
+does not establish that collection works.
+
+**Known incomplete Core target:** `dev-observability` exposes
+`/actuator/prometheus`, but Core security requires user authentication. The
+provisioned Prometheus `core-api` job will report `DOWN` with HTTP 401. Do not
+use a long-lived user JWT or disable Core security for scraping. Core needs a
+separate, bounded local machine-scrape authentication mechanism before this
+target and its panels can be considered working. Compute does not currently
+expose production stage, cache, or active-job gauge metrics, so the dashboard
+does not claim to show them. Worker attempt duration includes process/IPC and
+heartbeat shutdown, not just engine execution.
+
 ## Quick start: API integration smoke
 
 Copy `.env.example` to `.env.local`. Use an isolated database named
