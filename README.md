@@ -70,6 +70,49 @@ expose production stage, cache, or active-job gauge metrics, so the dashboard
 does not claim to show them. Worker attempt duration includes process/IPC and
 heartbeat shutdown, not just engine execution.
 
+## Local steady/burst load exploration
+
+After the Quick start database/fixture setup, start Core, Compute API, and
+Compute Worker with the local scripts above. Keep their existing
+`refinvest_integration` database and immutable `integration-e2e-v1` fixture;
+install local `psql` for a read-only DB status check. The command verifies
+OpenAPI sync, creates a separate synthetic PRO member and StrategyVersion,
+performs one warm-up run, then executes steady and burst phases with a drain
+and cooldown between them. It does not start or stop services, alter the
+fixture, or delete existing rows.
+
+```powershell
+.\scripts\run-load-test.ps1
+# Small script check: at most one measured submission per phase.
+.\scripts\run-load-test.ps1 -SteadyRate 1 -SteadyDuration 1 -BurstRate 1 -BurstDuration 1 -MaxSubmissions 1
+```
+
+Defaults are steady 0.2 submissions/s for 30 seconds and burst 2/s for 10
+seconds, at most 30 submissions per phase and 3 concurrent submission HTTP
+requests. Terminal polling is limited to 120 seconds per accepted run at a
+2-second interval; cooldown is 5 seconds. These bounds can be adjusted with
+`-SteadyRate`, `-BurstRate`, `-SteadyDuration`, `-BurstDuration`,
+`-MaxSubmissions`, `-Concurrency`, `-TerminalTimeout`, `-PollInterval`, and
+`-Cooldown`. The Python runner enforces upper limits. Polling to learn terminal
+status is recorded separately from submission traffic; it creates no new job.
+
+Each invocation writes `result.json` and `summary.md` under
+`.integration-data/performance/load-tests/<timestamp>/`. The report includes
+raw submission records, HTTP/terminal outcome counts, planned and actual
+submission rates, submit and terminal latency distributions, fixture hashes,
+revisions, a read-only DB comparison, and available Prometheus measurements.
+Terminal latency includes every observed `COMPLETED` and `FAILED` transition;
+timeouts and missing terminals are counted as censored observations, never as
+successful latency samples. It is measured from submission start until the
+client first sees terminal state, so it includes up to one poll interval of
+observation delay. A nonzero exit means the run failed; inspect its
+report, integration logs, and DB status. Core Prometheus values are `N/A` while
+its authenticated target is DOWN; `observability_status` remains `partial`.
+This is runtime bottleneck exploration, not
+the fixed-input benchmark or a performance gate. Stop only services you started
+using `stop-integration.ps1 -Service <name>`; reports and submitted integration
+rows remain for review.
+
 ## Quick start: API integration smoke
 
 Copy `.env.example` to `.env.local`. Use an isolated database named
