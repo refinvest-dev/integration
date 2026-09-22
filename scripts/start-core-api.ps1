@@ -3,7 +3,8 @@ param(
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
     [string]$CoreApiPath = (Join-Path $PSScriptRoot '..\..\api\refinvest'),
     [string]$ComputeBaseUrl,
-    [string]$DatabaseSchema
+    [string]$DatabaseSchema,
+    [switch]$Observability
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,6 +12,10 @@ Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Set-CoreIntegrationEnvironment $values
+if ($Observability) {
+    $env:SPRING_PROFILES_ACTIVE = if ($env:SPRING_PROFILES_ACTIVE) { "$($env:SPRING_PROFILES_ACTIVE),dev-observability" } else { 'dev-observability' }
+    $env:SERVER_ADDRESS = '127.0.0.1'
+}
 if (-not [string]::IsNullOrWhiteSpace($ComputeBaseUrl)) {
     $env:COMPUTE_API_BASE_URL = $ComputeBaseUrl
 }

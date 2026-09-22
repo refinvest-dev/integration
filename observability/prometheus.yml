@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+scrape_configs:
+  - job_name: core-api
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['127.0.0.1:8080']
+    # Core currently requires user authentication. This target stays DOWN (401)
+    # until Core provides a bounded, local machine-scrape authentication method.
+  - job_name: compute-api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['127.0.0.1:9101']
+  - job_name: compute-worker
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['127.0.0.1:9102']

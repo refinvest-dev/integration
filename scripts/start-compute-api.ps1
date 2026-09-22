@@ -3,7 +3,8 @@ param(
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
     [string]$ComputeApiPath = (Join-Path $PSScriptRoot '..\..\compute-api\refinvest'),
     [string]$Schema,
-    [string]$SnapshotStorageRoot
+    [string]$SnapshotStorageRoot,
+    [switch]$Observability
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,6 +12,7 @@ Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Set-ComputeIntegrationEnvironment $values (Join-Path $PSScriptRoot '..') $Schema
+if ($Observability) { $env:REFINVEST_API_METRICS_ENABLED = 'true'; $env:REFINVEST_API_METRICS_BIND = '127.0.0.1'; $env:REFINVEST_API_METRICS_PORT = '9101' }
 if (-not [string]::IsNullOrWhiteSpace($SnapshotStorageRoot)) {
     $env:REFINVEST_SNAPSHOT_STORAGE_ROOT = Resolve-IntegrationWorkspacePath `
         (Join-Path $PSScriptRoot '..') $SnapshotStorageRoot
