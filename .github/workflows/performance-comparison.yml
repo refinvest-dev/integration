@@ -1,0 +1,107 @@
+name: Manual performance comparison
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseline_run_id:
+        description: 'Run ID containing a performance-baseline artifact with baseline.json'
+        required: true
+        type: string
+      candidate_run_id:
+        description: 'Run ID containing a performance-baseline artifact with baseline.json'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout integration
+        uses: actions/checkout@v4
+        with:
+          path: integration
+
+      - name: Create read-only sibling checkout token
+        id: sibling-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.REFINVEST_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            context
+            core-api
+            compute-api
+          permission-contents: read
+
+      - name: Checkout context
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/context
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: context
+
+      - name: Checkout Core API
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/core-api
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: api/refinvest
+
+      - name: Checkout Compute API
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/compute-api
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: compute-api/refinvest
+
+      - name: Verify contract snapshots
+        shell: pwsh
+        working-directory: integration
+        run: ./scripts/verify-contract-sync.ps1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Test comparison decisions
+        working-directory: integration
+        run: python -B -m unittest discover -s scripts -p test_compare_performance_baselines.py
+
+      - name: Download baseline report
+        uses: actions/download-artifact@v4
+        with:
+          name: performance-baseline
+          run-id: ${{ inputs.baseline_run_id }}
+          github-token: ${{ github.token }}
+          path: integration/.integration-data/performance/ci-inputs/baseline
+
+      - name: Download candidate report
+        uses: actions/download-artifact@v4
+        with:
+          name: performance-baseline
+          run-id: ${{ inputs.candidate_run_id }}
+          github-token: ${{ github.token }}
+          path: integration/.integration-data/performance/ci-inputs/candidate
+
+      - name: Validate and compare official reports
+        working-directory: integration
+        run: |
+          python -B scripts/compare-performance-baselines.py \
+            --baseline .integration-data/performance/ci-inputs/baseline/baseline.json \
+            --candidate .integration-data/performance/ci-inputs/candidate/baseline.json
+
+      - name: Upload raw inputs and comparison result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-comparison-evidence
+          path: |
+            integration/.integration-data/performance/ci-inputs
+            integration/.integration-data/performance/comparisons
+          if-no-files-found: warn
