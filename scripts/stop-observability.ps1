@@ -14,3 +14,4 @@ foreach ($record in $records) {
     Stop-Process -Id $record.id
 }
 Remove-Item -LiteralPath $registry
+Remove-Item -LiteralPath (Join-Path $PSScriptRoot '..\.integration-data\observability\core-metrics-password') -ErrorAction SilentlyContinue

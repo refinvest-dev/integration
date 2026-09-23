@@ -36,6 +36,7 @@ every 5 seconds and keeps two days of data under ignored `.integration-data/`.
 
 ```powershell
 # After the normal database/fixture setup, in separate local terminals:
+# Set REFINVEST_METRICS_SCRAPE_PASSWORD to a separate private value of at least 32 characters in .env.local first.
 .\scripts\start-compute-api.ps1 -Observability
 .\scripts\start-compute-worker.ps1 -Observability
 .\scripts\start-core-api.ps1 -Observability
@@ -60,12 +61,10 @@ another interface. The dashboard uses 5-minute windows; allow at least two
 scrapes and run the normal API smoke to produce observations. A blank series
 does not establish that collection works.
 
-**Known incomplete Core target:** `dev-observability` exposes
-`/actuator/prometheus`, but Core security requires user authentication. The
-provisioned Prometheus `core-api` job will report `DOWN` with HTTP 401. Do not
-use a long-lived user JWT or disable Core security for scraping. Core needs a
-separate, bounded local machine-scrape authentication mechanism before this
-target and its panels can be considered working. Compute does not currently
+The `core-api` job uses a dedicated local scrape account and a password file
+generated under ignored `.integration-data/observability/`. Core accepts it
+only on the loopback metrics endpoint while `dev-observability` is active.
+Unauthenticated requests still receive 401. Compute does not currently
 expose production stage, cache, or active-job gauge metrics, so the dashboard
 does not claim to show them. Worker attempt duration includes process/IPC and
 heartbeat shutdown, not just engine execution.
@@ -106,8 +105,8 @@ timeouts and missing terminals are counted as censored observations, never as
 successful latency samples. It is measured from submission start until the
 client first sees terminal state, so it includes up to one poll interval of
 observation delay. A nonzero exit means the run failed; inspect its
-report, integration logs, and DB status. Core Prometheus values are `N/A` while
-its authenticated target is DOWN; `observability_status` remains `partial`.
+report, integration logs, and DB status. Core Prometheus values are `N/A` if
+its target is DOWN; `observability_status` then remains `partial`.
 This is runtime bottleneck exploration, not
 the fixed-input benchmark or a performance gate. Stop only services you started
 using `stop-integration.ps1 -Service <name>`; reports and submitted integration
