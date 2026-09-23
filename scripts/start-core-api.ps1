@@ -13,6 +13,8 @@ Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Set-CoreIntegrationEnvironment $values
 if ($Observability) {
+    Assert-IntegrationEnvironment $values @('REFINVEST_METRICS_SCRAPE_PASSWORD')
+    $env:REFINVEST_METRICS_SCRAPE_PASSWORD = $values['REFINVEST_METRICS_SCRAPE_PASSWORD']
     $env:SPRING_PROFILES_ACTIVE = if ($env:SPRING_PROFILES_ACTIVE) { "$($env:SPRING_PROFILES_ACTIVE),dev-observability" } else { 'dev-observability' }
     $env:SERVER_ADDRESS = '127.0.0.1'
 }

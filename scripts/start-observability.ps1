@@ -2,11 +2,15 @@
 param(
     [Parameter(Mandatory)][string]$PrometheusExe,
     [Parameter(Mandatory)][string]$GrafanaExe,
-    [Parameter(Mandatory)][securestring]$GrafanaAdminPassword
+    [Parameter(Mandatory)][securestring]$GrafanaAdminPassword,
+    [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local')
 )
 
 $ErrorActionPreference = 'Stop'
+Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$values = Get-IntegrationEnvironment $EnvironmentFile
+Assert-IntegrationEnvironment $values @('REFINVEST_METRICS_SCRAPE_PASSWORD')
 $data = Join-Path $root '.integration-data\observability'
 $registry = Join-Path $data 'processes.json'
 if (Test-Path $registry) { throw "Observability registry exists: $registry. Stop the recorded processes first." }
@@ -18,6 +22,23 @@ foreach ($port in 9090, 3002) {
 $prometheus = (Resolve-Path -LiteralPath $PrometheusExe).Path
 $grafana = (Resolve-Path -LiteralPath $GrafanaExe).Path
 New-Item -ItemType Directory -Force -Path $data, (Join-Path $data 'prometheus'), (Join-Path $data 'grafana'), (Join-Path $data 'logs') | Out-Null
+$scrapePasswordFile = Join-Path $data 'core-metrics-password'
+try {
+    [IO.File]::WriteAllText($scrapePasswordFile, $values['REFINVEST_METRICS_SCRAPE_PASSWORD'], [Text.UTF8Encoding]::new($false))
+    if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+        $acl = Get-Acl -LiteralPath $scrapePasswordFile
+        $acl.SetAccessRuleProtection($true, $false)
+        $acl.AddAccessRule([System.Security.AccessControl.FileSystemAccessRule]::new(
+            [System.Security.Principal.WindowsIdentity]::GetCurrent().User,
+            [System.Security.AccessControl.FileSystemRights]::FullControl,
+            [System.Security.AccessControl.AccessControlType]::Allow
+        ))
+        Set-Acl -LiteralPath $scrapePasswordFile -AclObject $acl
+    }
+} catch {
+    Remove-Item -LiteralPath $scrapePasswordFile -ErrorAction SilentlyContinue
+    throw
+}
 
 $prometheusArgs = @(
     "--config.file=$root\observability\prometheus.yml",
@@ -34,7 +55,12 @@ $start = @{
     PassThru = $true
     WindowStyle = 'Hidden'
 }
-$prom = Start-Process @start
+try {
+    $prom = Start-Process @start
+} catch {
+    Remove-Item -LiteralPath $scrapePasswordFile -ErrorAction SilentlyContinue
+    throw
+}
 try {
     $env:GF_PATHS_DATA = Join-Path $data 'grafana'
     $env:GF_PATHS_LOGS = Join-Path $data 'logs'
@@ -56,6 +82,7 @@ try {
     Write-Output 'Grafana: http://127.0.0.1:3002 (admin; password supplied at launch)'
 } catch {
     Stop-Process -Id $prom.Id -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $scrapePasswordFile -ErrorAction SilentlyContinue
     throw
 } finally {
     Remove-Item Env:GF_SECURITY_ADMIN_PASSWORD -ErrorAction SilentlyContinue
