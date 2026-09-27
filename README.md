@@ -36,7 +36,9 @@ every 5 seconds and keeps two days of data under ignored `.integration-data/`.
 
 ```powershell
 # After the normal database/fixture setup, in separate local terminals:
-# Set REFINVEST_METRICS_SCRAPE_PASSWORD to a separate private value of at least 32 characters in .env.local first.
+# Start Prometheus first; when the env value is absent the harness creates an ignored per-run scrape secret.
+$prometheus = 'C:\tools\prometheus\prometheus.exe'
+.\scripts\start-observability.ps1 -PrometheusExe $prometheus -PrometheusOnly
 .\scripts\start-compute-api.ps1 -Observability
 .\scripts\start-compute-worker.ps1 -Observability
 .\scripts\start-core-api.ps1 -Observability
@@ -76,30 +78,34 @@ Compute Worker with the local scripts above. Keep their existing
 `refinvest_integration` database and immutable `integration-e2e-v1` fixture;
 install local `psql` for a read-only DB status check. The command verifies
 OpenAPI sync, creates a separate synthetic PRO member and StrategyVersion,
-performs one warm-up run, then executes steady and burst phases with a drain
-and cooldown between them. It does not start or stop services, alter the
+performs one warm-up run, then executes three same-condition processing repetitions and
+three separate saturation/rejection repetitions with a drain and cooldown between them. It does not start or stop services, alter the
 fixture, or delete existing rows.
 
 ```powershell
 .\scripts\run-load-test.ps1
-# Small script check: at most one measured submission per phase.
-.\scripts\run-load-test.ps1 -SteadyRate 1 -SteadyDuration 1 -BurstRate 1 -BurstDuration 1 -MaxSubmissions 1
+# Short check with one processing repetition and one attempted saturation repetition.
+.\scripts\run-load-test.ps1 -SteadyRate 1 -SteadyDuration 1 -BurstRate 10 -BurstDuration 1 `
+  -MaxSubmissions 10 -Concurrency 8 -Repetitions 1
 ```
 
-Defaults are steady 0.2 submissions/s for 30 seconds and burst 2/s for 10
-seconds, at most 30 submissions per phase and 3 concurrent submission HTTP
+Defaults are processing 0.2 submissions/s for 30 seconds and saturation 2/s for 10
+seconds, repeated three times, at most 30 submissions per repetition and 3 concurrent submission HTTP
 requests. Terminal polling is limited to 120 seconds per accepted run at a
 2-second interval; cooldown is 5 seconds. These bounds can be adjusted with
 `-SteadyRate`, `-BurstRate`, `-SteadyDuration`, `-BurstDuration`,
-`-MaxSubmissions`, `-Concurrency`, `-TerminalTimeout`, `-PollInterval`, and
-`-Cooldown`. The Python runner enforces upper limits. Polling to learn terminal
+`-MaxSubmissions`, `-Concurrency`, `-TerminalTimeout`, `-PollInterval`,
+`-Cooldown`, and `-Repetitions`. The Python runner enforces upper limits. Polling to learn terminal
 status is recorded separately from submission traffic; it creates no new job.
 
 Each invocation writes `result.json` and `summary.md` under
 `.integration-data/performance/load-tests/<timestamp>/`. The report includes
-raw submission records, HTTP/terminal outcome counts, planned and actual
-submission rates, submit and terminal latency distributions, fixture hashes,
-revisions, a read-only DB comparison, and available Prometheus measurements.
+raw submission records, per-repetition request/accept/reject/failure/timeout/completion counts,
+planned and actual submission rates, accepted-work and rejection-response latency distributions,
+queue/worker metrics, fixture hashes, revisions, a read-only DB boundary comparison, clock-skew
+estimates, missing observations, and available Prometheus measurements. Rejected requests are never
+included in accepted-work terminal latency. The run fails when the configured saturation scenario
+produces no rejection because that did not exercise the requested overload boundary.
 Terminal latency includes every observed `COMPLETED` and `FAILED` transition;
 timeouts and missing terminals are counted as censored observations, never as
 successful latency samples. It is measured from submission start until the
@@ -111,6 +117,19 @@ This is runtime bottleneck exploration, not
 the fixed-input benchmark or a performance gate. Stop only services you started
 using `stop-integration.ps1 -Service <name>`; reports and submitted integration
 rows remain for review.
+
+The stage model distinguishes client submission, Core durable enqueue, Compute durable acceptance,
+Worker queue wait, Worker attempt, Compute terminal commit, Core poll observation, Core terminal commit,
+and client terminal observation. The report identifies the load generator, Core HTTP client, and Worker attempt
+monotonic timers. Core scheduler lag and Compute queue wait use wall clocks, so they remain estimates rather than
+exact cross-process durations.
+Raw database and HTTP wall-clock timestamps only prove that boundaries occurred: the report estimates and
+displays clock skew and never subtracts Core and Compute timestamps as an exact stage duration. If repeated
+evidence cannot separate a candidate, the report remains `indeterminate` and names the missing per-run
+instrumentation. A Compute execution candidate requires a new same-environment `-Mode Official` benchmark
+before optimization; an `official=false` smoke artifact is never relabeled. A Core poll/persistence candidate
+instead requires the same E2E load conditions before and after, because a Compute-only benchmark cannot
+establish that effect.
 
 ## Quick start: API integration smoke
 

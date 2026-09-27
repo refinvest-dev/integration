@@ -13,8 +13,16 @@ Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Set-CoreIntegrationEnvironment $values
 if ($Observability) {
-    Assert-IntegrationEnvironment $values @('REFINVEST_METRICS_SCRAPE_PASSWORD')
-    $env:REFINVEST_METRICS_SCRAPE_PASSWORD = $values['REFINVEST_METRICS_SCRAPE_PASSWORD']
+    $scrapePassword = $values['REFINVEST_METRICS_SCRAPE_PASSWORD']
+    if ([string]::IsNullOrWhiteSpace($scrapePassword)) {
+        $passwordFile = Join-Path $PSScriptRoot '..\.integration-data\observability\core-metrics-password'
+        if (-not (Test-Path -LiteralPath $passwordFile)) {
+            throw 'Start local observability first or set REFINVEST_METRICS_SCRAPE_PASSWORD.'
+        }
+        $scrapePassword = [IO.File]::ReadAllText((Resolve-Path -LiteralPath $passwordFile)).Trim()
+    }
+    if ($scrapePassword.Length -lt 32) { throw 'Metrics scrape password must be at least 32 characters.' }
+    $env:REFINVEST_METRICS_SCRAPE_PASSWORD = $scrapePassword
     $env:SPRING_PROFILES_ACTIVE = if ($env:SPRING_PROFILES_ACTIVE) { "$($env:SPRING_PROFILES_ACTIVE),dev-observability" } else { 'dev-observability' }
     $env:SERVER_ADDRESS = '127.0.0.1'
 }

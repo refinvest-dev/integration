@@ -8,6 +8,7 @@ param(
     [double]$SteadyDuration = 30,
     [double]$BurstRate = 2,
     [double]$BurstDuration = 10,
+    [int]$Repetitions = 3,
     [int]$MaxSubmissions = 30,
     [int]$Concurrency = 3,
     [double]$TerminalTimeout = 120,
@@ -46,6 +47,7 @@ try {
         '--fixture-root', (Join-Path $PSScriptRoot '..\.integration-data\snapshots\integration-e2e-v1'),
         '--steady-rate', "$SteadyRate", '--steady-duration', "$SteadyDuration",
         '--burst-rate', "$BurstRate", '--burst-duration', "$BurstDuration",
+        '--repetitions', "$Repetitions",
         '--max-submissions', "$MaxSubmissions", '--concurrency', "$Concurrency",
         '--terminal-timeout', "$TerminalTimeout", '--poll-interval', "$PollInterval",
         '--cooldown', "$Cooldown"
