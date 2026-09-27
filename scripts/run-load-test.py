@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import email.utils
 import hashlib
 import json
 import math
@@ -86,6 +87,8 @@ def http_json(url: str, method: str = "GET", body: dict | None = None, token: st
         error.close()
         return error.code, None, code
     except (urllib.error.URLError, TimeoutError, OSError) as error:
+        if isinstance(error, TimeoutError) or isinstance(getattr(error, "reason", None), TimeoutError):
+            return None, None, "TimeoutError"
         return None, None, type(error).__name__
     except (ValueError, UnicodeError):
         return None, None, "invalid_json"
@@ -120,6 +123,29 @@ def probe_core_scrape(core: str) -> dict:
     return {"state": f"HTTP_{status}" if status is not None else "UNAVAILABLE", "error": error}
 
 
+def clock_skew_probe(url: str) -> dict:
+    """Estimate remote HTTP wall-clock offset; never use it as a stage duration."""
+    request = urllib.request.Request(url, headers={"Accept": "application/json"})
+    before = time.time()
+    try:
+        with OPENER.open(request, timeout=3) as response:
+            response.read(4096)
+            date_header = response.headers.get("Date")
+    except (urllib.error.URLError, TimeoutError, OSError):
+        return {"state": "N/A", "reason": "health clock probe failed"}
+    after = time.time()
+    if not date_header:
+        return {"state": "N/A", "reason": "HTTP Date header absent"}
+    try:
+        remote = email.utils.parsedate_to_datetime(date_header).timestamp()
+    except (TypeError, ValueError, OverflowError):
+        return {"state": "N/A", "reason": "invalid HTTP Date header"}
+    return {"state": "estimated", "offset_ms": round((remote - ((before + after) / 2)) * 1000, 3),
+            "round_trip_ms": round((after - before) * 1000, 3),
+            "resolution": "HTTP Date is second-resolution",
+            "use": "display only; cross-process timestamps are not subtracted as exact durations"}
+
+
 def create_version(core: str, token: str) -> str:
     strategy = {"name": "Integration load " + uuid.uuid4().hex[:12]}
     status, data, _ = http_json(core + "/strategies", "POST", strategy, token)
@@ -147,12 +173,31 @@ def submit(core: str, version_id: str, token: str, index: int, planned: float) -
     ended = time.monotonic()
     run_id = str(data["id"]) if isinstance(data, dict) and data.get("id") is not None else None
     accepted = status in (200, 201, 202) and run_id is not None
+    if accepted:
+        outcome = "accepted"
+    elif error in SAFE_HTTP_ERROR_CODES:
+        outcome = "rejected"
+    elif error == "TimeoutError":
+        outcome = "submission_timeout"
+    else:
+        outcome = "submission_failed"
     return {"index": index, "schedule_lag_ms": round((started - planned) * 1000, 3),
             "started_utc": datetime.fromtimestamp(started_unix, timezone.utc).isoformat(),
             "submitted_monotonic": ended, "http_status": status, "client_error": error,
             "submit_ms": round((ended - started) * 1000, 3), "accepted": accepted,
             "run_id": run_id, "terminal_status": None, "error_code": None,
-            "terminal_ms": None, "poll_count": 0, "outcome": "accepted" if accepted else "rejected"}
+            "terminal_ms": None, "poll_count": 0, "outcome": outcome,
+            "stage_boundaries": {
+                "client_submission_started": "observed_monotonic",
+                "core_receipt_and_persistence": "not_individually_observed",
+                "compute_acceptance": "not_individually_observed",
+                "worker_queue_wait": "aggregate_metric_only",
+                "worker_execution": "aggregate_metric_only",
+                "compute_terminal_commit": "aggregate_metric_only",
+                "core_poll_observation": "aggregate_metric_only",
+                "core_terminal_persistence": "aggregate_commit_metric_and_db_state",
+                "client_terminal_observation": "observed_monotonic" if accepted else "not_applicable",
+            }}
 
 
 def poll_one(core: str, token: str, record: dict, terminal_timeout: float, interval: float) -> dict:
@@ -184,7 +229,8 @@ def poll_one(core: str, token: str, record: dict, terminal_timeout: float, inter
 
 
 def run_phase(name: str, core: str, version_id: str, token: str, rate: float, duration: float,
-              max_submissions: int, concurrency: int, terminal_timeout: float, poll_interval: float) -> dict:
+              max_submissions: int, concurrency: int, terminal_timeout: float, poll_interval: float,
+              repetition: int = 1, scenario_kind: str = "processing") -> dict:
     phase_start = time.monotonic()
     phase_start_utc = utc_now()
     futures = []
@@ -233,7 +279,8 @@ def run_phase(name: str, core: str, version_id: str, token: str, rate: float, du
     accepted = [record for record in records if record["accepted"]]
     end = time.monotonic()
     outcomes = {key: sum(record["outcome"] == key for record in records)
-                for key in ("completed", "failed", "rejected", "poll_error", "terminal_timeout",
+                for key in ("completed", "failed", "rejected", "submission_failed", "submission_timeout",
+                            "poll_error", "terminal_timeout",
                             "invalid_status", "fixture_mismatch", "duplicate_run_id")}
     http_codes = {}
     http_error_codes = {}
@@ -243,17 +290,28 @@ def run_phase(name: str, core: str, version_id: str, token: str, rate: float, du
         if record["client_error"]:
             error_code = record["client_error"]
             http_error_codes[error_code] = http_error_codes.get(error_code, 0) + 1
-    return {"name": name, "started_utc": phase_start_utc, "ended_utc": utc_now(),
+    accepted_terminal = [r["terminal_ms"] for r in accepted if r["terminal_ms"] is not None]
+    rejected = [r for r in records if not r["accepted"]]
+    counts = {"requested": len(records), "accepted": len(accepted),
+              "rejected": outcomes["rejected"], "completed": outcomes["completed"],
+              "failed": outcomes["failed"] + outcomes["submission_failed"] + outcomes["poll_error"]
+                        + outcomes["invalid_status"] + outcomes["fixture_mismatch"] + outcomes["duplicate_run_id"],
+              "timeout": outcomes["submission_timeout"] + outcomes["terminal_timeout"]}
+    return {"name": name, "scenario_kind": scenario_kind, "repetition": repetition,
+            "started_utc": phase_start_utc, "ended_utc": utc_now(),
             "planned_rate_per_s": rate, "duration_s": duration, "max_submissions": max_submissions,
             "submission_concurrency": concurrency, "terminal_timeout_s": terminal_timeout,
             "poll_interval_s": poll_interval, "submitted": len(records), "accepted": len(accepted),
-            "outcomes": outcomes, "http_statuses": http_codes, "http_error_codes": http_error_codes,
+            "counts": counts, "outcomes": outcomes, "http_statuses": http_codes, "http_error_codes": http_error_codes,
             "actual_submit_rate_per_s": round(len(records) / max(submission_end - phase_start, len(records) / rate), 3),
             "max_concurrent_submissions": max_active,
             "poll_concurrency": poll_workers,
             "submit_window_s": round(submission_end - phase_start, 3), "drain_s": round(end - submission_end, 3),
             "submit_latency": distribution([r["submit_ms"] for r in records]),
-            "terminal_latency": distribution([r["terminal_ms"] for r in records if r["terminal_ms"] is not None]),
+            "accepted_submit_latency": distribution([r["submit_ms"] for r in accepted]),
+            "rejection_response_latency": distribution([r["submit_ms"] for r in rejected]),
+            "accepted_work_terminal_latency": distribution(accepted_terminal),
+            "terminal_latency": distribution(accepted_terminal),
             "terminal_latency_censored": sum(r["accepted"] and r["terminal_ms"] is None for r in records),
             "poll_requests": sum(r["poll_count"] for r in records), "records": records}
 
@@ -278,8 +336,17 @@ def prometheus_summary(base: str, start: float, end: float) -> dict:
         "core_http_requests": f'sum(increase(http_server_requests_seconds_count{{job="core-api"}}[{window}s]))',
         "core_scheduler_p95_s": f'histogram_quantile(0.95, sum by (le,operation) (rate(refinvest_core_backtest_scheduler_lag_seconds_bucket{{job="core-api"}}[{window}s])))',
         "core_terminal": f'increase(refinvest_backtest_terminal_total{{job="core-api"}}[{window}s])',
+        "core_terminal_persistence_failures": f'increase(refinvest_core_backtest_terminal_persistence_failures_total{{job="core-api"}}[{window}s])',
+        "core_retries": f'increase(refinvest_backtest_retries_total{{job="core-api"}}[{window}s])',
     }
     result = {"window_seconds": window, "queried_at_utc": utc_now(), "values": {}}
+    ready_status, _, ready_error = http_json(base + "/-/ready", timeout=3, expect_json=False)
+    if ready_status != 200:
+        reason = ready_error or f"HTTP {ready_status}"
+        result["preflight"] = {"state": "N/A", "reason": reason}
+        result["values"] = {name: {"state": "N/A", "reason": "Prometheus unavailable: " + reason}
+                            for name in expressions}
+        return result
     for name, expression in expressions.items():
         query = urllib.parse.urlencode({"query": expression, "time": end})
         status, data, error = http_json(base + "/api/v1/query?" + query, timeout=3)
@@ -295,7 +362,8 @@ def prometheus_summary(base: str, start: float, end: float) -> dict:
                   for item in targets.get("series", []))
     if not core_up:
         for name in ("core_compute_p95_s", "core_compute_samples", "core_submissions",
-                     "core_http_requests", "core_scheduler_p95_s", "core_terminal"):
+                     "core_http_requests", "core_scheduler_p95_s", "core_terminal",
+                     "core_terminal_persistence_failures", "core_retries"):
             result["values"][name] = {"state": "N/A", "reason": "Core target DOWN or unavailable"}
     return result
 
@@ -311,17 +379,35 @@ def verify_database(phases: list[dict]) -> dict:
         return {"state": "error", "reason": "Non-numeric run ID"}
     command = [executable, "-h", os.environ["REFINVEST_LOAD_DB_HOST"], "-p", os.environ["REFINVEST_LOAD_DB_PORT"],
                "-U", os.environ["REFINVEST_LOAD_DB_USER"], "-d", "refinvest_integration",
-               "-v", "ON_ERROR_STOP=1", "-At", "-F", ",",
-               "-c", "SELECT id,status,COALESCE(error_code,'') FROM backtest_runs WHERE id IN (" + ",".join(ids) + ")"]
+               "-v", "ON_ERROR_STOP=1", "-At", "-F", "|", "-c",
+               "SELECT br.id,br.status,COALESCE(br.error_code,''),br.created_at," +
+               "COALESCE(d.status::text,''),COALESCE(d.compute_run_id,''),d.created_at,d.updated_at," +
+               "COALESCE(cj.status,''),cj.created_at,cj.terminal_at,cj.completed_at " +
+               "FROM backtest_runs br LEFT JOIN backtest_compute_dispatches d ON d.backtest_run_id=br.id " +
+               "LEFT JOIN compute_backtest_jobs cj ON cj.run_id=d.compute_run_id::uuid " +
+               "WHERE br.id IN (" + ",".join(ids) + ")"]
     try:
         completed = subprocess.run(command, capture_output=True, text=True, timeout=15, check=True)
     except (OSError, subprocess.SubprocessError):
         return {"state": "error", "reason": "Read-only integration DB query failed"}
     found = {}
     for line in completed.stdout.splitlines():
-        parts = line.split(",", 2)
-        if len(parts) == 3:
-            found[parts[0]] = {"status": parts[1], "error_code": parts[2] or None}
+        parts = line.split("|")
+        if len(parts) == 12:
+            found[parts[0]] = {
+                "status": parts[1], "error_code": parts[2] or None,
+                "boundaries": {
+                    "core_submission_persisted_at": parts[3] or None,
+                    "core_dispatch_status": parts[4] or None,
+                    "compute_run_id": parts[5] or None,
+                    "core_dispatch_created_at": parts[6] or None,
+                    "core_dispatch_last_updated_at": parts[7] or None,
+                    "compute_status": parts[8] or None,
+                    "compute_acceptance_persisted_at": parts[9] or None,
+                    "compute_terminal_persisted_at": parts[10] or None,
+                    "compute_completed_at": parts[11] or None,
+                },
+            }
     mismatches = []
     for phase in phases:
         for record in phase["records"]:
@@ -335,7 +421,9 @@ def verify_database(phases: list[dict]) -> dict:
     return {"state": "verified" if not mismatches else "mismatch", "accepted_count": len(ids),
             "found_count": len(found), "mismatch_run_ids": mismatches,
             "status_counts": {state: sum(row["status"] == state for row in found.values())
-                              for state in ("PENDING", "RUNNING", "COMPLETED", "FAILED")}}
+                              for state in ("PENDING", "RUNNING", "COMPLETED", "FAILED")},
+            "stage_boundary_evidence": {run_id: row["boundaries"] for run_id, row in found.items()},
+            "timestamp_policy": "Raw wall-clock timestamps prove durable boundaries only. Cross-service differences are not exact durations."}
 
 
 DIRECT_NAMES = {
@@ -344,8 +432,10 @@ DIRECT_NAMES = {
     "refinvest_compute_worker_claims_total",
     "refinvest_compute_worker_queue_wait_seconds_count",
     "refinvest_compute_worker_queue_wait_seconds_sum",
+    "refinvest_compute_worker_queue_wait_seconds_bucket",
     "refinvest_compute_worker_attempt_duration_seconds_count",
     "refinvest_compute_worker_attempt_duration_seconds_sum",
+    "refinvest_compute_worker_attempt_duration_seconds_bucket",
     "refinvest_compute_worker_terminal_transitions_total",
     "refinvest_compute_worker_retries_scheduled_total",
     "refinvest_compute_worker_failures_total",
@@ -390,6 +480,210 @@ def direct_delta(start: dict, end: dict) -> dict:
     return result
 
 
+def prometheus_preflight(base: str, attempts: int = 6, interval: float = 5) -> dict:
+    required = {
+        "compute_acceptance": 'refinvest_compute_backtest_jobs_accepted_total{job="compute-api"}',
+        "worker_queue": 'refinvest_compute_worker_queue_wait_seconds_count{job="compute-worker"}',
+        "worker_attempt": 'refinvest_compute_worker_attempt_duration_seconds_count{job="compute-worker"}',
+        "worker_terminal": 'refinvest_compute_worker_terminal_transitions_total{job="compute-worker"}',
+        "core_submission": 'refinvest_backtest_submissions_total{job="core-api"}',
+        "core_compute_submit": 'refinvest_core_compute_client_seconds_count{job="core-api",operation="submit"}',
+        "core_compute_poll": 'refinvest_core_compute_client_seconds_count{job="core-api",operation="poll"}',
+        "core_dispatch_lag": 'refinvest_core_backtest_scheduler_lag_seconds_count{job="core-api",operation="dispatch"}',
+        "core_poll_lag": 'refinvest_core_backtest_scheduler_lag_seconds_count{job="core-api",operation="poll"}',
+        "core_terminal_commit": 'refinvest_backtest_terminal_total{job="core-api"}',
+    }
+    last = {"state": "not_ready", "targets": {}, "required_series": {}}
+    for attempt in range(1, attempts + 1):
+        target_status, target_data, target_error = http_json(
+            base + "/api/v1/query?" + urllib.parse.urlencode({"query": 'up{job=~"core-api|compute-api|compute-worker"}'}),
+            timeout=3,
+        )
+        targets = {}
+        if target_status == 200 and target_data and target_data.get("status") == "success":
+            targets = {item.get("metric", {}).get("job"): item.get("value", [None, None])[1]
+                       for item in target_data.get("data", {}).get("result", [])}
+        series = {}
+        for name, expression in required.items():
+            status, data, error = http_json(
+                base + "/api/v1/query?" + urllib.parse.urlencode({"query": expression}), timeout=3
+            )
+            observed = status == 200 and data and data.get("status") == "success" \
+                and bool(data.get("data", {}).get("result", []))
+            series[name] = {"state": "observed" if observed else "N/A",
+                            "reason": None if observed else error or f"HTTP {status}"}
+        targets_up = all(targets.get(job) == "1" for job in ("core-api", "compute-api", "compute-worker"))
+        series_ready = all(value["state"] == "observed" for value in series.values())
+        last = {"state": "ready" if targets_up and series_ready else "not_ready",
+                "attempt": attempt, "targets": targets, "required_series": series,
+                "target_query_error": target_error}
+        if last["state"] == "ready":
+            return last
+        if attempt < attempts:
+            time.sleep(interval)
+    return last
+
+
+def _delta_total(phase: dict, metric: str) -> float | None:
+    worker = phase.get("direct_metrics", {}).get("compute_worker", {})
+    if worker.get("state") != "observed":
+        return None
+    matches = [value for name, value in worker.get("deltas", {}).items()
+               if name.split("{", 1)[0] == metric]
+    return sum(matches) if matches else None
+
+
+def _histogram_mean(phase: dict, metric: str) -> float | None:
+    total = _delta_total(phase, metric + "_sum")
+    count = _delta_total(phase, metric + "_count")
+    return round(total / count, 6) if total is not None and count else None
+
+
+def _histogram_quantile(phase: dict, metric: str, quantile: float) -> float | None:
+    worker = phase.get("direct_metrics", {}).get("compute_worker", {})
+    buckets = []
+    for name, value in worker.get("deltas", {}).items():
+        if name.split("{", 1)[0] != metric + "_bucket":
+            continue
+        match = re.search(r'(?:^|,)le="([^"]+)"', name.split("{", 1)[1].rstrip("}"))
+        if not match or match.group(1) == "+Inf":
+            continue
+        buckets.append((float(match.group(1)), value))
+    total = _delta_total(phase, metric + "_count")
+    if not buckets or not total:
+        return None
+    target = total * quantile
+    for boundary, cumulative in sorted(buckets):
+        if cumulative >= target:
+            return boundary
+    return None
+
+
+def _increases(values: list[float | None]) -> bool:
+    return len(values) >= 3 and all(value is not None for value in values) and all(
+        float(values[index]) <= float(values[index + 1]) for index in range(len(values) - 1)
+    ) and float(values[-1]) > float(values[0])
+
+
+def _prometheus_operation_value(phase: dict, metric: str, operation: str) -> float | None:
+    for item in phase.get("prometheus", {}).get("values", {}).get(metric, {}).get("series", []):
+        if item.get("labels", {}).get("operation") == operation:
+            try:
+                return round(float(item["value"]), 6)
+            except (KeyError, TypeError, ValueError):
+                return None
+    return None
+
+
+def cross_clock_stage_summary(phases: list[dict], database: dict, clock_skew: dict) -> dict:
+    evidence = database.get("stage_boundary_evidence", {})
+    repetitions = []
+    for phase in phases:
+        values = []
+        for record in phase["records"]:
+            if not record["accepted"]:
+                continue
+            boundary = evidence.get(record["run_id"], {})
+            compute_terminal = boundary.get("compute_terminal_persisted_at")
+            core_terminal = boundary.get("core_dispatch_last_updated_at")
+            if not compute_terminal or not core_terminal:
+                continue
+            try:
+                values.append((datetime.fromisoformat(core_terminal) -
+                               datetime.fromisoformat(compute_terminal)).total_seconds() * 1000)
+            except ValueError:
+                continue
+        summary = distribution(values)
+        phase["approximate_compute_terminal_to_core_terminal"] = summary
+        repetitions.append({"scenario_kind": phase["scenario_kind"], "repetition": phase["repetition"], **summary})
+    return {
+        "clock_skew": clock_skew,
+        "repetitions": repetitions,
+        "policy": "Cross-process wall-clock subtraction is approximate boundary evidence only, not an exact stage duration.",
+        "core_boundary": "dispatch TERMINAL updated_at is in the same Core transaction after terminal run persistence; it is not a standalone persistence timer.",
+    }
+
+
+def analyze_repetitions(phases: list[dict]) -> dict:
+    processing = [phase for phase in phases if phase["scenario_kind"] == "processing"]
+    saturation = [phase for phase in phases if phase["scenario_kind"] == "saturation"]
+    terminal_medians = [phase["accepted_work_terminal_latency"]["median_ms"] for phase in processing]
+    queue_means = [_histogram_mean(phase, "refinvest_compute_worker_queue_wait_seconds")
+                   for phase in processing]
+    execution_means = [_histogram_mean(phase, "refinvest_compute_worker_attempt_duration_seconds")
+                       for phase in processing]
+    core_poll_lag_p95 = [_prometheus_operation_value(phase, "core_scheduler_p95_s", "poll")
+                         for phase in processing]
+    core_poll_http_p95 = [_prometheus_operation_value(phase, "core_compute_p95_s", "poll")
+                          for phase in processing]
+    cross_clock_medians = [phase.get("approximate_compute_terminal_to_core_terminal", {}).get("median_ms")
+                           for phase in processing]
+    consistent = {
+        "accepted_work_terminal_median_ms": terminal_medians,
+        "compute_queue_mean_s": queue_means,
+        "worker_attempt_mean_s": execution_means,
+        "compute_queue_median_s": [_histogram_quantile(phase, "refinvest_compute_worker_queue_wait_seconds", 0.5)
+                                     for phase in processing],
+        "compute_queue_p95_s": [_histogram_quantile(phase, "refinvest_compute_worker_queue_wait_seconds", 0.95)
+                                  for phase in processing],
+        "worker_attempt_median_s": [_histogram_quantile(phase, "refinvest_compute_worker_attempt_duration_seconds", 0.5)
+                                     for phase in processing],
+        "worker_attempt_p95_s": [_histogram_quantile(phase, "refinvest_compute_worker_attempt_duration_seconds", 0.95)
+                                  for phase in processing],
+        "terminal_consistently_increases": _increases(terminal_medians),
+        "queue_consistently_increases": _increases(queue_means),
+        "execution_consistently_increases": _increases(execution_means),
+        "core_poll_scheduler_p95_s": core_poll_lag_p95,
+        "core_poll_http_p95_s": core_poll_http_p95,
+        "approximate_compute_terminal_to_core_terminal_median_ms": cross_clock_medians,
+    }
+    candidate = None
+    if len(processing) >= 3 and all(value is not None for value in core_poll_lag_p95 + core_poll_http_p95
+                                    + cross_clock_medians) and all(
+        float(core_poll_lag_p95[index]) > float(core_poll_http_p95[index])
+        for index in range(len(processing))
+    ):
+        candidate = "Core durable poll scheduling/cadence (not terminal DB write duration)"
+    elif consistent["terminal_consistently_increases"] and consistent["queue_consistently_increases"] \
+            and not consistent["execution_consistently_increases"]:
+        candidate = "Compute worker capacity / queueing"
+    elif consistent["terminal_consistently_increases"] and consistent["execution_consistently_increases"]:
+        candidate = "Compute worker execution"
+    if candidate:
+        conclusion = {"state": "candidate", "candidate": candidate,
+                      "evidence": consistent,
+                      "caveat": "Candidate only. Cross-clock DB differences are approximate, and terminal persistence write duration is not independently instrumented."}
+    else:
+        conclusion = {"state": "indeterminate", "evidence": consistent,
+                      "required_measurement": [
+                          "Per-run monotonic Core receipt-to-durable-submit, poll-observation-to-commit, and commit-to-response durations",
+                          "Per-run Compute acceptance, claim, executor start/end, and terminal-commit correlation",
+                          "At least three same-condition processing repetitions with all observability targets UP",
+                      ]}
+    conclusion["saturation"] = {
+        "repetitions": len(saturation),
+        "rejected": [phase["outcomes"]["rejected"] for phase in saturation],
+        "excluded_from_work_latency": True,
+        "note": "A single rejected burst is not evidence of a Compute or Core bottleneck.",
+    }
+    conclusion["benchmark_policy"] = {
+        "compute_candidate": "Capture a new Mode=Official Compute benchmark in the same environment before optimization; never relabel official=false smoke output.",
+        "core_candidate": "An official Compute benchmark cannot prove a Core poll/persistence improvement; preserve before/after E2E load conditions.",
+    }
+    return conclusion
+
+
+def missing_observations(phase: dict) -> list[str]:
+    missing = []
+    for owner, value in phase.get("direct_metrics", {}).items():
+        if value.get("state") != "observed":
+            missing.append("direct:" + owner)
+    for name, value in phase.get("prometheus", {}).get("values", {}).items():
+        if value.get("state") != "observed":
+            missing.append("prometheus:" + name)
+    return missing
+
+
 def log_match_counts(phases: list[dict]) -> dict:
     ids = {record["run_id"] for phase in phases for record in phase["records"] if record["run_id"]}
     result = {}
@@ -418,22 +712,32 @@ def markdown(report: dict) -> str:
     for name, value in report["revisions"].items():
         lines.append(f"- {name}: `{value}`")
     lines.extend(["", "## Scenarios", "",
-                  "| Scenario | 제출 | 접수 | 완료 | terminal 실패 | 거절 | timeout | terminal 미확인 | 실제 제출률/s |",
-                  "|---|---:|---:|---:|---:|---:|---:|---:|---:|"])
+                  "| Scenario | 반복 | 종류 | 제출 | 접수 | 완료 | terminal 실패 | 거절 | timeout | terminal 미확인 | 실제 제출률/s |",
+                  "|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|"])
     for phase in report["phases"]:
         outcomes = phase["outcomes"]
-        lines.append(f"| {phase['name']} | {phase['submitted']} | {phase['accepted']} | "
+        lines.append(f"| {phase['name']} | {phase['repetition']} | {phase['scenario_kind']} | {phase['submitted']} | {phase['accepted']} | "
                      f"{outcomes['completed']} | {outcomes['failed']} | {outcomes['rejected']} | "
                      f"{outcomes['terminal_timeout']} | {phase['terminal_latency_censored']} | "
                      f"{phase['actual_submit_rate_per_s']} |")
         lines.append(f"\n{phase['name']}: 제출 지연(ms) {phase['submit_latency']}; "
-                     f"terminal 지연(ms) {phase['terminal_latency']}. "
+                     f"접수 작업 terminal 지연(ms) {phase['accepted_work_terminal_latency']}; "
+                     f"거절 응답 지연(ms) {phase['rejection_response_latency']}. "
                      f"최대 동시 제출 {phase['max_concurrent_submissions']}, poll {phase['poll_requests']}회. "
                      f"HTTP 오류 코드 {phase['http_error_codes']}. "
                      "Terminal 지연은 완료·실패 전이를 모두 포함하고, 미완료 표본 수는 별도 표시합니다.\n")
+        lines.append(f"Compute queue 평균(s) {_histogram_mean(phase, 'refinvest_compute_worker_queue_wait_seconds')}; "
+                     f"median/p95 {_histogram_quantile(phase, 'refinvest_compute_worker_queue_wait_seconds', 0.5)}/"
+                     f"{_histogram_quantile(phase, 'refinvest_compute_worker_queue_wait_seconds', 0.95)}; "
+                     f"worker attempt 평균(s) {_histogram_mean(phase, 'refinvest_compute_worker_attempt_duration_seconds')}; "
+                     f"median/p95 {_histogram_quantile(phase, 'refinvest_compute_worker_attempt_duration_seconds', 0.5)}/"
+                     f"{_histogram_quantile(phase, 'refinvest_compute_worker_attempt_duration_seconds', 0.95)}; "
+                     f"관측 누락 {phase.get('observation_missing', [])}.\n")
     if report.get("error"):
         lines.append(f"오류: {report['error']}")
-    lines.extend(["", f"DB 대조: {report.get('database', {'state': 'N/A'})}",
+    lines.extend(["", "## Bottleneck assessment", "", str(report.get("bottleneck_assessment", {})),
+                  "", f"Clock skew 표시: {report.get('clock_skew', {})}",
+                  "", f"DB 대조: {report.get('database', {'state': 'N/A'})}",
                   "", "## Prometheus", ""])
     for name, value in report.get("prometheus", {}).get("values", {}).items():
         lines.append(f"- {name}: {value}")
@@ -461,6 +765,7 @@ def arguments(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--terminal-timeout", type=float, default=120)
     parser.add_argument("--poll-interval", type=float, default=2)
     parser.add_argument("--cooldown", type=float, default=5)
+    parser.add_argument("--repetitions", type=int, default=3)
     args = parser.parse_args(argv)
     if not 0 < args.steady_rate <= 2 or not 0 < args.burst_rate <= 10:
         parser.error("Rates must be positive and at most 2/s steady or 10/s burst")
@@ -472,6 +777,8 @@ def arguments(argv: list[str]) -> argparse.Namespace:
         parser.error("terminal-timeout 5..600s and poll-interval 0.2..10s are required")
     if not 0 <= args.cooldown <= 60:
         parser.error("cooldown must be 0..60s")
+    if not 1 <= args.repetitions <= 10:
+        parser.error("repetitions must be 1..10")
     for url in (args.core_url, args.compute_url, args.prometheus_url):
         parsed = urllib.parse.urlparse(url)
         if parsed.scheme != "http" or parsed.hostname not in ("localhost", "127.0.0.1"):
@@ -494,7 +801,23 @@ def main(argv: list[str] | None = None) -> int:
                               "cpu_count": os.cpu_count()},
               "parameters": {name: getattr(args, name) for name in (
                   "steady_rate", "steady_duration", "burst_rate", "burst_duration", "max_submissions",
-                  "concurrency", "terminal_timeout", "poll_interval", "cooldown")}}
+                  "concurrency", "terminal_timeout", "poll_interval", "cooldown", "repetitions")},
+              "stage_model": {
+                  "boundaries": ["client submission", "Core receipt/durable enqueue", "Compute acceptance",
+                                 "Worker queue wait", "Worker execution", "Compute terminal commit",
+                                 "Core poll observation", "Core terminal persistence", "client terminal observation"],
+                  "duration_policy": "Only same-process monotonic timers are exact. Wall-clock timestamps are boundary evidence, not cross-service durations.",
+                  "measurement_semantics": {
+                      "client_submit_and_terminal": "load-generator time.monotonic durations",
+                      "core_compute_client": "Micrometer Timer around the Core HTTP client",
+                      "core_scheduler_lag": "same-process wall-clock Duration; displayed but not treated as monotonic exact duration",
+                      "compute_queue_wait": "API-created DB timestamp to Worker wall clock; displayed with clock-skew caveat",
+                      "worker_attempt": "Worker monotonic duration including executor/IPC and heartbeat shutdown",
+                      "compute_terminal": "counter increments only after committed terminal persistence",
+                      "core_terminal": "counter/log emitted only after terminal transaction commit; DB state is re-read",
+                      "unavailable_exact_segments": "per-run Core poll observation-to-terminal commit and terminal commit-to-client response",
+                  },
+              }}
     first_measurement = None
     direct_start = None
     try:
@@ -504,6 +827,8 @@ def main(argv: list[str] | None = None) -> int:
             if status != 200:
                 raise RuntimeError(f"Health preflight failed: HTTP {status}")
         report["core_scrape"] = probe_core_scrape(args.core_url)
+        report["clock_skew"] = {"core": clock_skew_probe(args.core_url + "/actuator/health"),
+                                "compute": clock_skew_probe(args.compute_url + "/health")}
         version_id = create_version(args.core_url, token)
         warmup = submit(args.core_url, version_id, token, 0, time.monotonic())
         report["warmup"] = {key: value for key, value in warmup.items() if key != "run_id"}
@@ -513,21 +838,40 @@ def main(argv: list[str] | None = None) -> int:
         report["warmup"]["outcome"] = warmup["outcome"]
         if warmup["outcome"] != "completed":
             raise RuntimeError(f"Warm-up did not complete: {warmup['outcome']}")
+        report["observability_preflight"] = prometheus_preflight(args.prometheus_url)
+        if report["observability_preflight"]["state"] != "ready":
+            raise RuntimeError("Prometheus targets or required metric series are not ready")
         direct_start = direct_snapshot()
         first_measurement = time.time()
-        report["phases"].append(run_phase("steady", args.core_url, version_id, token, args.steady_rate,
-                                           args.steady_duration, args.max_submissions, args.concurrency,
-                                           args.terminal_timeout, args.poll_interval))
-        report["cooldown_started_utc"] = utc_now()
-        time.sleep(args.cooldown)
-        report["phases"].append(run_phase("burst", args.core_url, version_id, token, args.burst_rate,
-                                           args.burst_duration, args.max_submissions, args.concurrency,
-                                           args.terminal_timeout, args.poll_interval))
+        for scenario_kind, rate, duration in (("processing", args.steady_rate, args.steady_duration),
+                                               ("saturation", args.burst_rate, args.burst_duration)):
+            for repetition in range(1, args.repetitions + 1):
+                if report["phases"]:
+                    time.sleep(args.cooldown)
+                metric_start = direct_snapshot()
+                phase_wall_start = time.time()
+                phase = run_phase(scenario_kind, args.core_url, version_id, token, rate, duration,
+                                  args.max_submissions, args.concurrency, args.terminal_timeout,
+                                  args.poll_interval, repetition, scenario_kind)
+                phase_wall_end = time.time()
+                phase["direct_metrics"] = direct_delta(metric_start, direct_snapshot())
+                phase["prometheus"] = prometheus_summary(args.prometheus_url, phase_wall_start, phase_wall_end)
+                phase["observation_missing"] = missing_observations(phase)
+                report["phases"].append(phase)
         report["database"] = verify_database(report["phases"])
         report["log_matches"] = log_match_counts(report["phases"])
-        report["status"] = "passed" if all(
-            phase["outcomes"]["completed"] == phase["submitted"] for phase in report["phases"]
-        ) and report["database"]["state"] == "verified" else "failed"
+        report["cross_clock_stage_summary"] = cross_clock_stage_summary(
+            report["phases"], report["database"], report["clock_skew"]
+        )
+        report["bottleneck_assessment"] = analyze_repetitions(report["phases"])
+        processing_ok = all(phase["outcomes"]["completed"] == phase["submitted"]
+                            for phase in report["phases"] if phase["scenario_kind"] == "processing")
+        saturation_ok = all(phase["outcomes"]["completed"] + phase["outcomes"]["rejected"] == phase["submitted"]
+                            for phase in report["phases"] if phase["scenario_kind"] == "saturation")
+        report["saturation_reached"] = any(phase["outcomes"]["rejected"] > 0
+                                           for phase in report["phases"] if phase["scenario_kind"] == "saturation")
+        report["status"] = "passed" if processing_ok and saturation_ok and report["saturation_reached"] \
+            and report["database"]["state"] == "verified" else "failed"
     except Exception as error:
         report["error"] = f"{type(error).__name__}: {error}"
     finally:
@@ -540,7 +884,7 @@ def main(argv: list[str] | None = None) -> int:
         targets = report.get("prometheus", {}).get("values", {}).get("targets", {})
         up_jobs = {item["labels"].get("job") for item in targets.get("series", []) if item.get("value") == "1"}
         report["observability_status"] = "complete" if (
-            report.get("core_scrape", {}).get("state") == "HTTP_200"
+            report.get("observability_preflight", {}).get("state") == "ready"
             and {"core-api", "compute-api", "compute-worker"}.issubset(up_jobs)
         ) else "partial"
         (run_dir / "result.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

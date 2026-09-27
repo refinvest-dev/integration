@@ -1,8 +1,9 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$PrometheusExe,
-    [Parameter(Mandatory)][string]$GrafanaExe,
-    [Parameter(Mandatory)][securestring]$GrafanaAdminPassword,
+    [string]$GrafanaExe,
+    [securestring]$GrafanaAdminPassword,
+    [switch]$PrometheusOnly,
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local')
 )
 
@@ -10,21 +11,31 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $values = Get-IntegrationEnvironment $EnvironmentFile
-Assert-IntegrationEnvironment $values @('REFINVEST_METRICS_SCRAPE_PASSWORD')
+if (-not $PrometheusOnly -and ([string]::IsNullOrWhiteSpace($GrafanaExe) -or $null -eq $GrafanaAdminPassword)) {
+    throw 'GrafanaExe and GrafanaAdminPassword are required unless PrometheusOnly is selected.'
+}
 $data = Join-Path $root '.integration-data\observability'
 $registry = Join-Path $data 'processes.json'
 if (Test-Path $registry) { throw "Observability registry exists: $registry. Stop the recorded processes first." }
-foreach ($port in 9090, 3002) {
+$ports = if ($PrometheusOnly) { @(9090) } else { @(9090, 3002) }
+foreach ($port in $ports) {
     if (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue) {
         throw "Port $port is already in use."
     }
 }
 $prometheus = (Resolve-Path -LiteralPath $PrometheusExe).Path
-$grafana = (Resolve-Path -LiteralPath $GrafanaExe).Path
+$grafana = if ($PrometheusOnly) { $null } else { (Resolve-Path -LiteralPath $GrafanaExe).Path }
 New-Item -ItemType Directory -Force -Path $data, (Join-Path $data 'prometheus'), (Join-Path $data 'grafana'), (Join-Path $data 'logs') | Out-Null
 $scrapePasswordFile = Join-Path $data 'core-metrics-password'
 try {
-    [IO.File]::WriteAllText($scrapePasswordFile, $values['REFINVEST_METRICS_SCRAPE_PASSWORD'], [Text.UTF8Encoding]::new($false))
+    $scrapePassword = $values['REFINVEST_METRICS_SCRAPE_PASSWORD']
+    if ([string]::IsNullOrWhiteSpace($scrapePassword)) {
+        $bytes = [byte[]]::new(32)
+        $generator = [Security.Cryptography.RandomNumberGenerator]::Create()
+        try { $generator.GetBytes($bytes) } finally { $generator.Dispose() }
+        $scrapePassword = [Convert]::ToBase64String($bytes)
+    }
+    [IO.File]::WriteAllText($scrapePasswordFile, $scrapePassword, [Text.UTF8Encoding]::new($false))
     if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
         $acl = Get-Acl -LiteralPath $scrapePasswordFile
         $acl.SetAccessRuleProtection($true, $false)
@@ -62,6 +73,14 @@ try {
     throw
 }
 try {
+    if ($PrometheusOnly) {
+        $records = @($prom) | ForEach-Object {
+            [pscustomobject]@{ id = $_.Id; started = $_.StartTime.ToUniversalTime().ToString('o'); path = $_.Path }
+        }
+        $records | ConvertTo-Json | Set-Content -LiteralPath $registry -Encoding UTF8
+        Write-Output 'Prometheus: http://127.0.0.1:9090/targets'
+        return
+    }
     $env:GF_PATHS_DATA = Join-Path $data 'grafana'
     $env:GF_PATHS_LOGS = Join-Path $data 'logs'
     $env:GF_PATHS_PLUGINS = Join-Path $data 'grafana\plugins'
