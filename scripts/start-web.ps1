@@ -1,16 +1,25 @@
 [CmdletBinding()]
 param(
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
-    [string]$WebPath = (Join-Path $PSScriptRoot '..\..\web\web')
+    [string]$WebPath = (Join-Path $PSScriptRoot '..\..\web\web'),
+    [string]$Profile = 'default',
+    [string]$RegistryId = 'default'
 )
 
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
-$port = if ($values['INTEGRATION_WEB_PORT']) { $values['INTEGRATION_WEB_PORT'] } else { '3001' }
-if (Test-IntegrationTcpListener -Port $port) { throw "Port $port is already in use." }
+$port = if ($values['INTEGRATION_WEB_PORT']) { [int]$values['INTEGRATION_WEB_PORT'] } else { 3001 }
 if (-not (Test-Path -LiteralPath (Join-Path $WebPath 'package.json'))) { throw "Web checkout does not exist: $WebPath" }
+$identity = New-WebIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -WebPath $WebPath `
+    -Profile $Profile -RegistryId $RegistryId
+$allowed = Assert-IntegrationServiceStartAllowed -RootPath (Join-Path $PSScriptRoot '..') `
+    -Name 'web' -ExpectedIdentity $identity -RegistryId $RegistryId -Port $port
+if ($allowed.reuse) {
+    [pscustomobject]@{ processId=$allowed.record.servicePid; webUrl=$allowed.record.identity.configuration.serviceBaseUrl; apiBaseUrl=$allowed.record.identity.configuration.coreBaseUrl; reused=$true; profile=$Profile }
+    return
+}
 
 $corePort = if ($values['INTEGRATION_CORE_PORT']) { $values['INTEGRATION_CORE_PORT'] } else { '8080' }
 $env:NEXT_PUBLIC_API_BASE_URL = if ($values['NEXT_PUBLIC_API_BASE_URL']) {
@@ -33,13 +42,15 @@ $startParameters = @{
     FilePath = $pnpm
     ArgumentList = @('dev', '--port', $port)
     WorkingDirectory = $WebPath
-    RedirectStandardOutput = Join-Path $logDir 'web.out.log'
-    RedirectStandardError = Join-Path $logDir 'web.err.log'
+    RedirectStandardOutput = Join-Path $logDir "$RegistryId-web.out.log"
+    RedirectStandardError = Join-Path $logDir "$RegistryId-web.err.log"
     PassThru = $true
 }
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
     $startParameters.WindowStyle = 'Hidden'
 }
 $process = Start-Process @startParameters
-Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'web' -Process $process -Port $port -HealthUrl "http://localhost:$port/login" -LogPath (Join-Path $logDir 'web.out.log')
-[pscustomobject]@{ processId = $process.Id; webUrl = "http://localhost:$port"; apiBaseUrl = $env:NEXT_PUBLIC_API_BASE_URL }
+Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'web' -Process $process `
+    -Identity $identity -RegistryId $RegistryId -Port $port -HealthUrl "http://localhost:$port/login" `
+    -LogPath (Join-Path $logDir "$RegistryId-web.out.log")
+[pscustomobject]@{ processId = $process.Id; webUrl = "http://localhost:$port"; apiBaseUrl = $env:NEXT_PUBLIC_API_BASE_URL; reused=$false; profile=$Profile }

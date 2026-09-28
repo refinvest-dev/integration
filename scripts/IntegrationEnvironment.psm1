@@ -1,3 +1,5 @@
+Import-Module (Join-Path $PSScriptRoot 'IntegrationIdentity.psm1') -Force
+
 function Get-IntegrationEnvironment {
     param([Parameter(Mandatory)][string]$EnvironmentFile)
 
@@ -176,4 +178,100 @@ function Set-ComputeIntegrationEnvironment {
     $env:REFINVEST_SNAPSHOT_STORAGE_ROOT = [IO.Path]::GetFullPath((Join-Path $WorkspacePath $Values['REFINVEST_SNAPSHOT_STORAGE_ROOT']))
 }
 
-Export-ModuleMember -Function Get-IntegrationEnvironment, Assert-IntegrationEnvironment, Get-IntegrationPostgresHost, Get-IntegrationPsql, Get-IntegrationPython, Normalize-IntegrationProcessPathEnvironment, Get-IntegrationGradleWrapper, Resolve-IntegrationWorkspacePath, Test-IntegrationTcpListener, Set-CoreIntegrationEnvironment, Set-ComputeIntegrationEnvironment
+function New-ComputeIntegrationIdentity {
+    param(
+        [hashtable]$Values,
+        [string]$EnvironmentFile,
+        [string]$ComputeApiPath,
+        [ValidateSet('compute-api','compute-worker')][string]$ServiceRole,
+        [string]$Profile = 'default',
+        [string]$RegistryId = 'default',
+        [string]$DatabaseSchema = 'public',
+        [string]$SnapshotStorageRoot,
+        [string]$SnapshotProfile = 'integration-e2e-v1',
+        [switch]$Observability
+    )
+    $workspace = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+    $schema = if ([string]::IsNullOrWhiteSpace($DatabaseSchema)) { 'public' } else { $DatabaseSchema }
+    $storage = if ([string]::IsNullOrWhiteSpace($SnapshotStorageRoot)) {
+        [IO.Path]::GetFullPath((Join-Path $workspace $Values['REFINVEST_SNAPSHOT_STORAGE_ROOT']))
+    } else { Resolve-IntegrationWorkspacePath $workspace $SnapshotStorageRoot }
+    $port = if ($Values['INTEGRATION_COMPUTE_PORT']) { [int]$Values['INTEGRATION_COMPUTE_PORT'] } else { 8000 }
+    $configuration = [ordered]@{
+        environmentFile = [IO.Path]::GetFullPath($EnvironmentFile)
+        listenHost = if ($ServiceRole -eq 'compute-api') { '127.0.0.1' } else { $null }
+        listenPort = if ($ServiceRole -eq 'compute-api') { $port } else { $null }
+        serviceBaseUrl = if ($ServiceRole -eq 'compute-api') { "http://127.0.0.1:$port" } else { $null }
+        databaseHost = Get-IntegrationPostgresHost $Values
+        databasePort = [int]$Values['INTEGRATION_POSTGRES_PORT']
+        databaseName = $Values['POSTGRES_DB']
+        databaseSchema = $schema
+        snapshotStorageRoot = $storage
+        snapshotProfile = $SnapshotProfile
+        snapshotStorageBackend = 'filesystem'
+        workerId = if ($ServiceRole -eq 'compute-worker') { 'integration-e2e-worker' } else { $null }
+        observability = [bool]$Observability
+        metricsEndpoint = if (-not $Observability) { $null } elseif ($ServiceRole -eq 'compute-api') { 'http://127.0.0.1:9101/metrics' } else { 'http://127.0.0.1:9102/metrics' }
+    }
+    New-IntegrationServiceIdentity -ServiceRole $ServiceRole -Profile $Profile -RegistryId $RegistryId `
+        -RepositoryPath $ComputeApiPath -Configuration $configuration
+}
+
+function New-CoreIntegrationIdentity {
+    param(
+        [hashtable]$Values, [string]$EnvironmentFile, [string]$CoreApiPath,
+        [string]$Profile = 'default', [string]$RegistryId = 'default',
+        [string]$DatabaseSchema = 'public', [string]$ComputeBaseUrl, [switch]$Observability
+    )
+    $corePort = if ($Values['INTEGRATION_CORE_PORT']) { [int]$Values['INTEGRATION_CORE_PORT'] } else { 8080 }
+    $computePort = if ($Values['INTEGRATION_COMPUTE_PORT']) { [int]$Values['INTEGRATION_COMPUTE_PORT'] } else { 8000 }
+    $configuration = [ordered]@{
+        environmentFile = [IO.Path]::GetFullPath($EnvironmentFile)
+        listenHost = '127.0.0.1'; listenPort = $corePort; serviceBaseUrl = "http://127.0.0.1:$corePort"
+        databaseHost = Get-IntegrationPostgresHost $Values
+        databasePort = [int]$Values['INTEGRATION_POSTGRES_PORT']; databaseName = $Values['POSTGRES_DB']
+        databaseSchema = if ([string]::IsNullOrWhiteSpace($DatabaseSchema)) { 'public' } else { $DatabaseSchema }
+        computeBaseUrl = if ([string]::IsNullOrWhiteSpace($ComputeBaseUrl)) { "http://127.0.0.1:$computePort" } else { $ComputeBaseUrl.TrimEnd('/') }
+        oauthEnabled = ($Values['REFINVEST_OAUTH_ENABLED'] -eq 'true')
+        webOrigin = $Values['REFINVEST_WEB_ORIGIN']
+        cookieSecure = $Values['REFINVEST_COOKIE_SECURE']
+        cookieSameSite = $Values['REFINVEST_COOKIE_SAME_SITE']
+        observability = [bool]$Observability
+        metricsEndpoint = if ($Observability) { "http://127.0.0.1:$corePort/actuator/prometheus" } else { $null }
+    }
+    New-IntegrationServiceIdentity -ServiceRole 'core-api' -Profile $Profile -RegistryId $RegistryId `
+        -RepositoryPath $CoreApiPath -Configuration $configuration
+}
+
+function New-WebIntegrationIdentity {
+    param([hashtable]$Values, [string]$EnvironmentFile, [string]$WebPath, [string]$Profile='default', [string]$RegistryId='default')
+    $webPort = if ($Values['INTEGRATION_WEB_PORT']) { [int]$Values['INTEGRATION_WEB_PORT'] } else { 3001 }
+    $corePort = if ($Values['INTEGRATION_CORE_PORT']) { [int]$Values['INTEGRATION_CORE_PORT'] } else { 8080 }
+    $coreBaseUrl = if ($Values['NEXT_PUBLIC_API_BASE_URL']) { $Values['NEXT_PUBLIC_API_BASE_URL'].TrimEnd('/') } else { "http://localhost:$corePort" }
+    New-IntegrationServiceIdentity -ServiceRole 'web' -Profile $Profile -RegistryId $RegistryId -RepositoryPath $WebPath -Configuration ([ordered]@{
+        environmentFile=[IO.Path]::GetFullPath($EnvironmentFile); listenHost='localhost'; listenPort=$webPort
+        serviceBaseUrl="http://localhost:$webPort"; coreBaseUrl=$coreBaseUrl
+    })
+}
+
+function New-FaultProxyIntegrationIdentity {
+    param([string]$IntegrationPath, [string]$Profile, [string]$RegistryId, [int]$Port, [string]$UpstreamBaseUrl)
+    New-IntegrationServiceIdentity -ServiceRole 'compute-fault-proxy' -Profile $Profile -RegistryId $RegistryId `
+        -RepositoryPath $IntegrationPath -Configuration ([ordered]@{
+            listenHost='127.0.0.1'; listenPort=$Port; serviceBaseUrl="http://127.0.0.1:$Port"
+            upstreamBaseUrl=$UpstreamBaseUrl.TrimEnd('/')
+        })
+}
+
+function New-PrometheusIntegrationIdentity {
+    param([string]$IntegrationPath, [string]$EnvironmentFile, [string]$ExecutablePath, [string]$Profile='observability-load', [string]$RegistryId='observability-load')
+    New-IntegrationServiceIdentity -ServiceRole 'prometheus' -Profile $Profile -RegistryId $RegistryId `
+        -RepositoryPath $IntegrationPath -Configuration ([ordered]@{
+            environmentFile=[IO.Path]::GetFullPath($EnvironmentFile); listenHost='127.0.0.1'; listenPort=9090
+            executablePath=if ([string]::IsNullOrWhiteSpace($ExecutablePath)) { $null } else { [IO.Path]::GetFullPath($ExecutablePath) }
+            serviceBaseUrl='http://127.0.0.1:9090'; coreTarget='http://127.0.0.1:8080/actuator/prometheus'
+            computeApiTarget='http://127.0.0.1:9101/metrics'; computeWorkerTarget='http://127.0.0.1:9102/metrics'
+        })
+}
+
+Export-ModuleMember -Function Get-IntegrationEnvironment, Assert-IntegrationEnvironment, Get-IntegrationPostgresHost, Get-IntegrationPsql, Get-IntegrationPython, Normalize-IntegrationProcessPathEnvironment, Get-IntegrationGradleWrapper, Resolve-IntegrationWorkspacePath, Test-IntegrationTcpListener, Set-CoreIntegrationEnvironment, Set-ComputeIntegrationEnvironment, New-ComputeIntegrationIdentity, New-CoreIntegrationIdentity, New-WebIntegrationIdentity, New-FaultProxyIntegrationIdentity, New-PrometheusIntegrationIdentity

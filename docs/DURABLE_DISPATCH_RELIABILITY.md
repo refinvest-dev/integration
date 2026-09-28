@@ -16,6 +16,17 @@ creates unique Core and Compute schemas in that database and a unique ignored
 snapshot artifact directory. Existing schemas and rows are not reset, deleted,
 or inferred as migration history.
 
+Each invocation also uses profile `durable-dispatch-reliability` and a unique
+`durable-dispatch-reliability-<run-id>` process registry. Its Compute API,
+Worker, Core, and fault proxy cannot be discovered or reused as the default
+stack. Before recovery traffic is sent, topology preflight requires the API and
+Worker to have the same Compute schema/snapshot identity, the proxy to target
+that API, and Core to target that proxy. Cleanup addresses only that run's
+registry, including after a partial failure; it never stops a default-profile
+process. If one of the bounded ports is owned by another registry or an
+unrecorded process, the harness fails before starting and does not terminate
+the owner.
+
 ## Assertions
 
 - Compute HTTP idempotency: every round uses a new UUID v4 key and starts all
