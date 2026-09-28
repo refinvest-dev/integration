@@ -12,6 +12,7 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 
 if ($Concurrency -le 0 -or $Rounds -le 0 -or $DispatchRuns -le 0) {
     throw 'Concurrency, Rounds, and DispatchRuns must be positive.'
@@ -27,6 +28,9 @@ if ($values['POSTGRES_DB'] -cne 'refinvest_integration') {
 }
 
 $suffix = "$(Get-Date -Format yyyyMMddHHmmss)_$([guid]::NewGuid().ToString('N').Substring(0, 6))"
+$profile = 'durable-dispatch-reliability'
+$registryId = "durable-dispatch-reliability-$($suffix.Replace('_','-'))"
+$snapshotProfile = "reliability-$($suffix.Replace('_','-'))"
 $computeSchema = "ri_rel_compute_$suffix"
 $coreSchema = "ri_rel_core_$suffix"
 $snapshotStorageRoot = ".integration-data\reliability-snapshots\$suffix"
@@ -79,7 +83,10 @@ try {
         -EnvironmentFile $EnvironmentFile `
         -ComputeApiPath $ComputeApiPath `
         -Schema $computeSchema `
-        -SnapshotStorageRoot $snapshotStorageRoot
+        -SnapshotStorageRoot $snapshotStorageRoot `
+        -SnapshotProfile $snapshotProfile `
+        -Profile $profile `
+        -RegistryId $registryId
     & (Join-Path $PSScriptRoot 'wait-for-http.ps1') `
         -Uri "http://127.0.0.1:$($values['INTEGRATION_COMPUTE_PORT'])/health"
 
@@ -91,14 +98,16 @@ try {
         --output $computeReportPath
     if ($LASTEXITCODE -ne 0) { throw 'Compute HTTP idempotency verification failed.' }
 
-    & (Join-Path $PSScriptRoot 'stop-integration.ps1') -Service compute-api
+    & (Join-Path $PSScriptRoot 'stop-integration.ps1') -Service compute-api -Profile $profile -RegistryId $registryId
 
     $proxyPort = 8001
     & (Join-Path $PSScriptRoot 'start-core-api.ps1') `
         -EnvironmentFile $EnvironmentFile `
         -CoreApiPath $CoreApiPath `
         -ComputeBaseUrl "http://127.0.0.1:$proxyPort" `
-        -DatabaseSchema $coreSchema
+        -DatabaseSchema $coreSchema `
+        -Profile $profile `
+        -RegistryId $registryId
     & (Join-Path $PSScriptRoot 'wait-for-http.ps1') `
         -Uri "http://127.0.0.1:$($values['INTEGRATION_CORE_PORT'])/actuator/health" `
         -TimeoutSeconds 300
@@ -122,20 +131,36 @@ try {
         -EnvironmentFile $EnvironmentFile `
         -ComputeApiPath $ComputeApiPath `
         -Schema $computeSchema `
-        -SnapshotStorageRoot $snapshotStorageRoot
+        -SnapshotStorageRoot $snapshotStorageRoot `
+        -SnapshotProfile $snapshotProfile `
+        -Profile $profile `
+        -RegistryId $registryId
     & (Join-Path $PSScriptRoot 'wait-for-http.ps1') `
         -Uri "http://127.0.0.1:$($values['INTEGRATION_COMPUTE_PORT'])/health"
     & (Join-Path $PSScriptRoot 'start-compute-fault-proxy.ps1') `
         -ComputeApiPath $ComputeApiPath `
         -Port $proxyPort `
-        -UpstreamBaseUrl "http://127.0.0.1:$($values['INTEGRATION_COMPUTE_PORT'])"
+        -UpstreamBaseUrl "http://127.0.0.1:$($values['INTEGRATION_COMPUTE_PORT'])" `
+        -Profile $profile `
+        -RegistryId $registryId
     & (Join-Path $PSScriptRoot 'wait-for-http.ps1') `
         -Uri "http://127.0.0.1:$proxyPort/__faults__/status"
     & (Join-Path $PSScriptRoot 'start-compute-worker.ps1') `
         -EnvironmentFile $EnvironmentFile `
         -ComputeApiPath $ComputeApiPath `
         -Schema $computeSchema `
-        -SnapshotStorageRoot $snapshotStorageRoot
+        -SnapshotStorageRoot $snapshotStorageRoot `
+        -SnapshotProfile $snapshotProfile `
+        -Profile $profile `
+        -RegistryId $registryId
+
+    $expected = @{
+        'compute-api' = New-ComputeIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -ComputeApiPath $ComputeApiPath -ServiceRole compute-api -Profile $profile -RegistryId $registryId -DatabaseSchema $computeSchema -SnapshotStorageRoot $snapshotStorageRoot -SnapshotProfile $snapshotProfile
+        'compute-worker' = New-ComputeIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -ComputeApiPath $ComputeApiPath -ServiceRole compute-worker -Profile $profile -RegistryId $registryId -DatabaseSchema $computeSchema -SnapshotStorageRoot $snapshotStorageRoot -SnapshotProfile $snapshotProfile
+        'compute-fault-proxy' = New-FaultProxyIntegrationIdentity -IntegrationPath (Join-Path $PSScriptRoot '..') -Profile $profile -RegistryId $registryId -Port $proxyPort -UpstreamBaseUrl "http://127.0.0.1:$($values['INTEGRATION_COMPUTE_PORT'])"
+        'core-api' = New-CoreIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -CoreApiPath $CoreApiPath -Profile $profile -RegistryId $registryId -DatabaseSchema $coreSchema -ComputeBaseUrl "http://127.0.0.1:$proxyPort"
+    }
+    Assert-IntegrationTopology -RootPath (Join-Path $PSScriptRoot '..') -Profile $profile -RegistryId $registryId -ExpectedIdentities $expected -RequiredServices @('compute-api','compute-worker','compute-fault-proxy','core-api') | Out-Null
 
     Set-ComputeIntegrationEnvironment $values (Join-Path $PSScriptRoot '..') $computeSchema
     foreach ($name in @('REFINVEST_JWT_ISSUER', 'REFINVEST_JWT_AUDIENCE', 'REFINVEST_JWT_SECRET')) {
@@ -166,6 +191,8 @@ try {
             coreRevision = (& git -C $CoreApiPath rev-parse HEAD).Trim()
             computeRevision = (& git -C $ComputeApiPath rev-parse HEAD).Trim()
             integrationRevision = (& git -C (Join-Path $PSScriptRoot '..') rev-parse HEAD).Trim()
+            profile = $profile
+            registryId = $registryId
         }
         idempotencyConcurrency = $computeReport.idempotencyConcurrency
         payloadConflicts = $computeReport.payloadConflicts
@@ -189,7 +216,7 @@ try {
 } finally {
     foreach ($service in @('compute-worker', 'compute-fault-proxy', 'compute-api', 'core-api')) {
         try {
-            & (Join-Path $PSScriptRoot 'stop-integration.ps1') -Service $service | Out-Host
+            & (Join-Path $PSScriptRoot 'stop-integration.ps1') -Service $service -Profile $profile -RegistryId $registryId | Out-Host
         } catch {
             Write-Warning "Could not stop registered $service process: $($_.Exception.Message)"
         }

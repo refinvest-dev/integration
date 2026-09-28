@@ -4,10 +4,27 @@ param(
     [string]$AccessToken,
     [int]$TimeoutSeconds = 90,
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
-    [string]$ForeignMemberId = '900000000000003'
+    [string]$ForeignMemberId = '900000000000003',
+    [string]$CoreApiPath = (Join-Path $PSScriptRoot '..\..\api\refinvest'),
+    [string]$ComputeApiPath = (Join-Path $PSScriptRoot '..\..\compute-api\refinvest'),
+    [string]$Profile = 'default',
+    [string]$RegistryId = 'default',
+    [string]$Schema = 'public',
+    [string]$SnapshotProfile = 'integration-e2e-v1',
+    [string]$SnapshotStorageRoot
 )
 $ErrorActionPreference = 'Stop'
 if ([string]::IsNullOrWhiteSpace($AccessToken)) { throw 'Pass the token printed by seed-core-member.ps1 as -AccessToken.' }
+
+Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
+$identityValues = Get-IntegrationEnvironment $EnvironmentFile
+$expectedIdentities = @{
+    'compute-api' = New-ComputeIntegrationIdentity -Values $identityValues -EnvironmentFile $EnvironmentFile -ComputeApiPath $ComputeApiPath -ServiceRole compute-api -Profile $Profile -RegistryId $RegistryId -DatabaseSchema $Schema -SnapshotStorageRoot $SnapshotStorageRoot -SnapshotProfile $SnapshotProfile
+    'compute-worker' = New-ComputeIntegrationIdentity -Values $identityValues -EnvironmentFile $EnvironmentFile -ComputeApiPath $ComputeApiPath -ServiceRole compute-worker -Profile $Profile -RegistryId $RegistryId -DatabaseSchema $Schema -SnapshotStorageRoot $SnapshotStorageRoot -SnapshotProfile $SnapshotProfile
+    'core-api' = New-CoreIntegrationIdentity -Values $identityValues -EnvironmentFile $EnvironmentFile -CoreApiPath $CoreApiPath -Profile $Profile -RegistryId $RegistryId
+}
+Assert-IntegrationTopology -RootPath (Join-Path $PSScriptRoot '..') -Profile $Profile -RegistryId $RegistryId -ExpectedIdentities $expectedIdentities | Out-Null
 
 $csrf = 'integration-smoke-csrf'
 $cookie = "REFINVEST_ACCESS_TOKEN=$AccessToken; XSRF-TOKEN=$csrf"

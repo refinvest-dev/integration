@@ -13,17 +13,30 @@ param(
     [int]$Concurrency = 3,
     [double]$TerminalTimeout = 120,
     [double]$PollInterval = 2,
-    [double]$Cooldown = 5
+    [double]$Cooldown = 5,
+    [string]$Profile = 'observability-load',
+    [string]$RegistryId = 'observability-load'
 )
 
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
 if ($values['POSTGRES_DB'] -cne 'refinvest_integration') {
     throw 'Load tests are allowed only against refinvest_integration.'
 }
 & (Join-Path $PSScriptRoot 'verify-contract-sync.ps1') `
     -ContextPath $ContextPath -CoreApiPath $CoreApiPath -ComputeApiPath $ComputeApiPath
+
+$records = Get-IntegrationProcessRecords -RootPath (Join-Path $PSScriptRoot '..') -RegistryId $RegistryId
+$expected = @{
+    'compute-api' = New-ComputeIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -ComputeApiPath $ComputeApiPath -ServiceRole compute-api -Profile $Profile -RegistryId $RegistryId -Observability
+    'compute-worker' = New-ComputeIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -ComputeApiPath $ComputeApiPath -ServiceRole compute-worker -Profile $Profile -RegistryId $RegistryId -Observability
+    'core-api' = New-CoreIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -CoreApiPath $CoreApiPath -Profile $Profile -RegistryId $RegistryId -Observability
+}
+if ($records.ContainsKey('prometheus')) { $expected['prometheus'] = $records['prometheus'].identity }
+Assert-IntegrationTopology -RootPath (Join-Path $PSScriptRoot '..') -Profile $Profile -RegistryId $RegistryId `
+    -ExpectedIdentities $expected -RequiredServices @('compute-api','compute-worker','core-api','prometheus') | Out-Null
 
 # Each invocation gets a separate synthetic PRO member, so the monthly quota and
 # concurrent-run count of an existing developer account are untouched.

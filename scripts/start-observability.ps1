@@ -4,27 +4,36 @@ param(
     [string]$GrafanaExe,
     [securestring]$GrafanaAdminPassword,
     [switch]$PrometheusOnly,
-    [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local')
+    [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
+    [string]$Profile = 'observability-load',
+    [string]$RegistryId = 'observability-load'
 )
 
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $values = Get-IntegrationEnvironment $EnvironmentFile
 if (-not $PrometheusOnly -and ([string]::IsNullOrWhiteSpace($GrafanaExe) -or $null -eq $GrafanaAdminPassword)) {
     throw 'GrafanaExe and GrafanaAdminPassword are required unless PrometheusOnly is selected.'
 }
 $data = Join-Path $root '.integration-data\observability'
-$registry = Join-Path $data 'processes.json'
-if (Test-Path $registry) { throw "Observability registry exists: $registry. Stop the recorded processes first." }
-$ports = if ($PrometheusOnly) { @(9090) } else { @(9090, 3002) }
-foreach ($port in $ports) {
-    if (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue) {
-        throw "Port $port is already in use."
-    }
-}
+$registry = Join-Path $data 'grafana-process.json'
+if (-not $PrometheusOnly -and (Test-Path $registry)) { throw "Grafana registry exists: $registry. Stop the recorded process first." }
 $prometheus = (Resolve-Path -LiteralPath $PrometheusExe).Path
 $grafana = if ($PrometheusOnly) { $null } else { (Resolve-Path -LiteralPath $GrafanaExe).Path }
+$prometheusIdentity = New-PrometheusIntegrationIdentity -IntegrationPath $root -EnvironmentFile $EnvironmentFile -ExecutablePath $prometheus -Profile $Profile -RegistryId $RegistryId
+$allowed = Assert-IntegrationServiceStartAllowed -RootPath $root -Name prometheus -ExpectedIdentity $prometheusIdentity -RegistryId $RegistryId -Port 9090
+if ($allowed.reuse) {
+    Write-Output 'Prometheus already running with matching identity: http://127.0.0.1:9090/targets'
+    if (-not $PrometheusOnly) {
+        throw 'Prometheus is already running; stop this observability profile before starting Prometheus and Grafana together.'
+    }
+    return
+}
+if (-not $PrometheusOnly -and (Test-IntegrationTcpListener -Port 3002)) {
+    throw 'UNOWNED_PORT 3002 is already in use; refusing to start or terminate Grafana.'
+}
 New-Item -ItemType Directory -Force -Path $data, (Join-Path $data 'prometheus'), (Join-Path $data 'grafana'), (Join-Path $data 'logs') | Out-Null
 $scrapePasswordFile = Join-Path $data 'core-metrics-password'
 try {
@@ -68,16 +77,15 @@ $start = @{
 }
 try {
     $prom = Start-Process @start
+    Register-IntegrationProcess -RootPath $root -Name prometheus -Process $prom -Identity $prometheusIdentity `
+        -RegistryId $RegistryId -Port 9090 -HealthUrl 'http://127.0.0.1:9090/-/healthy' `
+        -LogPath (Join-Path $data 'logs\prometheus.out.log')
 } catch {
     Remove-Item -LiteralPath $scrapePasswordFile -ErrorAction SilentlyContinue
     throw
 }
 try {
     if ($PrometheusOnly) {
-        $records = @($prom) | ForEach-Object {
-            [pscustomobject]@{ id = $_.Id; started = $_.StartTime.ToUniversalTime().ToString('o'); path = $_.Path }
-        }
-        $records | ConvertTo-Json | Set-Content -LiteralPath $registry -Encoding UTF8
         Write-Output 'Prometheus: http://127.0.0.1:9090/targets'
         return
     }
@@ -93,14 +101,12 @@ try {
     $graf = Start-Process -FilePath $grafana -ArgumentList $grafanaArgs -WorkingDirectory $root `
         -RedirectStandardOutput (Join-Path $data 'logs\grafana.out.log') `
         -RedirectStandardError (Join-Path $data 'logs\grafana.err.log') -PassThru -WindowStyle Hidden
-    $records = @($prom, $graf) | ForEach-Object {
-        [pscustomobject]@{ id = $_.Id; started = $_.StartTime.ToUniversalTime().ToString('o'); path = $_.Path }
-    }
-    $records | ConvertTo-Json | Set-Content -LiteralPath $registry -Encoding UTF8
+    [pscustomobject]@{ id = $graf.Id; started = $graf.StartTime.ToUniversalTime().ToString('o'); path = $graf.Path } |
+        ConvertTo-Json | Set-Content -LiteralPath $registry -Encoding UTF8
     Write-Output 'Prometheus: http://127.0.0.1:9090/targets'
     Write-Output 'Grafana: http://127.0.0.1:3002 (admin; password supplied at launch)'
 } catch {
-    Stop-Process -Id $prom.Id -ErrorAction SilentlyContinue
+    Stop-IntegrationRegisteredProcess -RootPath $root -Name prometheus -RegistryId $RegistryId -ErrorAction SilentlyContinue | Out-Null
     Remove-Item -LiteralPath $scrapePasswordFile -ErrorAction SilentlyContinue
     throw
 } finally {

@@ -167,20 +167,55 @@ Start the backend processes in this order:
 .\scripts\start-core-api.ps1
 ```
 
-The start scripts record only the processes they launch in the ignored
-`.integration-data/processes.json` registry. Use the lifecycle helpers to
-inspect or stop those recorded processes:
+The start scripts record only the processes they launch in ignored,
+profile-scoped `.integration-data/processes/<registry-id>.json` registries.
+The default stack uses `default`; API smoke, browser acceptance, observability,
+and each reliability run use separate registry IDs. A record contains PID and
+start time (OS process identity) plus a secret-free configuration identity:
+service role, execution profile, checkout path/revision, listen address,
+database name/schema, snapshot profile/root, environment-file path, and the
+service endpoints that affect topology. Dirty checkout state is diagnostic and
+is not part of the reuse fingerprint.
+
+A start script reuses a live recorded process only when PID/start time, role,
+profile, repository revision, configuration fingerprint, listener ownership,
+and health all match. A healthy endpoint is not sufficient. `MISMATCH`,
+`LEGACY`, `STALE`, or `UNOWNED_PORT` is a hard failure and no process is stopped
+or restarted automatically. Use the lifecycle helpers to inspect or explicitly
+stop only the recorded profile:
 
 ```powershell
 .\scripts\status-integration.ps1
 .\scripts\stop-integration.ps1
 # Or stop only a recorded service.
 .\scripts\stop-integration.ps1 -Service core-api
+# Example for an acceptance profile.
+.\scripts\status-integration.ps1 -Profile web-acceptance -RegistryId web-acceptance
+.\scripts\stop-integration.ps1 -Profile web-acceptance -RegistryId web-acceptance
 ```
 
 `stop-integration.ps1` verifies the recorded launcher PID and start time
 before stopping its process tree. It never stops a listener or worker that was
-not recorded by an integration start script.
+not recorded by an integration start script. If status reports a schema
+mismatch such as `compute-api=ri_rel_*` versus `compute-worker=public`, stop the
+named service with the exact profile/registry command printed by status and
+then start the intended stack. Do not kill the port owner directly.
+
+`status-integration.ps1` reports PID validation, listener ownership, health,
+recorded/current revisions, database, schema, and identity state. `MATCH` is
+reusable; `MISMATCH` is a live but incompatible managed service; `LEGACY` lacks
+configuration identity; `STALE` no longer identifies the recorded OS process;
+and `UNOWNED_PORT` means integration has no matching ownership record. Legacy
+`.integration-data/processes.json` records are never assumed compatible; after
+inspection, they can be stopped explicitly with
+`.\scripts\stop-integration.ps1 -Legacy`.
+
+Before submitting jobs, API smoke, Web acceptance, controlled load, and the
+reliability recovery path run a cross-service topology preflight. It requires
+Core/Compute to use the same integration database, Compute API/Worker to use
+the same schema and snapshot identity, Core to target the recorded Compute API
+(or its recorded fault proxy), Web to target the recorded Core endpoint, and
+Prometheus targets to match recorded observability endpoints.
 
 `start-core-api.ps1` also sets Gradle's user home to the ignored
 `.integration-data/gradle` directory. This avoids a global Gradle cache and

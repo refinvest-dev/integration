@@ -4,6 +4,8 @@ param(
     [string]$CoreApiPath = (Join-Path $PSScriptRoot '..\..\api\refinvest'),
     [string]$ComputeBaseUrl,
     [string]$DatabaseSchema,
+    [string]$Profile = 'default',
+    [string]$RegistryId = 'default',
     [switch]$Observability
 )
 
@@ -11,6 +13,17 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
+$schemaName = if ([string]::IsNullOrWhiteSpace($DatabaseSchema)) { 'public' } else { $DatabaseSchema }
+$identity = New-CoreIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -CoreApiPath $CoreApiPath `
+    -Profile $Profile -RegistryId $RegistryId -DatabaseSchema $schemaName `
+    -ComputeBaseUrl $ComputeBaseUrl -Observability:$Observability
+$port = if ($values['INTEGRATION_CORE_PORT']) { [int]$values['INTEGRATION_CORE_PORT'] } else { 8080 }
+$allowed = Assert-IntegrationServiceStartAllowed -RootPath (Join-Path $PSScriptRoot '..') `
+    -Name 'core-api' -ExpectedIdentity $identity -RegistryId $RegistryId -Port $port
+if ($allowed.reuse) {
+    [pscustomobject]@{ processId=$allowed.record.servicePid; healthUrl=$allowed.record.healthUrl; reused=$true; profile=$Profile }
+    return
+}
 Set-CoreIntegrationEnvironment $values
 if ($Observability) {
     $scrapePassword = $values['REFINVEST_METRICS_SCRAPE_PASSWORD']
@@ -38,9 +51,6 @@ if (-not [string]::IsNullOrWhiteSpace($DatabaseSchema)) {
     }
     $env:DATABASE_NAME = "$($values['POSTGRES_DB'])?currentSchema=$DatabaseSchema"
 }
-$port = if ($values['INTEGRATION_CORE_PORT']) { $values['INTEGRATION_CORE_PORT'] } else { '8080' }
-if (Test-IntegrationTcpListener -Port $port) { throw "Port $port is already in use." }
-
 $logDir = Join-Path $PSScriptRoot '..\.integration-data\logs'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 $gradleUserHome = Join-Path $PSScriptRoot '..\.integration-data\gradle'
@@ -52,8 +62,8 @@ $startParameters = @{
     FilePath = $gradleWrapper
     ArgumentList = $gradleArguments
     WorkingDirectory = $CoreApiPath
-    RedirectStandardOutput = Join-Path $logDir 'core-api.out.log'
-    RedirectStandardError = Join-Path $logDir 'core-api.err.log'
+    RedirectStandardOutput = Join-Path $logDir "$RegistryId-core-api.out.log"
+    RedirectStandardError = Join-Path $logDir "$RegistryId-core-api.err.log"
     PassThru = $true
 }
 $runningOnWindows = [System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT
@@ -65,5 +75,7 @@ if ($runningOnWindows) {
 }
 Normalize-IntegrationProcessPathEnvironment
 $process = Start-Process @startParameters
-Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'core-api' -Process $process -Port $port -HealthUrl "http://127.0.0.1:$port/actuator/health" -LogPath (Join-Path $logDir 'core-api.out.log')
-[pscustomobject]@{ processId = $process.Id; healthUrl = "http://127.0.0.1:$port/actuator/health" }
+Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'core-api' -Process $process `
+    -Identity $identity -RegistryId $RegistryId -Port $port -HealthUrl "http://127.0.0.1:$port/actuator/health" `
+    -LogPath (Join-Path $logDir "$RegistryId-core-api.out.log")
+[pscustomobject]@{ processId = $process.Id; healthUrl = "http://127.0.0.1:$port/actuator/health"; reused=$false; profile=$Profile }

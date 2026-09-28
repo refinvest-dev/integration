@@ -4,6 +4,9 @@ param(
     [string]$ComputeApiPath = (Join-Path $PSScriptRoot '..\..\compute-api\refinvest'),
     [string]$Schema,
     [string]$SnapshotStorageRoot,
+    [string]$SnapshotProfile = 'integration-e2e-v1',
+    [string]$Profile = 'default',
+    [string]$RegistryId = 'default',
     [switch]$Observability
 )
 
@@ -11,27 +14,38 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'IntegrationProcess.psm1') -Force
 $values = Get-IntegrationEnvironment $EnvironmentFile
+$schemaName = if ([string]::IsNullOrWhiteSpace($Schema)) { 'public' } else { $Schema }
+$identity = New-ComputeIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile `
+    -ComputeApiPath $ComputeApiPath -ServiceRole compute-api -Profile $Profile -RegistryId $RegistryId `
+    -DatabaseSchema $schemaName -SnapshotStorageRoot $SnapshotStorageRoot `
+    -SnapshotProfile $SnapshotProfile -Observability:$Observability
+$port = if ($values['INTEGRATION_COMPUTE_PORT']) { [int]$values['INTEGRATION_COMPUTE_PORT'] } else { 8000 }
+$allowed = Assert-IntegrationServiceStartAllowed -RootPath (Join-Path $PSScriptRoot '..') `
+    -Name 'compute-api' -ExpectedIdentity $identity -RegistryId $RegistryId -Port $port
+if ($allowed.reuse) {
+    [pscustomobject]@{ processId=$allowed.record.servicePid; healthUrl=$allowed.record.healthUrl; reused=$true; profile=$Profile }
+    return
+}
 Set-ComputeIntegrationEnvironment $values (Join-Path $PSScriptRoot '..') $Schema
 if ($Observability) { $env:REFINVEST_API_METRICS_ENABLED = 'true'; $env:REFINVEST_API_METRICS_BIND = '127.0.0.1'; $env:REFINVEST_API_METRICS_PORT = '9101' }
 if (-not [string]::IsNullOrWhiteSpace($SnapshotStorageRoot)) {
     $env:REFINVEST_SNAPSHOT_STORAGE_ROOT = Resolve-IntegrationWorkspacePath `
         (Join-Path $PSScriptRoot '..') $SnapshotStorageRoot
 }
-$port = if ($values['INTEGRATION_COMPUTE_PORT']) { $values['INTEGRATION_COMPUTE_PORT'] } else { '8000' }
-if (Test-IntegrationTcpListener -Port $port) { throw "Port $port is already in use." }
-
 $logDir = Join-Path $PSScriptRoot '..\.integration-data\logs'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 $startParameters = @{
     FilePath = Get-IntegrationPython -ComputeApiPath $ComputeApiPath
     ArgumentList = "-m uvicorn refinvest.app.main:app --host 127.0.0.1 --port $port"
     WorkingDirectory = $ComputeApiPath
-    RedirectStandardOutput = Join-Path $logDir 'compute-api.out.log'
-    RedirectStandardError = Join-Path $logDir 'compute-api.err.log'
+    RedirectStandardOutput = Join-Path $logDir "$RegistryId-compute-api.out.log"
+    RedirectStandardError = Join-Path $logDir "$RegistryId-compute-api.err.log"
     PassThru = $true
 }
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) { $startParameters.WindowStyle = 'Hidden' }
 Normalize-IntegrationProcessPathEnvironment
 $process = Start-Process @startParameters
-Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'compute-api' -Process $process -Port $port -HealthUrl "http://127.0.0.1:$port/health" -LogPath (Join-Path $logDir 'compute-api.out.log')
-[pscustomobject]@{ processId = $process.Id; healthUrl = "http://127.0.0.1:$port/health" }
+Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'compute-api' -Process $process `
+    -Identity $identity -RegistryId $RegistryId -Port $port -HealthUrl "http://127.0.0.1:$port/health" `
+    -LogPath (Join-Path $logDir "$RegistryId-compute-api.out.log")
+[pscustomobject]@{ processId = $process.Id; healthUrl = "http://127.0.0.1:$port/health"; reused=$false; profile=$Profile }
