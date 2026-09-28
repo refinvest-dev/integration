@@ -60,6 +60,25 @@ function Get-IntegrationProcessRecords {
     $records
 }
 
+function ConvertTo-IntegrationUtcStartTime {
+    param([Parameter(Mandatory)]$Value)
+    if ($Value -is [DateTime]) { return ([DateTime]$Value).ToUniversalTime() }
+    if ($Value -is [DateTimeOffset]) { return ([DateTimeOffset]$Value).UtcDateTime }
+    [DateTimeOffset]::Parse(
+        [string]$Value,
+        [Globalization.CultureInfo]::InvariantCulture,
+        [Globalization.DateTimeStyles]::RoundtripKind
+    ).UtcDateTime
+}
+
+function Test-IntegrationStartTimeMatches {
+    param([Parameter(Mandatory)][DateTime]$Actual, [Parameter(Mandatory)]$Recorded)
+    try {
+        $recordedUtc = ConvertTo-IntegrationUtcStartTime $Recorded
+        [Math]::Abs(($Actual.ToUniversalTime().Ticks - $recordedUtc.Ticks)) -le [TimeSpan]::TicksPerMillisecond
+    } catch { $false }
+}
+
 function Save-IntegrationProcessRecords {
     param([string]$RootPath, [string]$RegistryId, [hashtable]$Records)
     $registryPath = Get-IntegrationProcessRegistryPath $RootPath $RegistryId
@@ -78,7 +97,7 @@ function Get-IntegrationProcessOwnership {
     param([Parameter(Mandatory)]$Record)
     try {
         $process = Get-Process -Id ([int]$Record.launcherPid) -ErrorAction Stop
-        if ($process.StartTime.ToUniversalTime().ToString('o') -ne $Record.launcherStartedAt) {
+        if (-not (Test-IntegrationStartTimeMatches -Actual $process.StartTime -Recorded $Record.launcherStartedAt)) {
             return [pscustomobject]@{ state = 'pid-reused'; process = $null }
         }
         [pscustomobject]@{ state = 'running'; process = $process }
@@ -224,7 +243,7 @@ function Assert-IntegrationServiceStartAllowed {
             }
             try {
                 $serviceProcess = Get-Process -Id ([int]$listenerPid) -ErrorAction Stop
-                if ($record.serviceStartedAt -and $serviceProcess.StartTime.ToUniversalTime().ToString('o') -ne $record.serviceStartedAt) {
+                if ($record.serviceStartedAt -and -not (Test-IntegrationStartTimeMatches -Actual $serviceProcess.StartTime -Recorded $record.serviceStartedAt)) {
                     throw "MISMATCH $Name listener PID start time differs from the recorded service start time."
                 }
             } catch { throw "MISMATCH $Name listener process identity could not be verified: $($_.Exception.Message)" }
@@ -411,7 +430,7 @@ function Stop-IntegrationRegisteredProcess {
                 [int]$listenerAfter -eq [int]$record.servicePid) {
                 try {
                     $serviceProcess = Get-Process -Id ([int]$record.servicePid) -ErrorAction Stop
-                    if (-not $record.serviceStartedAt -or $serviceProcess.StartTime.ToUniversalTime().ToString('o') -eq $record.serviceStartedAt) {
+                    if (-not $record.serviceStartedAt -or (Test-IntegrationStartTimeMatches -Actual $serviceProcess.StartTime -Recorded $record.serviceStartedAt)) {
                         & taskkill.exe /PID $record.servicePid /T /F 2>$null | Out-Null
                         Start-Sleep -Milliseconds 200
                         $listenerAfter = Get-IntegrationListenerPid $record.port

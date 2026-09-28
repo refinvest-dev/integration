@@ -44,6 +44,11 @@ try {
     Register-IntegrationProcess -RootPath $testRoot -Name compute-api -Process $current -Identity $match -RegistryId default
     $allowed = Assert-IntegrationServiceStartAllowed -RootPath $testRoot -Name compute-api -ExpectedIdentity $match -RegistryId default
     Assert-True $allowed.reuse 'matching PID/start time/identity is reusable'
+    $dateTimeRecord = [pscustomobject]@{
+        launcherPid = $current.Id
+        launcherStartedAt = $current.StartTime.ToUniversalTime()
+    }
+    Assert-True ((Get-IntegrationProcessOwnership $dateTimeRecord).state -eq 'running') 'DateTime JSON start time preserves process ownership'
 
     foreach ($case in @(
         @{ name='schema'; identity=(New-TestIdentity compute-api default default 'refinvest_integration' 'other_schema') },
