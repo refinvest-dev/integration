@@ -94,6 +94,29 @@ function Test-IntegrationProcessTreeContains {
             $current = [IntegrationProcessNative.ProcessTree]::ParentProcessId($current)
             if ($current -eq $LauncherPid) { return $true }
         }
+    } elseif (Test-Path -LiteralPath '/proc') {
+        $current = $ProcessId
+        for ($i = 0; $i -lt 32 -and $current -gt 0; $i++) {
+            $statPath = "/proc/$current/stat"
+            if (-not (Test-Path -LiteralPath $statPath)) { return $false }
+            try {
+                $stat = Get-Content -LiteralPath $statPath -Raw -ErrorAction Stop
+                $closingParenthesis = $stat.LastIndexOf(')')
+                if ($closingParenthesis -lt 0) { return $false }
+                $fields = @($stat.Substring($closingParenthesis + 1).Trim() -split '\s+')
+                if ($fields.Count -lt 2) { return $false }
+                $current = [int]$fields[1]
+                if ($current -eq $LauncherPid) { return $true }
+            } catch { return $false }
+        }
+    } elseif (Get-Command ps -ErrorAction SilentlyContinue) {
+        $current = $ProcessId
+        for ($i = 0; $i -lt 32 -and $current -gt 0; $i++) {
+            $parent = (& ps -o ppid= -p $current 2>$null).Trim()
+            if ($parent -notmatch '^\d+$') { return $false }
+            $current = [int]$parent
+            if ($current -eq $LauncherPid) { return $true }
+        }
     }
     $false
 }
@@ -101,12 +124,37 @@ function Test-IntegrationProcessTreeContains {
 function Get-IntegrationListenerPid {
     param([Nullable[int]]$Port)
     if ($null -eq $Port) { return $null }
-    $listener = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |
-        Select-Object -First 1
-    if ($null -ne $listener) { return [int]$listener.OwningProcess }
+    $getNetTcpConnection = Get-Command Get-NetTCPConnection -ErrorAction SilentlyContinue
+    if ($null -ne $getNetTcpConnection) {
+        $listener = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+        if ($null -ne $listener) { return [int]$listener.OwningProcess }
+    }
     if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
         foreach ($line in @(& netstat.exe -ano -p tcp 2>$null)) {
             if ($line -match "^\s*TCP\s+\S+:$Port\s+\S+\s+LISTENING\s+(\d+)\s*$") { return [int]$Matches[1] }
+        }
+        return $null
+    }
+    $ss = Get-Command ss -ErrorAction SilentlyContinue
+    if ($null -ne $ss) {
+        foreach ($line in @(& $ss.Source --listening --tcp --numeric --processes 2>$null)) {
+            if ($line -match "^\s*LISTEN\s+\S+\s+\S+\s+\S+:$Port\s+") {
+                if ($line -match 'pid=(\d+)') { return [int]$Matches[1] }
+                return 0
+            }
+        }
+    }
+    $lsof = Get-Command lsof -ErrorAction SilentlyContinue
+    if ($null -ne $lsof) {
+        $listenerPid = @(& $lsof.Source -nP "-iTCP:$Port" -sTCP:LISTEN -t 2>$null | Select-Object -First 1)
+        if ($listenerPid.Count -gt 0 -and [string]$listenerPid[0] -match '^\d+$') { return [int]$listenerPid[0] }
+    }
+    $netstat = Get-Command netstat -ErrorAction SilentlyContinue
+    if ($null -ne $netstat) {
+        foreach ($line in @(& $netstat.Source -lntp 2>$null)) {
+            if ($line -match "^tcp\S*\s+.*\S+:$Port\s+.*\s+LISTEN\s+(\d+)/") { return [int]$Matches[1] }
+            if ($line -match "^tcp\S*\s+.*\S+:$Port\s+.*\s+LISTEN\s+-\s*$") { return 0 }
         }
     }
     $null
