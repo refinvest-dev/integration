@@ -1,0 +1,59 @@
+{
+  "artifacts": [
+    {
+      "path": "trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "sha256": "5d8e1bafc44a3591e89ec32fb0e0d8b387a3dd5091429999203f4f691b0528f2",
+      "sizeBytes": 532
+    },
+    {
+      "path": "position-history.csv",
+      "role": "POSITION_HISTORY",
+      "sha256": "15f2e1d8304e99706c856b0d95cadade721768a3490f7d35ad06b23078c50405",
+      "sizeBytes": 209
+    }
+  ],
+  "declaredPositionMode": "ONE_WAY",
+  "description": "포지션 확대 후 일부 축소와 전량 청산",
+  "expectedCanonicalRecordCount": 13,
+  "expectedEligibleEpisodeCount": 1,
+  "expectedEpisodeCount": 1,
+  "expectedExcludedEpisodeCount": 0,
+  "expectedFailureCode": null,
+  "expectedImportStatus": "ACCEPTED",
+  "expectedReconciliationStatuses": [
+    "EXACT"
+  ],
+  "fixtureId": "increase-and-reduce",
+  "instrumentTerms": {
+    "contractMultiplier": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "settlementPrecision": 2,
+    "stepSize": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "tickSize": {
+      "scale": 2,
+      "unscaled": "1"
+    }
+  },
+  "normalizerVersion": "fixture-v1",
+  "productFamily": "LINEAR_PERPETUAL",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewTimezone": "Asia/Seoul",
+  "schemaVersion": "1.0.0",
+  "settlementAsset": "USDT",
+  "sourceDialect": {
+    "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
+    "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
+  },
+  "sourceTimezone": "Asia/Seoul",
+  "tags": [
+    "ACCEPTED_ELIGIBLE",
+    "SYNTHETIC",
+    "NON_PRODUCTION"
+  ]
+}

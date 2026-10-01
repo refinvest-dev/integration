@@ -131,6 +131,20 @@ before optimization; an `official=false` smoke artifact is never relabeled. A Co
 instead requires the same E2E load conditions before and after, because a Compute-only benchmark cannot
 establish that effect.
 
+## Trading Review reconstruction fixtures
+
+Binance USDⓈ-M Linear Perpetual One-way reconstruction의 합성 Golden Dataset과 fixture catalog는
+[`fixtures/trading-review/binance-usds-v1`](fixtures/trading-review/binance-usds-v1/README.md)에 있다.
+정적 schema, provenance, 보존식, checksum, 개인정보 namespace와 손상 거절 검증은 다음 명령으로 실행한다.
+
+```powershell
+.\scripts\verify-trading-review-fixtures.ps1
+```
+
+이 검증은 reconstruction을 구현하거나 실행하지 않으며, Trading Review API가 확정되기 전까지 endpoint 기반
+E2E를 추측하지 않는다. Cross-service compatibility/E2E 전에는 기존 규칙대로 먼저
+`.\scripts\verify-contract-sync.ps1`을 실행한다.
+
 ## Quick start: API integration smoke
 
 Copy `.env.example` to `.env.local`. Use an isolated database named

@@ -1,0 +1,59 @@
+{
+  "artifacts": [
+    {
+      "path": "trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "sha256": "12e4eedd85862fe1e7ec985c13593622410b38131d5d4800cf65c3663e4bf40b",
+      "sizeBytes": 316
+    },
+    {
+      "path": "position-history.csv",
+      "role": "POSITION_HISTORY",
+      "sha256": "ab8c80a387a680248c186dbd0ba94633ddb1a844feae267684878b1c5b239a6c",
+      "sizeBytes": 209
+    }
+  ],
+  "declaredPositionMode": "ONE_WAY",
+  "description": "settlement asset과 다른 fee의 valuation 부재",
+  "expectedCanonicalRecordCount": 7,
+  "expectedEligibleEpisodeCount": 0,
+  "expectedEpisodeCount": 1,
+  "expectedExcludedEpisodeCount": 1,
+  "expectedFailureCode": null,
+  "expectedImportStatus": "ACCEPTED",
+  "expectedReconciliationStatuses": [
+    "EXACT"
+  ],
+  "fixtureId": "different-fee-asset",
+  "instrumentTerms": {
+    "contractMultiplier": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "settlementPrecision": 2,
+    "stepSize": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "tickSize": {
+      "scale": 2,
+      "unscaled": "1"
+    }
+  },
+  "normalizerVersion": "fixture-v1",
+  "productFamily": "LINEAR_PERPETUAL",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewTimezone": "Asia/Seoul",
+  "schemaVersion": "1.0.0",
+  "settlementAsset": "USDT",
+  "sourceDialect": {
+    "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
+    "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
+  },
+  "sourceTimezone": "Asia/Seoul",
+  "tags": [
+    "ACCEPTED_EXCLUDED",
+    "SYNTHETIC",
+    "NON_PRODUCTION"
+  ]
+}

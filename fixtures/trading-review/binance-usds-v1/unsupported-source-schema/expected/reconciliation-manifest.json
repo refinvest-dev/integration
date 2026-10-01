@@ -1,0 +1,31 @@
+{
+  "allocations": [],
+  "canonicalManifestHash": "a87616ea02ce917fcb7300a03d47a138a061fadd51a7f9f3408e252bfb914d18",
+  "canonicalManifestHashInputs": {
+    "canonicalRecordContentHash": "9e8b38bcea4fdc0ca384e6a04d80311c5594db6764258551a7760cf9a1bdef88",
+    "instrumentTermsHash": "5e458341f034961318f4d5d33cedda47717979a8480d3c7f1c05ef8031f0aad5",
+    "normalizerVersion": "fixture-v1",
+    "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "sourceArtifactHashes": {
+      "POSITION_HISTORY": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+      "TRADE_HISTORY": "eb93b35cc379982a3039ef9f203f964062c9f439760b1e6769cacc18dd6ce825"
+    }
+  },
+  "conservation": {
+    "feesByAsset": "NOT_EVALUATED",
+    "passed": null,
+    "quantity": "NOT_EVALUATED",
+    "reportedPnl": "NOT_EVALUATED"
+  },
+  "episodes": [],
+  "fixtureId": "unsupported-source-schema",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "UNSUPPORTED_SOURCE_SCHEMA"
+  },
+  "manifestSchemaVersion": "1.0.0",
+  "normalizerVersion": "fixture-v1",
+  "orderedExecutionKeysByInstrument": {},
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "summaryMatches": []
+}

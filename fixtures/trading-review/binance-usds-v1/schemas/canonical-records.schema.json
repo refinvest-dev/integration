@@ -1,0 +1,87 @@
+{
+  "$id": "https://refinvest.dev/schemas/trading-review/canonical-records-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "decimal": {
+      "additionalProperties": false,
+      "properties": {
+        "scale": { "minimum": 0, "type": "integer" },
+        "unscaled": { "pattern": "^-?(0|[1-9][0-9]*)$", "type": "string" }
+      },
+      "required": ["scale", "unscaled"],
+      "type": "object"
+    },
+    "instrument": {
+      "additionalProperties": false,
+      "properties": {
+        "instrumentId": { "pattern": "^BINANCE:USDS_FUTURES:[A-Z0-9_]+$", "type": "string" },
+        "venueSymbol": { "pattern": "^[A-Z0-9_]+$", "type": "string" }
+      },
+      "required": ["instrumentId", "venueSymbol"],
+      "type": "object"
+    },
+    "money": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": { "$ref": "#/$defs/decimal" },
+        "asset": { "pattern": "^[A-Z][A-Z0-9]*$", "type": "string" }
+      },
+      "required": ["amount", "asset"],
+      "type": "object"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRole": { "enum": ["TRADE_HISTORY", "POSITION_HISTORY"] },
+        "sourceRecordKey": { "minLength": 1, "type": "string" },
+        "sourceRowNumber": { "minimum": 1, "type": "integer" }
+      },
+      "required": ["artifactRole", "sourceRowNumber", "sourceRecordKey"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "fixtureId": { "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "type": "string" },
+    "records": {
+      "items": {
+        "allOf": [
+          {
+            "properties": {
+              "canonicalRecordId": { "minLength": 1, "type": "string" },
+              "instrument": { "$ref": "#/$defs/instrument" },
+              "recordType": { "enum": ["EXECUTION", "FEE", "VENUE_REPORTED_PNL", "VENUE_POSITION_SUMMARY"] },
+              "sourceArtifactRole": { "enum": ["TRADE_HISTORY", "POSITION_HISTORY"] },
+              "sourceProvenance": { "items": { "$ref": "#/$defs/provenance" }, "minItems": 1, "type": "array" },
+              "sourceRowNumber": { "minimum": 1, "type": "integer" },
+              "syntheticSourceRecordKey": { "minLength": 1, "type": "string" }
+            },
+            "required": ["canonicalRecordId", "recordType", "instrument", "sourceArtifactRole", "sourceRowNumber", "syntheticSourceRecordKey", "sourceProvenance"]
+          },
+          {
+            "if": { "properties": { "recordType": { "const": "EXECUTION" } } },
+            "then": { "required": ["occurredAt", "executionSide", "quantity", "price", "sourceAmount", "rawTradeId", "rawOrderId", "buyer", "maker", "executionOrigin"] }
+          },
+          {
+            "if": { "properties": { "recordType": { "const": "FEE" } } },
+            "then": { "required": ["occurredAt", "fee"] }
+          },
+          {
+            "if": { "properties": { "recordType": { "const": "VENUE_REPORTED_PNL" } } },
+            "then": { "required": ["occurredAt", "reportedRealizedPnl"] }
+          },
+          {
+            "if": { "properties": { "recordType": { "const": "VENUE_POSITION_SUMMARY" } } },
+            "then": { "required": ["openedInterval", "closedInterval", "direction", "marginMode", "entryPrice", "averageClosePrice", "maxQuantity", "closedVolume", "closingPnl", "status"] }
+          }
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schemaVersion": { "const": "1.0.0" }
+  },
+  "required": ["schemaVersion", "fixtureId", "records"],
+  "title": "RefInvest canonical trading records fixture",
+  "type": "object"
+}

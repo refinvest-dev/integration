@@ -1,0 +1,41 @@
+{
+  "$id": "https://refinvest.dev/schemas/trading-review/quality-report-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalRecordCount": { "minimum": 0, "type": "integer" },
+    "capabilitySummary": { "additionalProperties": { "minimum": 0, "type": "integer" }, "type": "object" },
+    "conflictCount": { "minimum": 0, "type": "integer" },
+    "duplicateCount": { "minimum": 0, "type": "integer" },
+    "eligibleEpisodeCount": { "minimum": 0, "type": "integer" },
+    "episodeCount": { "minimum": 0, "type": "integer" },
+    "excludedEpisodeCount": { "minimum": 0, "type": "integer" },
+    "exclusionReasonCounts": { "additionalProperties": { "minimum": 0, "type": "integer" }, "type": "object" },
+    "fixtureId": { "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "type": "string" },
+    "importStatus": { "enum": ["ACCEPTED", "REJECTED"] },
+    "parsedRowCount": {
+      "properties": { "POSITION_HISTORY": { "minimum": 0, "type": "integer" }, "TRADE_HISTORY": { "minimum": 0, "type": "integer" } },
+      "required": ["TRADE_HISTORY", "POSITION_HISTORY"],
+      "type": "object"
+    },
+    "sourceRowCount": {
+      "properties": { "POSITION_HISTORY": { "minimum": 0, "type": "integer" }, "TRADE_HISTORY": { "minimum": 0, "type": "integer" } },
+      "required": ["TRADE_HISTORY", "POSITION_HISTORY"],
+      "type": "object"
+    },
+    "versions": {
+      "properties": {
+        "import": { "const": "BINANCE_USDS_DUAL_ARTIFACT_IMPORT_V1" },
+        "normalizer": { "const": "fixture-v1" },
+        "reconciliation": { "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1" },
+        "reconstruction": { "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1" }
+      },
+      "required": ["import", "normalizer", "reconstruction", "reconciliation"],
+      "type": "object"
+    },
+    "warnings": { "items": { "type": "string" }, "type": "array" }
+  },
+  "required": ["fixtureId", "importStatus", "sourceRowCount", "parsedRowCount", "canonicalRecordCount", "duplicateCount", "conflictCount", "episodeCount", "eligibleEpisodeCount", "excludedEpisodeCount", "exclusionReasonCounts", "warnings", "capabilitySummary", "versions"],
+  "title": "RefInvest trading fixture quality report",
+  "type": "object"
+}
