@@ -1,0 +1,66 @@
+{
+  "evidenceChains": [
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:reentry-before-boundary:metric:reentry",
+      "behaviorObservationId": "synthetic:analytics-v1:reentry-before-boundary:observation:reentry:l1",
+      "episodeId": "synthetic:analytics-v1:reentry-before-boundary:episode:l1",
+      "evidenceId": "synthetic:analytics-v1:reentry-before-boundary:evidence:reentry:l1",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:allocation:l1:open",
+        "synthetic:analytics-v1:reentry-before-boundary:allocation:l1:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-before-boundary:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-before-boundary:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-before-boundary:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-before-boundary:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:record:l1:open",
+        "synthetic:analytics-v1:reentry-before-boundary:record:l1:open:fee",
+        "synthetic:analytics-v1:reentry-before-boundary:record:l1:open:pnl",
+        "synthetic:analytics-v1:reentry-before-boundary:record:l1:close",
+        "synthetic:analytics-v1:reentry-before-boundary:record:l1:close:fee",
+        "synthetic:analytics-v1:reentry-before-boundary:record:l1:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:reentry-before-boundary:metric:reentry",
+      "behaviorObservationId": "synthetic:analytics-v1:reentry-before-boundary:observation:reentry:e2",
+      "episodeId": "synthetic:analytics-v1:reentry-before-boundary:episode:e2",
+      "evidenceId": "synthetic:analytics-v1:reentry-before-boundary:evidence:reentry:e2",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:allocation:e2:open",
+        "synthetic:analytics-v1:reentry-before-boundary:allocation:e2:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-before-boundary:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-before-boundary:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-before-boundary:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-before-boundary:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:record:e2:open",
+        "synthetic:analytics-v1:reentry-before-boundary:record:e2:open:fee",
+        "synthetic:analytics-v1:reentry-before-boundary:record:e2:open:pnl",
+        "synthetic:analytics-v1:reentry-before-boundary:record:e2:close",
+        "synthetic:analytics-v1:reentry-before-boundary:record:e2:close:fee",
+        "synthetic:analytics-v1:reentry-before-boundary:record:e2:close:pnl"
+      ]
+    }
+  ],
+  "fixtureId": "reentry-before-boundary",
+  "schemaVersion": "1.0.0"
+}

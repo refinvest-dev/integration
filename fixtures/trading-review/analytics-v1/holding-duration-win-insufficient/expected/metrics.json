@@ -1,0 +1,92 @@
+{
+  "analysisConfigHash": "e56e80e2ad435efc3a0096ea8c880ed06f9fedbb9d81c273b438d20da82d4156",
+  "fixtureId": "holding-duration-win-insufficient",
+  "metrics": [
+    {
+      "applicabilityReason": null,
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-win-insufficient:metric:holding",
+      "capabilitySnapshotByEpisode": {
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ]
+      },
+      "comparisonCount": 2,
+      "comparisonEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3"
+      ],
+      "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+      "definitionVersion": 1,
+      "eligibleCount": 3,
+      "eligibleEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3"
+      ],
+      "evidenceReference": "synthetic:analytics-v1:holding-duration-win-insufficient:evidence:holding:w1",
+      "excludedCount": 0,
+      "excludedEpisodeIds": [],
+      "exclusionReasonCounts": {},
+      "findingEligibility": "INELIGIBLE_METRIC_STATUS",
+      "intermediateAggregates": {
+        "lossCount": 2,
+        "winCount": 1
+      },
+      "manualVerification": {
+        "firstCheck": "win group count is 1 and configured minimum is 2",
+        "method": "HAND_CALCULATED_INDEPENDENT_DOUBLE_CHECK",
+        "secondCheck": "loss group meets 2, but both group minimums are required; scalar remains null"
+      },
+      "metricStatus": "INSUFFICIENT_SAMPLE",
+      "missingCapabilities": [],
+      "observationIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:observation:holding:w1",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:observation:holding:l2",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:observation:holding:l3"
+      ],
+      "populationCount": 3,
+      "populationEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3"
+      ],
+      "requiredCapabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "STABLE_EPISODE_TIME"
+      ],
+      "result": null,
+      "sampleCounts": {
+        "holdingLosses": {
+          "actual": 2,
+          "minimum": 2
+        },
+        "holdingWins": {
+          "actual": 1,
+          "minimum": 2
+        }
+      },
+      "subjectCount": 1,
+      "subjectEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1"
+      ],
+      "unit": null
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

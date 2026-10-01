@@ -1,0 +1,168 @@
+{
+  "episodes": [
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T09:10:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1",
+      "grossTradingPnl": "10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "10",
+      "openedAt": "2026-01-01T09:00:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "WIN",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:w1:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:w1:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T09:50:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+      "grossTradingPnl": "-10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "-10",
+      "openedAt": "2026-01-01T09:20:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "LOSS",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l2:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l2:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:50:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3",
+      "grossTradingPnl": "-10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "-10",
+      "openedAt": "2026-01-01T10:00:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "LOSS",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l3:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l3:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:5",
+          "sourceRowNumber": 5
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    }
+  ],
+  "fixtureId": "holding-duration-win-insufficient",
+  "schemaVersion": "1.0.0"
+}

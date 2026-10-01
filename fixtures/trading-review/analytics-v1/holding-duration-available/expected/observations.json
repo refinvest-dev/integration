@@ -1,0 +1,100 @@
+{
+  "fixtureId": "holding-duration-available",
+  "observations": [
+    {
+      "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:holding-duration-available:evidence:holding:w1",
+      "observationId": "synthetic:analytics-v1:holding-duration-available:observation:holding:w1",
+      "observationTimestamp": "2026-01-01T09:10:00Z",
+      "observedAttributes": {
+        "membershipRole": "SUBJECT",
+        "outcomeClassification": "WIN"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-available:episode:l3",
+        "synthetic:analytics-v1:holding-duration-available:episode:l4"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:holding-duration-available:episode:w1",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-available:record:w1:open",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:open:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:open:pnl",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:close",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:close:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:close:pnl"
+      ]
+    },
+    {
+      "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:holding-duration-available:evidence:holding:w2",
+      "observationId": "synthetic:analytics-v1:holding-duration-available:observation:holding:w2",
+      "observationTimestamp": "2026-01-01T09:40:00Z",
+      "observedAttributes": {
+        "membershipRole": "SUBJECT",
+        "outcomeClassification": "WIN"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-available:episode:l3",
+        "synthetic:analytics-v1:holding-duration-available:episode:l4"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:holding-duration-available:episode:w2",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-available:record:w2:open",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:open:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:open:pnl",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:close",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:close:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:close:pnl"
+      ]
+    },
+    {
+      "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:holding-duration-available:evidence:holding:l3",
+      "observationId": "synthetic:analytics-v1:holding-duration-available:observation:holding:l3",
+      "observationTimestamp": "2026-01-01T10:30:00Z",
+      "observedAttributes": {
+        "membershipRole": "COMPARISON",
+        "outcomeClassification": "LOSS"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-available:episode:l4"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:holding-duration-available:episode:l3",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-available:record:l3:open",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:open:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:open:pnl",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:close",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:close:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:close:pnl"
+      ]
+    },
+    {
+      "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:holding-duration-available:evidence:holding:l4",
+      "observationId": "synthetic:analytics-v1:holding-duration-available:observation:holding:l4",
+      "observationTimestamp": "2026-01-01T11:30:00Z",
+      "observedAttributes": {
+        "membershipRole": "COMPARISON",
+        "outcomeClassification": "LOSS"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-available:episode:l3"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:holding-duration-available:episode:l4",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-available:record:l4:open",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:open:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:open:pnl",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:close",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:close:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:close:pnl"
+      ]
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

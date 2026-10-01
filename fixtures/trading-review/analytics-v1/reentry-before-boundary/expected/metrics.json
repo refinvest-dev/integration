@@ -1,0 +1,87 @@
+{
+  "analysisConfigHash": "799e1819455c56c4b589a821ef0e6552c501f796af5bd32cd93d47538af9c3ec",
+  "fixtureId": "reentry-before-boundary",
+  "metrics": [
+    {
+      "applicabilityReason": null,
+      "behaviorMetricId": "synthetic:analytics-v1:reentry-before-boundary:metric:reentry",
+      "capabilitySnapshotByEpisode": {
+        "synthetic:analytics-v1:reentry-before-boundary:episode:e2": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:reentry-before-boundary:episode:l1": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ]
+      },
+      "comparisonCount": 1,
+      "comparisonEpisodeIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:episode:e2"
+      ],
+      "definitionId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+      "definitionVersion": 1,
+      "eligibleCount": 2,
+      "eligibleEpisodeIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:episode:l1",
+        "synthetic:analytics-v1:reentry-before-boundary:episode:e2"
+      ],
+      "evidenceReference": "synthetic:analytics-v1:reentry-before-boundary:evidence:reentry:l1",
+      "excludedCount": 0,
+      "excludedEpisodeIds": [],
+      "exclusionReasonCounts": {},
+      "findingEligibility": "INELIGIBLE_SAMPLE",
+      "intermediateAggregates": {
+        "earliestEntryEpisodeIds": [
+          "synthetic:analytics-v1:reentry-before-boundary:episode:e2"
+        ],
+        "elapsedMicroseconds": [
+          1799000000
+        ]
+      },
+      "manualVerification": {
+        "firstCheck": "1 matched loss / 1 eligible loss = 1",
+        "method": "HAND_CALCULATED_INDEPENDENT_DOUBLE_CHECK",
+        "secondCheck": "elapsed 1799000000 microseconds satisfies 0 < elapsed <= 1800000000"
+      },
+      "metricStatus": "AVAILABLE",
+      "missingCapabilities": [],
+      "observationIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:observation:reentry:l1",
+        "synthetic:analytics-v1:reentry-before-boundary:observation:reentry:e2"
+      ],
+      "populationCount": 2,
+      "populationEpisodeIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:episode:l1",
+        "synthetic:analytics-v1:reentry-before-boundary:episode:e2"
+      ],
+      "requiredCapabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "STABLE_EPISODE_TIME"
+      ],
+      "result": {
+        "differentSymbolCount": 0,
+        "eligibleLossCount": 1,
+        "entryWithinWindowRate": {
+          "denominator": 1,
+          "numerator": 1
+        },
+        "lossWithEntryCount": 1,
+        "relatedEntryCount": 1,
+        "sameSymbolCount": 1
+      },
+      "sampleCounts": null,
+      "subjectCount": 1,
+      "subjectEpisodeIds": [
+        "synthetic:analytics-v1:reentry-before-boundary:episode:l1"
+      ],
+      "unit": "RATIO"
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

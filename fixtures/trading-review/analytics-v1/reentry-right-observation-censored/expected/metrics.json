@@ -1,0 +1,66 @@
+{
+  "analysisConfigHash": "2a163ad951ce8b76e331d3b55343a38f0eb5ae4d5f5e375754fe927b98094622",
+  "fixtureId": "reentry-right-observation-censored",
+  "metrics": [
+    {
+      "applicabilityReason": null,
+      "behaviorMetricId": "synthetic:analytics-v1:reentry-right-observation-censored:metric:reentry",
+      "capabilitySnapshotByEpisode": {
+        "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ]
+      },
+      "comparisonCount": 0,
+      "comparisonEpisodeIds": [],
+      "definitionId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+      "definitionVersion": 1,
+      "eligibleCount": 0,
+      "eligibleEpisodeIds": [],
+      "evidenceReference": "synthetic:analytics-v1:reentry-right-observation-censored:evidence:reentry:l1",
+      "excludedCount": 1,
+      "excludedEpisodeIds": [
+        "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1"
+      ],
+      "exclusionReasonCounts": {
+        "WINDOW_RIGHT_CENSORED": 1
+      },
+      "findingEligibility": "INELIGIBLE_METRIC_STATUS",
+      "intermediateAggregates": {
+        "eligibleLossCount": 0,
+        "observationHorizonEnd": "2026-01-01T10:30:00Z"
+      },
+      "manualVerification": {
+        "firstCheck": "10:00 + PT30M = 10:30, later than endExclusive 10:20",
+        "method": "HAND_CALCULATED_INDEPENDENT_DOUBLE_CHECK",
+        "secondCheck": "eligibleLossCount 0 is below configured minimum 1"
+      },
+      "metricStatus": "INSUFFICIENT_SAMPLE",
+      "missingCapabilities": [],
+      "observationIds": [
+        "synthetic:analytics-v1:reentry-right-observation-censored:observation:reentry:l1"
+      ],
+      "populationCount": 1,
+      "populationEpisodeIds": [
+        "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1"
+      ],
+      "requiredCapabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "STABLE_EPISODE_TIME"
+      ],
+      "result": null,
+      "sampleCounts": {
+        "actual": 0,
+        "minimum": 1,
+        "sample": "reentryEligibleLosses"
+      },
+      "subjectCount": 0,
+      "subjectEpisodeIds": [],
+      "unit": null
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

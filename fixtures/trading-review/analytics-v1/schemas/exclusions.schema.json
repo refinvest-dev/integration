@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": { "sourceRef": { "additionalProperties": false, "properties": { "artifactId": { "type": "string" }, "sourceRecordKey": { "type": "string" }, "sourceRowNumber": { "minimum": 1, "type": "integer" } }, "required": ["artifactId", "sourceRowNumber", "sourceRecordKey"], "type": "object" } },
+  "additionalProperties": false,
+  "properties": {
+    "exclusions": { "items": { "additionalProperties": false, "properties": { "candidateId": { "type": "string" }, "exclusionReason": { "minLength": 1, "type": "string" }, "impact": { "minLength": 1, "type": "string" }, "metricDefinitionIds": { "items": { "type": "string" }, "minItems": 1, "type": "array", "uniqueItems": true }, "missingCapability": { "type": ["string", "null"] }, "sourceEvidenceRefs": { "items": { "$ref": "#/$defs/sourceRef" }, "minItems": 1, "type": "array" } }, "required": ["candidateId", "exclusionReason", "metricDefinitionIds", "missingCapability", "sourceEvidenceRefs", "impact"], "type": "object" }, "type": "array" },
+    "fixtureId": { "type": "string" },
+    "schemaVersion": { "const": "1.0.0" }
+  },
+  "required": ["schemaVersion", "fixtureId", "exclusions"],
+  "type": "object"
+}

@@ -1,0 +1,27 @@
+{
+  "exclusions": [
+    {
+      "candidateId": "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1",
+      "exclusionReason": "WINDOW_RIGHT_CENSORED",
+      "impact": "No full observation window; rate is null rather than zero.",
+      "metricDefinitionIds": [
+        "ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+      ],
+      "missingCapability": null,
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ]
+    }
+  ],
+  "fixtureId": "reentry-right-observation-censored",
+  "schemaVersion": "1.0.0"
+}

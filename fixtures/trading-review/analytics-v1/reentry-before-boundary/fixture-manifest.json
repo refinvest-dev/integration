@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "58ceeca9b41c79d061c6c95b897db25fb8077fb758f05baaf4d5fb1ea4fc38b7",
+  "description": "손실 종료 29분 59초 뒤 일반 entry",
+  "expectedMetricStatuses": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": "AVAILABLE"
+  },
+  "expectedResultHash": "6516c34b0161fae579db15ae74d44bc4b5c26be638005f3ca499c426b71353a7",
+  "fixtureId": "reentry-before-boundary",
+  "metricDefinitionIds": [
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+  ],
+  "metricDefinitionVersions": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": 1
+  },
+  "reconciliationManifestHash": "ecc3e941a949dcb4216f93569705053c767357d8357a7244a87525ad52338c92",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:reentry-before-boundary",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "ecc3e941a949dcb4216f93569705053c767357d8357a7244a87525ad52338c92"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "AVAILABLE"
+  ]
+}

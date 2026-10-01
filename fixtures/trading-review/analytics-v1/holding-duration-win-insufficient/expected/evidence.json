@@ -1,0 +1,96 @@
+{
+  "evidenceChains": [
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-win-insufficient:metric:holding",
+      "behaviorObservationId": "synthetic:analytics-v1:holding-duration-win-insufficient:observation:holding:w1",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1",
+      "evidenceId": "synthetic:analytics-v1:holding-duration-win-insufficient:evidence:holding:w1",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:w1:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:w1:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open:pnl",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-win-insufficient:metric:holding",
+      "behaviorObservationId": "synthetic:analytics-v1:holding-duration-win-insufficient:observation:holding:l2",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+      "evidenceId": "synthetic:analytics-v1:holding-duration-win-insufficient:evidence:holding:l2",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l2:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l2:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open:pnl",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-win-insufficient:metric:holding",
+      "behaviorObservationId": "synthetic:analytics-v1:holding-duration-win-insufficient:observation:holding:l3",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3",
+      "evidenceId": "synthetic:analytics-v1:holding-duration-win-insufficient:evidence:holding:l3",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l3:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l3:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:5",
+          "sourceRowNumber": 5
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open:pnl",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close:pnl"
+      ]
+    }
+  ],
+  "fixtureId": "holding-duration-win-insufficient",
+  "schemaVersion": "1.0.0"
+}

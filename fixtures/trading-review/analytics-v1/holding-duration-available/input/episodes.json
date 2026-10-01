@@ -1,0 +1,222 @@
+{
+  "episodes": [
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T09:10:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:holding-duration-available:episode:w1",
+      "grossTradingPnl": "10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "10",
+      "openedAt": "2026-01-01T09:00:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "WIN",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-available:allocation:w1:open",
+        "synthetic:analytics-v1:holding-duration-available:allocation:w1:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T09:40:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:holding-duration-available:episode:w2",
+      "grossTradingPnl": "10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "10",
+      "openedAt": "2026-01-01T09:20:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "WIN",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-available:allocation:w2:open",
+        "synthetic:analytics-v1:holding-duration-available:allocation:w2:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:30:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:holding-duration-available:episode:l3",
+      "grossTradingPnl": "-10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "-10",
+      "openedAt": "2026-01-01T10:00:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "LOSS",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-available:allocation:l3:open",
+        "synthetic:analytics-v1:holding-duration-available:allocation:l3:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:5",
+          "sourceRowNumber": 5
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T11:30:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:holding-duration-available:episode:l4",
+      "grossTradingPnl": "-10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "-10",
+      "openedAt": "2026-01-01T10:40:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "LOSS",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-available:allocation:l4:open",
+        "synthetic:analytics-v1:holding-duration-available:allocation:l4:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:7",
+          "sourceRowNumber": 7
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:8",
+          "sourceRowNumber": 8
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    }
+  ],
+  "fixtureId": "holding-duration-available",
+  "schemaVersion": "1.0.0"
+}

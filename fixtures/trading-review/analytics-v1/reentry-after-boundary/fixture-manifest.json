@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "309b1babbaa6a85ac9bbc8671416e4b3af00c1bbc8f687cad530afc90fd29011",
+  "description": "30분을 1 microsecond 초과한 entry와 실제 rate zero",
+  "expectedMetricStatuses": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": "AVAILABLE"
+  },
+  "expectedResultHash": "74598f65378b5797adc9130fed42d6376feafce2cff28d044bae136a766fd493",
+  "fixtureId": "reentry-after-boundary",
+  "metricDefinitionIds": [
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+  ],
+  "metricDefinitionVersions": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": 1
+  },
+  "reconciliationManifestHash": "047c92453ea684b0bc097932d106e359c887bd0063b7f1b6e1c3dc9fa0649e72",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:reentry-after-boundary",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "047c92453ea684b0bc097932d106e359c887bd0063b7f1b6e1c3dc9fa0649e72"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "AVAILABLE"
+  ]
+}

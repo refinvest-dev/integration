@@ -1,0 +1,28 @@
+{
+  "exclusions": [
+    {
+      "candidateId": "synthetic:analytics-v1:reentry-missing-net-pnl:episode:l1",
+      "exclusionReason": "OUTCOME_UNAVAILABLE",
+      "impact": "Both scalar results are null with MISSING_CAPABILITY.",
+      "metricDefinitionIds": [
+        "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS"
+      ],
+      "missingCapability": "FEES",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-missing-net-pnl:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-missing-net-pnl:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-missing-net-pnl:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-missing-net-pnl:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ]
+    }
+  ],
+  "fixtureId": "reentry-missing-net-pnl",
+  "schemaVersion": "1.0.0"
+}

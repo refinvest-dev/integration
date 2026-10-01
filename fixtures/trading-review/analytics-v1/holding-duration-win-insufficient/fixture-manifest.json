@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "34f9c58c60f65ed08847816c90983ba854be5c8f4dc9c7a3ac4532719c88a834",
+  "description": "holding win group이 minimum 2보다 작은 표본 부족",
+  "expectedMetricStatuses": {
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": "INSUFFICIENT_SAMPLE"
+  },
+  "expectedResultHash": "0fb95378e87fb93ea6811b12becb38aad06c1b337c4bd74c3c93ad63015d02d4",
+  "fixtureId": "holding-duration-win-insufficient",
+  "metricDefinitionIds": [
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE"
+  ],
+  "metricDefinitionVersions": {
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": 1
+  },
+  "reconciliationManifestHash": "08154c1ab09699a0628599d188cafeaab44d4e66b186a3efaf0f030f8a170b56",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:holding-duration-win-insufficient",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "08154c1ab09699a0628599d188cafeaab44d4e66b186a3efaf0f030f8a170b56"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "INSUFFICIENT_SAMPLE"
+  ]
+}

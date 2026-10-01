@@ -1,0 +1,27 @@
+{
+  "exclusions": [
+    {
+      "candidateId": "synthetic:analytics-v1:reentry-after-boundary:episode:e2",
+      "exclusionReason": "ENTRY_AFTER_WINDOW",
+      "impact": "Loss remains eligible; candidate is outside the relation window.",
+      "metricDefinitionIds": [
+        "ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+      ],
+      "missingCapability": null,
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-after-boundary:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-after-boundary:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-after-boundary:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-after-boundary:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ]
+    }
+  ],
+  "fixtureId": "reentry-after-boundary",
+  "schemaVersion": "1.0.0"
+}

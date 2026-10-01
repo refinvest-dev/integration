@@ -1,0 +1,40 @@
+{
+  "analysisPeriod": {
+    "endExclusive": "2026-01-01T12:00:00Z",
+    "startInclusive": "2026-01-01T09:00:00Z"
+  },
+  "baselinePolicy": "PRIOR_PERIOD_SAME_INSTRUMENT_DIRECTION",
+  "durationUnit": "MICROSECOND",
+  "eligibleReviewUnitPolicy": "COMPLETE_AND_RECONCILED_ONLY",
+  "exposureBasis": "INITIAL_NOTIONAL",
+  "findingMinimums": {
+    "exposurePairs": 5,
+    "holdingLosses": 5,
+    "holdingWins": 5,
+    "reentryEligibleLosses": 5
+  },
+  "fundingTreatment": "EXCLUDED",
+  "metricBundleId": "TRADING_BEHAVIOR_METRICS_V1",
+  "metricDefinitionIds": [
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE"
+  ],
+  "metricDefinitionVersions": {
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": 1
+  },
+  "metricMinimums": {
+    "exposurePairs": 1,
+    "holdingLosses": 2,
+    "holdingWins": 2,
+    "priorBaselineEpisodes": 3,
+    "reentryEligibleLosses": 1
+  },
+  "outcomeBasis": "NET_TRADING_PNL",
+  "reentryWindow": "PT30M",
+  "reversalTreatment": "SEPARATE",
+  "reviewTimezone": "Asia/Seoul",
+  "schemaVersion": 1,
+  "symbolScope": [
+    "AAAUSDT"
+  ],
+  "timezoneDatabaseVersion": "2026a"
+}

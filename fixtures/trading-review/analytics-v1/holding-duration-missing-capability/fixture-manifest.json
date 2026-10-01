@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "18e3b3b9d9e96a5090fcec3135a43e7b5dd750c4aceb3104b5359eb83486ee5c",
+  "description": "holding population의 outcome/fee capability 누락",
+  "expectedMetricStatuses": {
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": "MISSING_CAPABILITY"
+  },
+  "expectedResultHash": "819c6b30ec8bd3b9b8259fbcf1f82769311d02206abb23ebbab51ee4f2a716e0",
+  "fixtureId": "holding-duration-missing-capability",
+  "metricDefinitionIds": [
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE"
+  ],
+  "metricDefinitionVersions": {
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": 1
+  },
+  "reconciliationManifestHash": "1dfe038415750cbf7fe9d89980251b4824a7a72367764b7e668fbc048f29bd8a",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:holding-duration-missing-capability",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "1dfe038415750cbf7fe9d89980251b4824a7a72367764b7e668fbc048f29bd8a"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "MISSING_CAPABILITY"
+  ]
+}

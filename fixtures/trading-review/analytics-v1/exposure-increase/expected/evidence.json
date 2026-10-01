@@ -1,0 +1,156 @@
+{
+  "evidenceChains": [
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-increase:metric:exposure",
+      "behaviorObservationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:h1",
+      "episodeId": "synthetic:analytics-v1:exposure-increase:episode:h1",
+      "evidenceId": "synthetic:analytics-v1:exposure-increase:evidence:exposure:h1",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-increase:allocation:h1:open",
+        "synthetic:analytics-v1:exposure-increase:allocation:h1:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:h1:open",
+        "synthetic:analytics-v1:exposure-increase:record:h1:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h1:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:h1:close",
+        "synthetic:analytics-v1:exposure-increase:record:h1:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h1:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-increase:metric:exposure",
+      "behaviorObservationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:h2",
+      "episodeId": "synthetic:analytics-v1:exposure-increase:episode:h2",
+      "evidenceId": "synthetic:analytics-v1:exposure-increase:evidence:exposure:h2",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-increase:allocation:h2:open",
+        "synthetic:analytics-v1:exposure-increase:allocation:h2:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:h2:open",
+        "synthetic:analytics-v1:exposure-increase:record:h2:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h2:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:h2:close",
+        "synthetic:analytics-v1:exposure-increase:record:h2:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h2:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-increase:metric:exposure",
+      "behaviorObservationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:h3",
+      "episodeId": "synthetic:analytics-v1:exposure-increase:episode:h3",
+      "evidenceId": "synthetic:analytics-v1:exposure-increase:evidence:exposure:h3",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-increase:allocation:h3:open",
+        "synthetic:analytics-v1:exposure-increase:allocation:h3:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:5",
+          "sourceRowNumber": 5
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:h3:open",
+        "synthetic:analytics-v1:exposure-increase:record:h3:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h3:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:h3:close",
+        "synthetic:analytics-v1:exposure-increase:record:h3:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h3:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-increase:metric:exposure",
+      "behaviorObservationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:l4",
+      "episodeId": "synthetic:analytics-v1:exposure-increase:episode:l4",
+      "evidenceId": "synthetic:analytics-v1:exposure-increase:evidence:exposure:l4",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-increase:allocation:l4:open",
+        "synthetic:analytics-v1:exposure-increase:allocation:l4:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:7",
+          "sourceRowNumber": 7
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:8",
+          "sourceRowNumber": 8
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:l4:open",
+        "synthetic:analytics-v1:exposure-increase:record:l4:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:l4:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:l4:close",
+        "synthetic:analytics-v1:exposure-increase:record:l4:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:l4:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-increase:metric:exposure",
+      "behaviorObservationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:e5",
+      "episodeId": "synthetic:analytics-v1:exposure-increase:episode:e5",
+      "evidenceId": "synthetic:analytics-v1:exposure-increase:evidence:exposure:e5",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-increase:allocation:e5:open",
+        "synthetic:analytics-v1:exposure-increase:allocation:e5:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:9",
+          "sourceRowNumber": 9
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-increase:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-increase:trade-row:10",
+          "sourceRowNumber": 10
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:e5:open",
+        "synthetic:analytics-v1:exposure-increase:record:e5:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:e5:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:e5:close",
+        "synthetic:analytics-v1:exposure-increase:record:e5:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:e5:close:pnl"
+      ]
+    }
+  ],
+  "fixtureId": "exposure-increase",
+  "schemaVersion": "1.0.0"
+}

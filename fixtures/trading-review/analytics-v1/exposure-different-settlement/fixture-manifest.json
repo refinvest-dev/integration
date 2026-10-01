@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "f853af9d8bc2c10fc2e8555848d86a30a69a3b5200a3aa2fe271af1533891a61",
+  "description": "loss와 related entry의 settlement currency가 달라 환산하지 않음",
+  "expectedMetricStatuses": {
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS": "INSUFFICIENT_SAMPLE"
+  },
+  "expectedResultHash": "f0e1a90099aa17e0c7974ad527fd1ca9440a3aad10b02cb0ac789b93871a71c8",
+  "fixtureId": "exposure-different-settlement",
+  "metricDefinitionIds": [
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS"
+  ],
+  "metricDefinitionVersions": {
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS": 1
+  },
+  "reconciliationManifestHash": "637b322d14448b45705facf1e3f7e6f69b119921d3b92ae34b28d0075d2095d0",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:exposure-different-settlement",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "637b322d14448b45705facf1e3f7e6f69b119921d3b92ae34b28d0075d2095d0"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "INSUFFICIENT_SAMPLE"
+  ]
+}

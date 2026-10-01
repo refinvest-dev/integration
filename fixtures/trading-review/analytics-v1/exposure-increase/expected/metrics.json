@@ -1,0 +1,134 @@
+{
+  "analysisConfigHash": "861e2ac2a03891240e85fb2afa76b57d940c30df3e39e8e5eb8eb67fd4af0c55",
+  "fixtureId": "exposure-increase",
+  "metrics": [
+    {
+      "applicabilityReason": null,
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-increase:metric:exposure",
+      "capabilitySnapshotByEpisode": {
+        "synthetic:analytics-v1:exposure-increase:episode:e5": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:exposure-increase:episode:h1": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:exposure-increase:episode:h2": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:exposure-increase:episode:h3": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:exposure-increase:episode:l4": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ]
+      },
+      "comparisonCount": 4,
+      "comparisonEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:e5",
+        "synthetic:analytics-v1:exposure-increase:episode:h1",
+        "synthetic:analytics-v1:exposure-increase:episode:h2",
+        "synthetic:analytics-v1:exposure-increase:episode:h3"
+      ],
+      "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+      "definitionVersion": 1,
+      "eligibleCount": 5,
+      "eligibleEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:h1",
+        "synthetic:analytics-v1:exposure-increase:episode:h2",
+        "synthetic:analytics-v1:exposure-increase:episode:h3",
+        "synthetic:analytics-v1:exposure-increase:episode:l4",
+        "synthetic:analytics-v1:exposure-increase:episode:e5"
+      ],
+      "evidenceReference": "synthetic:analytics-v1:exposure-increase:evidence:exposure:h1",
+      "excludedCount": 0,
+      "excludedEpisodeIds": [],
+      "exclusionReasonCounts": {},
+      "findingEligibility": "INELIGIBLE_SAMPLE",
+      "intermediateAggregates": {
+        "absoluteDeltaByCurrency": {
+          "USDT": [
+            "50"
+          ]
+        },
+        "pairRatios": [
+          {
+            "denominator": 2,
+            "numerator": 3
+          }
+        ],
+        "percentageDeltas": [
+          {
+            "denominator": 2,
+            "numerator": 1
+          }
+        ],
+        "priorBaselineEpisodeIds": [
+          "synthetic:analytics-v1:exposure-increase:episode:h1",
+          "synthetic:analytics-v1:exposure-increase:episode:h2",
+          "synthetic:analytics-v1:exposure-increase:episode:h3"
+        ],
+        "priorBaselineNotional": "100"
+      },
+      "manualVerification": {
+        "firstCheck": "150 / 100 = 3/2; absolute delta = 50; percentage delta = 1/2",
+        "method": "HAND_CALCULATED_INDEPENDENT_DOUBLE_CHECK",
+        "secondCheck": "sorted singleton ratio [3/2] has median 3/2; three prior 100 values have median 100"
+      },
+      "metricStatus": "AVAILABLE",
+      "missingCapabilities": [],
+      "observationIds": [
+        "synthetic:analytics-v1:exposure-increase:observation:exposure:h1",
+        "synthetic:analytics-v1:exposure-increase:observation:exposure:h2",
+        "synthetic:analytics-v1:exposure-increase:observation:exposure:h3",
+        "synthetic:analytics-v1:exposure-increase:observation:exposure:l4",
+        "synthetic:analytics-v1:exposure-increase:observation:exposure:e5"
+      ],
+      "populationCount": 5,
+      "populationEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:h1",
+        "synthetic:analytics-v1:exposure-increase:episode:h2",
+        "synthetic:analytics-v1:exposure-increase:episode:h3",
+        "synthetic:analytics-v1:exposure-increase:episode:l4",
+        "synthetic:analytics-v1:exposure-increase:episode:e5"
+      ],
+      "requiredCapabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "result": {
+        "decreasedCount": 0,
+        "equalCount": 0,
+        "increasedCount": 1,
+        "medianNextEntryVsLossEpisodeRatio": {
+          "denominator": 2,
+          "numerator": 3
+        },
+        "pairCount": 1
+      },
+      "sampleCounts": null,
+      "subjectCount": 1,
+      "subjectEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:l4"
+      ],
+      "unit": "RATIO"
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

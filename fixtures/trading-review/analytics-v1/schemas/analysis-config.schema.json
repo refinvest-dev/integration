@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analysisPeriod": { "additionalProperties": false, "properties": { "endExclusive": { "format": "date-time", "type": "string" }, "startInclusive": { "format": "date-time", "type": "string" } }, "required": ["startInclusive", "endExclusive"], "type": "object" },
+    "baselinePolicy": { "const": "PRIOR_PERIOD_SAME_INSTRUMENT_DIRECTION" },
+    "durationUnit": { "const": "MICROSECOND" },
+    "eligibleReviewUnitPolicy": { "const": "COMPLETE_AND_RECONCILED_ONLY" },
+    "exposureBasis": { "const": "INITIAL_NOTIONAL" },
+    "findingMinimums": { "additionalProperties": false, "properties": { "exposurePairs": { "const": 5 }, "holdingLosses": { "const": 5 }, "holdingWins": { "const": 5 }, "reentryEligibleLosses": { "const": 5 } }, "required": ["reentryEligibleLosses", "exposurePairs", "holdingWins", "holdingLosses"], "type": "object" },
+    "fundingTreatment": { "const": "EXCLUDED" },
+    "metricBundleId": { "const": "TRADING_BEHAVIOR_METRICS_V1" },
+    "metricDefinitionIds": { "items": { "type": "string" }, "minItems": 1, "type": "array", "uniqueItems": true },
+    "metricDefinitionVersions": { "additionalProperties": { "const": 1 }, "type": "object" },
+    "metricMinimums": { "additionalProperties": false, "properties": { "exposurePairs": { "const": 1 }, "holdingLosses": { "const": 2 }, "holdingWins": { "const": 2 }, "priorBaselineEpisodes": { "const": 3 }, "reentryEligibleLosses": { "const": 1 } }, "required": ["reentryEligibleLosses", "exposurePairs", "priorBaselineEpisodes", "holdingWins", "holdingLosses"], "type": "object" },
+    "outcomeBasis": { "const": "NET_TRADING_PNL" },
+    "reentryWindow": { "const": "PT30M" },
+    "reversalTreatment": { "const": "SEPARATE" },
+    "reviewTimezone": { "const": "Asia/Seoul" },
+    "schemaVersion": { "const": 1 },
+    "symbolScope": { "items": { "pattern": "^[A-Z]{3}USDT$", "type": "string" }, "minItems": 1, "type": "array", "uniqueItems": true },
+    "timezoneDatabaseVersion": { "const": "2026a" }
+  },
+  "required": ["schemaVersion", "metricBundleId", "metricDefinitionIds", "metricDefinitionVersions", "analysisPeriod", "reviewTimezone", "timezoneDatabaseVersion", "outcomeBasis", "fundingTreatment", "eligibleReviewUnitPolicy", "reversalTreatment", "reentryWindow", "baselinePolicy", "symbolScope", "exposureBasis", "durationUnit", "metricMinimums", "findingMinimums"],
+  "type": "object"
+}

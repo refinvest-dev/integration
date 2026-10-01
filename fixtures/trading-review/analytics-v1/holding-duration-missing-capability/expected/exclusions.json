@@ -1,0 +1,27 @@
+{
+  "exclusions": [
+    {
+      "candidateId": "synthetic:analytics-v1:holding-duration-missing-capability:episode:u4",
+      "exclusionReason": "OUTCOME_UNAVAILABLE",
+      "impact": "The complete metric scalar is withheld instead of using a partial population.",
+      "metricDefinitionIds": [
+        "WIN_LOSS_HOLDING_DURATION_DIFFERENCE"
+      ],
+      "missingCapability": "FEES",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-missing-capability:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-missing-capability:trade-row:7",
+          "sourceRowNumber": 7
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-missing-capability:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-missing-capability:trade-row:8",
+          "sourceRowNumber": 8
+        }
+      ]
+    }
+  ],
+  "fixtureId": "holding-duration-missing-capability",
+  "schemaVersion": "1.0.0"
+}
