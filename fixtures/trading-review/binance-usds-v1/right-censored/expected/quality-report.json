@@ -1,0 +1,37 @@
+{
+  "canonicalRecordCount": 3,
+  "capabilitySummary": {
+    "FEES": 1,
+    "INITIAL_EXPOSURE": 1,
+    "MAX_EXPOSURE": 1,
+    "POSITION_INCREASES": 1,
+    "POSITION_MODE_OBSERVED_COMPATIBLE": 1,
+    "POSITION_MODE_USER_DECLARED": 1,
+    "VENUE_REPORTED_PNL": 1
+  },
+  "conflictCount": 0,
+  "duplicateCount": 0,
+  "eligibleEpisodeCount": 0,
+  "episodeCount": 1,
+  "excludedEpisodeCount": 1,
+  "exclusionReasonCounts": {
+    "EPISODE_RIGHT_CENSORED": 1
+  },
+  "fixtureId": "right-censored",
+  "importStatus": "ACCEPTED",
+  "parsedRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 1
+  },
+  "sourceRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 1
+  },
+  "versions": {
+    "import": "BINANCE_USDS_DUAL_ARTIFACT_IMPORT_V1",
+    "normalizer": "fixture-v1",
+    "reconciliation": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "reconstruction": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1"
+  },
+  "warnings": []
+}

@@ -1,0 +1,81 @@
+{
+  "$id": "https://refinvest.dev/schemas/trading-review/fixture-manifest-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "decimal": {
+      "additionalProperties": false,
+      "properties": {
+        "scale": { "minimum": 0, "type": "integer" },
+        "unscaled": { "pattern": "^-?(0|[1-9][0-9]*)$", "type": "string" }
+      },
+      "required": ["scale", "unscaled"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": { "minLength": 1, "type": "string" },
+          "role": { "enum": ["TRADE_HISTORY", "POSITION_HISTORY"] },
+          "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+          "sizeBytes": { "minimum": 1, "type": "integer" }
+        },
+        "required": ["path", "role", "sha256", "sizeBytes"],
+        "type": "object"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "declaredPositionMode": { "enum": ["ONE_WAY"] },
+    "description": { "minLength": 1, "type": "string" },
+    "expectedCanonicalRecordCount": { "minimum": 0, "type": "integer" },
+    "expectedEligibleEpisodeCount": { "minimum": 0, "type": "integer" },
+    "expectedEpisodeCount": { "minimum": 0, "type": "integer" },
+    "expectedExcludedEpisodeCount": { "minimum": 0, "type": "integer" },
+    "expectedFailureCode": {
+      "enum": [null, "FILE_FORMAT_INVALID", "REQUIRED_COLUMN_MISSING", "UNSUPPORTED_SOURCE_SCHEMA", "UNSUPPORTED_PRODUCT", "UNSUPPORTED_POSITION_MODE", "DUPLICATE_SOURCE_ARTIFACT", "RECORD_CONFLICT"]
+    },
+    "expectedImportStatus": { "enum": ["ACCEPTED", "REJECTED"] },
+    "expectedReconciliationStatuses": {
+      "items": { "enum": ["EXACT", "WITHIN_ROUNDING_TOLERANCE", "AMBIGUOUS", "INCOMPLETE_TRADES", "SUMMARY_MISMATCH", "UNSUPPORTED_OVERLAP"] },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "fixtureId": { "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "type": "string" },
+    "instrumentTerms": {
+      "additionalProperties": false,
+      "properties": {
+        "contractMultiplier": { "$ref": "#/$defs/decimal" },
+        "settlementPrecision": { "minimum": 0, "type": "integer" },
+        "stepSize": { "$ref": "#/$defs/decimal" },
+        "tickSize": { "$ref": "#/$defs/decimal" }
+      },
+      "required": ["contractMultiplier", "settlementPrecision", "stepSize", "tickSize"],
+      "type": "object"
+    },
+    "normalizerVersion": { "const": "fixture-v1" },
+    "productFamily": { "enum": ["LINEAR_PERPETUAL", "INVERSE_PERPETUAL"] },
+    "reconstructionPolicyVersion": { "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1" },
+    "reviewTimezone": { "const": "Asia/Seoul" },
+    "schemaVersion": { "const": "1.0.0" },
+    "settlementAsset": { "enum": ["USDT", "BTC"] },
+    "sourceDialect": {
+      "additionalProperties": false,
+      "properties": {
+        "positionHistory": { "const": "BINANCE_USDS_POSITION_HISTORY_V1" },
+        "tradeHistory": { "const": "BINANCE_USDS_TRADE_HISTORY_V1" }
+      },
+      "required": ["tradeHistory", "positionHistory"],
+      "type": "object"
+    },
+    "sourceTimezone": { "const": "Asia/Seoul" },
+    "tags": { "items": { "type": "string" }, "minItems": 2, "type": "array", "uniqueItems": true }
+  },
+  "required": ["schemaVersion", "fixtureId", "description", "sourceDialect", "sourceTimezone", "reviewTimezone", "declaredPositionMode", "productFamily", "settlementAsset", "instrumentTerms", "normalizerVersion", "reconstructionPolicyVersion", "expectedImportStatus", "expectedCanonicalRecordCount", "expectedEpisodeCount", "expectedEligibleEpisodeCount", "expectedExcludedEpisodeCount", "expectedFailureCode", "expectedReconciliationStatuses", "artifacts", "tags"],
+  "title": "RefInvest Trading Review fixture manifest",
+  "type": "object"
+}

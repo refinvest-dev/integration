@@ -1,0 +1,31 @@
+{
+  "allocations": [],
+  "canonicalManifestHash": "a8c2ea7de857f2a11c0a6d185fe5b042e0af46342b9a01c0edaed335ba1be0b9",
+  "canonicalManifestHashInputs": {
+    "canonicalRecordContentHash": "592d93b48fe993348092efd9d86a2633f65b7b3fc649c1846a41667660a961c4",
+    "instrumentTermsHash": "5e458341f034961318f4d5d33cedda47717979a8480d3c7f1c05ef8031f0aad5",
+    "normalizerVersion": "fixture-v1",
+    "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "sourceArtifactHashes": {
+      "POSITION_HISTORY": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+      "TRADE_HISTORY": "2b551cac32e10b5334db0b0d330123df8366c1e6c8cff030c8e51bb35f3ba503"
+    }
+  },
+  "conservation": {
+    "feesByAsset": "NOT_EVALUATED",
+    "passed": null,
+    "quantity": "NOT_EVALUATED",
+    "reportedPnl": "NOT_EVALUATED"
+  },
+  "episodes": [],
+  "fixtureId": "execution-identity-conflict",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "RECORD_CONFLICT"
+  },
+  "manifestSchemaVersion": "1.0.0",
+  "normalizerVersion": "fixture-v1",
+  "orderedExecutionKeysByInstrument": {},
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "summaryMatches": []
+}

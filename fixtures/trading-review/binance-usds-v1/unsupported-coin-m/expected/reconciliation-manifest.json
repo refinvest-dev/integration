@@ -1,0 +1,31 @@
+{
+  "allocations": [],
+  "canonicalManifestHash": "fbdd74f7393d7a8963074e7a4f3d245eee92043176d7de83125cd5ee550d82d5",
+  "canonicalManifestHashInputs": {
+    "canonicalRecordContentHash": "bfe5982e048b223373ebf9b89389923baa0af63105213e497b01e6f9bc8fa8ff",
+    "instrumentTermsHash": "5e458341f034961318f4d5d33cedda47717979a8480d3c7f1c05ef8031f0aad5",
+    "normalizerVersion": "fixture-v1",
+    "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "sourceArtifactHashes": {
+      "POSITION_HISTORY": "abc3858045012f66d163007be6ad454346790939e4ac375a403ab28eb2a3eb8e",
+      "TRADE_HISTORY": "824549308705cd41212b3f33dcb895b79d2b154e7e13bc6c82cf10600b995b4f"
+    }
+  },
+  "conservation": {
+    "feesByAsset": "NOT_EVALUATED",
+    "passed": null,
+    "quantity": "NOT_EVALUATED",
+    "reportedPnl": "NOT_EVALUATED"
+  },
+  "episodes": [],
+  "fixtureId": "unsupported-coin-m",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "UNSUPPORTED_PRODUCT"
+  },
+  "manifestSchemaVersion": "1.0.0",
+  "normalizerVersion": "fixture-v1",
+  "orderedExecutionKeysByInstrument": {},
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "summaryMatches": []
+}

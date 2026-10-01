@@ -1,0 +1,57 @@
+{
+  "artifacts": [
+    {
+      "path": "trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "sha256": "2b551cac32e10b5334db0b0d330123df8366c1e6c8cff030c8e51bb35f3ba503",
+      "sizeBytes": 307
+    },
+    {
+      "path": "position-history.csv",
+      "role": "POSITION_HISTORY",
+      "sha256": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+      "sizeBytes": 125
+    }
+  ],
+  "declaredPositionMode": "ONE_WAY",
+  "description": "동일 execution identity가 다른 content를 주장",
+  "expectedCanonicalRecordCount": 0,
+  "expectedEligibleEpisodeCount": 0,
+  "expectedEpisodeCount": 0,
+  "expectedExcludedEpisodeCount": 0,
+  "expectedFailureCode": "RECORD_CONFLICT",
+  "expectedImportStatus": "REJECTED",
+  "expectedReconciliationStatuses": [],
+  "fixtureId": "execution-identity-conflict",
+  "instrumentTerms": {
+    "contractMultiplier": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "settlementPrecision": 2,
+    "stepSize": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "tickSize": {
+      "scale": 2,
+      "unscaled": "1"
+    }
+  },
+  "normalizerVersion": "fixture-v1",
+  "productFamily": "LINEAR_PERPETUAL",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewTimezone": "Asia/Seoul",
+  "schemaVersion": "1.0.0",
+  "settlementAsset": "USDT",
+  "sourceDialect": {
+    "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
+    "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
+  },
+  "sourceTimezone": "Asia/Seoul",
+  "tags": [
+    "REJECTED_IMPORT",
+    "SYNTHETIC",
+    "NON_PRODUCTION"
+  ]
+}

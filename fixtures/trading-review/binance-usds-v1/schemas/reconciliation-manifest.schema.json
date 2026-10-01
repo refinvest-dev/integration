@@ -1,0 +1,112 @@
+{
+  "$id": "https://refinvest.dev/schemas/trading-review/reconciliation-manifest-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "decimal": {
+      "additionalProperties": false,
+      "properties": {
+        "scale": { "minimum": 0, "type": "integer" },
+        "unscaled": { "pattern": "^-?(0|[1-9][0-9]*)$", "type": "string" }
+      },
+      "required": ["scale", "unscaled"],
+      "type": "object"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRole": { "enum": ["TRADE_HISTORY", "POSITION_HISTORY"] },
+        "sourceRecordKey": { "minLength": 1, "type": "string" },
+        "sourceRowNumber": { "minimum": 1, "type": "integer" }
+      },
+      "required": ["artifactRole", "sourceRowNumber", "sourceRecordKey"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allocations": {
+      "items": {
+        "properties": {
+          "action": { "enum": ["OPEN", "INCREASE", "REDUCE", "CLOSE", "REVERSAL_CLOSE", "REVERSAL_OPEN"] },
+          "allocatedFeeByAsset": { "additionalProperties": { "$ref": "#/$defs/decimal" }, "type": "object" },
+          "allocatedQuantity": { "$ref": "#/$defs/decimal" },
+          "allocatedReportedPnl": { "$ref": "#/$defs/decimal" },
+          "episodeId": { "minLength": 1, "type": "string" },
+          "executionRecordId": { "minLength": 1, "type": "string" },
+          "feeRecordId": { "minLength": 1, "type": "string" },
+          "reportedPnlRecordId": { "minLength": 1, "type": "string" },
+          "reversalGroupId": { "minLength": 1, "type": "string" },
+          "sourceProvenance": { "items": { "$ref": "#/$defs/provenance" }, "minItems": 1, "type": "array" }
+        },
+        "required": ["executionRecordId", "feeRecordId", "reportedPnlRecordId", "episodeId", "action", "allocatedQuantity", "allocatedFeeByAsset", "allocatedReportedPnl", "sourceProvenance"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "canonicalManifestHash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "canonicalManifestHashInputs": {
+      "properties": {
+        "canonicalRecordContentHash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+        "instrumentTermsHash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+        "normalizerVersion": { "const": "fixture-v1" },
+        "reconstructionPolicyVersion": { "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1" },
+        "sourceArtifactHashes": {
+          "properties": {
+            "POSITION_HISTORY": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+            "TRADE_HISTORY": { "pattern": "^[0-9a-f]{64}$", "type": "string" }
+          },
+          "required": ["TRADE_HISTORY", "POSITION_HISTORY"],
+          "type": "object"
+        }
+      },
+      "required": ["canonicalRecordContentHash", "instrumentTermsHash", "normalizerVersion", "reconstructionPolicyVersion", "sourceArtifactHashes"],
+      "type": "object"
+    },
+    "conservation": {
+      "properties": {
+        "feesByAsset": { "enum": ["PASSED", "NOT_EVALUATED"] },
+        "passed": { "type": ["boolean", "null"] },
+        "quantity": { "enum": ["PASSED", "NOT_EVALUATED"] },
+        "reportedPnl": { "enum": ["PASSED", "NOT_EVALUATED"] }
+      },
+      "required": ["quantity", "feesByAsset", "reportedPnl", "passed"],
+      "type": "object"
+    },
+    "episodes": {
+      "items": {
+        "properties": {
+          "capabilities": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "direction": { "enum": ["LONG", "SHORT"] },
+          "eligible": { "type": "boolean" },
+          "episodeId": { "minLength": 1, "type": "string" },
+          "executionRecordIds": { "items": { "minLength": 1, "type": "string" }, "type": "array", "uniqueItems": true },
+          "exclusionReasons": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "reconciliationStatus": { "enum": ["EXACT", "WITHIN_ROUNDING_TOLERANCE", "AMBIGUOUS", "INCOMPLETE_TRADES", "SUMMARY_MISMATCH", "UNSUPPORTED_OVERLAP"] },
+          "reconstructionStatus": { "enum": ["COMPLETE", "LEFT_CENSORED", "RIGHT_CENSORED", "INCONSISTENT", "UNSUPPORTED"] },
+          "sourceProvenance": { "items": { "$ref": "#/$defs/provenance" }, "minItems": 1, "type": "array" },
+          "venuePositionSummaryRecordIds": { "items": { "minLength": 1, "type": "string" }, "type": "array", "uniqueItems": true }
+        },
+        "required": ["episodeId", "direction", "reconstructionStatus", "reconciliationStatus", "capabilities", "eligible", "exclusionReasons", "executionRecordIds", "venuePositionSummaryRecordIds", "sourceProvenance"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "fixtureId": { "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "type": "string" },
+    "importResult": {
+      "properties": {
+        "accepted": { "type": "boolean" },
+        "failureCode": { "type": ["string", "null"] }
+      },
+      "required": ["accepted", "failureCode"],
+      "type": "object"
+    },
+    "manifestSchemaVersion": { "const": "1.0.0" },
+    "normalizerVersion": { "const": "fixture-v1" },
+    "orderedExecutionKeysByInstrument": { "additionalProperties": { "items": { "type": "string" }, "type": "array" }, "type": "object" },
+    "reconstructionPolicyVersion": { "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1" },
+    "summaryMatches": { "items": { "type": "object" }, "type": "array" }
+  },
+  "required": ["manifestSchemaVersion", "fixtureId", "normalizerVersion", "reconstructionPolicyVersion", "importResult", "orderedExecutionKeysByInstrument", "episodes", "allocations", "summaryMatches", "conservation", "canonicalManifestHashInputs", "canonicalManifestHash"],
+  "title": "RefInvest reconciliation manifest fixture",
+  "type": "object"
+}
