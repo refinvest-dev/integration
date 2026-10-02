@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analysisConfigHash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "fixtureId": { "type": "string" },
+    "metrics": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "applicabilityReason": { "type": ["string", "null"] },
+          "behaviorMetricId": { "minLength": 1, "type": "string" },
+          "capabilitySnapshotByEpisode": { "additionalProperties": { "items": { "type": "string" }, "type": "array", "uniqueItems": true }, "type": "object" },
+          "comparisonCount": { "minimum": 0, "type": "integer" },
+          "comparisonEpisodeIds": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "definitionId": { "type": "string" },
+          "definitionVersion": { "const": 1 },
+          "eligibleCount": { "minimum": 0, "type": "integer" },
+          "eligibleEpisodeIds": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "evidenceReference": { "minLength": 1, "type": "string" },
+          "excludedCount": { "minimum": 0, "type": "integer" },
+          "excludedEpisodeIds": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "exclusionReasonCounts": { "additionalProperties": { "minimum": 1, "type": "integer" }, "type": "object" },
+          "findingEligibility": { "enum": ["ELIGIBLE", "INELIGIBLE_SAMPLE", "INELIGIBLE_METRIC_STATUS"] },
+          "intermediateAggregates": { "type": "object" },
+          "manualVerification": { "additionalProperties": false, "properties": { "firstCheck": { "minLength": 1, "type": "string" }, "method": { "const": "HAND_CALCULATED_INDEPENDENT_DOUBLE_CHECK" }, "secondCheck": { "minLength": 1, "type": "string" } }, "required": ["method", "firstCheck", "secondCheck"], "type": "object" },
+          "metricStatus": { "enum": ["AVAILABLE", "INSUFFICIENT_SAMPLE", "MISSING_CAPABILITY", "NOT_APPLICABLE"] },
+          "missingCapabilities": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "observationIds": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "populationCount": { "minimum": 0, "type": "integer" },
+          "populationEpisodeIds": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "requiredCapabilities": { "items": { "type": "string" }, "minItems": 1, "type": "array", "uniqueItems": true },
+          "result": { "type": ["object", "null"] },
+          "sampleCounts": { "type": ["object", "null"] },
+          "subjectCount": { "minimum": 0, "type": "integer" },
+          "subjectEpisodeIds": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "unit": { "type": ["string", "null"] }
+        },
+        "required": ["behaviorMetricId", "definitionId", "definitionVersion", "populationCount", "eligibleCount", "excludedCount", "subjectCount", "comparisonCount", "populationEpisodeIds", "eligibleEpisodeIds", "excludedEpisodeIds", "subjectEpisodeIds", "comparisonEpisodeIds", "observationIds", "intermediateAggregates", "result", "unit", "metricStatus", "findingEligibility", "requiredCapabilities", "missingCapabilities", "capabilitySnapshotByEpisode", "exclusionReasonCounts", "sampleCounts", "applicabilityReason", "evidenceReference", "manualVerification"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schemaVersion": { "const": "1.0.0" }
+  },
+  "required": ["schemaVersion", "fixtureId", "analysisConfigHash", "metrics"],
+  "type": "object"
+}

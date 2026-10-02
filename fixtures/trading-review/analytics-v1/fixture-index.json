@@ -1,0 +1,519 @@
+{
+  "fixtures": [
+    {
+      "expectedResultHash": "6516c34b0161fae579db15ae74d44bc4b5c26be638005f3ca499c426b71353a7",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "eb26d0e5defa64710eaebd55d94079979667069e5296ed727ea1bacd08e7ec08",
+          "sizeBytes": 1087
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "38efc4d5dcad541c5c19695bc3d7efa552b1ffad1138ab33a509cba4357376ac",
+          "sizeBytes": 3732
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "335e6a561d0706e7068cba487e60009fac37eb4495716e6bb8682521c2775105",
+          "sizeBytes": 11856
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "a5f83122635b09f532f415b6f0f70d98fc5644a95e54483826d92eddcb4aab7c",
+          "sizeBytes": 1067
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "9f3c2e03c1c4d2238567f06d0268cab6b7c2a90cbd1a54a91c009038e5dbb08e",
+          "sizeBytes": 2324
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "0a465ff6f5a209478e4f108441655d43982c3b2898b16fafeacc8be964e41f37",
+          "sizeBytes": 2946
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "01e3e0a83a174b2d55e6a9c0f169b283d82b34553990fd035dc5799233155947",
+          "sizeBytes": 3257
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "6e9125ca947251232cb3294d4e6d87b5e7b3b995f022f9de2bb65124df02be2d",
+          "sizeBytes": 93
+        }
+      ],
+      "fixtureId": "reentry-before-boundary",
+      "path": "reentry-before-boundary"
+    },
+    {
+      "expectedResultHash": "39d518491223dc034a6f135fda332cb345ceaf14b209cbab3bb3668d48bd1ec7",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "d9136c853b3d640d57f69bd40caa4ff5df9724a368e3dbe14be7851c28854515",
+          "sizeBytes": 1089
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "b54977cfe6062726bd55cc3952a45094eab393247ebbf7145dd9961cad3306e1",
+          "sizeBytes": 3717
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "0b606c63d04127ee1f624bdf0e60d5f526a27ef02101ca5c5ddec583303c5eaa",
+          "sizeBytes": 11781
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "a5f83122635b09f532f415b6f0f70d98fc5644a95e54483826d92eddcb4aab7c",
+          "sizeBytes": 1067
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "4bd8fd1bf5c93a7213e697c2055871b39db50d4a3c7cfe5158e676b0d2880838",
+          "sizeBytes": 2304
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "cd30aa5a9c148b4927d285309bfe49b7dd428ef2776187a9018eb8dc548c7190",
+          "sizeBytes": 2932
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "e0ddcabcea1b8abc5c6221e3715120db33326bef9e67e1ef458d701c74954f89",
+          "sizeBytes": 3224
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "bb4714e553c8b46601175b8b963908c7e89b314afde7f1a46faf8119cf0ebce7",
+          "sizeBytes": 92
+        }
+      ],
+      "fixtureId": "reentry-exact-boundary",
+      "path": "reentry-exact-boundary"
+    },
+    {
+      "expectedResultHash": "74598f65378b5797adc9130fed42d6376feafce2cff28d044bae136a766fd493",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "b2b849f2e19acd336bd24b38b3683e914f7ce48cb7a074713642046d7cd6946e",
+          "sizeBytes": 1101
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "bd4a4809883782741c4b199c15f92cbfb040eefacb98da11868286fe319afb67",
+          "sizeBytes": 3724
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "a8909d76deb8d62793a31fe51d3475bd70e78d9129b742ee963808af6da794ca",
+          "sizeBytes": 11816
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "a5f83122635b09f532f415b6f0f70d98fc5644a95e54483826d92eddcb4aab7c",
+          "sizeBytes": 1067
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "e5544579400fc3e96f0a0ff47b88706dffb93377b42499dd1c7c06d43095e172",
+          "sizeBytes": 2228
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "f41d324b35f6ae7a671a3d57c9e341a7f5bec5d23a0502945668d693e814cc7d",
+          "sizeBytes": 2799
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "d39b56440d2c3b06f015c659a30c845c903f3de5cb3da62cccdc0d9c2d12e826",
+          "sizeBytes": 3224
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "ddf1647de10483aecfcf9a6786919d5c8b7630a43729598f237f025cb6fde265",
+          "sizeBytes": 946
+        }
+      ],
+      "fixtureId": "reentry-after-boundary",
+      "path": "reentry-after-boundary"
+    },
+    {
+      "expectedResultHash": "f2e7d257e971370925ce16e37e751c57d8e647d3988d1abfa7ace781e791782c",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "40d16f9110ce075e85331efa8a76018cee85efc793dcb267995087288db9ffea",
+          "sizeBytes": 1155
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "56e17e04680f4277e73b1f18103af3cde075d108706c4de99e445d653b8cdf27",
+          "sizeBytes": 2002
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "4b7f962c5bfd79e724db6b41c6fc4fde95e8c8f96d38a73260145d52f444d42f",
+          "sizeBytes": 6760
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "1ca358a1ba06f96b06711e9d8a577c84519bfbbcb7a7d494431040a1994a3caf",
+          "sizeBytes": 1067
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "8f6996dfda74d8c8dd656d0f5693d308cad638731e5180b418a8031d4c7586b7",
+          "sizeBytes": 1283
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "f48873d406ded05424cb7bb6d184be44f27f7ca04136a188b5e42cf526755efe",
+          "sizeBytes": 2249
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "1df21f7ecf5f97e5a495568de77085a7297db1bea0e614760f679ebb7461c268",
+          "sizeBytes": 1865
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "be47f3d8a2ad01548eb9e09aa3a77e400444cf2ede48a37dbcdeae70af5eceff",
+          "sizeBytes": 1015
+        }
+      ],
+      "fixtureId": "reentry-right-observation-censored",
+      "path": "reentry-right-observation-censored"
+    },
+    {
+      "expectedResultHash": "6276d3b87ec421d06c8856d8f1457ef467d381239b92af294865c85e334de620",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "53c054e3801df86e522d4201934fc394cc742e2934923c703b3586048628a16c",
+          "sizeBytes": 1305
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "4dcefa87dabcc1591d6e6c361565bc3f87e11cafe5b410d6882caf61836d90c4",
+          "sizeBytes": 3700
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "01bbe5c92baefac18d005f1acd6f90d71a9eb6e54379bf62b0325aa65981e590",
+          "sizeBytes": 10662
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "a6d384ed66aa0ce05dc9cebf39216f65f73926b32d073cf080105d744827d623",
+          "sizeBytes": 1154
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "45f5f2e1647b80aa66d801d3bcd235881b7c9f0c8b9ded208e88435357b2deca",
+          "sizeBytes": 4127
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "2445394110969fcd3c1d91b2b926cebf75a5a65e1267c360ee8624a49273cf2d",
+          "sizeBytes": 4802
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "0f00aef810900774957d2f15ed4b1eaab584ff648c2a3bc2e7c627638eb2c10e",
+          "sizeBytes": 6111
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "32c2340003c5e13aefba2f26c863b2bc23736b4539ee8c415ca117995b72d921",
+          "sizeBytes": 990
+        }
+      ],
+      "fixtureId": "reentry-missing-net-pnl",
+      "path": "reentry-missing-net-pnl"
+    },
+    {
+      "expectedResultHash": "856be84b59a7c511323577b1d3d1884920180bcd9bb6474223d0bc50cc1b9b69",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "c8b634d7e1166d1389fbf14e8e236195091d76ce174558c212f7684213cdc43c",
+          "sizeBytes": 1104
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "b820c0269952a5bbd0ae8f529b65f937cb956bf14ca5d98c2fee4ea6f2e2987b",
+          "sizeBytes": 8972
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "ea72d2061f27b18fc7f4dfde5dd3f0c8957479ecfc69eaa809acde4e2c190025",
+          "sizeBytes": 27344
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "d02b0b941258f402d54e4c3a00715970b3a7bbe55738abacfc219f382353fc00",
+          "sizeBytes": 1075
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "0a9102d4af476035d09ceb055b8256fb0a460c111380ffc24813b7448bd130cf",
+          "sizeBytes": 6272
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "075c348578d13821109238e4545d0030cf6ee6bfa5944676992f4e4b407b8a79",
+          "sizeBytes": 4682
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "7aa22ce65ecd0af5bf2b4e59b93065e6bc883b7a1637447b4683c439816d4fb3",
+          "sizeBytes": 7525
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "e31146046fb72c0c9b2988bf8f6bdf38b4b5f1608606b7358590c68a0a6aac6e",
+          "sizeBytes": 87
+        }
+      ],
+      "fixtureId": "exposure-increase",
+      "path": "exposure-increase"
+    },
+    {
+      "expectedResultHash": "f0e1a90099aa17e0c7974ad527fd1ca9440a3aad10b02cb0ac789b93871a71c8",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "cdfe8c64f9d4bce3dac0ccdb423a2a7b695f162104bed4dc4a07294531579517",
+          "sizeBytes": 1163
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "5ef5998d87056a0dfff1bc38a56598d690b786bc007002ef6bb61b675d3bbbe4",
+          "sizeBytes": 3822
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "841f345942759d78ba16eaa1d5558ec2392764451523f5eb84f783d59d149405",
+          "sizeBytes": 12306
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "d02b0b941258f402d54e4c3a00715970b3a7bbe55738abacfc219f382353fc00",
+          "sizeBytes": 1075
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "77a8a01d6da8bd5d3f987ea120307dc4c402b797e8cd5739b7690a2774a3c410",
+          "sizeBytes": 2373
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "d8b50d0530c5d0e53f79d8d57ef7c3db070600f294b9ebaaa0f6958c1165d72c",
+          "sizeBytes": 2793
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "9d64ff52690c172dc9419e4a1e5140aa7ea0ae0eade0c4e9672edafe0e23949d",
+          "sizeBytes": 3461
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "1cb0598a86fe8140eab1f8268b4e3c4040d979dd216431c905a7de20f60bebb2",
+          "sizeBytes": 981
+        }
+      ],
+      "fixtureId": "exposure-different-settlement",
+      "path": "exposure-different-settlement"
+    },
+    {
+      "expectedResultHash": "c7cbb9540814e8da9f909e2b2834f2a087ff375e68b4b14963f2c7b22d948903",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "a7e58d4e6001a5fbbf5d9c3d25888feb1643db684f9673023066e658581603cd",
+          "sizeBytes": 1135
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "cb3dd1a1b06c62367b5ec9aef6f8582ed51ab5e46fc252bcccbdac4ab36abcc2",
+          "sizeBytes": 7458
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "e17c36f7140c0c1020da1f39ef105e72cc9fdc5cc708a3aedb21e8ea2117f305",
+          "sizeBytes": 23349
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "be14402efff14cb45177f1913e2e30b53a42825fbedec213ab743c8a640cdffb",
+          "sizeBytes": 1079
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "0db276ae779e617e6513885c26e777a9eacd368f48ca9d2625b2900254f3a5ab",
+          "sizeBytes": 4992
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "523af2674fa43883392d6be709fca5a499e4a4a4860952cf904737a321f46008",
+          "sizeBytes": 4038
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "ee095c8c2d6f2ca449ced4c2696cd616c2988a9cae750e5bcca06515e090d7fe",
+          "sizeBytes": 6610
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "1f624ff3cdf866d120856e9d7ea2b2dbecfa27a74e55ea7d4c3725a17434d001",
+          "sizeBytes": 96
+        }
+      ],
+      "fixtureId": "holding-duration-available",
+      "path": "holding-duration-available"
+    },
+    {
+      "expectedResultHash": "0fb95378e87fb93ea6811b12becb38aad06c1b337c4bd74c3c93ad63015d02d4",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "c5c2ad3410049cc8769e84553107930f0352f98d32e974ff09301e7162293bae",
+          "sizeBytes": 1160
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "0a4660089441f7a091d19119f293c04d12b47c29e313cdc0fc319bee1f941e7d",
+          "sizeBytes": 5773
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "9e3ca992f1ce7beb70dc0366a8a80c13b2ac47bee212bb83e89c8a6e0c5df12d",
+          "sizeBytes": 18493
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "be14402efff14cb45177f1913e2e30b53a42825fbedec213ab743c8a640cdffb",
+          "sizeBytes": 1079
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "501b046a177cca6036e320fa1a62d28210688ebb53b1ca93876f1846add686da",
+          "sizeBytes": 3959
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "4e88a575b7093f05d87eabf44585f4aeeab1250039cd46dfdfa6756f85d9c423",
+          "sizeBytes": 3415
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "a1eb544eeb5c59d72a53f6825f7e5b796388b0e6b01b8a3b387342050e0694e9",
+          "sizeBytes": 5326
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "8315033b96bb0927875fed5eb6641a0247b73237dd72cc73d00d96fd0a03b322",
+          "sizeBytes": 103
+        }
+      ],
+      "fixtureId": "holding-duration-win-insufficient",
+      "path": "holding-duration-win-insufficient"
+    },
+    {
+      "expectedResultHash": "819c6b30ec8bd3b9b8259fbcf1f82769311d02206abb23ebbab51ee4f2a716e0",
+      "files": [
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "f0900cc03d57392cd637219eb37cfc6aebb052fdf87cc17cd7cfbec6df4c5b02",
+          "sizeBytes": 1156
+        },
+        {
+          "path": "input/episodes.json",
+          "sha256": "c8eac55042bb2c0db74f78f269adb17c279f3d72869bcc8f5f5c678a29841b3b",
+          "sizeBytes": 7686
+        },
+        {
+          "path": "input/reconciliation-manifest.json",
+          "sha256": "4e3ba1d5d223b2e5a1cc6b6fb6c106367f0b7cdd0e0ab4326ced518f6451ef55",
+          "sizeBytes": 23380
+        },
+        {
+          "path": "input/analysis-config.json",
+          "sha256": "be14402efff14cb45177f1913e2e30b53a42825fbedec213ab743c8a640cdffb",
+          "sizeBytes": 1079
+        },
+        {
+          "path": "expected/observations.json",
+          "sha256": "ce31a4ac6835035985eda913041e9c122e38d5c4eb0355b391ca3d881df7bc84",
+          "sizeBytes": 4956
+        },
+        {
+          "path": "expected/metrics.json",
+          "sha256": "e9aaa22c28c8fa3b4f4e511effba614aafd1aa10ff301650fbf2d4bcb43c40c0",
+          "sizeBytes": 3800
+        },
+        {
+          "path": "expected/evidence.json",
+          "sha256": "5f5cc6df84996a5d2ba1746fc6dfae5ed420ce4a2da4d773466fd7152e182e90",
+          "sizeBytes": 7016
+        },
+        {
+          "path": "expected/exclusions.json",
+          "sha256": "d4a18e4f3472b9028a05b8ccf4f62148385f573a3505aa1d05985c70f130f627",
+          "sizeBytes": 1046
+        }
+      ],
+      "fixtureId": "holding-duration-missing-capability",
+      "path": "holding-duration-missing-capability"
+    }
+  ],
+  "metricBundleId": "TRADING_BEHAVIOR_METRICS_V1",
+  "packageFiles": [
+    {
+      "path": "README.md",
+      "sha256": "fde4de57efed3a1cb6086c3f7194170789f0652bdfad93c2a0bb67dcddad1485",
+      "sizeBytes": 5035
+    },
+    {
+      "path": "schemas/analysis-config.schema.json",
+      "sha256": "f2b126a5c683da1523ed0e09f9a8a4c5f7058af4de08ee6434b5f8b4c5b25739",
+      "sizeBytes": 2479
+    },
+    {
+      "path": "schemas/analytics-fixture-manifest.schema.json",
+      "sha256": "9562d0e8b08f2e05e5fbda48c72937fe83bc8a44855d194c62dd321f4619d0ac",
+      "sizeBytes": 2021
+    },
+    {
+      "path": "schemas/episodes.schema.json",
+      "sha256": "08d7ca17de253d0c4c17bac235fb48c9295f351346271da5f3847673b8d948ce",
+      "sizeBytes": 3568
+    },
+    {
+      "path": "schemas/evidence.schema.json",
+      "sha256": "65f9ccbbd19f4919e011df5a43fa9d52093f3ee1df5befcf6c803e68bb44e468",
+      "sizeBytes": 1355
+    },
+    {
+      "path": "schemas/exclusions.schema.json",
+      "sha256": "4645415224f6eb5d99bccead36d4e1f3b9dcdde04d07dcbb5b5ac2789ecfb464",
+      "sizeBytes": 1228
+    },
+    {
+      "path": "schemas/metrics.schema.json",
+      "sha256": "406bb078f6d1f08f7a2a5f4a14976c61c384fb7acaf7d9e285f02fdc3eefba56",
+      "sizeBytes": 3657
+    },
+    {
+      "path": "schemas/observations.schema.json",
+      "sha256": "ee618b6e55c457ee9914d284d9fedd2a425ffc9903a5e15a77e3bd41e8cac08b",
+      "sizeBytes": 1152
+    }
+  ],
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0"
+}

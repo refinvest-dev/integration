@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "958abe36c291b0c31ce5f18fb71f17cdf143265160bdc635831a07d534076da1",
+  "description": "손실 종료 정확히 30분 뒤 일반 entry",
+  "expectedMetricStatuses": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": "AVAILABLE"
+  },
+  "expectedResultHash": "39d518491223dc034a6f135fda332cb345ceaf14b209cbab3bb3668d48bd1ec7",
+  "fixtureId": "reentry-exact-boundary",
+  "metricDefinitionIds": [
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+  ],
+  "metricDefinitionVersions": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": 1
+  },
+  "reconciliationManifestHash": "56b0caf42136ab517de3deff11a53d153d2ab083d12bc7a0afe25961573d5326",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:reentry-exact-boundary",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "56b0caf42136ab517de3deff11a53d153d2ab083d12bc7a0afe25961573d5326"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "AVAILABLE"
+  ]
+}

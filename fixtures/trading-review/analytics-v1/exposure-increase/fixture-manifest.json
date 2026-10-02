@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "861146c242dd47a94b96e108f11e58fd6f2a200917ce738806ee8577967592f8",
+  "description": "loss initial notional 100에서 next entry 150으로 증가",
+  "expectedMetricStatuses": {
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS": "AVAILABLE"
+  },
+  "expectedResultHash": "856be84b59a7c511323577b1d3d1884920180bcd9bb6474223d0bc50cc1b9b69",
+  "fixtureId": "exposure-increase",
+  "metricDefinitionIds": [
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS"
+  ],
+  "metricDefinitionVersions": {
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS": 1
+  },
+  "reconciliationManifestHash": "956d81f02a26433272e02a69c8820f3cae3365f87b7635cd79876ab0af42af6f",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:exposure-increase",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "956d81f02a26433272e02a69c8820f3cae3365f87b7635cd79876ab0af42af6f"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "AVAILABLE"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": { "sourceRef": { "additionalProperties": false, "properties": { "artifactId": { "type": "string" }, "sourceRecordKey": { "type": "string" }, "sourceRowNumber": { "minimum": 1, "type": "integer" } }, "required": ["artifactId", "sourceRowNumber", "sourceRecordKey"], "type": "object" } },
+  "additionalProperties": false,
+  "properties": {
+    "evidenceChains": { "items": { "additionalProperties": false, "properties": { "behaviorMetricId": { "type": "string" }, "behaviorObservationId": { "type": ["string", "null"] }, "episodeId": { "type": "string" }, "evidenceId": { "type": "string" }, "positionAllocationIds": { "items": { "type": "string" }, "minItems": 1, "type": "array", "uniqueItems": true }, "sourceRowRefs": { "items": { "$ref": "#/$defs/sourceRef" }, "minItems": 1, "type": "array" }, "tradingRecordIds": { "items": { "type": "string" }, "minItems": 1, "type": "array", "uniqueItems": true } }, "required": ["evidenceId", "behaviorMetricId", "behaviorObservationId", "episodeId", "positionAllocationIds", "tradingRecordIds", "sourceRowRefs"], "type": "object" }, "minItems": 1, "type": "array" },
+    "fixtureId": { "type": "string" },
+    "schemaVersion": { "const": "1.0.0" }
+  },
+  "required": ["schemaVersion", "fixtureId", "evidenceChains"],
+  "type": "object"
+}

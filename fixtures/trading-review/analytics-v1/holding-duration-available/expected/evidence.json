@@ -1,0 +1,126 @@
+{
+  "evidenceChains": [
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-available:metric:holding",
+      "behaviorObservationId": "synthetic:analytics-v1:holding-duration-available:observation:holding:w1",
+      "episodeId": "synthetic:analytics-v1:holding-duration-available:episode:w1",
+      "evidenceId": "synthetic:analytics-v1:holding-duration-available:evidence:holding:w1",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-available:allocation:w1:open",
+        "synthetic:analytics-v1:holding-duration-available:allocation:w1:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-available:record:w1:open",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:open:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:open:pnl",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:close",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:close:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:w1:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-available:metric:holding",
+      "behaviorObservationId": "synthetic:analytics-v1:holding-duration-available:observation:holding:w2",
+      "episodeId": "synthetic:analytics-v1:holding-duration-available:episode:w2",
+      "evidenceId": "synthetic:analytics-v1:holding-duration-available:evidence:holding:w2",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-available:allocation:w2:open",
+        "synthetic:analytics-v1:holding-duration-available:allocation:w2:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-available:record:w2:open",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:open:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:open:pnl",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:close",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:close:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:w2:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-available:metric:holding",
+      "behaviorObservationId": "synthetic:analytics-v1:holding-duration-available:observation:holding:l3",
+      "episodeId": "synthetic:analytics-v1:holding-duration-available:episode:l3",
+      "evidenceId": "synthetic:analytics-v1:holding-duration-available:evidence:holding:l3",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-available:allocation:l3:open",
+        "synthetic:analytics-v1:holding-duration-available:allocation:l3:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:5",
+          "sourceRowNumber": 5
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-available:record:l3:open",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:open:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:open:pnl",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:close",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:close:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:l3:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-available:metric:holding",
+      "behaviorObservationId": "synthetic:analytics-v1:holding-duration-available:observation:holding:l4",
+      "episodeId": "synthetic:analytics-v1:holding-duration-available:episode:l4",
+      "evidenceId": "synthetic:analytics-v1:holding-duration-available:evidence:holding:l4",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:holding-duration-available:allocation:l4:open",
+        "synthetic:analytics-v1:holding-duration-available:allocation:l4:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:7",
+          "sourceRowNumber": 7
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-available:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-available:trade-row:8",
+          "sourceRowNumber": 8
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-available:record:l4:open",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:open:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:open:pnl",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:close",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:close:fee",
+        "synthetic:analytics-v1:holding-duration-available:record:l4:close:pnl"
+      ]
+    }
+  ],
+  "fixtureId": "holding-duration-available",
+  "schemaVersion": "1.0.0"
+}

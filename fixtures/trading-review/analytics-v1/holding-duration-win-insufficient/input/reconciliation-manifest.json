@@ -1,0 +1,471 @@
+{
+  "episodeSet": [
+    "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1",
+    "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+    "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3"
+  ],
+  "episodeSnapshots": [
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T09:10:00Z",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1",
+      "openedAt": "2026-01-01T09:00:00Z",
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T09:50:00Z",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+      "openedAt": "2026-01-01T09:20:00Z",
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:50:00Z",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3",
+      "openedAt": "2026-01-01T10:00:00Z",
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE"
+    }
+  ],
+  "fixtureId": "holding-duration-win-insufficient",
+  "ledgerRevisionId": "synthetic:analytics-v1:holding-duration-win-insufficient:ledger-revision:1",
+  "manifestHash": "08154c1ab09699a0628599d188cafeaab44d4e66b186a3efaf0f030f8a170b56",
+  "positionAllocations": [
+    {
+      "action": "OPEN",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "0",
+      "allocationId": "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:w1:open",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1",
+      "occurredAt": "2026-01-01T09:00:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open:pnl"
+      ]
+    },
+    {
+      "action": "CLOSE",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "10",
+      "allocationId": "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:w1:close",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:w1",
+      "occurredAt": "2026-01-01T09:10:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close:pnl"
+      ]
+    },
+    {
+      "action": "OPEN",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "0",
+      "allocationId": "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l2:open",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+      "occurredAt": "2026-01-01T09:20:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:3",
+          "sourceRowNumber": 3
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open:pnl"
+      ]
+    },
+    {
+      "action": "CLOSE",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "-10",
+      "allocationId": "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l2:close",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l2",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close:pnl"
+      ]
+    },
+    {
+      "action": "OPEN",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "0",
+      "allocationId": "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l3:open",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:5",
+          "sourceRowNumber": 5
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open:pnl"
+      ]
+    },
+    {
+      "action": "CLOSE",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "-10",
+      "allocationId": "synthetic:analytics-v1:holding-duration-win-insufficient:allocation:l3:close",
+      "episodeId": "synthetic:analytics-v1:holding-duration-win-insufficient:episode:l3",
+      "occurredAt": "2026-01-01T10:50:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close:fee",
+        "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close:pnl"
+      ]
+    }
+  ],
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceArtifacts": [
+    {
+      "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+      "contentHash": "230911d86cbee294de5e2f825b45abce5f02fea5088ae35237940cd9dc913fae",
+      "format": "CSV",
+      "path": "synthetic-trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "rowCount": 6,
+      "sourceRows": [
+        {
+          "rowNumber": 1,
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:1"
+        },
+        {
+          "rowNumber": 2,
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:2"
+        },
+        {
+          "rowNumber": 3,
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:3"
+        },
+        {
+          "rowNumber": 4,
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:4"
+        },
+        {
+          "rowNumber": 5,
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:5"
+        },
+        {
+          "rowNumber": 6,
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:6"
+        }
+      ]
+    }
+  ],
+  "tradingRecords": [
+    {
+      "occurredAt": "2026-01-01T09:00:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:00:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open:fee"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:00:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:open:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T09:10:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:10:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close:fee"
+    },
+    {
+      "amount": "10",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:10:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:w1:close:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T09:20:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:3",
+          "sourceRowNumber": 3
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:20:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:3",
+          "sourceRowNumber": 3
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open:fee"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:20:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:3",
+          "sourceRowNumber": 3
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:open:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close:fee"
+    },
+    {
+      "amount": "-10",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l2:close:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:5",
+          "sourceRowNumber": 5
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:5",
+          "sourceRowNumber": 5
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open:fee"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:5",
+          "sourceRowNumber": 5
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:open:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T10:50:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T10:50:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close:fee"
+    },
+    {
+      "amount": "-10",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T10:50:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:holding-duration-win-insufficient:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:holding-duration-win-insufficient:trade-row:6",
+          "sourceRowNumber": 6
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:holding-duration-win-insufficient:record:l3:close:pnl"
+    }
+  ]
+}

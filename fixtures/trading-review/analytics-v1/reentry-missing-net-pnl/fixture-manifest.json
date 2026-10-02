@@ -1,0 +1,32 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "10e6acbf7ef1e89cde95a3bbdaa603314457bc8c3775c00c272442ebad2318b1",
+  "description": "fee 또는 valuation 누락으로 loss 판정이 불가능한 structurally in-scope episode",
+  "expectedMetricStatuses": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": "MISSING_CAPABILITY",
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS": "MISSING_CAPABILITY"
+  },
+  "expectedResultHash": "6276d3b87ec421d06c8856d8f1457ef467d381239b92af294865c85e334de620",
+  "fixtureId": "reentry-missing-net-pnl",
+  "metricDefinitionIds": [
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS"
+  ],
+  "metricDefinitionVersions": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": 1,
+    "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS": 1
+  },
+  "reconciliationManifestHash": "0e26d8bf494c63b088e828a7b1d961d64c391b2b4cb86b2f57447ea91bc08816",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:reentry-missing-net-pnl",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "0e26d8bf494c63b088e828a7b1d961d64c391b2b4cb86b2f57447ea91bc08816"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "MISSING_CAPABILITY"
+  ]
+}

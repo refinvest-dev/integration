@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "bb2ab77b5e7f319c5f9a4953da979fa484d73620524e43f3a6f86276815961ad",
+  "description": "분석 종료까지 전체 30분 window를 관찰할 수 없는 loss",
+  "expectedMetricStatuses": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": "INSUFFICIENT_SAMPLE"
+  },
+  "expectedResultHash": "f2e7d257e971370925ce16e37e751c57d8e647d3988d1abfa7ace781e791782c",
+  "fixtureId": "reentry-right-observation-censored",
+  "metricDefinitionIds": [
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+  ],
+  "metricDefinitionVersions": {
+    "ENTRY_WITHIN_WINDOW_AFTER_LOSS": 1
+  },
+  "reconciliationManifestHash": "4b09e78d53a95fe453a95242f89bacef257561c31a68bfa5a800b8f57c0e2cd5",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:reentry-right-observation-censored",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "4b09e78d53a95fe453a95242f89bacef257561c31a68bfa5a800b8f57c0e2cd5"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "INSUFFICIENT_SAMPLE"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "analysisConfig": "input/analysis-config.json",
+  "canonicalEpisodeHash": "8a9262f1f7d868e936633e0799e4bb1c37b04d1a0b5ad646deb362936626a126",
+  "description": "win/loss 양쪽 표본을 충족하는 holding duration difference",
+  "expectedMetricStatuses": {
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": "AVAILABLE"
+  },
+  "expectedResultHash": "c7cbb9540814e8da9f909e2b2834f2a087ff375e68b4b14963f2c7b22d948903",
+  "fixtureId": "holding-duration-available",
+  "metricDefinitionIds": [
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE"
+  ],
+  "metricDefinitionVersions": {
+    "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": 1
+  },
+  "reconciliationManifestHash": "86161eae83166dee1d561970c06346196bf1949dfb7f6f7705e576b8cfb64d53",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceReconstructionFixture": {
+    "fixtureId": "synthetic:analytics-v1:holding-duration-available",
+    "mode": "PINNED_MINIMAL_COPY",
+    "sourceManifestHash": "86161eae83166dee1d561970c06346196bf1949dfb7f6f7705e576b8cfb64d53"
+  },
+  "tags": [
+    "SYNTHETIC",
+    "NON_PRODUCTION",
+    "AVAILABLE"
+  ]
+}

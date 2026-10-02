@@ -1,0 +1,66 @@
+{
+  "evidenceChains": [
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-different-settlement:metric:exposure",
+      "behaviorObservationId": "synthetic:analytics-v1:exposure-different-settlement:observation:exposure:l1",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:l1",
+      "evidenceId": "synthetic:analytics-v1:exposure-different-settlement:evidence:exposure:l1",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:allocation:l1:open",
+        "synthetic:analytics-v1:exposure-different-settlement:allocation:l1:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:open",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:open:fee",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:open:pnl",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:close",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:close:fee",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:close:pnl"
+      ]
+    },
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-different-settlement:metric:exposure",
+      "behaviorObservationId": "synthetic:analytics-v1:exposure-different-settlement:observation:exposure:e2",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:e2",
+      "evidenceId": "synthetic:analytics-v1:exposure-different-settlement:evidence:exposure:e2",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:allocation:e2:open",
+        "synthetic:analytics-v1:exposure-different-settlement:allocation:e2:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:open",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:open:fee",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:open:pnl",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:close",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:close:fee",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:close:pnl"
+      ]
+    }
+  ],
+  "fixtureId": "exposure-different-settlement",
+  "schemaVersion": "1.0.0"
+}

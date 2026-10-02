@@ -1,0 +1,60 @@
+{
+  "episodes": [
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:00:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1",
+      "grossTradingPnl": "-10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "-10",
+      "openedAt": "2026-01-01T09:50:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "LOSS",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:reentry-right-observation-censored:allocation:l1:open",
+        "synthetic:analytics-v1:reentry-right-observation-censored:allocation:l1:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    }
+  ],
+  "fixtureId": "reentry-right-observation-censored",
+  "schemaVersion": "1.0.0"
+}

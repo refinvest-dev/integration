@@ -1,0 +1,114 @@
+{
+  "episodes": [
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:00:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:l1",
+      "grossTradingPnl": "-10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDT",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "-10",
+      "openedAt": "2026-01-01T09:50:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "LOSS",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:allocation:l1:open",
+        "synthetic:analytics-v1:exposure-different-settlement:allocation:l1:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDT",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:20:00Z",
+      "closingAction": "CLOSE",
+      "direction": "LONG",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:e2",
+      "grossTradingPnl": "10",
+      "initialExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDY",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "instrumentId": "SYNTHETIC:USDS_FUTURES:AAAUSDT",
+      "maxExposure": {
+        "contractMultiplier": "1",
+        "currency": "USDY",
+        "notional": "100",
+        "price": "10",
+        "quantity": "10"
+      },
+      "netTradingPnl": "10",
+      "openedAt": "2026-01-01T10:10:00Z",
+      "openingAction": "OPEN",
+      "outcomeClassification": "WIN",
+      "outcomeCompleteness": "COMPLETE",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:allocation:e2:open",
+        "synthetic:analytics-v1:exposure-different-settlement:allocation:e2:close"
+      ],
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "settlementAsset": "USDY",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:3",
+          "sourceRowNumber": 3
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "symbol": "AAAUSDT",
+      "tradingFee": "0"
+    }
+  ],
+  "fixtureId": "exposure-different-settlement",
+  "schemaVersion": "1.0.0"
+}

@@ -1,0 +1,36 @@
+{
+  "evidenceChains": [
+    {
+      "behaviorMetricId": "synthetic:analytics-v1:reentry-right-observation-censored:metric:reentry",
+      "behaviorObservationId": "synthetic:analytics-v1:reentry-right-observation-censored:observation:reentry:l1",
+      "episodeId": "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1",
+      "evidenceId": "synthetic:analytics-v1:reentry-right-observation-censored:evidence:reentry:l1",
+      "positionAllocationIds": [
+        "synthetic:analytics-v1:reentry-right-observation-censored:allocation:l1:open",
+        "synthetic:analytics-v1:reentry-right-observation-censored:allocation:l1:close"
+      ],
+      "sourceRowRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:1",
+          "sourceRowNumber": 1
+        },
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open:fee",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open:pnl",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close:fee",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close:pnl"
+      ]
+    }
+  ],
+  "fixtureId": "reentry-right-observation-censored",
+  "schemaVersion": "1.0.0"
+}

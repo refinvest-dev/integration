@@ -1,0 +1,323 @@
+{
+  "episodeSet": [
+    "synthetic:analytics-v1:exposure-different-settlement:episode:l1",
+    "synthetic:analytics-v1:exposure-different-settlement:episode:e2"
+  ],
+  "episodeSnapshots": [
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:00:00Z",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:l1",
+      "openedAt": "2026-01-01T09:50:00Z",
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE"
+    },
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:20:00Z",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:e2",
+      "openedAt": "2026-01-01T10:10:00Z",
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE"
+    }
+  ],
+  "fixtureId": "exposure-different-settlement",
+  "ledgerRevisionId": "synthetic:analytics-v1:exposure-different-settlement:ledger-revision:1",
+  "manifestHash": "637b322d14448b45705facf1e3f7e6f69b119921d3b92ae34b28d0075d2095d0",
+  "positionAllocations": [
+    {
+      "action": "OPEN",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "0",
+      "allocationId": "synthetic:analytics-v1:exposure-different-settlement:allocation:l1:open",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:l1",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:open",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:open:fee",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:open:pnl"
+      ]
+    },
+    {
+      "action": "CLOSE",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "-10",
+      "allocationId": "synthetic:analytics-v1:exposure-different-settlement:allocation:l1:close",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:l1",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:close",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:close:fee",
+        "synthetic:analytics-v1:exposure-different-settlement:record:l1:close:pnl"
+      ]
+    },
+    {
+      "action": "OPEN",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "0",
+      "allocationId": "synthetic:analytics-v1:exposure-different-settlement:allocation:e2:open",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:e2",
+      "occurredAt": "2026-01-01T10:10:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:3",
+          "sourceRowNumber": 3
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:open",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:open:fee",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:open:pnl"
+      ]
+    },
+    {
+      "action": "CLOSE",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "10",
+      "allocationId": "synthetic:analytics-v1:exposure-different-settlement:allocation:e2:close",
+      "episodeId": "synthetic:analytics-v1:exposure-different-settlement:episode:e2",
+      "occurredAt": "2026-01-01T10:20:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:close",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:close:fee",
+        "synthetic:analytics-v1:exposure-different-settlement:record:e2:close:pnl"
+      ]
+    }
+  ],
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceArtifacts": [
+    {
+      "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+      "contentHash": "cbe60c7255988c0034e083d45afb2dc6fd76ad7292f2106913a071077ed9ec84",
+      "format": "CSV",
+      "path": "synthetic-trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "rowCount": 4,
+      "sourceRows": [
+        {
+          "rowNumber": 1,
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:1"
+        },
+        {
+          "rowNumber": 2,
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:2"
+        },
+        {
+          "rowNumber": 3,
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:3"
+        },
+        {
+          "rowNumber": 4,
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:4"
+        }
+      ]
+    }
+  ],
+  "tradingRecords": [
+    {
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:l1:open"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:l1:open:fee"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:l1:open:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:l1:close"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:l1:close:fee"
+    },
+    {
+      "amount": "-10",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:l1:close:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T10:10:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:3",
+          "sourceRowNumber": 3
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:e2:open"
+    },
+    {
+      "amount": "0",
+      "asset": "USDY",
+      "occurredAt": "2026-01-01T10:10:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:3",
+          "sourceRowNumber": 3
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:e2:open:fee"
+    },
+    {
+      "amount": "0",
+      "asset": "USDY",
+      "occurredAt": "2026-01-01T10:10:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:3",
+          "sourceRowNumber": 3
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:e2:open:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T10:20:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:e2:close"
+    },
+    {
+      "amount": "0",
+      "asset": "USDY",
+      "occurredAt": "2026-01-01T10:20:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:e2:close:fee"
+    },
+    {
+      "amount": "10",
+      "asset": "USDY",
+      "occurredAt": "2026-01-01T10:20:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:exposure-different-settlement:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:exposure-different-settlement:trade-row:4",
+          "sourceRowNumber": 4
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:exposure-different-settlement:record:e2:close:pnl"
+    }
+  ]
+}

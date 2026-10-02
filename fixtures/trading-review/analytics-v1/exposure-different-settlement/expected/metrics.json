@@ -1,0 +1,82 @@
+{
+  "analysisConfigHash": "861e2ac2a03891240e85fb2afa76b57d940c30df3e39e8e5eb8eb67fd4af0c55",
+  "fixtureId": "exposure-different-settlement",
+  "metrics": [
+    {
+      "applicabilityReason": null,
+      "behaviorMetricId": "synthetic:analytics-v1:exposure-different-settlement:metric:exposure",
+      "capabilitySnapshotByEpisode": {
+        "synthetic:analytics-v1:exposure-different-settlement:episode:e2": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:exposure-different-settlement:episode:l1": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ]
+      },
+      "comparisonCount": 0,
+      "comparisonEpisodeIds": [],
+      "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+      "definitionVersion": 1,
+      "eligibleCount": 1,
+      "eligibleEpisodeIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:episode:l1"
+      ],
+      "evidenceReference": "synthetic:analytics-v1:exposure-different-settlement:evidence:exposure:l1",
+      "excludedCount": 1,
+      "excludedEpisodeIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:episode:e2"
+      ],
+      "exclusionReasonCounts": {
+        "SETTLEMENT_CURRENCY_MISMATCH": 1
+      },
+      "findingEligibility": "INELIGIBLE_METRIC_STATUS",
+      "intermediateAggregates": {
+        "eligiblePairCount": 0,
+        "settlementCurrencies": [
+          "USDT",
+          "USDY"
+        ]
+      },
+      "manualVerification": {
+        "firstCheck": "USDT and USDY are unequal; V1 defines no conversion",
+        "method": "HAND_CALCULATED_INDEPENDENT_DOUBLE_CHECK",
+        "secondCheck": "eligible pair count 0 is below configured minimum 1"
+      },
+      "metricStatus": "INSUFFICIENT_SAMPLE",
+      "missingCapabilities": [],
+      "observationIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:observation:exposure:l1",
+        "synthetic:analytics-v1:exposure-different-settlement:observation:exposure:e2"
+      ],
+      "populationCount": 2,
+      "populationEpisodeIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:episode:l1",
+        "synthetic:analytics-v1:exposure-different-settlement:episode:e2"
+      ],
+      "requiredCapabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "result": null,
+      "sampleCounts": {
+        "actual": 0,
+        "minimum": 1,
+        "sample": "exposurePairs"
+      },
+      "subjectCount": 1,
+      "subjectEpisodeIds": [
+        "synthetic:analytics-v1:exposure-different-settlement:episode:l1"
+      ],
+      "unit": null
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

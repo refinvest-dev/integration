@@ -1,0 +1,132 @@
+{
+  "fixtureId": "exposure-increase",
+  "observations": [
+    {
+      "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:exposure-increase:evidence:exposure:h1",
+      "observationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:h1",
+      "observationTimestamp": "2026-01-01T09:10:00Z",
+      "observedAttributes": {
+        "membershipRole": "COMPARISON",
+        "outcomeClassification": "WIN"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:e5",
+        "synthetic:analytics-v1:exposure-increase:episode:h2",
+        "synthetic:analytics-v1:exposure-increase:episode:h3"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:exposure-increase:episode:h1",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:h1:open",
+        "synthetic:analytics-v1:exposure-increase:record:h1:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h1:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:h1:close",
+        "synthetic:analytics-v1:exposure-increase:record:h1:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h1:close:pnl"
+      ]
+    },
+    {
+      "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:exposure-increase:evidence:exposure:h2",
+      "observationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:h2",
+      "observationTimestamp": "2026-01-01T09:25:00Z",
+      "observedAttributes": {
+        "membershipRole": "COMPARISON",
+        "outcomeClassification": "WIN"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:e5",
+        "synthetic:analytics-v1:exposure-increase:episode:h1",
+        "synthetic:analytics-v1:exposure-increase:episode:h3"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:exposure-increase:episode:h2",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:h2:open",
+        "synthetic:analytics-v1:exposure-increase:record:h2:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h2:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:h2:close",
+        "synthetic:analytics-v1:exposure-increase:record:h2:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h2:close:pnl"
+      ]
+    },
+    {
+      "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:exposure-increase:evidence:exposure:h3",
+      "observationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:h3",
+      "observationTimestamp": "2026-01-01T09:40:00Z",
+      "observedAttributes": {
+        "membershipRole": "COMPARISON",
+        "outcomeClassification": "WIN"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:e5",
+        "synthetic:analytics-v1:exposure-increase:episode:h1",
+        "synthetic:analytics-v1:exposure-increase:episode:h2"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:exposure-increase:episode:h3",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:h3:open",
+        "synthetic:analytics-v1:exposure-increase:record:h3:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h3:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:h3:close",
+        "synthetic:analytics-v1:exposure-increase:record:h3:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:h3:close:pnl"
+      ]
+    },
+    {
+      "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:exposure-increase:evidence:exposure:l4",
+      "observationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:l4",
+      "observationTimestamp": "2026-01-01T10:00:00Z",
+      "observedAttributes": {
+        "membershipRole": "SUBJECT",
+        "outcomeClassification": "LOSS"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:e5",
+        "synthetic:analytics-v1:exposure-increase:episode:h1",
+        "synthetic:analytics-v1:exposure-increase:episode:h2",
+        "synthetic:analytics-v1:exposure-increase:episode:h3"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:exposure-increase:episode:l4",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:l4:open",
+        "synthetic:analytics-v1:exposure-increase:record:l4:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:l4:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:l4:close",
+        "synthetic:analytics-v1:exposure-increase:record:l4:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:l4:close:pnl"
+      ]
+    },
+    {
+      "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:exposure-increase:evidence:exposure:e5",
+      "observationId": "synthetic:analytics-v1:exposure-increase:observation:exposure:e5",
+      "observationTimestamp": "2026-01-01T10:20:00Z",
+      "observedAttributes": {
+        "membershipRole": "COMPARISON",
+        "outcomeClassification": "WIN"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:exposure-increase:episode:h1",
+        "synthetic:analytics-v1:exposure-increase:episode:h2",
+        "synthetic:analytics-v1:exposure-increase:episode:h3"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:exposure-increase:episode:e5",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:exposure-increase:record:e5:open",
+        "synthetic:analytics-v1:exposure-increase:record:e5:open:fee",
+        "synthetic:analytics-v1:exposure-increase:record:e5:open:pnl",
+        "synthetic:analytics-v1:exposure-increase:record:e5:close",
+        "synthetic:analytics-v1:exposure-increase:record:e5:close:fee",
+        "synthetic:analytics-v1:exposure-increase:record:e5:close:pnl"
+      ]
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

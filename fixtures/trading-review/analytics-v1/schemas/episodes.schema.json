@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "decimal": { "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$", "type": "string" },
+    "evidenceRef": {
+      "additionalProperties": false,
+      "properties": { "artifactId": { "minLength": 1, "type": "string" }, "sourceRecordKey": { "minLength": 1, "type": "string" }, "sourceRowNumber": { "minimum": 1, "type": "integer" } },
+      "required": ["artifactId", "sourceRowNumber", "sourceRecordKey"],
+      "type": "object"
+    },
+    "exposure": {
+      "additionalProperties": false,
+      "properties": { "contractMultiplier": { "$ref": "#/$defs/decimal" }, "currency": { "pattern": "^[A-Z]{4}$", "type": "string" }, "notional": { "$ref": "#/$defs/decimal" }, "price": { "$ref": "#/$defs/decimal" }, "quantity": { "$ref": "#/$defs/decimal" } },
+      "required": ["quantity", "price", "contractMultiplier", "notional", "currency"],
+      "type": ["object", "null"]
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "episodes": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "capabilities": { "items": { "type": "string" }, "type": "array", "uniqueItems": true },
+          "closedAt": { "format": "date-time", "type": "string" },
+          "closingAction": { "enum": ["CLOSE", "REVERSAL_CLOSE"] },
+          "direction": { "enum": ["LONG", "SHORT"] },
+          "episodeId": { "minLength": 1, "type": "string" },
+          "grossTradingPnl": { "anyOf": [{ "$ref": "#/$defs/decimal" }, { "type": "null" }] },
+          "initialExposure": { "$ref": "#/$defs/exposure" },
+          "instrumentId": { "pattern": "^SYNTHETIC:USDS_FUTURES:[A-Z]{3}USDT$", "type": "string" },
+          "maxExposure": { "$ref": "#/$defs/exposure" },
+          "netTradingPnl": { "anyOf": [{ "$ref": "#/$defs/decimal" }, { "type": "null" }] },
+          "openedAt": { "format": "date-time", "type": "string" },
+          "openingAction": { "enum": ["OPEN", "REVERSAL_OPEN"] },
+          "outcomeClassification": { "enum": ["WIN", "LOSS", "BREAKEVEN", "UNAVAILABLE"] },
+          "outcomeCompleteness": { "enum": ["COMPLETE", "UNAVAILABLE"] },
+          "positionAllocationIds": { "items": { "minLength": 1, "type": "string" }, "minItems": 1, "type": "array", "uniqueItems": true },
+          "reconciliationStatus": { "enum": ["EXACT", "WITHIN_ROUNDING_TOLERANCE", "AMBIGUOUS", "INCOMPLETE_TRADES", "SUMMARY_MISMATCH", "UNSUPPORTED_OVERLAP"] },
+          "reconstructionStatus": { "enum": ["COMPLETE", "LEFT_CENSORED", "RIGHT_CENSORED", "INCONSISTENT", "UNSUPPORTED"] },
+          "settlementAsset": { "pattern": "^[A-Z]{4}$", "type": "string" },
+          "sourceEvidenceRefs": { "items": { "$ref": "#/$defs/evidenceRef" }, "minItems": 1, "type": "array" },
+          "symbol": { "pattern": "^[A-Z]{3}USDT$", "type": "string" },
+          "tradingFee": { "anyOf": [{ "$ref": "#/$defs/decimal" }, { "type": "null" }] }
+        },
+        "required": ["episodeId", "instrumentId", "symbol", "direction", "openedAt", "closedAt", "openingAction", "closingAction", "initialExposure", "maxExposure", "grossTradingPnl", "tradingFee", "netTradingPnl", "outcomeClassification", "outcomeCompleteness", "reconstructionStatus", "reconciliationStatus", "capabilities", "settlementAsset", "positionAllocationIds", "sourceEvidenceRefs"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "fixtureId": { "type": "string" },
+    "schemaVersion": { "const": "1.0.0" }
+  },
+  "required": ["schemaVersion", "fixtureId", "episodes"],
+  "type": "object"
+}

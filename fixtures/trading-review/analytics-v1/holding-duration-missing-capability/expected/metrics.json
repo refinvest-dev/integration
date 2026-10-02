@@ -1,0 +1,95 @@
+{
+  "analysisConfigHash": "e56e80e2ad435efc3a0096ea8c880ed06f9fedbb9d81c273b438d20da82d4156",
+  "fixtureId": "holding-duration-missing-capability",
+  "metrics": [
+    {
+      "applicabilityReason": null,
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-missing-capability:metric:holding",
+      "capabilitySnapshotByEpisode": {
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:l3": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:u4": [
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:w1": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:w2": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ]
+      },
+      "comparisonCount": 1,
+      "comparisonEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:l3"
+      ],
+      "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+      "definitionVersion": 1,
+      "eligibleCount": 3,
+      "eligibleEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:w1",
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:w2",
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:l3"
+      ],
+      "evidenceReference": "synthetic:analytics-v1:holding-duration-missing-capability:evidence:holding:w1",
+      "excludedCount": 1,
+      "excludedEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:u4"
+      ],
+      "exclusionReasonCounts": {
+        "OUTCOME_UNAVAILABLE": 1
+      },
+      "findingEligibility": "INELIGIBLE_METRIC_STATUS",
+      "intermediateAggregates": {
+        "unavailableOutcomeCount": 1
+      },
+      "manualVerification": {
+        "firstCheck": "one structurally in-scope episode has null netTradingPnl and no FEES capability",
+        "method": "HAND_CALCULATED_INDEPENDENT_DOUBLE_CHECK",
+        "secondCheck": "MISSING_CAPABILITY precedes INSUFFICIENT_SAMPLE in the status priority"
+      },
+      "metricStatus": "MISSING_CAPABILITY",
+      "missingCapabilities": [
+        "CLOSED_OUTCOME",
+        "FEES"
+      ],
+      "observationIds": [
+        "synthetic:analytics-v1:holding-duration-missing-capability:observation:holding:w1",
+        "synthetic:analytics-v1:holding-duration-missing-capability:observation:holding:w2",
+        "synthetic:analytics-v1:holding-duration-missing-capability:observation:holding:l3",
+        "synthetic:analytics-v1:holding-duration-missing-capability:observation:holding:u4"
+      ],
+      "populationCount": 4,
+      "populationEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:w1",
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:w2",
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:l3",
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:u4"
+      ],
+      "requiredCapabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "STABLE_EPISODE_TIME"
+      ],
+      "result": null,
+      "sampleCounts": null,
+      "subjectCount": 2,
+      "subjectEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:w1",
+        "synthetic:analytics-v1:holding-duration-missing-capability:episode:w2"
+      ],
+      "unit": null
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

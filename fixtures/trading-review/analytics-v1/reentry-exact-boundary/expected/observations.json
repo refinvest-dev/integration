@@ -1,0 +1,50 @@
+{
+  "fixtureId": "reentry-exact-boundary",
+  "observations": [
+    {
+      "definitionId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:reentry-exact-boundary:evidence:reentry:l1",
+      "observationId": "synthetic:analytics-v1:reentry-exact-boundary:observation:reentry:l1",
+      "observationTimestamp": "2026-01-01T10:00:00Z",
+      "observedAttributes": {
+        "membershipRole": "SUBJECT",
+        "outcomeClassification": "LOSS"
+      },
+      "relatedEpisodeIds": [
+        "synthetic:analytics-v1:reentry-exact-boundary:episode:e2"
+      ],
+      "subjectEpisodeId": "synthetic:analytics-v1:reentry-exact-boundary:episode:l1",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:reentry-exact-boundary:record:l1:open",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:l1:open:fee",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:l1:open:pnl",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:l1:close",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:l1:close:fee",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:l1:close:pnl"
+      ]
+    },
+    {
+      "definitionId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+      "definitionVersion": 1,
+      "evidenceReference": "synthetic:analytics-v1:reentry-exact-boundary:evidence:reentry:e2",
+      "observationId": "synthetic:analytics-v1:reentry-exact-boundary:observation:reentry:e2",
+      "observationTimestamp": "2026-01-01T10:45:00Z",
+      "observedAttributes": {
+        "membershipRole": "COMPARISON",
+        "outcomeClassification": "WIN"
+      },
+      "relatedEpisodeIds": [],
+      "subjectEpisodeId": "synthetic:analytics-v1:reentry-exact-boundary:episode:e2",
+      "supportingRecordIds": [
+        "synthetic:analytics-v1:reentry-exact-boundary:record:e2:open",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:e2:open:fee",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:e2:open:pnl",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:e2:close",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:e2:close:fee",
+        "synthetic:analytics-v1:reentry-exact-boundary:record:e2:close:pnl"
+      ]
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

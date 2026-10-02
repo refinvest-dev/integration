@@ -1,0 +1,109 @@
+{
+  "analysisConfigHash": "e56e80e2ad435efc3a0096ea8c880ed06f9fedbb9d81c273b438d20da82d4156",
+  "fixtureId": "holding-duration-available",
+  "metrics": [
+    {
+      "applicabilityReason": null,
+      "behaviorMetricId": "synthetic:analytics-v1:holding-duration-available:metric:holding",
+      "capabilitySnapshotByEpisode": {
+        "synthetic:analytics-v1:holding-duration-available:episode:l3": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:holding-duration-available:episode:l4": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:holding-duration-available:episode:w1": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "synthetic:analytics-v1:holding-duration-available:episode:w2": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ]
+      },
+      "comparisonCount": 2,
+      "comparisonEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-available:episode:l3",
+        "synthetic:analytics-v1:holding-duration-available:episode:l4"
+      ],
+      "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+      "definitionVersion": 1,
+      "eligibleCount": 4,
+      "eligibleEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-available:episode:w1",
+        "synthetic:analytics-v1:holding-duration-available:episode:w2",
+        "synthetic:analytics-v1:holding-duration-available:episode:l3",
+        "synthetic:analytics-v1:holding-duration-available:episode:l4"
+      ],
+      "evidenceReference": "synthetic:analytics-v1:holding-duration-available:evidence:holding:w1",
+      "excludedCount": 0,
+      "excludedEpisodeIds": [],
+      "exclusionReasonCounts": {},
+      "findingEligibility": "INELIGIBLE_SAMPLE",
+      "intermediateAggregates": {
+        "lossDurationsMicroseconds": [
+          1800000000,
+          3000000000
+        ],
+        "lossMedianMicroseconds": 2400000000,
+        "winDurationsMicroseconds": [
+          600000000,
+          1200000000
+        ],
+        "winMedianMicroseconds": 900000000
+      },
+      "manualVerification": {
+        "firstCheck": "win median = (600000000 + 1200000000)/2 = 900000000; loss median = 2400000000",
+        "method": "HAND_CALCULATED_INDEPENDENT_DOUBLE_CHECK",
+        "secondCheck": "2400000000 - 900000000 = 1500000000; 2400000000/900000000 = 8/3"
+      },
+      "metricStatus": "AVAILABLE",
+      "missingCapabilities": [],
+      "observationIds": [
+        "synthetic:analytics-v1:holding-duration-available:observation:holding:w1",
+        "synthetic:analytics-v1:holding-duration-available:observation:holding:w2",
+        "synthetic:analytics-v1:holding-duration-available:observation:holding:l3",
+        "synthetic:analytics-v1:holding-duration-available:observation:holding:l4"
+      ],
+      "populationCount": 4,
+      "populationEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-available:episode:w1",
+        "synthetic:analytics-v1:holding-duration-available:episode:w2",
+        "synthetic:analytics-v1:holding-duration-available:episode:l3",
+        "synthetic:analytics-v1:holding-duration-available:episode:l4"
+      ],
+      "requiredCapabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "STABLE_EPISODE_TIME"
+      ],
+      "result": {
+        "lossCount": 2,
+        "medianDifferenceMicroseconds": 1500000000,
+        "medianRatio": {
+          "denominator": 3,
+          "numerator": 8
+        },
+        "winCount": 2
+      },
+      "sampleCounts": null,
+      "subjectCount": 2,
+      "subjectEpisodeIds": [
+        "synthetic:analytics-v1:holding-duration-available:episode:w1",
+        "synthetic:analytics-v1:holding-duration-available:episode:w2"
+      ],
+      "unit": "MICROSECOND"
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

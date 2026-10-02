@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analysisConfig": { "const": "input/analysis-config.json" },
+    "canonicalEpisodeHash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "description": { "minLength": 1, "type": "string" },
+    "expectedMetricStatuses": { "additionalProperties": { "enum": ["AVAILABLE", "INSUFFICIENT_SAMPLE", "MISSING_CAPABILITY", "NOT_APPLICABLE"] }, "type": "object" },
+    "expectedResultHash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "fixtureId": { "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "type": "string" },
+    "metricDefinitionIds": { "items": { "enum": ["ENTRY_WITHIN_WINDOW_AFTER_LOSS", "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS", "WIN_LOSS_HOLDING_DURATION_DIFFERENCE"] }, "minItems": 1, "type": "array", "uniqueItems": true },
+    "metricDefinitionVersions": { "additionalProperties": { "const": 1 }, "type": "object" },
+    "reconciliationManifestHash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "reconstructionPolicyVersion": { "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1" },
+    "schemaVersion": { "const": "1.0.0" },
+    "sourceReconstructionFixture": {
+      "additionalProperties": false,
+      "properties": {
+        "fixtureId": { "pattern": "^synthetic:analytics-v1:[a-z0-9-]+$", "type": "string" },
+        "mode": { "const": "PINNED_MINIMAL_COPY" },
+        "sourceManifestHash": { "pattern": "^[0-9a-f]{64}$", "type": "string" }
+      },
+      "required": ["mode", "fixtureId", "sourceManifestHash"],
+      "type": "object"
+    },
+    "tags": { "items": { "type": "string" }, "minItems": 2, "type": "array", "uniqueItems": true }
+  },
+  "required": ["schemaVersion", "fixtureId", "description", "metricDefinitionIds", "metricDefinitionVersions", "reconstructionPolicyVersion", "reconciliationManifestHash", "canonicalEpisodeHash", "sourceReconstructionFixture", "analysisConfig", "expectedMetricStatuses", "expectedResultHash", "tags"],
+  "type": "object"
+}

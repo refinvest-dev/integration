@@ -1,0 +1,175 @@
+{
+  "episodeSet": [
+    "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1"
+  ],
+  "episodeSnapshots": [
+    {
+      "capabilities": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "STABLE_EPISODE_TIME"
+      ],
+      "closedAt": "2026-01-01T10:00:00Z",
+      "episodeId": "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1",
+      "openedAt": "2026-01-01T09:50:00Z",
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE"
+    }
+  ],
+  "fixtureId": "reentry-right-observation-censored",
+  "ledgerRevisionId": "synthetic:analytics-v1:reentry-right-observation-censored:ledger-revision:1",
+  "manifestHash": "4b09e78d53a95fe453a95242f89bacef257561c31a68bfa5a800b8f57c0e2cd5",
+  "positionAllocations": [
+    {
+      "action": "OPEN",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "0",
+      "allocationId": "synthetic:analytics-v1:reentry-right-observation-censored:allocation:l1:open",
+      "episodeId": "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open:fee",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open:pnl"
+      ]
+    },
+    {
+      "action": "CLOSE",
+      "allocatedFee": "0",
+      "allocatedReportedPnl": "-10",
+      "allocationId": "synthetic:analytics-v1:reentry-right-observation-censored:allocation:l1:close",
+      "episodeId": "synthetic:analytics-v1:reentry-right-observation-censored:episode:l1",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "quantity": "10",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordIds": [
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close:fee",
+        "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close:pnl"
+      ]
+    }
+  ],
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "schemaVersion": "1.0.0",
+  "sourceArtifacts": [
+    {
+      "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+      "contentHash": "a2f0bdd82a004aaaa498072ebe9cf28e29b05f3238a5d73c2325e5d4b56f0853",
+      "format": "CSV",
+      "path": "synthetic-trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "rowCount": 2,
+      "sourceRows": [
+        {
+          "rowNumber": 1,
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:1"
+        },
+        {
+          "rowNumber": 2,
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:2"
+        }
+      ]
+    }
+  ],
+  "tradingRecords": [
+    {
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open:fee"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T09:50:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:open:pnl"
+    },
+    {
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "price": "10",
+      "quantity": "10",
+      "recordType": "EXECUTION",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close"
+    },
+    {
+      "amount": "0",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "recordType": "FEE",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close:fee"
+    },
+    {
+      "amount": "-10",
+      "asset": "USDT",
+      "occurredAt": "2026-01-01T10:00:00Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceRefs": [
+        {
+          "artifactId": "synthetic:analytics-v1:reentry-right-observation-censored:artifact:trade-history",
+          "sourceRecordKey": "synthetic:analytics-v1:reentry-right-observation-censored:trade-row:2",
+          "sourceRowNumber": 2
+        }
+      ],
+      "tradingRecordId": "synthetic:analytics-v1:reentry-right-observation-censored:record:l1:close:pnl"
+    }
+  ]
+}
