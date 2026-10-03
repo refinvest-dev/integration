@@ -8,11 +8,19 @@
   "excludedEpisodeCount": 0,
   "exclusionReasonCounts": {},
   "fixtureId": "unsupported-source-schema",
+  "ignoredNonTradingRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
   "importStatus": "REJECTED",
   "parsedRowCount": {
     "POSITION_HISTORY": 0,
     "TRADE_HISTORY": 0
   },
+  "reconciliationStatusCounts": {},
+  "reconstructionStatusCounts": {},
+  "schemaVersion": "1.1.0",
+  "sourceArtifactCount": 2,
   "sourceRowCount": {
     "POSITION_HISTORY": 0,
     "TRADE_HISTORY": 1

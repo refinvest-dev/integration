@@ -19,11 +19,23 @@
     "MISSING_EXECUTION_SUSPECTED": 1
   },
   "fixtureId": "incomplete-trades",
+  "ignoredNonTradingRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
   "importStatus": "ACCEPTED",
   "parsedRowCount": {
     "POSITION_HISTORY": 1,
     "TRADE_HISTORY": 2
   },
+  "reconciliationStatusCounts": {
+    "INCOMPLETE_TRADES": 1
+  },
+  "reconstructionStatusCounts": {
+    "INCONSISTENT": 1
+  },
+  "schemaVersion": "1.1.0",
+  "sourceArtifactCount": 2,
   "sourceRowCount": {
     "POSITION_HISTORY": 1,
     "TRADE_HISTORY": 2

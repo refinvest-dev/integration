@@ -18,11 +18,23 @@
     "AMBIGUOUS_POSITION_MATCH": 2
   },
   "fixtureId": "ambiguous-position-match",
+  "ignoredNonTradingRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
   "importStatus": "ACCEPTED",
   "parsedRowCount": {
     "POSITION_HISTORY": 2,
     "TRADE_HISTORY": 4
   },
+  "reconciliationStatusCounts": {
+    "AMBIGUOUS": 2
+  },
+  "reconstructionStatusCounts": {
+    "COMPLETE": 2
+  },
+  "schemaVersion": "1.1.0",
+  "sourceArtifactCount": 2,
   "sourceRowCount": {
     "POSITION_HISTORY": 2,
     "TRADE_HISTORY": 4

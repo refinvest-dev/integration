@@ -1,0 +1,66 @@
+{
+  "acceptanceScenarioIds": [],
+  "artifacts": [
+    {
+      "path": "trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "sha256": "bc4880238665a35efadfe30f2d871106d73130a1577756504f9eca787827a3e8",
+      "sizeBytes": 417
+    },
+    {
+      "path": "position-history.csv",
+      "role": "POSITION_HISTORY",
+      "sha256": "70d90bf0431310ba969c8a42921555c802ef746ca5b0921970b6d12c75abe868",
+      "sizeBytes": 214
+    }
+  ],
+  "canonicalSchemaVersion": "1.0.0",
+  "category": "ACCEPTED_AND_ELIGIBLE",
+  "contextScenarioId": "TR-RECON-SCENARIO-06",
+  "declaredPositionMode": "ONE_WAY",
+  "description": "손실 상태에서 Long 수량을 추가한 뒤 전량 청산",
+  "expectedCanonicalRecordCount": 10,
+  "expectedEligibleEpisodeCount": 1,
+  "expectedEpisodeCount": 1,
+  "expectedExcludedEpisodeCount": 0,
+  "expectedFailureCode": null,
+  "expectedImportStatus": "ACCEPTED",
+  "expectedReconciliationStatuses": [
+    "EXACT"
+  ],
+  "fixtureId": "loss-context-increase",
+  "instrumentTerms": {
+    "contractMultiplier": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "settlementPrecision": 2,
+    "stepSize": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "tickSize": {
+      "scale": 2,
+      "unscaled": "1"
+    }
+  },
+  "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
+  "normalizerVersion": "fixture-v1",
+  "physicalDialectValidation": "SYNTHETIC_ONLY",
+  "productFamily": "LINEAR_PERPETUAL",
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewTimezone": "Asia/Seoul",
+  "schemaVersion": "1.1.0",
+  "settlementAsset": "USDT",
+  "sourceDialects": {
+    "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
+    "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
+  },
+  "sourceTimezone": "Asia/Seoul",
+  "tags": [
+    "ACCEPTED_AND_ELIGIBLE",
+    "SYNTHETIC",
+    "NON_PRODUCTION"
+  ]
+}

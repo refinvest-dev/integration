@@ -18,11 +18,23 @@
   "excludedEpisodeCount": 0,
   "exclusionReasonCounts": {},
   "fixtureId": "partial-exit",
+  "ignoredNonTradingRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
   "importStatus": "ACCEPTED",
   "parsedRowCount": {
     "POSITION_HISTORY": 1,
     "TRADE_HISTORY": 3
   },
+  "reconciliationStatusCounts": {
+    "EXACT": 1
+  },
+  "reconstructionStatusCounts": {
+    "COMPLETE": 1
+  },
+  "schemaVersion": "1.1.0",
+  "sourceArtifactCount": 2,
   "sourceRowCount": {
     "POSITION_HISTORY": 1,
     "TRADE_HISTORY": 3

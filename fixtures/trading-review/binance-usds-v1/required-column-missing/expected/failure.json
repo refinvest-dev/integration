@@ -1,0 +1,18 @@
+{
+  "createdLedgerRevision": false,
+  "expectedLogClassification": "WARN",
+  "failureCategory": "SCHEMA",
+  "failureCode": "REQUIRED_COLUMN_MISSING",
+  "fixtureId": "required-column-missing",
+  "importStatus": "REJECTED",
+  "maskedEvidence": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "hashPrefix": "39001a8dcdaa",
+      "sourceRowNumber": 1
+    }
+  ],
+  "retryable": true,
+  "schemaVersion": "1.0.0",
+  "userFacingMeaning": "필수 열이 없는 export이므로 올바른 Trade History 파일이 필요합니다."
+}

@@ -16,17 +16,17 @@
         "scale": 0,
         "unscaled": "0"
       },
-      "episodeId": "ep:partial-entry:01",
-      "executionRecordId": "partial-entry:trade:910000000301:execution",
       "feeRecordId": "partial-entry:trade:910000000301:fee",
       "reportedPnlRecordId": "partial-entry:trade:910000000301:pnl",
+      "reviewUnitId": "ep:partial-entry:01",
       "sourceProvenance": [
         {
           "artifactRole": "TRADE_HISTORY",
           "sourceRecordKey": "trade:AAAUSDT:910000000301",
           "sourceRowNumber": 1
         }
-      ]
+      ],
+      "tradingRecordId": "partial-entry:trade:910000000301:execution"
     },
     {
       "action": "INCREASE",
@@ -44,17 +44,17 @@
         "scale": 0,
         "unscaled": "0"
       },
-      "episodeId": "ep:partial-entry:01",
-      "executionRecordId": "partial-entry:trade:910000000302:execution",
       "feeRecordId": "partial-entry:trade:910000000302:fee",
       "reportedPnlRecordId": "partial-entry:trade:910000000302:pnl",
+      "reviewUnitId": "ep:partial-entry:01",
       "sourceProvenance": [
         {
           "artifactRole": "TRADE_HISTORY",
           "sourceRecordKey": "trade:AAAUSDT:910000000302",
           "sourceRowNumber": 2
         }
-      ]
+      ],
+      "tradingRecordId": "partial-entry:trade:910000000302:execution"
     },
     {
       "action": "CLOSE",
@@ -72,30 +72,34 @@
         "scale": 2,
         "unscaled": "600"
       },
-      "episodeId": "ep:partial-entry:01",
-      "executionRecordId": "partial-entry:trade:910000000303:execution",
       "feeRecordId": "partial-entry:trade:910000000303:fee",
       "reportedPnlRecordId": "partial-entry:trade:910000000303:pnl",
+      "reviewUnitId": "ep:partial-entry:01",
       "sourceProvenance": [
         {
           "artifactRole": "TRADE_HISTORY",
           "sourceRecordKey": "trade:AAAUSDT:910000000303",
           "sourceRowNumber": 3
         }
-      ]
+      ],
+      "tradingRecordId": "partial-entry:trade:910000000303:execution"
     }
   ],
-  "canonicalManifestHash": "9f87b3e36a4d1e15d83bfce382b196555cd86dd8fadb146ee270f55d17c9fb8a",
+  "canonicalManifestHash": "f22a4508d64c3b386ee5232fb40558e2c3ea39c71ba7b2fca5c03e3683a42da8",
   "canonicalManifestHashInputs": {
     "canonicalRecordContentHash": "c57ab6258242d2c383f0987fdea6cbafc42650526e175d160ac1c959d944c968",
+    "canonicalSchemaVersion": "1.0.0",
     "instrumentTermsHash": "5e458341f034961318f4d5d33cedda47717979a8480d3c7f1c05ef8031f0aad5",
+    "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
     "normalizerVersion": "fixture-v1",
+    "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
     "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
     "sourceArtifactHashes": {
       "POSITION_HISTORY": "fa04afba8c5e82f0902076c2de22eb0d19d826756d6f90e0b2e3d58343772c17",
       "TRADE_HISTORY": "5a30b5a99fb20b86014dfce9255a041b7d53c4986f00240325c9f299fc8f0fc0"
     }
   },
+  "canonicalSchemaVersion": "1.0.0",
   "conservation": {
     "feesByAsset": "PASSED",
     "passed": true,
@@ -203,11 +207,19 @@
           "sourceRowNumber": 1
         }
       ],
+      "tradingFee": {
+        "scale": 2,
+        "unscaled": "0"
+      },
       "tradingFeesByAsset": {
         "USDT": {
           "scale": 2,
           "unscaled": "0"
         }
+      },
+      "venuePositionPnl": {
+        "scale": 2,
+        "unscaled": "600"
       },
       "venuePositionSummaryRecordIds": [
         "partial-entry:position:1:summary"
@@ -219,7 +231,8 @@
     "accepted": true,
     "failureCode": null
   },
-  "manifestSchemaVersion": "1.0.0",
+  "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
+  "manifestSchemaVersion": "1.1.0",
   "normalizerVersion": "fixture-v1",
   "orderedExecutionKeysByInstrument": {
     "BINANCE:USDS_FUTURES:AAAUSDT": [
@@ -228,7 +241,9 @@
       "trade:AAAUSDT:910000000303"
     ]
   },
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
   "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "sourceRecordSetHash": "c57ab6258242d2c383f0987fdea6cbafc42650526e175d160ac1c959d944c968",
   "summaryMatches": [
     {
       "candidateEpisodeIds": [

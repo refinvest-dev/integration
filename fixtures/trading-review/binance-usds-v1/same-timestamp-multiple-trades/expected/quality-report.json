@@ -1,31 +1,43 @@
 {
-  "canonicalRecordCount": 10,
+  "canonicalRecordCount": 6,
   "capabilitySummary": {
-    "CLOSED_OUTCOME": 1,
     "FEES": 1,
     "INITIAL_EXPOSURE": 1,
     "MAX_EXPOSURE": 1,
     "POSITION_INCREASES": 1,
     "POSITION_MODE_OBSERVED_COMPATIBLE": 1,
     "POSITION_MODE_USER_DECLARED": 1,
-    "VENUE_POSITION_SUMMARY": 1,
     "VENUE_REPORTED_PNL": 1
   },
   "conflictCount": 0,
   "duplicateCount": 0,
-  "eligibleEpisodeCount": 1,
+  "eligibleEpisodeCount": 0,
   "episodeCount": 1,
-  "excludedEpisodeCount": 0,
-  "exclusionReasonCounts": {},
+  "excludedEpisodeCount": 1,
+  "exclusionReasonCounts": {
+    "EPISODE_RIGHT_CENSORED": 1
+  },
   "fixtureId": "same-timestamp-multiple-trades",
+  "ignoredNonTradingRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
   "importStatus": "ACCEPTED",
   "parsedRowCount": {
-    "POSITION_HISTORY": 1,
-    "TRADE_HISTORY": 3
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 2
   },
+  "reconciliationStatusCounts": {
+    "INCOMPLETE_TRADES": 1
+  },
+  "reconstructionStatusCounts": {
+    "RIGHT_CENSORED": 1
+  },
+  "schemaVersion": "1.1.0",
+  "sourceArtifactCount": 2,
   "sourceRowCount": {
-    "POSITION_HISTORY": 1,
-    "TRADE_HISTORY": 3
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 2
   },
   "versions": {
     "import": "BINANCE_USDS_DUAL_ARTIFACT_IMPORT_V1",

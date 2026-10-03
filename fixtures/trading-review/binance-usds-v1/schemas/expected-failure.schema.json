@@ -1,0 +1,35 @@
+{
+  "$id": "https://refinvest.dev/schemas/trading-review/expected-failure-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "createdLedgerRevision": { "const": false },
+    "expectedLogClassification": { "enum": ["INFO", "WARN", "ERROR"] },
+    "failureCategory": { "enum": ["FILE_FORMAT", "SCHEMA", "PRODUCT", "POSITION_MODE", "SOURCE_CONFLICT"] },
+    "failureCode": {
+      "enum": ["FILE_FORMAT_INVALID", "REQUIRED_COLUMN_MISSING", "UNSUPPORTED_SOURCE_SCHEMA", "UNSUPPORTED_PRODUCT", "UNSUPPORTED_POSITION_MODE", "DUPLICATE_SOURCE_ARTIFACT", "RECORD_CONFLICT"]
+    },
+    "fixtureId": { "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "type": "string" },
+    "importStatus": { "const": "REJECTED" },
+    "maskedEvidence": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "artifactRole": { "enum": ["TRADE_HISTORY", "POSITION_HISTORY"] },
+          "hashPrefix": { "pattern": "^[0-9a-f]{12}$", "type": "string" },
+          "sourceRowNumber": { "minimum": 1, "type": "integer" }
+        },
+        "required": ["artifactRole", "sourceRowNumber", "hashPrefix"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "retryable": { "const": true },
+    "schemaVersion": { "const": "1.0.0" },
+    "userFacingMeaning": { "minLength": 1, "type": "string" }
+  },
+  "required": ["schemaVersion", "fixtureId", "failureCode", "failureCategory", "retryable", "importStatus", "createdLedgerRevision", "userFacingMeaning", "maskedEvidence", "expectedLogClassification"],
+  "title": "RefInvest rejected reconstruction fixture expected failure",
+  "type": "object"
+}

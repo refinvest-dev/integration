@@ -1,0 +1,49 @@
+{
+  "canonicalRecordCount": 14,
+  "capabilitySummary": {
+    "CLOSED_OUTCOME": 2,
+    "FEES": 2,
+    "INITIAL_EXPOSURE": 2,
+    "MAX_EXPOSURE": 2,
+    "POSITION_INCREASES": 2,
+    "POSITION_MODE_OBSERVED_COMPATIBLE": 2,
+    "POSITION_MODE_USER_DECLARED": 2,
+    "VENUE_POSITION_SUMMARY": 2,
+    "VENUE_REPORTED_PNL": 2
+  },
+  "conflictCount": 0,
+  "duplicateCount": 0,
+  "eligibleEpisodeCount": 2,
+  "episodeCount": 2,
+  "excludedEpisodeCount": 0,
+  "exclusionReasonCounts": {},
+  "fixtureId": "same-minute-unique-match",
+  "ignoredNonTradingRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
+  "importStatus": "ACCEPTED",
+  "parsedRowCount": {
+    "POSITION_HISTORY": 2,
+    "TRADE_HISTORY": 4
+  },
+  "reconciliationStatusCounts": {
+    "EXACT": 2
+  },
+  "reconstructionStatusCounts": {
+    "COMPLETE": 2
+  },
+  "schemaVersion": "1.1.0",
+  "sourceArtifactCount": 2,
+  "sourceRowCount": {
+    "POSITION_HISTORY": 2,
+    "TRADE_HISTORY": 4
+  },
+  "versions": {
+    "import": "BINANCE_USDS_DUAL_ARTIFACT_IMPORT_V1",
+    "normalizer": "fixture-v1",
+    "reconciliation": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "reconstruction": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1"
+  },
+  "warnings": []
+}

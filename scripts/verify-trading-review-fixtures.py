@@ -26,19 +26,38 @@ TRADE_HEADERS = ["Uid", "Time", "Symbol", "Side", "Price", "Quantity", "Amount",
 POSITION_HEADERS = ["Symbol", "Margin Mode", "Position Side", "Entry Price", "Avg. Close Price", "Max Open Interest", "Closed Vol.", "Closing PNL", "Opened", "Closed", "Status"]
 EXPECTED_FIXTURES = {
     "simple-long", "simple-short", "partial-entry", "partial-exit", "increase-and-reduce",
-    "long-to-short-reversal", "same-timestamp-multiple-trades", "fee-rebate",
+    "loss-context-increase", "long-to-short-reversal", "short-to-long-reversal",
+    "same-timestamp-multiple-trades", "fee-rebate",
     "left-censored", "right-censored", "incomplete-trades", "ambiguous-position-match",
-    "position-pnl-mismatch", "different-fee-asset", "unsupported-position-status",
+    "trade-episode-only", "position-summary-only", "same-minute-unique-match",
+    "position-pnl-mismatch", "within-rounding-tolerance", "above-rounding-tolerance",
+    "different-fee-asset", "unsupported-position-status",
     "duplicate-execution-same-content", "execution-identity-conflict", "hedge-overlap",
     "unsupported-coin-m", "required-column-missing", "unsupported-source-schema",
+    "invalid-trade-id", "invalid-numeric-value",
+}
+EXPECTED_SCENARIOS = {
+    f"TR-RECON-SCENARIO-{number:02d}": fixture_id
+    for number, fixture_id in enumerate([
+        "simple-long", "simple-short", "partial-entry", "partial-exit", "increase-and-reduce",
+        "loss-context-increase", "long-to-short-reversal", "short-to-long-reversal", "left-censored",
+        "right-censored", "same-timestamp-multiple-trades", "invalid-trade-id", "incomplete-trades",
+        "trade-episode-only", "position-summary-only", "same-minute-unique-match",
+        "duplicate-execution-same-content", "execution-identity-conflict", "fee-rebate",
+        "different-fee-asset", "hedge-overlap", "unsupported-position-status", "position-pnl-mismatch",
+        "within-rounding-tolerance", "above-rounding-tolerance",
+    ], 1)
 }
 REQUIRED_FILES = {
     "trade-history.csv", "position-history.csv", "fixture-manifest.json",
     "expected/canonical-records.json", "expected/reconciliation-manifest.json",
     "expected/quality-report.json",
 }
+REJECTED_FILE = "expected/failure.json"
 ELIGIBLE_RECONCILIATION = {"EXACT", "WITHIN_ROUNDING_TOLERANCE"}
 KNOWN_SAMPLE_VALUES = {"900000001", "700000001", "800000001", "BTCUSDT", "ETHUSDT"}
+EXPECTED_DUPLICATE_COUNTS = {"duplicate-execution-same-content": 1}
+EXPECTED_CONFLICT_COUNTS = {"execution-identity-conflict": 1}
 
 
 class ValidationFailure(Exception):
@@ -105,7 +124,8 @@ def validate_context(context_path: Path) -> None:
     required = {
         "docs/DECISIONS.md": ["ADR-055", "ADR-056", "ADR-057", "ADR-058", "ADR-059"],
         "docs/DOMAIN.md": [*(f"TR-I{number:02d}" for number in range(1, 14))],
-        "docs/TRADING_RECONSTRUCTION.md": [POLICY, "RECORD_CONFLICT", "UNSUPPORTED_POSITION_MODE", "UNSUPPORTED_POSITION_STATUS"],
+        "docs/TRADING_RECONSTRUCTION.md": [POLICY, "RECORD_CONFLICT", "UNSUPPORTED_POSITION_MODE", "UNSUPPORTED_POSITION_STATUS", "## O. Scenario Tables"],
+        "docs/TRADING_REVIEW_ACCEPTANCE.md": ["TR-ACC-IMPORT-001", "TR-ACC-RECON-011"],
     }
     for relative, tokens in required.items():
         path = context_path / relative
@@ -145,7 +165,10 @@ def validate_namespace(fixture_id: str, trade_rows: list[dict[str, str]], positi
         if not re.fullmatch(r"99000000[0-9]{4}", row.get("Uid", "")):
             fail(f"Synthetic UID namespace violation in {fixture_id} trade row {row_number}")
         trade_id = row.get("Trade ID", row.get("Trade Id", ""))
-        if not re.fullmatch(r"91000000[0-9]{4}", trade_id):
+        if fixture_id == "invalid-trade-id":
+            if trade_id != "91A000001201":
+                fail(f"Invalid Trade ID fixture drift: {fixture_id} trade row {row_number}")
+        elif not re.fullmatch(r"91000000[0-9]{4}", trade_id):
             fail(f"Synthetic Trade ID namespace violation in {fixture_id} trade row {row_number}")
         if not re.fullmatch(r"92000000[0-9]{4}", row.get("Order ID", "")):
             fail(f"Synthetic Order ID namespace violation in {fixture_id} trade row {row_number}")
@@ -164,7 +187,7 @@ def validate_conservation(canonical: dict[str, Any], reconciliation: dict[str, A
     fee = defaultdict(lambda: defaultdict(Decimal))
     pnl = defaultdict(Decimal)
     for allocation in reconciliation["allocations"]:
-        execution_id = allocation["executionRecordId"]
+        execution_id = allocation["tradingRecordId"]
         if execution_id not in records or allocation["feeRecordId"] not in records or allocation["reportedPnlRecordId"] not in records:
             fail(f"Allocation links an unknown canonical record: {execution_id}")
         quantity[execution_id] += decimal_value(allocation["allocatedQuantity"])
@@ -183,7 +206,7 @@ def validate_conservation(canonical: dict[str, Any], reconciliation: dict[str, A
             fail(f"Reported PnL is not conserved: {record_id}")
     allocations_by_episode = defaultdict(list)
     for allocation in reconciliation["allocations"]:
-        allocations_by_episode[allocation["episodeId"]].append(allocation)
+        allocations_by_episode[allocation["reviewUnitId"]].append(allocation)
     for episode in reconciliation["episodes"]:
         if episode["reconstructionStatus"] != "COMPLETE":
             continue
@@ -196,7 +219,8 @@ def validate_conservation(canonical: dict[str, Any], reconciliation: dict[str, A
 def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[str, Any]) -> None:
     fixture_id = index_entry["fixtureId"]
     present = {path.relative_to(folder).as_posix() for path in folder.rglob("*") if path.is_file()}
-    missing = REQUIRED_FILES - present
+    expected_files = REQUIRED_FILES | ({REJECTED_FILE} if index_entry["expectedImportStatus"] == "REJECTED" else set())
+    missing = expected_files - present
     if missing:
         fail(f"Missing fixture files for {fixture_id}: {sorted(missing)}")
     if folder.name != fixture_id or index_entry["path"] != fixture_id:
@@ -214,6 +238,15 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
     validate_schema(canonical, schemas["canonical-records"], canonical_path)
     validate_schema(reconciliation, schemas["reconciliation-manifest"], reconciliation_path)
     validate_schema(quality, schemas["quality-report"], quality_path)
+    failure = None
+    if manifest["expectedImportStatus"] == "REJECTED":
+        failure_path = folder / REJECTED_FILE
+        failure = load_json(failure_path)
+        validate_schema(failure, schemas["expected-failure"], failure_path)
+        if failure["fixtureId"] != fixture_id or failure["failureCode"] != manifest["expectedFailureCode"]:
+            fail(f"Rejected failure expectation mismatch: {fixture_id}")
+        if failure["createdLedgerRevision"] or failure["importStatus"] != "REJECTED":
+            fail(f"Rejected fixture creates a LedgerRevision: {fixture_id}")
     if any(value["fixtureId"] != fixture_id for value in (manifest, canonical, reconciliation, quality)):
         fail(f"Fixture ID mismatch inside authored JSON: {fixture_id}")
 
@@ -230,13 +263,19 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
             fail(f"Unsupported-schema fixture does not isolate Trade ID rename: {fixture_id}")
     elif trade_headers != TRADE_HEADERS or len(trade_headers) != len(set(trade_headers)):
         fail(f"Trade History headers do not match V1: {fixture_id}")
+    if fixture_id == "invalid-numeric-value" and trade_rows[0]["Quantity"] != "1e0":
+        fail("Invalid numeric fixture no longer isolates exponent notation")
     validate_namespace(fixture_id, trade_rows, position_rows, failure_code)
 
     row_counts = {"TRADE_HISTORY": len(trade_rows), "POSITION_HISTORY": len(position_rows)}
     if quality["sourceRowCount"] != row_counts:
         fail(f"Quality source row count mismatch: {fixture_id}")
+    if any(quality["parsedRowCount"][role] > row_counts[role] for role in row_counts):
+        fail(f"Parsed row count exceeds source row count: {fixture_id}")
     if manifest["expectedCanonicalRecordCount"] != len(canonical["records"]) or quality["canonicalRecordCount"] != len(canonical["records"]):
         fail(f"Canonical record count mismatch: {fixture_id}")
+    if quality["sourceArtifactCount"] != 2 or quality["ignoredNonTradingRowCount"] != {"TRADE_HISTORY": 0, "POSITION_HISTORY": 0}:
+        fail(f"Quality artifact/non-trading count mismatch: {fixture_id}")
     if manifest["expectedEpisodeCount"] != len(reconciliation["episodes"]) or quality["episodeCount"] != len(reconciliation["episodes"]):
         fail(f"Episode count mismatch: {fixture_id}")
     eligible = sum(1 for episode in reconciliation["episodes"] if episode["eligible"])
@@ -248,6 +287,14 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
     statuses = sorted({episode["reconciliationStatus"] for episode in reconciliation["episodes"]})
     if manifest["expectedReconciliationStatuses"] != statuses:
         fail(f"Expected reconciliation status mismatch: {fixture_id}")
+    reconstruction_counts = dict(sorted(Counter(episode["reconstructionStatus"] for episode in reconciliation["episodes"]).items()))
+    reconciliation_counts = dict(sorted(Counter(episode["reconciliationStatus"] for episode in reconciliation["episodes"]).items()))
+    if quality["reconstructionStatusCounts"] != reconstruction_counts or quality["reconciliationStatusCounts"] != reconciliation_counts:
+        fail(f"Quality status count mismatch: {fixture_id}")
+    expected_duplicate_count = EXPECTED_DUPLICATE_COUNTS.get(fixture_id, 0)
+    expected_conflict_count = EXPECTED_CONFLICT_COUNTS.get(fixture_id, 0)
+    if quality["duplicateCount"] != expected_duplicate_count or quality["conflictCount"] != expected_conflict_count:
+        fail(f"Quality duplicate/conflict count mismatch: {fixture_id}")
 
     record_ids: set[str] = set()
     for record in canonical["records"]:
@@ -259,6 +306,8 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
         if record["sourceArtifactRole"] not in {ref["artifactRole"] for ref in record["sourceProvenance"]}:
             fail(f"Canonical primary artifact role is absent from provenance: {record_id}")
     episode_ids: set[str] = set()
+    eligible_summary_ids: set[str] = set()
+    records = {record["canonicalRecordId"]: record for record in canonical["records"]}
     canonical_types = {record["canonicalRecordId"]: record["recordType"] for record in canonical["records"]}
     for episode in reconciliation["episodes"]:
         episode_id = episode["episodeId"]
@@ -277,12 +326,36 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
                 fail(f"Eligible episode has exclusion reasons: {episode_id}")
             if not episode["executionRecordIds"] or len(episode["venuePositionSummaryRecordIds"]) != 1:
                 fail(f"Eligible episode lacks direct execution/summary evidence: {episode_id}")
+            summary_id = episode["venuePositionSummaryRecordIds"][0]
+            if summary_id in eligible_summary_ids:
+                fail(f"Position summary is assigned to multiple eligible episodes: {summary_id}")
+            eligible_summary_ids.add(summary_id)
         elif not episode["exclusionReasons"]:
             fail(f"Excluded episode has no exclusion reason: {episode_id}")
+        if "CLOSED_OUTCOME" not in episode["capabilities"] and episode.get("netTradingPnl") is not None:
+            fail(f"Unavailable net outcome is represented as a number: {episode_id}")
+        if "CLOSED_OUTCOME" in episode["capabilities"]:
+            if episode.get("grossTradingPnl") is None or episode.get("tradingFee") is None or episode.get("netTradingPnl") is None:
+                fail(f"Closed outcome capability lacks gross/fee/net values: {episode_id}")
+            expected_net = decimal_value(episode["grossTradingPnl"]) - decimal_value(episode["tradingFee"])
+            if decimal_value(episode["netTradingPnl"]) != expected_net:
+                fail(f"Net trading PnL does not equal gross minus signed fee: {episode_id}")
+        if len(episode["venuePositionSummaryRecordIds"]) == 1 and episode["venuePositionPnl"] is not None:
+            summary_record = records[episode["venuePositionSummaryRecordIds"][0]]
+            if decimal_value(episode["venuePositionPnl"]) != decimal_value(summary_record["closingPnl"]["amount"]):
+                fail(f"Venue position PnL differs from the linked summary: {episode_id}")
+    exclusion_counts = dict(sorted(Counter(reason for episode in reconciliation["episodes"] for reason in episode["exclusionReasons"]).items()))
+    capability_counts = dict(sorted(Counter(capability for episode in reconciliation["episodes"] for capability in episode["capabilities"]).items()))
+    if quality["exclusionReasonCounts"] != exclusion_counts or quality["capabilitySummary"] != capability_counts:
+        fail(f"Quality exclusion/capability count mismatch: {fixture_id}")
     for allocation in reconciliation["allocations"]:
-        if allocation["episodeId"] not in episode_ids:
-            fail(f"Allocation references unknown episode: {allocation['episodeId']}")
-        validate_provenance(allocation["sourceProvenance"], row_counts, allocation["executionRecordId"])
+        if allocation["reviewUnitId"] not in episode_ids:
+            fail(f"Allocation references unknown episode: {allocation['reviewUnitId']}")
+        if canonical_types.get(allocation["tradingRecordId"]) != "EXECUTION":
+            fail(f"Allocation references unknown/non-execution record: {allocation['tradingRecordId']}")
+        if allocation["action"] in {"OPEN", "INCREASE", "REVERSAL_OPEN"} and decimal_value(allocation["allocatedReportedPnl"]) != 0:
+            fail(f"Opening allocation has non-zero reported PnL: {allocation['tradingRecordId']}")
+        validate_provenance(allocation["sourceProvenance"], row_counts, allocation["tradingRecordId"])
     for summary_match in reconciliation["summaryMatches"]:
         validate_provenance(summary_match["sourceProvenance"], row_counts, summary_match["summaryRecordId"])
 
@@ -295,6 +368,10 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
         fail(f"Rejected fixture has no failure code: {fixture_id}")
     if quality["importStatus"] != manifest["expectedImportStatus"]:
         fail(f"Quality import status mismatch: {fixture_id}")
+    if manifest["category"] != index_entry["category"] or manifest["contextScenarioId"] != index_entry["contextScenarioId"]:
+        fail(f"Manifest/index traceability mismatch: {fixture_id}")
+    if manifest["physicalDialectValidation"] != "SYNTHETIC_ONLY":
+        fail(f"Raw dialect validation is overstated: {fixture_id}")
 
     artifact_roles = [artifact["role"] for artifact in manifest["artifacts"]]
     if sorted(artifact_roles) != ["POSITION_HISTORY", "TRADE_HISTORY"] or len(set(artifact_roles)) != 2:
@@ -306,6 +383,8 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
     inputs = reconciliation["canonicalManifestHashInputs"]
     if inputs["canonicalRecordContentHash"] != digest_bytes(canonical_bytes(canonical)):
         fail(f"Canonical record content hash mismatch: {fixture_id}")
+    if reconciliation["sourceRecordSetHash"] != inputs["canonicalRecordContentHash"]:
+        fail(f"Source record set hash mismatch: {fixture_id}")
     for role, filename in {"TRADE_HISTORY": "trade-history.csv", "POSITION_HISTORY": "position-history.csv"}.items():
         if inputs["sourceArtifactHashes"][role] != digest_file(folder / filename):
             fail(f"Manifest source artifact hash mismatch: {fixture_id}/{role}")
@@ -317,7 +396,7 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
         validate_conservation(canonical, reconciliation)
 
     indexed_files = {item["path"]: item for item in index_entry["files"]}
-    if set(indexed_files) != REQUIRED_FILES:
+    if set(indexed_files) != expected_files:
         fail(f"Fixture index file catalog mismatch: {fixture_id}")
     for relative, metadata in indexed_files.items():
         path = folder / relative
@@ -325,14 +404,15 @@ def validate_fixture(folder: Path, index_entry: dict[str, Any], schemas: dict[st
             fail(f"Fixture index checksum/size mismatch: {fixture_id}/{relative}")
 
 
-def validate(root: Path, context_path: Path) -> None:
+def validate(root: Path, context_path: Path, *, check_markdown_links: bool = True) -> None:
     if not root.is_dir():
         fail(f"Fixture root does not exist: {root}")
     validate_context(context_path)
-    validate_markdown_links(root)
+    if check_markdown_links:
+        validate_markdown_links(root)
     schemas = {
         name: load_json(root / "schemas" / f"{name}.schema.json", canonical_format=False)
-        for name in ["fixture-manifest", "canonical-records", "reconciliation-manifest", "quality-report"]
+        for name in ["fixture-manifest", "canonical-records", "reconciliation-manifest", "quality-report", "expected-failure"]
     }
     for name, schema in schemas.items():
         try:
@@ -342,6 +422,9 @@ def validate(root: Path, context_path: Path) -> None:
     index = load_json(root / "fixture-index.json")
     if index["contextContract"]["reconstructionPolicyVersion"] != POLICY:
         fail("Fixture index is not linked to the context reconstruction policy version")
+    dialect_validation = index.get("physicalDialectValidation", {})
+    if dialect_validation.get("positionHistory") != "PENDING_RAW_SAMPLE" or dialect_validation.get("tradeHistory") != "SYNTHETIC_ONLY":
+        fail("Physical dialect validation must remain synthetic/pending until a raw sample is available")
     entries = index["fixtures"]
     fixture_ids = [entry["fixtureId"] for entry in entries]
     if len(fixture_ids) != len(set(fixture_ids)):
@@ -349,8 +432,26 @@ def validate(root: Path, context_path: Path) -> None:
     if set(fixture_ids) != EXPECTED_FIXTURES:
         fail(f"Fixture catalog mismatch; missing={sorted(EXPECTED_FIXTURES - set(fixture_ids))}, extra={sorted(set(fixture_ids) - EXPECTED_FIXTURES)}")
     categories = {entry["category"] for entry in entries}
-    if categories != {"ACCEPTED_ELIGIBLE", "ACCEPTED_EXCLUDED", "REJECTED_IMPORT"}:
+    if categories != {"ACCEPTED_AND_ELIGIBLE", "ACCEPTED_BUT_EXCLUDED", "REJECTED_IMPORT"}:
         fail(f"Fixture categories are incomplete: {sorted(categories)}")
+    scenarios = index.get("contextScenarios", [])
+    scenario_ids = [item["contextScenarioId"] for item in scenarios]
+    if len(scenario_ids) != len(set(scenario_ids)) or len(scenarios) != 25:
+        fail("Context scenario traceability must contain 25 unique IDs")
+    scenario_mapping = {item["contextScenarioId"]: item["fixtureId"] for item in scenarios}
+    if scenario_mapping != EXPECTED_SCENARIOS:
+        fail("Context scenario traceability mapping differs from TRADING_RECONSTRUCTION.md O.2")
+    if any(item["validationStatus"] not in {"IMPLEMENTED", "PENDING_RAW_SAMPLE", "NOT_APPLICABLE_WITH_REASON"} for item in scenarios):
+        fail("Invalid context scenario validation status")
+    if any(item["validationStatus"] == "NOT_APPLICABLE_WITH_REASON" and not item.get("reason") for item in scenarios):
+        fail("NOT_APPLICABLE_WITH_REASON requires a reason")
+    expected_outcome_by_category = {
+        "ACCEPTED_AND_ELIGIBLE": "SUCCEEDED",
+        "ACCEPTED_BUT_EXCLUDED": "ACCEPTED_WITH_EXCLUSIONS",
+        "REJECTED_IMPORT": "REJECTED",
+    }
+    if any(item["expectedOutcome"] != expected_outcome_by_category[item["category"]] for item in scenarios):
+        fail("Context scenario outcome/category mapping is inconsistent")
     for entry in entries:
         validate_fixture(root / entry["path"], entry, schemas)
     expected_package_files = {"README.md", *{f"schemas/{name}.schema.json" for name in schemas}}
@@ -365,21 +466,45 @@ def validate(root: Path, context_path: Path) -> None:
     for forbidden in KNOWN_SAMPLE_VALUES:
         if forbidden.encode() in searchable:
             fail(f"Known real/public sample value found in fixtures: {forbidden}")
+    text = searchable.decode("utf-8", errors="ignore")
+    for pattern in [r"(?i)(api[_-]?key|secret|password|credential)", r"(?i)[A-Z]:\\", r"(?i)\.integration-data", r"(?i)originalFilename|storageReference"]:
+        if re.search(pattern, text):
+            fail(f"Sensitive identifier/path pattern found in fixture payload: {pattern}")
 
 
 def tamper_self_test(root: Path, context_path: Path) -> None:
-    with tempfile.TemporaryDirectory(prefix="refinvest-fixture-tamper-") as temp:
-        copied = Path(temp) / root.name
-        shutil.copytree(root, copied)
+    def expect_rejection(label: str, mutate: Any, expected_message: str) -> None:
+        with tempfile.TemporaryDirectory(prefix=f"refinvest-fixture-{label}-") as temp:
+            copied = Path(temp) / root.name
+            shutil.copytree(root, copied)
+            mutate(copied)
+            try:
+                validate(copied, context_path, check_markdown_links=False)
+            except ValidationFailure as error:
+                if expected_message not in str(error):
+                    fail(f"Tamper self-test {label} failed for the wrong reason: {error}")
+                return
+            fail(f"Tamper self-test failed: {label} corruption was accepted")
+
+    def corrupt_count(copied: Path) -> None:
         target = copied / "simple-long" / "expected" / "quality-report.json"
         value = json.loads(target.read_text(encoding="utf-8"))
         value["canonicalRecordCount"] += 1
         target.write_text(json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
-        try:
-            validate(copied, context_path)
-        except ValidationFailure:
-            return
-        fail("Tamper self-test failed: a corrupted fixture was accepted")
+
+    def corrupt_reference(copied: Path) -> None:
+        target = copied / "simple-long" / "expected" / "reconciliation-manifest.json"
+        value = json.loads(target.read_text(encoding="utf-8"))
+        value["allocations"][0]["tradingRecordId"] = "missing:execution"
+        target.write_text(json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+
+    def corrupt_privacy(copied: Path) -> None:
+        target = copied / "simple-long" / "trade-history.csv"
+        target.write_text(target.read_text(encoding="utf-8").replace("AAAUSDT", "PRODUSDT"), encoding="utf-8", newline="\n")
+
+    expect_rejection("count", corrupt_count, "Canonical record count mismatch")
+    expect_rejection("reference", corrupt_reference, "unknown/non-execution record")
+    expect_rejection("privacy", corrupt_privacy, "Synthetic symbol namespace violation")
 
 
 def main() -> int:
@@ -395,7 +520,7 @@ def main() -> int:
     except ValidationFailure as error:
         print(f"FAIL {error}")
         return 1
-    print(f"OK  {len(EXPECTED_FIXTURES)} Trading Review fixtures, schemas, hashes, provenance, privacy, and tamper detection")
+    print(f"OK  {len(EXPECTED_FIXTURES)} Trading Review fixtures and 25 context scenarios; schemas, hashes, provenance, privacy, and tamper detection")
     return 0
 
 

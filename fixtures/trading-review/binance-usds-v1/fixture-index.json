@@ -7,6 +7,7 @@
       "ADR-058",
       "ADR-059",
       "TRADING_RECONSTRUCTION.md",
+      "TRADING_REVIEW_ACCEPTANCE.md",
       "TR-I01",
       "TR-I02",
       "TR-I03",
@@ -23,11 +24,214 @@
     ],
     "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1"
   },
+  "contextScenarios": [
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-01",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "simple-long",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-02",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "simple-short",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-03",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "partial-entry",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-04",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "partial-exit",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-05",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "increase-and-reduce",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-06",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "loss-context-increase",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-07",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "long-to-short-reversal",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-08",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "short-to-long-reversal",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-09",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "left-censored",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-10",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "right-censored",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-11",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "same-timestamp-multiple-trades",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "REJECTED_IMPORT",
+      "contextScenarioId": "TR-RECON-SCENARIO-12",
+      "expectedOutcome": "REJECTED",
+      "fixtureId": "invalid-trade-id",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-13",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "incomplete-trades",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-14",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "trade-episode-only",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-15",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "position-summary-only",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-16",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "same-minute-unique-match",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-17",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "duplicate-execution-same-content",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "REJECTED_IMPORT",
+      "contextScenarioId": "TR-RECON-SCENARIO-18",
+      "expectedOutcome": "REJECTED",
+      "fixtureId": "execution-identity-conflict",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-19",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "fee-rebate",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-20",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "different-fee-asset",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "REJECTED_IMPORT",
+      "contextScenarioId": "TR-RECON-SCENARIO-21",
+      "expectedOutcome": "REJECTED",
+      "fixtureId": "hedge-overlap",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-22",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "unsupported-position-status",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-23",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "position-pnl-mismatch",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-24",
+      "expectedOutcome": "SUCCEEDED",
+      "fixtureId": "within-rounding-tolerance",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-25",
+      "expectedOutcome": "ACCEPTED_WITH_EXCLUSIONS",
+      "fixtureId": "above-rounding-tolerance",
+      "reason": null,
+      "validationStatus": "IMPLEMENTED"
+    }
+  ],
   "fixtureSetId": "binance-usds-reconstruction-golden-v1",
-  "fixtureSetVersion": 1,
+  "fixtureSetVersion": 2,
   "fixtures": [
     {
-      "category": "ACCEPTED_ELIGIBLE",
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-01",
       "description": "단일 Long 진입 후 전량 청산",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -43,8 +247,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "d9da66f4e50ba905e4a2603dd17cb396a87bebe23abf8819598994ce713e5a76",
-          "sizeBytes": 1547
+          "sha256": "91f83c11959f0f680901c19ba4d256f3983534d8ee20dbae018d5e7c8ff2e576",
+          "sizeBytes": 1933
         },
         {
           "path": "expected/canonical-records.json",
@@ -53,20 +257,21 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "1f6d6af79bd377b7fb7baad190e4710a0ee9848aff3654f4bc9aca38d11f15a7",
-          "sizeBytes": 6182
+          "sha256": "7152fac12841d3d1d61c1f6941784b0f5d372193df56bcf1b5931728ece0e4e8",
+          "sizeBytes": 6769
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "6d495c0534109ae735b7e1a55078c6552a6fa75c7e0a4c1fdcf7a4b3a27816e7",
-          "sizeBytes": 949
+          "sha256": "aff8223e3726c0a362c7a9962c49e08fa2d86bd3fcf4b5adf2cd253fe0f5620c",
+          "sizeBytes": 1204
         }
       ],
       "fixtureId": "simple-long",
       "path": "simple-long"
     },
     {
-      "category": "ACCEPTED_ELIGIBLE",
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-02",
       "description": "단일 Short 진입 후 전량 청산",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -82,8 +287,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "66bbe358b0e1dbca284b28041a2994cc19763cf3d12751fc0ca57233bfba110a",
-          "sizeBytes": 1549
+          "sha256": "c51e17e7e1b26a63cd50f0083a98a2c94c7566be9b578bdc3c4da0d590caff31",
+          "sizeBytes": 1884
         },
         {
           "path": "expected/canonical-records.json",
@@ -92,20 +297,21 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "7d57af5712de43f596775df869363216f1384ebde972fb411ea7aac0ea1ddff3",
-          "sizeBytes": 6199
+          "sha256": "56f331d62d82968f1c1cc5734c258e4da6f5997244d0072c1bd842c236120667",
+          "sizeBytes": 6786
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "9f6f6783883541eb36e5a5b83dab183bf7cae3dd45732394f5ac29693952634c",
-          "sizeBytes": 950
+          "sha256": "bc22f628a925577f0cb6ff6610410961fd9c432f4a602abaef46fd8ff5106a89",
+          "sizeBytes": 1205
         }
       ],
       "fixtureId": "simple-short",
       "path": "simple-short"
     },
     {
-      "category": "ACCEPTED_ELIGIBLE",
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-03",
       "description": "분할 진입 후 전량 청산",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -121,8 +327,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "38b855f8d849c0064093e7e1f69ce9ec0760959fe157029eb4c60380ca4ecb2d",
-          "sizeBytes": 1545
+          "sha256": "010b0ea589de4e7f8410114371a006318afc50ac7232d550f7741e7bc15912e9",
+          "sizeBytes": 1906
         },
         {
           "path": "expected/canonical-records.json",
@@ -131,20 +337,21 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "a6403f2cc028149579e931ecd921e2d5934213826e6653d6cef28b76a208fc4c",
-          "sizeBytes": 7216
+          "sha256": "a5fa344e8ffbce2b5c22f4d88a3550607ddd714b2feb1a7e024c004751e88f4c",
+          "sizeBytes": 7804
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "97b1562c9f0ce5c78ed4e5dc5e1c831739b481cc082c3bb8f11b2c8a3103c95f",
-          "sizeBytes": 952
+          "sha256": "544131c931674f600876c0896b59c394cd3c4dfc4753a94bbaad0ca56c717cfa",
+          "sizeBytes": 1207
         }
       ],
       "fixtureId": "partial-entry",
       "path": "partial-entry"
     },
     {
-      "category": "ACCEPTED_ELIGIBLE",
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-04",
       "description": "단일 진입 후 분할 청산",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -160,8 +367,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "2b2f0eb86bae74d01698b3ca83fa4716654a230ed5ca23688dd4099fceb1caab",
-          "sizeBytes": 1544
+          "sha256": "e4a01c3a4252c7ce9c54e631dec0e396739c1fe4ff243dfd36849b2554bcdeb2",
+          "sizeBytes": 1905
         },
         {
           "path": "expected/canonical-records.json",
@@ -170,20 +377,21 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "0aa663976209853b8d62153c10115026706ba70bdf548a57f3fc172b2aa9b0aa",
-          "sizeBytes": 7195
+          "sha256": "3798918b588f748c862a6146997a0aae94c0941948b257c3f05ca0a4db733753",
+          "sizeBytes": 7783
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "3a795f11bba63938c0365e96d172c2be5fb3153c1d25c0534ad289a0a3042671",
-          "sizeBytes": 951
+          "sha256": "716ab8c87c4edc87956bfa24fbdebb7177d22c25550f5e5170de01d7d1124bdc",
+          "sizeBytes": 1206
         }
       ],
       "fixtureId": "partial-exit",
       "path": "partial-exit"
     },
     {
-      "category": "ACCEPTED_ELIGIBLE",
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-05",
       "description": "포지션 확대 후 일부 축소와 전량 청산",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -199,8 +407,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "16c125ca998c6fb710a2447e5b3f2cf93c4f61f971bcf27531c488ac8df31c23",
-          "sizeBytes": 1571
+          "sha256": "ca6aa116c73b543a7ce34fd220461e9b66e956913f025926d0a66678c53ab7dd",
+          "sizeBytes": 1906
         },
         {
           "path": "expected/canonical-records.json",
@@ -209,20 +417,61 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "e48ef198a6bb1b1af3b114fef259a9c21a865ab546b7efc91ae930594131ef20",
-          "sizeBytes": 8374
+          "sha256": "b8c9c309f59f39f7e8edb79f6a0e2030f762755fe2ce28b6cee61098a92d9a19",
+          "sizeBytes": 8963
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "e93d877a0f72e802e8f165a3022c5ace50c8c1474749f3a7b6c72984458e458c",
-          "sizeBytes": 958
+          "sha256": "7e58d35d0cd579e3d7daa1cd3987b806e529eea76a10f2ac853e78a85bedddc3",
+          "sizeBytes": 1213
         }
       ],
       "fixtureId": "increase-and-reduce",
       "path": "increase-and-reduce"
     },
     {
-      "category": "ACCEPTED_ELIGIBLE",
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-06",
+      "description": "손실 상태에서 Long 수량을 추가한 뒤 전량 청산",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "bc4880238665a35efadfe30f2d871106d73130a1577756504f9eca787827a3e8",
+          "sizeBytes": 417
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "70d90bf0431310ba969c8a42921555c802ef746ca5b0921970b6d12c75abe868",
+          "sizeBytes": 214
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "d5011381afc27311650abc9fb76211376a60cf69072dd370009d3c23989b4504",
+          "sizeBytes": 1919
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "ba3bfee6ba6cc88170394b7517bb86a831af1f03e035d375df2268625e441f11",
+          "sizeBytes": 9484
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "2b302112504a2712aa1a0c41c0f8516a7ce7a3320411797a32b0b5668068cfab",
+          "sizeBytes": 7972
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "95b49602bbe820582cd85a85b609f81ce047dcb1c6b22c049b80d13ded576a99",
+          "sizeBytes": 1215
+        }
+      ],
+      "fixtureId": "loss-context-increase",
+      "path": "loss-context-increase"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-07",
       "description": "하나의 SELL execution이 Long을 닫고 Short를 시작",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -238,8 +487,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "f935abe9f1172e6f169f13e0f338b4496e868884f9c2d2e6c33f31f6765c9814",
-          "sizeBytes": 1581
+          "sha256": "75df693c4193fc910753d5253a5812f05932751aad49cd26446311bd341b1a1e",
+          "sizeBytes": 1942
         },
         {
           "path": "expected/canonical-records.json",
@@ -248,98 +497,61 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "1895143a49eb3a651b2c1b5c8129109a9471241fd5ffdbbbc61aa79886f0988d",
-          "sizeBytes": 11686
+          "sha256": "645c9e8fcd702a3e9ab7ca434ce6cfad421e2e6950327e6a0a3a8dc2682b9429",
+          "sizeBytes": 12434
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "8df77e5c1013497959384a8acbad80637ec65a9a4d772431c86e8d30532bec74",
-          "sizeBytes": 961
+          "sha256": "b84e82eafe5a989420f5c26e0f20f0763bcb8a784be3806c0b5a36429e1332fb",
+          "sizeBytes": 1216
         }
       ],
       "fixtureId": "long-to-short-reversal",
       "path": "long-to-short-reversal"
     },
     {
-      "category": "ACCEPTED_ELIGIBLE",
-      "description": "동일 timestamp의 execution을 숫자 Trade ID로 정렬",
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-08",
+      "description": "하나의 BUY execution이 Short를 닫고 Long을 시작",
       "expectedImportStatus": "ACCEPTED",
       "files": [
         {
           "path": "trade-history.csv",
-          "sha256": "bd7098b0f75ce111a4d460c5ecd03ba0cf62ff45c81880baaba1636850b9afeb",
-          "sizeBytes": 424
+          "sha256": "7d4af27f549c2d38bc364770f5db9785c9ddec89dc0de5a911578ce95f4db82a",
+          "sizeBytes": 425
         },
         {
           "path": "position-history.csv",
-          "sha256": "9543acfc3b7f75ac69c90c2872c84b4415032e241adfd496555109a5de5b02bb",
-          "sizeBytes": 209
+          "sha256": "63c4d5565f7bd370ce5f001f3c901f438b826749fd47f24936d57b3807ce92ce",
+          "sizeBytes": 295
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "da22cc46bbac66c150296820e7c30a4681c2c29ce26da95307b8c4de335eecf4",
-          "sizeBytes": 1589
+          "sha256": "a6ab4bbfa1fdd6ead26d0287ba2cc74ae38ebfbc3adcb78a649dc4c40f143344",
+          "sizeBytes": 1915
         },
         {
           "path": "expected/canonical-records.json",
-          "sha256": "1da90e2f5cac498c67b8bd2cdc9af3ab95499910101f32d61190c9e34a41227a",
-          "sizeBytes": 9584
+          "sha256": "42139655cf06b75673d5ec84b35bfd28200ced3f232d308a3f935f3b92f7c2fb",
+          "sizeBytes": 10914
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "83d6e1828447f0e4deae45f60f26b8fcabcc17acd4ea4f6dcf6235332bdb5d4a",
-          "sizeBytes": 7573
+          "sha256": "30f15a9d6cae4ec065ae435a91dcf94a109a2c70adf3cc3076c7146091e780f1",
+          "sizeBytes": 12376
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "754c05f50d102cde8aabd92955cd322253974934bf7cd3937972fe078b085853",
-          "sizeBytes": 969
+          "sha256": "897d28de22af647f51ab566efea09d88583f9b95d978628781337b0cb5bcc545",
+          "sizeBytes": 1216
         }
       ],
-      "fixtureId": "same-timestamp-multiple-trades",
-      "path": "same-timestamp-multiple-trades"
+      "fixtureId": "short-to-long-reversal",
+      "path": "short-to-long-reversal"
     },
     {
-      "category": "ACCEPTED_ELIGIBLE",
-      "description": "음수 source fee를 rebate로 보존",
-      "expectedImportStatus": "ACCEPTED",
-      "files": [
-        {
-          "path": "trade-history.csv",
-          "sha256": "7f305b818b161dcf4eb603348e26b4c977e3051ccb258b28295695dabe769b18",
-          "sizeBytes": 313
-        },
-        {
-          "path": "position-history.csv",
-          "sha256": "ab8c80a387a680248c186dbd0ba94633ddb1a844feae267684878b1c5b239a6c",
-          "sizeBytes": 209
-        },
-        {
-          "path": "fixture-manifest.json",
-          "sha256": "08cbf098566b39637815ff54ce534b19bd60beb457c1a02b896bb1f78d81ae1d",
-          "sizeBytes": 1547
-        },
-        {
-          "path": "expected/canonical-records.json",
-          "sha256": "bb0ca16744b24afb2ad5b4bca284c0b83bb6d8fe6074b1bb06cfcfbb08b754f0",
-          "sizeBytes": 6739
-        },
-        {
-          "path": "expected/reconciliation-manifest.json",
-          "sha256": "e83b9b264baea118f36552639e6431628b364463809acf421f56e5f7078676d5",
-          "sizeBytes": 6167
-        },
-        {
-          "path": "expected/quality-report.json",
-          "sha256": "558e0bed065017cf0cdb04d1c19e4cee2684dea9a0a0f86c06e855d21ae94f02",
-          "sizeBytes": 948
-        }
-      ],
-      "fixtureId": "fee-rebate",
-      "path": "fee-rebate"
-    },
-    {
-      "category": "ACCEPTED_EXCLUDED",
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-09",
       "description": "CSV coverage 시작 전부터 존재한 Short position",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -355,8 +567,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "47e3f47568108235f393c2d8ccd1f11e1bbbe77413b9c916d384ed4a5b8792d3",
-          "sizeBytes": 1579
+          "sha256": "d2d8d32d34e00866cc21f81602917de7ad188a8fbdd2100f18731de7b2f7f398",
+          "sizeBytes": 1940
         },
         {
           "path": "expected/canonical-records.json",
@@ -365,20 +577,21 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "cd036a04484eb47fbd2579c4211ef13880a9b32794d4bf8569c2918867ad36e2",
-          "sizeBytes": 4613
+          "sha256": "b25da08e7b97d6221c64529061851c6fded719a1d0d7e5c98e59daad9b585a9a",
+          "sizeBytes": 5199
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "b6cde7f624dad8863ddaf8410d2ba0f3f8608f2080831b19bd43776e6ca64d24",
-          "sizeBytes": 804
+          "sha256": "dfc503d7069abe9218bb830036cc6e053630811b92ed49d389a9caea0dccbfa8",
+          "sizeBytes": 1076
         }
       ],
       "fixtureId": "left-censored",
       "path": "left-censored"
     },
     {
-      "category": "ACCEPTED_EXCLUDED",
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-10",
       "description": "CSV 종료 시점까지 열린 Long position",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -394,8 +607,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "85a040abceec3b15b30c82f95ded35b712d367a053e89432dee3124bcba12e01",
-          "sizeBytes": 1570
+          "sha256": "6c4e54713e7c27ea4d0d7f10f2774ae0c33da656724dc8ca275c310744854f05",
+          "sizeBytes": 1931
         },
         {
           "path": "expected/canonical-records.json",
@@ -404,20 +617,106 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "56881aa49db3ee48c911989a9bc1eba25996500f68d7c49e5cffc8693aed3b16",
-          "sizeBytes": 3913
+          "sha256": "fe70d2edde54a3add34849def8d9b6c337deab0ceb6b51370369bc612424b088",
+          "sizeBytes": 4448
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "2d117aceafdf8b471e5b60d570bdab634d6cd59a41ebaa51b3742232f159cfeb",
-          "sizeBytes": 929
+          "sha256": "8f0b8d0f1faab7a01e4e4a7030fa06ee9bd2bcb092779ed3cf2bf60b82b4868d",
+          "sizeBytes": 1202
         }
       ],
       "fixtureId": "right-censored",
       "path": "right-censored"
     },
     {
-      "category": "ACCEPTED_EXCLUDED",
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-11",
+      "description": "동일 timestamp execution을 numeric Trade ID 순서로 처리",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "9d0ee8f5e2550932532926912b69a1f1b10b77a7274e180d035f5960f208edcc",
+          "sizeBytes": 309
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+          "sizeBytes": 125
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "f685758203348e8d0605f77022a000dd522cfe1821b3de97ef9da6b2fc96d13f",
+          "sizeBytes": 1940
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "abe44e70d2b4dd9a2bf71846074abafd49e4996f2d12e3310652853bb541a744",
+          "sizeBytes": 5471
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "cfc3f4bea9c8037f37ba83b30df08f702d1fe1b54e5bd8d1c11501df0a813df8",
+          "sizeBytes": 5819
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "bdb81875b85e030b55b5728ce0bb4fa217702ea3e771c8c9f55f447b2c1462fb",
+          "sizeBytes": 1218
+        }
+      ],
+      "fixtureId": "same-timestamp-multiple-trades",
+      "path": "same-timestamp-multiple-trades"
+    },
+    {
+      "category": "REJECTED_IMPORT",
+      "contextScenarioId": "TR-RECON-SCENARIO-12",
+      "description": "숫자가 아닌 Trade ID",
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "3bcd40c2ac4e0a054d694d747edff0575fdf88b49973ad75cd8215098e547132",
+          "sizeBytes": 200
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+          "sizeBytes": 125
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "3a551209522cf9fe09c660a804e8eed623684be33d0c52139eb7e848de544872",
+          "sizeBytes": 1866
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "740fa4d3852afb6f87adc3527ee3d28342ba29a554cdecff7a35ba79261b3876",
+          "sizeBytes": 83
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "2babd03bb9fd3158f97fc7bcf7a5966f126194d7b1e3dcc7d9574c353c0bbc2f",
+          "sizeBytes": 1628
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "d32d072ce25a3b0d74d41b1f3418c772d9a03776e61772f8b918a71f7bb47241",
+          "sizeBytes": 934
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "7312d1fa94d7b17ab63d296f4d210aac817fdb2f0cbd21d7df60d66e394569d7",
+          "sizeBytes": 524
+        }
+      ],
+      "fixtureId": "invalid-trade-id",
+      "path": "invalid-trade-id"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-13",
       "description": "Position History가 요구하는 close execution 누락",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -433,8 +732,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "059890e970cefab23eae250a6f5119427deaea23fae01315af90226a135a19f7",
-          "sizeBytes": 1584
+          "sha256": "120790bd07ab09cc8fdc9ad45fb1ba2b130a217a266e232cf8cd56454d275cb9",
+          "sizeBytes": 1945
         },
         {
           "path": "expected/canonical-records.json",
@@ -443,176 +742,141 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "21f88a60e1807fe3b38739bfea2b8258d670e14a4d33cb352c8c801607b5d976",
-          "sizeBytes": 6216
+          "sha256": "463380ed352db772814df3363f6b94c9bfa208f9184e2d7c33f603d64d540326",
+          "sizeBytes": 6803
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "c9151f233fda4ad01c0c5495d16dff0ea458c19a9c5d91830a7e8aa64c19f140",
-          "sizeBytes": 970
+          "sha256": "b9cd9a1b4a1c67bf5ba16a63d7f2b352a17aac65e232a0e817595845a765a6d6",
+          "sizeBytes": 1241
         }
       ],
       "fixtureId": "incomplete-trades",
       "path": "incomplete-trades"
     },
     {
-      "category": "ACCEPTED_EXCLUDED",
-      "description": "동일 분의 동일 constraint episode-summary 2×2 ambiguity",
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-14",
+      "description": "Trade flat-to-flat episode만 있고 Position summary가 없음",
       "expectedImportStatus": "ACCEPTED",
       "files": [
         {
           "path": "trade-history.csv",
-          "sha256": "e3966a39c4e01fa40704d4f1c9ee9f2e9f4f31707dd5d5e7395a309d4512b231",
+          "sha256": "7a734337cd71fbaa4b5c908f30ffb10306c4781d3717e8e2d3e939c803242ca7",
+          "sizeBytes": 312
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+          "sizeBytes": 125
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "eef3824cf0d601e2b5c2a4b5586d5119fef60310b1edf40875e18ddc824ff8a8",
+          "sizeBytes": 1954
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "96d8a0319624d5a995011712a6c85f80633a42174e604d1d89c4f526431fc02c",
+          "sizeBytes": 5389
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "f2544bdceb6d5eb3e1da731609654026f9acb9624cf8b05f239dff3911b820f9",
+          "sizeBytes": 5698
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "6a3cb2ec269a85cc06a9a209e1d516c72bb8d3c039106c13d40fd167322c1b9d",
+          "sizeBytes": 1201
+        }
+      ],
+      "fixtureId": "trade-episode-only",
+      "path": "trade-episode-only"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-15",
+      "description": "Position summary만 있고 Trade execution이 없음",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "166c0f7880e3fd62a32ecb74e5e320af9ceef9a808ba93318f32a6c0497934aa",
+          "sizeBytes": 93
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "d293360194889158534af746a866aed31bbd06656fafd72231e25d8d6c498e81",
+          "sizeBytes": 209
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "75cdcd744f697b08e91d4d236865968ab53c5240e2fab654bd0a02161c5c1d97",
+          "sizeBytes": 1946
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "02dba1a85832ff48336afbcea636eb5396ec6f99024182c13eaaa29e506dffa9",
+          "sizeBytes": 1503
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "e13cb58fb877a35dfa2c82705cd0eebe5ad68422acc2e00c08873688628fb7fe",
+          "sizeBytes": 3702
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "f62527d95a31bdb150233fe401f1c381f09d5302f98dcd2548afe8127700e427",
+          "sizeBytes": 1082
+        }
+      ],
+      "fixtureId": "position-summary-only",
+      "path": "position-summary-only"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-16",
+      "description": "같은 분의 두 episode를 entry/exit price equality로 유일하게 조정",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "21d77b0f141d5fa24e5795c986ecd336495e25bebb254c3faf65a05cfa123e3f",
           "sizeBytes": 531
         },
         {
           "path": "position-history.csv",
-          "sha256": "ec66640372bbc0dad00f35c4a4ded787fd24bd9d9f6e30da2b986e3343cdafd5",
+          "sha256": "45f60705d24d83720afa3b53c64286bd1cff61bde40713a1759e48401f23517e",
           "sizeBytes": 293
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "703112ea78e1ec253e6f8e315bcff9a081552b6f6b896ee95cf8a72351e210f6",
-          "sizeBytes": 1591
+          "sha256": "fcae515a0411b5fd66b79ce974626e81773e1633cbd41b9c1588977fd1649936",
+          "sizeBytes": 1937
         },
         {
           "path": "expected/canonical-records.json",
-          "sha256": "7b14fcdcef30869341d785db4b1c4b532f50ee506a713ec7a0e97f9179b92c7e",
+          "sha256": "3b60e02df26e8ee4678140126517cd88d51def022c55a1a3f6358ad52c9337be",
           "sizeBytes": 13601
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "37ba4685eef70d134eddbb1619313cf910f038ff0f2a600235a2787d5d2db98e",
-          "sizeBytes": 11936
+          "sha256": "120e47be0aa63eee82a98c3cebf1fc4eb06ebd3752ffbb25e4d15e0b046d3ed9",
+          "sizeBytes": 12565
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "4f5a00ba1affaaa219cf6b9aa934191bf892761e88dc8bec2ed9e4e8f7c11469",
-          "sizeBytes": 942
+          "sha256": "fcc2c18755017f70135989026bf7050aa47fee399bde48c17eb2ff11994c24ba",
+          "sizeBytes": 1218
         }
       ],
-      "fixtureId": "ambiguous-position-match",
-      "path": "ambiguous-position-match"
+      "fixtureId": "same-minute-unique-match",
+      "path": "same-minute-unique-match"
     },
     {
-      "category": "ACCEPTED_EXCLUDED",
-      "description": "Trade realized profit와 Position closing PNL tolerance 초과",
-      "expectedImportStatus": "ACCEPTED",
-      "files": [
-        {
-          "path": "trade-history.csv",
-          "sha256": "8ae93fdf828ae78e57a6d36f685654ce585dacaba4da043fd374459cdc0a5097",
-          "sizeBytes": 312
-        },
-        {
-          "path": "position-history.csv",
-          "sha256": "68366e161ec9aec42b2f3b8752f4562d53d1b833b41402e59ccc8fc4a8a88d90",
-          "sizeBytes": 209
-        },
-        {
-          "path": "fixture-manifest.json",
-          "sha256": "077518692ba3da9e16f8ce8273db7513cac6b53fd4af88aae1d4b413e856cbcd",
-          "sizeBytes": 1594
-        },
-        {
-          "path": "expected/canonical-records.json",
-          "sha256": "42fbfe29646362b4a128f553f5e5f5bc4b0e6cf5f4cfb149294a3b4e160a8f69",
-          "sizeBytes": 6823
-        },
-        {
-          "path": "expected/reconciliation-manifest.json",
-          "sha256": "6d54727836276525299301149eed621ebfe961e8303693d9e99ba65ff87064bd",
-          "sizeBytes": 6225
-        },
-        {
-          "path": "expected/quality-report.json",
-          "sha256": "66ca4c52e315f5806f5baea82cf613b43ce1f6b0cc476090c0fb80230a877399",
-          "sizeBytes": 926
-        }
-      ],
-      "fixtureId": "position-pnl-mismatch",
-      "path": "position-pnl-mismatch"
-    },
-    {
-      "category": "ACCEPTED_EXCLUDED",
-      "description": "settlement asset과 다른 fee의 valuation 부재",
-      "expectedImportStatus": "ACCEPTED",
-      "files": [
-        {
-          "path": "trade-history.csv",
-          "sha256": "12e4eedd85862fe1e7ec985c13593622410b38131d5d4800cf65c3663e4bf40b",
-          "sizeBytes": 316
-        },
-        {
-          "path": "position-history.csv",
-          "sha256": "ab8c80a387a680248c186dbd0ba94633ddb1a844feae267684878b1c5b239a6c",
-          "sizeBytes": 209
-        },
-        {
-          "path": "fixture-manifest.json",
-          "sha256": "dec13f7cf161befe43b2c65a551d8ab1dbb66eceb76d77d804f8fd03fe410872",
-          "sizeBytes": 1569
-        },
-        {
-          "path": "expected/canonical-records.json",
-          "sha256": "00a0b10fcacb55522c69453d602ef02278470b14ae310a6dbbe8c9179a3c9c0d",
-          "sizeBytes": 6811
-        },
-        {
-          "path": "expected/reconciliation-manifest.json",
-          "sha256": "ac05bce847a59e75522f46da1c9ba8039dd5530aaea5ecb964956c635df468ec",
-          "sizeBytes": 6353
-        },
-        {
-          "path": "expected/quality-report.json",
-          "sha256": "0bdc77feaf9e89506c2221d9f853240afbc9d88d368d55e2880eb63a010f2485",
-          "sizeBytes": 998
-        }
-      ],
-      "fixtureId": "different-fee-asset",
-      "path": "different-fee-asset"
-    },
-    {
-      "category": "ACCEPTED_EXCLUDED",
-      "description": "Position History Status가 Closed가 아님",
-      "expectedImportStatus": "ACCEPTED",
-      "files": [
-        {
-          "path": "trade-history.csv",
-          "sha256": "2b39feac28b7e960a89a934a26a2a650f233ca87a189f50b94e6f6c04c384afd",
-          "sizeBytes": 312
-        },
-        {
-          "path": "position-history.csv",
-          "sha256": "1d0ac4c5b41d0f436c37a08a239321b832c789b2ff9b4aedc4b77d41fd89d054",
-          "sizeBytes": 207
-        },
-        {
-          "path": "fixture-manifest.json",
-          "sha256": "78ebf0bd4965539363a5e2125191438387cec3d317fb5efc81bd5f3a40f1e7cd",
-          "sizeBytes": 1581
-        },
-        {
-          "path": "expected/canonical-records.json",
-          "sha256": "34dc539366bc4517d4039e781de19dd4f1790a181ae87ef9ded369cc49b5e7fa",
-          "sizeBytes": 6869
-        },
-        {
-          "path": "expected/reconciliation-manifest.json",
-          "sha256": "293f4f80caacfed35589d5d97028084c8467b9de51ad1d9f7e72bd32759274d5",
-          "sizeBytes": 6338
-        },
-        {
-          "path": "expected/quality-report.json",
-          "sha256": "7695a0b383731ec9431379bb3b011b648d1df24cb53465922111a50bb4cafd89",
-          "sizeBytes": 947
-        }
-      ],
-      "fixtureId": "unsupported-position-status",
-      "path": "unsupported-position-status"
-    },
-    {
-      "category": "ACCEPTED_ELIGIBLE",
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-17",
       "description": "동일 identity와 동일 content를 provenance 병합 deduplicate",
       "expectedImportStatus": "ACCEPTED",
       "files": [
@@ -628,8 +892,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "fa6345a8d027a0eff66b01420726ce8cb8c77eda0c51280f71ea3624dd228b46",
-          "sizeBytes": 1598
+          "sha256": "9789a5a745d212c94aebb15f1a16b87bb401a613d6355cbfb8ffc40db16b86ec",
+          "sizeBytes": 1960
         },
         {
           "path": "expected/canonical-records.json",
@@ -638,13 +902,13 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "4b8b42d823a3ec1bbf9313f7ce3de6fea83f73a5653dbc2d0320a4671ad3bef3",
-          "sizeBytes": 6672
+          "sha256": "f6b6eec9134fb85dfc7409f95098e062f2a7e88934b401b8b005c050d8cae047",
+          "sizeBytes": 7259
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "02a6218f5bf5b0442c61588581ab8322d5a698965e17ee5197f3a318aa1ec66b",
-          "sizeBytes": 970
+          "sha256": "15593b53ff2e6a5d2497cf5c8ae292b118cb47f39145a99b6af27486017b6dc6",
+          "sizeBytes": 1225
         }
       ],
       "fixtureId": "duplicate-execution-same-content",
@@ -652,6 +916,7 @@
     },
     {
       "category": "REJECTED_IMPORT",
+      "contextScenarioId": "TR-RECON-SCENARIO-18",
       "description": "동일 execution identity가 다른 content를 주장",
       "expectedImportStatus": "REJECTED",
       "files": [
@@ -667,8 +932,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "0bada7dd4502192da19e29ae5c5e50388219885d4514abc244b6b2d777d58819",
-          "sizeBytes": 1576
+          "sha256": "c59322f29e4ca691730b42d5ab19facca7aaf404512590a17907cf1305fd6b0d",
+          "sizeBytes": 1928
         },
         {
           "path": "expected/canonical-records.json",
@@ -677,20 +942,106 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "45128414ab715a4b69db15951362f01d6b86d0867550b519a17f5057cc152c23",
-          "sizeBytes": 1208
+          "sha256": "b0ea58d9af14a6758d337b02f6fded9c2b30a5dc5d745bd2054f8d663235a33f",
+          "sizeBytes": 1635
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "60046a2c52f048b83a7f2a468d23b6c7e5e0c750139c9a51ec4b3ed543265aba",
-          "sizeBytes": 700
+          "sha256": "90d741cb0854040829cfeac7b091892f739ae43f9753b49787efd7126d811106",
+          "sizeBytes": 916
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "ce0bec8aac918dc109e23a78bd7942c40d35f5526cd0d0e7d2726d071d3678b6",
+          "sizeBytes": 660
         }
       ],
       "fixtureId": "execution-identity-conflict",
       "path": "execution-identity-conflict"
     },
     {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-19",
+      "description": "음수 source fee를 rebate로 보존",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "7f305b818b161dcf4eb603348e26b4c977e3051ccb258b28295695dabe769b18",
+          "sizeBytes": 313
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "ab8c80a387a680248c186dbd0ba94633ddb1a844feae267684878b1c5b239a6c",
+          "sizeBytes": 209
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "81a1c708fac8254d188871e8fe969540ec00103c84d82a631b3c40831608cfec",
+          "sizeBytes": 1882
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "bb0ca16744b24afb2ad5b4bca284c0b83bb6d8fe6074b1bb06cfcfbb08b754f0",
+          "sizeBytes": 6739
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "5ad45aef29f039f0353f347604b9917b2254f8ea7f8f8476a1cc983288947d11",
+          "sizeBytes": 6754
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "f1f497c560714d9e07fcf97869147a0ab984cd9ee748bb0d0c2f93f7d381514d",
+          "sizeBytes": 1203
+        }
+      ],
+      "fixtureId": "fee-rebate",
+      "path": "fee-rebate"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-20",
+      "description": "settlement asset과 다른 fee의 valuation 부재",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "12e4eedd85862fe1e7ec985c13593622410b38131d5d4800cf65c3663e4bf40b",
+          "sizeBytes": 316
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "ab8c80a387a680248c186dbd0ba94633ddb1a844feae267684878b1c5b239a6c",
+          "sizeBytes": 209
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "f2815b256cba21772ccd6d8d5a2e440f2338a5118e120f3e5b0bd2b958f97dd0",
+          "sizeBytes": 1930
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "00a0b10fcacb55522c69453d602ef02278470b14ae310a6dbbe8c9179a3c9c0d",
+          "sizeBytes": 6811
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "2db13bb206164fd9ac5f8ddbdaaf95dc28306a161ed43708fcc4a76a14e961af",
+          "sizeBytes": 6891
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "5c25fe18ded6cc5452ad0f886317a55a5d8b221de62aa86aade548ec070dc0fb",
+          "sizeBytes": 1253
+        }
+      ],
+      "fixtureId": "different-fee-asset",
+      "path": "different-fee-asset"
+    },
+    {
       "category": "REJECTED_IMPORT",
+      "contextScenarioId": "TR-RECON-SCENARIO-21",
       "description": "One-way allocation으로 설명할 수 없는 Long/Short overlap",
       "expectedImportStatus": "REJECTED",
       "files": [
@@ -706,8 +1057,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "a2c9a11c7392861f5beecc4e6104bc95ab3a9bb45f8c6f1b380b7c70cddbc2b1",
-          "sizeBytes": 1583
+          "sha256": "d63d6fa1716a0bb840332fa80fb6c27af9602df181aeff0afe126d2a740084c8",
+          "sizeBytes": 1935
         },
         {
           "path": "expected/canonical-records.json",
@@ -716,59 +1067,271 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "5e64545d96b27647d34fb21171fcd33ec792332760fd63f939f05a8c8a1e1cf7",
-          "sizeBytes": 1204
+          "sha256": "d6b1bd550bd8705559e3026545cbad6b846f63934f678455fa18e4969ff75a78",
+          "sizeBytes": 1631
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "fd1bb417d2ea4a7de72658fa663e6ab9c6786fc18d86e7143e32442f5005d636",
-          "sizeBytes": 686
+          "sha256": "b12c122860c516bb197098e7652eec0b6e59a30b8a6b8215f72969bbce3ffd37",
+          "sizeBytes": 902
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "4a8b728f76771e3cbcbcfac816878ee30ee68858a6ba594419e56a5b8f7d496b",
+          "sizeBytes": 688
         }
       ],
       "fixtureId": "hedge-overlap",
       "path": "hedge-overlap"
     },
     {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-22",
+      "description": "Position History Status가 Closed가 아님",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "2b39feac28b7e960a89a934a26a2a650f233ca87a189f50b94e6f6c04c384afd",
+          "sizeBytes": 312
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "1d0ac4c5b41d0f436c37a08a239321b832c789b2ff9b4aedc4b77d41fd89d054",
+          "sizeBytes": 207
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "e87d6536f56d86ea5d3bce343fbfba408baf22704f64ebf2b58b56feb62cd30a",
+          "sizeBytes": 1943
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "34dc539366bc4517d4039e781de19dd4f1790a181ae87ef9ded369cc49b5e7fa",
+          "sizeBytes": 6869
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "d99f5810eec7be69ea2957d6da1f9cd747f7737918487e70cd1ec35779fb21a9",
+          "sizeBytes": 6925
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "5f188a8be25d7244517d324b39d4740b13ac61591e276cd27f55b85f3b5925a7",
+          "sizeBytes": 1213
+        }
+      ],
+      "fixtureId": "unsupported-position-status",
+      "path": "unsupported-position-status"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-23",
+      "description": "Trade realized profit와 Position closing PNL tolerance 초과",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "8ae93fdf828ae78e57a6d36f685654ce585dacaba4da043fd374459cdc0a5097",
+          "sizeBytes": 312
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "68366e161ec9aec42b2f3b8752f4562d53d1b833b41402e59ccc8fc4a8a88d90",
+          "sizeBytes": 209
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "0f0bd857372ed0ca41f6be877b935401b8c305b8f47d1c84ea28ba20b255b65a",
+          "sizeBytes": 1955
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "42fbfe29646362b4a128f553f5e5f5bc4b0e6cf5f4cfb149294a3b4e160a8f69",
+          "sizeBytes": 6823
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "d163018ea6ee3ef22d985528432a5abbe61d5656a72f97f446e063ba69138d0b",
+          "sizeBytes": 6812
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "be3b033e901edb2ac18965be9b24f91b90f96a387730e42864b145271bf42803",
+          "sizeBytes": 1192
+        }
+      ],
+      "fixtureId": "position-pnl-mismatch",
+      "path": "position-pnl-mismatch"
+    },
+    {
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioId": "TR-RECON-SCENARIO-24",
+      "description": "Trade와 Position PnL 차이가 derived tolerance 이내",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "71663528b594b92f319d180738d30adc058c95b1cde4eb69d6623740ff654b51",
+          "sizeBytes": 317
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "1095097a8104568492487a39cc0398d588e996b998d1052c660a7aeea66b871d",
+          "sizeBytes": 209
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "dc89cc508dc5021df928d717bb6b8c0fc296a794f17618710f4cce91dfc4d8e6",
+          "sizeBytes": 1962
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "aac8f130f66e7c239a8eca7e2fee8bc8a1bad30161236794639fff7c77631f36",
+          "sizeBytes": 6856
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "47d279f0478fba73db6defd5b6faa8ee84a7a2207e6ba602e54c1d74eea9e101",
+          "sizeBytes": 7037
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "4d27ec1f870c6f9277129408f1c2e8258789305b9cf800267857944417ae9dca",
+          "sizeBytes": 1274
+        }
+      ],
+      "fixtureId": "within-rounding-tolerance",
+      "path": "within-rounding-tolerance"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": "TR-RECON-SCENARIO-25",
+      "description": "Trade와 Position PnL 차이가 derived tolerance 초과",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "89181080ec6eb2882119d333098f3329954e5a10f79e4e1f92d6cd2f26f99b29",
+          "sizeBytes": 317
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "1095097a8104568492487a39cc0398d588e996b998d1052c660a7aeea66b871d",
+          "sizeBytes": 209
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "243f01b0bc0e7a61a1eb0146b8386664a892033930435c9e0c8aa04cc3145dd2",
+          "sizeBytes": 1952
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "3fa541b41307db733be19318dfc9e45ee6d0dcb38bb6643c9fe88ae3e7e8d6ef",
+          "sizeBytes": 6848
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "b17fe3ce22981770ee2209e99b68acdf7cc41fec5b56bb38488155732d1f2740",
+          "sizeBytes": 6932
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "dca7c4e0eafdabafd4b59c603529f4a27ba43b9edd3630a5fc95a51774660535",
+          "sizeBytes": 1217
+        }
+      ],
+      "fixtureId": "above-rounding-tolerance",
+      "path": "above-rounding-tolerance"
+    },
+    {
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioId": null,
+      "description": "동일 분의 동일 constraint episode-summary 2×2 ambiguity",
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "e3966a39c4e01fa40704d4f1c9ee9f2e9f4f31707dd5d5e7395a309d4512b231",
+          "sizeBytes": 531
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "ec66640372bbc0dad00f35c4a4ded787fd24bd9d9f6e30da2b986e3343cdafd5",
+          "sizeBytes": 293
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "b1c10dd51863c9d0bc8d6620af712a2b44d4b6cf0ecada98b90a02418441a077",
+          "sizeBytes": 1934
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "7b14fcdcef30869341d785db4b1c4b532f50ee506a713ec7a0e97f9179b92c7e",
+          "sizeBytes": 13601
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "90753988b0175456caff5c255b9b7de557e452757fc65ef68b4b888ca99e280b",
+          "sizeBytes": 12581
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "b848dabbc270f60eb29fc228398e515e5b0b1d60580d644f97833aafb54ebdb2",
+          "sizeBytes": 1201
+        }
+      ],
+      "fixtureId": "ambiguous-position-match",
+      "path": "ambiguous-position-match"
+    },
+    {
       "category": "REJECTED_IMPORT",
-      "description": "지원하지 않는 COIN-M product family",
+      "contextScenarioId": null,
+      "description": "지수 표기 Quantity numeric value",
       "expectedImportStatus": "REJECTED",
       "files": [
         {
           "path": "trade-history.csv",
-          "sha256": "824549308705cd41212b3f33dcb895b79d2b154e7e13bc6c82cf10600b995b4f",
-          "sizeBytes": 308
+          "sha256": "af34a1a93adaba3ced3bbeeec72b354163e6b92754a810bb9c2b9c3ca6936385",
+          "sizeBytes": 202
         },
         {
           "path": "position-history.csv",
-          "sha256": "abc3858045012f66d163007be6ad454346790939e4ac375a403ab28eb2a3eb8e",
-          "sizeBytes": 208
+          "sha256": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+          "sizeBytes": 125
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "b06b899bcdb173af9d7701bf77291d3261edd7edfa2d131871b3bca33bbb2c6b",
-          "sizeBytes": 1559
+          "sha256": "33eaffd03c0710a074bc81772fe4e0dadc5287e8745709b01004e80081f9c8f0",
+          "sizeBytes": 1891
         },
         {
           "path": "expected/canonical-records.json",
-          "sha256": "ff1142bb70e5dfb866118e74d6d4486ad065b9f1a440d3ec70cfb5fa6a56638f",
-          "sizeBytes": 85
+          "sha256": "81d23fc934930849e33180613a9c39721da509c85b32aced875648d030371222",
+          "sizeBytes": 88
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "f41f5e5e9f6c27334e7413e50cc0d09fc2bd90b0bb2db3c2106b98999d317f4a",
-          "sizeBytes": 1203
+          "sha256": "7ec9ec08c07daa9b7caddf34c8031c54bc862ed5b62cb73bb7efefff3a5fc126",
+          "sizeBytes": 1633
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "bf6edadae65c0158bf3f65f151c69a0470a8cbe931d508f13564b50223534377",
-          "sizeBytes": 691
+          "sha256": "744bf74af6bfb9b43be8742d45e197729187ac711f5c9d7d86953c84d085837d",
+          "sizeBytes": 939
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "7e0d465a4f74b8ac6c383afa950618732e95206b06d1360321292bca4d01e22a",
+          "sizeBytes": 538
         }
       ],
-      "fixtureId": "unsupported-coin-m",
-      "path": "unsupported-coin-m"
+      "fixtureId": "invalid-numeric-value",
+      "path": "invalid-numeric-value"
     },
     {
       "category": "REJECTED_IMPORT",
+      "contextScenarioId": null,
       "description": "Trade History required Maker column 누락",
       "expectedImportStatus": "REJECTED",
       "files": [
@@ -784,8 +1347,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "84c7eee47c820de30d7a84d1cbe4b470fd889db0242c977d9c3ee9dcaf4cb0de",
-          "sizeBytes": 1569
+          "sha256": "8f7c0d346578769d965f3b5b30849026f4f66f1a8335b6ece6b82a636e633d8e",
+          "sizeBytes": 1903
         },
         {
           "path": "expected/canonical-records.json",
@@ -794,13 +1357,18 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "6b861dbdb7e36b726cdbe102a55823f7c2171fb54c06178d3fe89f844b5860bf",
-          "sizeBytes": 1212
+          "sha256": "ac68e6652d4de625528d457cae72f10739e57f4dfedfeebf7592454796fa98d4",
+          "sizeBytes": 1639
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "a9af614b7f6dce6d608ec2e6705525c6a3f15a8b956e72b43c71b036ba61b875",
-          "sizeBytes": 696
+          "sha256": "c9da6976716c20fefcf82768f671de4ed45d8ba9e5edebda351f48c0cb93b0a4",
+          "sizeBytes": 912
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "da1fccaaa697d17df7545962101d41281daa09b033a475481fba2633f061219d",
+          "sizeBytes": 527
         }
       ],
       "fixtureId": "required-column-missing",
@@ -808,6 +1376,52 @@
     },
     {
       "category": "REJECTED_IMPORT",
+      "contextScenarioId": null,
+      "description": "지원하지 않는 COIN-M product family",
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "trade-history.csv",
+          "sha256": "824549308705cd41212b3f33dcb895b79d2b154e7e13bc6c82cf10600b995b4f",
+          "sizeBytes": 308
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "abc3858045012f66d163007be6ad454346790939e4ac375a403ab28eb2a3eb8e",
+          "sizeBytes": 208
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "7b85b283a32fbcdd69d24c39148de065e1b58bc64ad182f59e266ee1f0058618",
+          "sizeBytes": 1892
+        },
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "ff1142bb70e5dfb866118e74d6d4486ad065b9f1a440d3ec70cfb5fa6a56638f",
+          "sizeBytes": 85
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "d5500de63e77be600b02eab0abee2464b06eb7e9653f318b8a49686954cc7018",
+          "sizeBytes": 1628
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "a9d1c8c3d54ecf11f47c9814ebab3d94b9b926b37c5211b4d8d5c33394ca52cf",
+          "sizeBytes": 907
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "a2d3f2d648214bf395941abaa1c221fe3815c6cb6a3fa5dddfa640e461a6b436",
+          "sizeBytes": 541
+        }
+      ],
+      "fixtureId": "unsupported-coin-m",
+      "path": "unsupported-coin-m"
+    },
+    {
+      "category": "REJECTED_IMPORT",
+      "contextScenarioId": null,
       "description": "Trade ID header가 지원하지 않는 이름으로 변경됨",
       "expectedImportStatus": "REJECTED",
       "files": [
@@ -823,8 +1437,8 @@
         },
         {
           "path": "fixture-manifest.json",
-          "sha256": "0ec24ab0eeecef6482c3cae7eb73b0dadeb9c3b693464c748f84829c481e2154",
-          "sizeBytes": 1592
+          "sha256": "dbf97272208e56d41de81c3202dc816c332d2668a4f10649040bbd5b02dae649",
+          "sizeBytes": 1926
         },
         {
           "path": "expected/canonical-records.json",
@@ -833,13 +1447,18 @@
         },
         {
           "path": "expected/reconciliation-manifest.json",
-          "sha256": "51fdd0185bd1ac6e52638328c556dc65b60ebf135bcbe32b12d0ddac1b766d32",
-          "sizeBytes": 1216
+          "sha256": "c822c449c28a71fa0a6607a6c7c1a8baf3de4cdc62add17a976943b7965f58db",
+          "sizeBytes": 1643
         },
         {
           "path": "expected/quality-report.json",
-          "sha256": "b58ffad10690350c191698825dd49c4742b4fe2d5723506684fae678857d8576",
-          "sizeBytes": 698
+          "sha256": "f6088c47cbecfa3aaec6c294bdc4abbae96e48930a0f9d9cdd2affc501b87f48",
+          "sizeBytes": 914
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "c64cb25811ae7b6f3f3c9a6d961f3afbc1c880453dd6183c30ab3d80805c6ddd",
+          "sizeBytes": 532
         }
       ],
       "fixtureId": "unsupported-source-schema",
@@ -849,8 +1468,8 @@
   "packageFiles": [
     {
       "path": "README.md",
-      "sha256": "4c23eb524787503f8dbb2e0c57a5e7787488caa9822c0515b3978646eb41f781",
-      "sizeBytes": 5670
+      "sha256": "816473c29d291446ffb0954e4d9902159a1f1fc1ae350278706bc4fe7d55de20",
+      "sizeBytes": 10737
     },
     {
       "path": "schemas/canonical-records.schema.json",
@@ -858,20 +1477,30 @@
       "sizeBytes": 3640
     },
     {
+      "path": "schemas/expected-failure.schema.json",
+      "sha256": "3efcff6606b6a4e3157a5b48010b287bd020e0d841c6bc418192c280cffce033",
+      "sizeBytes": 1702
+    },
+    {
       "path": "schemas/fixture-manifest.schema.json",
-      "sha256": "d6b40b55fe47113515226785f653761b0d019868ae3a88592a556849d84ab3e4",
-      "sizeBytes": 3869
+      "sha256": "62fa9a6fcb290dc1bcc6faeaae4478dfdb7a79bb1ea849d176fd7ff1d35f0f64",
+      "sizeBytes": 4771
     },
     {
       "path": "schemas/quality-report.schema.json",
-      "sha256": "62838c2dd3d04385667163ba3d581e3eed07063b30bec0594bfae43c62f38f7a",
-      "sizeBytes": 2279
+      "sha256": "e56354abcbd3a787f52cf65d4c72b13af3a80c686aaccd456f694f7d9ae33708",
+      "sizeBytes": 2985
     },
     {
       "path": "schemas/reconciliation-manifest.schema.json",
-      "sha256": "230d487808821c0c765e30e9ee62507498139a81fdddc328b47f24dbe999dcdd",
-      "sizeBytes": 5823
+      "sha256": "8bb59ef2bd55e9fc62410c80433769fc4263654d97891c429666164a4d6dee9d",
+      "sizeBytes": 9286
     }
   ],
-  "schemaVersion": "1.0.0"
+  "physicalDialectValidation": {
+    "positionHistory": "PENDING_RAW_SAMPLE",
+    "reason": "실제 Binance Position History byte-level delimiter/encoding/BOM/line-ending sample 미확보",
+    "tradeHistory": "SYNTHETIC_ONLY"
+  },
+  "schemaVersion": "1.1.0"
 }

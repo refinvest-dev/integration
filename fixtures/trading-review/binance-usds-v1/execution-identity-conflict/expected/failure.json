@@ -1,0 +1,23 @@
+{
+  "createdLedgerRevision": false,
+  "expectedLogClassification": "ERROR",
+  "failureCategory": "SOURCE_CONFLICT",
+  "failureCode": "RECORD_CONFLICT",
+  "fixtureId": "execution-identity-conflict",
+  "importStatus": "REJECTED",
+  "maskedEvidence": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "hashPrefix": "2b551cac32e1",
+      "sourceRowNumber": 1
+    },
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "hashPrefix": "2b551cac32e1",
+      "sourceRowNumber": 2
+    }
+  ],
+  "retryable": true,
+  "schemaVersion": "1.0.0",
+  "userFacingMeaning": "같은 체결 식별자의 내용이 서로 달라 source 확인 후 새 import가 필요합니다."
+}

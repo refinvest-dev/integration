@@ -1,4 +1,7 @@
 {
+  "acceptanceScenarioIds": [
+    "TR-ACC-IMPORT-013"
+  ],
   "artifacts": [
     {
       "path": "trade-history.csv",
@@ -13,6 +16,9 @@
       "sizeBytes": 125
     }
   ],
+  "canonicalSchemaVersion": "1.0.0",
+  "category": "REJECTED_IMPORT",
+  "contextScenarioId": "TR-RECON-SCENARIO-18",
   "declaredPositionMode": "ONE_WAY",
   "description": "동일 execution identity가 다른 content를 주장",
   "expectedCanonicalRecordCount": 0,
@@ -38,13 +44,16 @@
       "unscaled": "1"
     }
   },
+  "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
   "normalizerVersion": "fixture-v1",
+  "physicalDialectValidation": "SYNTHETIC_ONLY",
   "productFamily": "LINEAR_PERPETUAL",
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
   "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
   "reviewTimezone": "Asia/Seoul",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "settlementAsset": "USDT",
-  "sourceDialect": {
+  "sourceDialects": {
     "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
     "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
   },

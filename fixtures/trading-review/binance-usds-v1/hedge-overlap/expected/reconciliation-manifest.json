@@ -1,16 +1,20 @@
 {
   "allocations": [],
-  "canonicalManifestHash": "3d7aa44cdfae17f659b9c6f376a46ad40350d1c2f2fcbc455d17602852cb1625",
+  "canonicalManifestHash": "4ec371ae543b53fcab0b872e41b74ad5f5f0d51dc4e4803946b18455e5d9b309",
   "canonicalManifestHashInputs": {
     "canonicalRecordContentHash": "ceb36e7a653e12011e7949c1d2729148fd16d5eaba3fcf275937589ded13c562",
+    "canonicalSchemaVersion": "1.0.0",
     "instrumentTermsHash": "5e458341f034961318f4d5d33cedda47717979a8480d3c7f1c05ef8031f0aad5",
+    "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
     "normalizerVersion": "fixture-v1",
+    "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
     "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
     "sourceArtifactHashes": {
       "POSITION_HISTORY": "7c34990995649fc55a0faf9494939945219945e213fad072cb87eb483b142c09",
       "TRADE_HISTORY": "9b9f07306590cc1d58127fff6dab4eb2affe578c82b25e490bf8176f9b6dcfd7"
     }
   },
+  "canonicalSchemaVersion": "1.0.0",
   "conservation": {
     "feesByAsset": "NOT_EVALUATED",
     "passed": null,
@@ -23,9 +27,12 @@
     "accepted": false,
     "failureCode": "UNSUPPORTED_POSITION_MODE"
   },
-  "manifestSchemaVersion": "1.0.0",
+  "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
+  "manifestSchemaVersion": "1.1.0",
   "normalizerVersion": "fixture-v1",
   "orderedExecutionKeysByInstrument": {},
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
   "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "sourceRecordSetHash": "ceb36e7a653e12011e7949c1d2729148fd16d5eaba3fcf275937589ded13c562",
   "summaryMatches": []
 }
