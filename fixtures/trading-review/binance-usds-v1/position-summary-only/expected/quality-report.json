@@ -1,0 +1,44 @@
+{
+  "canonicalRecordCount": 1,
+  "capabilitySummary": {
+    "POSITION_MODE_USER_DECLARED": 1,
+    "VENUE_POSITION_SUMMARY": 1
+  },
+  "conflictCount": 0,
+  "duplicateCount": 0,
+  "eligibleEpisodeCount": 0,
+  "episodeCount": 1,
+  "excludedEpisodeCount": 1,
+  "exclusionReasonCounts": {
+    "POSITION_SUMMARY_WITHOUT_TRADES": 1
+  },
+  "fixtureId": "position-summary-only",
+  "ignoredNonTradingRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
+  "importStatus": "ACCEPTED",
+  "parsedRowCount": {
+    "POSITION_HISTORY": 1,
+    "TRADE_HISTORY": 0
+  },
+  "reconciliationStatusCounts": {
+    "INCOMPLETE_TRADES": 1
+  },
+  "reconstructionStatusCounts": {
+    "INCONSISTENT": 1
+  },
+  "schemaVersion": "1.1.0",
+  "sourceArtifactCount": 2,
+  "sourceRowCount": {
+    "POSITION_HISTORY": 1,
+    "TRADE_HISTORY": 0
+  },
+  "versions": {
+    "import": "BINANCE_USDS_DUAL_ARTIFACT_IMPORT_V1",
+    "normalizer": "fixture-v1",
+    "reconciliation": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "reconstruction": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1"
+  },
+  "warnings": []
+}

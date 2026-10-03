@@ -14,6 +14,11 @@
   },
   "additionalProperties": false,
   "properties": {
+    "acceptanceScenarioIds": {
+      "items": { "pattern": "^TR-ACC-[A-Z]+-[0-9]{3}$", "type": "string" },
+      "type": "array",
+      "uniqueItems": true
+    },
     "artifacts": {
       "items": {
         "additionalProperties": false,
@@ -29,6 +34,14 @@
       "maxItems": 2,
       "minItems": 2,
       "type": "array"
+    },
+    "canonicalSchemaVersion": { "const": "1.0.0" },
+    "category": { "enum": ["ACCEPTED_AND_ELIGIBLE", "ACCEPTED_BUT_EXCLUDED", "REJECTED_IMPORT"] },
+    "contextScenarioId": {
+      "oneOf": [
+        { "pattern": "^TR-RECON-SCENARIO-(0[1-9]|1[0-9]|2[0-5])$", "type": "string" },
+        { "type": "null" }
+      ]
     },
     "declaredPositionMode": { "enum": ["ONE_WAY"] },
     "description": { "minLength": 1, "type": "string" },
@@ -57,13 +70,16 @@
       "required": ["contractMultiplier", "settlementPrecision", "stepSize", "tickSize"],
       "type": "object"
     },
+    "instrumentTermsVersion": { "enum": ["AAAUSDT_FIXTURE_TERMS_V1", "AAAUSD_FIXTURE_TERMS_V1"] },
     "normalizerVersion": { "const": "fixture-v1" },
+    "physicalDialectValidation": { "const": "SYNTHETIC_ONLY" },
     "productFamily": { "enum": ["LINEAR_PERPETUAL", "INVERSE_PERPETUAL"] },
     "reconstructionPolicyVersion": { "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1" },
+    "reconciliationVersion": { "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1" },
     "reviewTimezone": { "const": "Asia/Seoul" },
-    "schemaVersion": { "const": "1.0.0" },
+    "schemaVersion": { "const": "1.1.0" },
     "settlementAsset": { "enum": ["USDT", "BTC"] },
-    "sourceDialect": {
+    "sourceDialects": {
       "additionalProperties": false,
       "properties": {
         "positionHistory": { "const": "BINANCE_USDS_POSITION_HISTORY_V1" },
@@ -75,7 +91,7 @@
     "sourceTimezone": { "const": "Asia/Seoul" },
     "tags": { "items": { "type": "string" }, "minItems": 2, "type": "array", "uniqueItems": true }
   },
-  "required": ["schemaVersion", "fixtureId", "description", "sourceDialect", "sourceTimezone", "reviewTimezone", "declaredPositionMode", "productFamily", "settlementAsset", "instrumentTerms", "normalizerVersion", "reconstructionPolicyVersion", "expectedImportStatus", "expectedCanonicalRecordCount", "expectedEpisodeCount", "expectedEligibleEpisodeCount", "expectedExcludedEpisodeCount", "expectedFailureCode", "expectedReconciliationStatuses", "artifacts", "tags"],
+  "required": ["schemaVersion", "fixtureId", "contextScenarioId", "acceptanceScenarioIds", "description", "category", "sourceDialects", "sourceTimezone", "reviewTimezone", "declaredPositionMode", "productFamily", "settlementAsset", "instrumentTerms", "instrumentTermsVersion", "normalizerVersion", "canonicalSchemaVersion", "reconstructionPolicyVersion", "reconciliationVersion", "expectedImportStatus", "expectedCanonicalRecordCount", "expectedEpisodeCount", "expectedEligibleEpisodeCount", "expectedExcludedEpisodeCount", "expectedFailureCode", "expectedReconciliationStatuses", "physicalDialectValidation", "artifacts", "tags"],
   "title": "RefInvest Trading Review fixture manifest",
   "type": "object"
 }

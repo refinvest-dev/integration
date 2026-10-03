@@ -1,0 +1,23 @@
+{
+  "createdLedgerRevision": false,
+  "expectedLogClassification": "ERROR",
+  "failureCategory": "POSITION_MODE",
+  "failureCode": "UNSUPPORTED_POSITION_MODE",
+  "fixtureId": "hedge-overlap",
+  "importStatus": "REJECTED",
+  "maskedEvidence": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "hashPrefix": "9b9f07306590",
+      "sourceRowNumber": 2
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "hashPrefix": "7c3499099564",
+      "sourceRowNumber": 2
+    }
+  ],
+  "retryable": true,
+  "schemaVersion": "1.0.0",
+  "userFacingMeaning": "One-way 규칙으로 설명할 수 없는 반대 방향 중첩이 있어 지원 범위의 자료로 다시 가져와야 합니다."
+}

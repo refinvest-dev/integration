@@ -1,28 +1,32 @@
 {
+  "acceptanceScenarioIds": [],
   "artifacts": [
     {
       "path": "trade-history.csv",
       "role": "TRADE_HISTORY",
-      "sha256": "bd7098b0f75ce111a4d460c5ecd03ba0cf62ff45c81880baaba1636850b9afeb",
-      "sizeBytes": 424
+      "sha256": "9d0ee8f5e2550932532926912b69a1f1b10b77a7274e180d035f5960f208edcc",
+      "sizeBytes": 309
     },
     {
       "path": "position-history.csv",
       "role": "POSITION_HISTORY",
-      "sha256": "9543acfc3b7f75ac69c90c2872c84b4415032e241adfd496555109a5de5b02bb",
-      "sizeBytes": 209
+      "sha256": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+      "sizeBytes": 125
     }
   ],
+  "canonicalSchemaVersion": "1.0.0",
+  "category": "ACCEPTED_BUT_EXCLUDED",
+  "contextScenarioId": "TR-RECON-SCENARIO-11",
   "declaredPositionMode": "ONE_WAY",
-  "description": "동일 timestamp의 execution을 숫자 Trade ID로 정렬",
-  "expectedCanonicalRecordCount": 10,
-  "expectedEligibleEpisodeCount": 1,
+  "description": "동일 timestamp execution을 numeric Trade ID 순서로 처리",
+  "expectedCanonicalRecordCount": 6,
+  "expectedEligibleEpisodeCount": 0,
   "expectedEpisodeCount": 1,
-  "expectedExcludedEpisodeCount": 0,
+  "expectedExcludedEpisodeCount": 1,
   "expectedFailureCode": null,
   "expectedImportStatus": "ACCEPTED",
   "expectedReconciliationStatuses": [
-    "EXACT"
+    "INCOMPLETE_TRADES"
   ],
   "fixtureId": "same-timestamp-multiple-trades",
   "instrumentTerms": {
@@ -40,19 +44,22 @@
       "unscaled": "1"
     }
   },
+  "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
   "normalizerVersion": "fixture-v1",
+  "physicalDialectValidation": "SYNTHETIC_ONLY",
   "productFamily": "LINEAR_PERPETUAL",
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
   "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
   "reviewTimezone": "Asia/Seoul",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "settlementAsset": "USDT",
-  "sourceDialect": {
+  "sourceDialects": {
     "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
     "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
   },
   "sourceTimezone": "Asia/Seoul",
   "tags": [
-    "ACCEPTED_ELIGIBLE",
+    "ACCEPTED_BUT_EXCLUDED",
     "SYNTHETIC",
     "NON_PRODUCTION"
   ]

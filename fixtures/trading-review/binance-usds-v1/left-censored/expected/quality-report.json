@@ -14,11 +14,23 @@
     "EPISODE_LEFT_CENSORED": 1
   },
   "fixtureId": "left-censored",
+  "ignoredNonTradingRowCount": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
   "importStatus": "ACCEPTED",
   "parsedRowCount": {
     "POSITION_HISTORY": 1,
     "TRADE_HISTORY": 1
   },
+  "reconciliationStatusCounts": {
+    "INCOMPLETE_TRADES": 1
+  },
+  "reconstructionStatusCounts": {
+    "LEFT_CENSORED": 1
+  },
+  "schemaVersion": "1.1.0",
+  "sourceArtifactCount": 2,
   "sourceRowCount": {
     "POSITION_HISTORY": 1,
     "TRADE_HISTORY": 1

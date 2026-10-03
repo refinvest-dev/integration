@@ -1,0 +1,66 @@
+{
+  "acceptanceScenarioIds": [],
+  "artifacts": [
+    {
+      "path": "trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "sha256": "7d4af27f549c2d38bc364770f5db9785c9ddec89dc0de5a911578ce95f4db82a",
+      "sizeBytes": 425
+    },
+    {
+      "path": "position-history.csv",
+      "role": "POSITION_HISTORY",
+      "sha256": "63c4d5565f7bd370ce5f001f3c901f438b826749fd47f24936d57b3807ce92ce",
+      "sizeBytes": 295
+    }
+  ],
+  "canonicalSchemaVersion": "1.0.0",
+  "category": "ACCEPTED_AND_ELIGIBLE",
+  "contextScenarioId": "TR-RECON-SCENARIO-08",
+  "declaredPositionMode": "ONE_WAY",
+  "description": "하나의 BUY execution이 Short를 닫고 Long을 시작",
+  "expectedCanonicalRecordCount": 11,
+  "expectedEligibleEpisodeCount": 2,
+  "expectedEpisodeCount": 2,
+  "expectedExcludedEpisodeCount": 0,
+  "expectedFailureCode": null,
+  "expectedImportStatus": "ACCEPTED",
+  "expectedReconciliationStatuses": [
+    "EXACT"
+  ],
+  "fixtureId": "short-to-long-reversal",
+  "instrumentTerms": {
+    "contractMultiplier": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "settlementPrecision": 2,
+    "stepSize": {
+      "scale": 0,
+      "unscaled": "1"
+    },
+    "tickSize": {
+      "scale": 2,
+      "unscaled": "1"
+    }
+  },
+  "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
+  "normalizerVersion": "fixture-v1",
+  "physicalDialectValidation": "SYNTHETIC_ONLY",
+  "productFamily": "LINEAR_PERPETUAL",
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewTimezone": "Asia/Seoul",
+  "schemaVersion": "1.1.0",
+  "settlementAsset": "USDT",
+  "sourceDialects": {
+    "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
+    "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
+  },
+  "sourceTimezone": "Asia/Seoul",
+  "tags": [
+    "ACCEPTED_AND_ELIGIBLE",
+    "SYNTHETIC",
+    "NON_PRODUCTION"
+  ]
+}

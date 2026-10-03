@@ -1,0 +1,58 @@
+{
+  "fixtureId": "position-summary-only",
+  "records": [
+    {
+      "averageClosePrice": {
+        "scale": 2,
+        "unscaled": "1100"
+      },
+      "canonicalRecordId": "position-summary-only:position:1:summary",
+      "closedInterval": {
+        "endExclusive": "2026-01-02T01:06:00.000000Z",
+        "startInclusive": "2026-01-02T01:05:00.000000Z"
+      },
+      "closedVolume": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "closingPnl": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "100"
+        },
+        "asset": "USDT"
+      },
+      "direction": "LONG",
+      "entryPrice": {
+        "scale": 2,
+        "unscaled": "1000"
+      },
+      "instrument": {
+        "instrumentId": "BINANCE:USDS_FUTURES:AAAUSDT",
+        "venueSymbol": "AAAUSDT"
+      },
+      "marginMode": "ISOLATED",
+      "maxQuantity": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "openedInterval": {
+        "endExclusive": "2026-01-02T01:01:00.000000Z",
+        "startInclusive": "2026-01-02T01:00:00.000000Z"
+      },
+      "recordType": "VENUE_POSITION_SUMMARY",
+      "sourceArtifactRole": "POSITION_HISTORY",
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "sourceRowNumber": 1,
+      "status": "Closed",
+      "syntheticSourceRecordKey": "position:position-history:1"
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

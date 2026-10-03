@@ -1,0 +1,18 @@
+{
+  "createdLedgerRevision": false,
+  "expectedLogClassification": "WARN",
+  "failureCategory": "FILE_FORMAT",
+  "failureCode": "FILE_FORMAT_INVALID",
+  "fixtureId": "invalid-numeric-value",
+  "importStatus": "REJECTED",
+  "maskedEvidence": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "hashPrefix": "af34a1a93ada",
+      "sourceRowNumber": 1
+    }
+  ],
+  "retryable": true,
+  "schemaVersion": "1.0.0",
+  "userFacingMeaning": "필수 숫자 값 형식을 검증할 수 없어 수정된 export로 새 import가 필요합니다."
+}

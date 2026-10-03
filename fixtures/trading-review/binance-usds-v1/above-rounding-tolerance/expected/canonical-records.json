@@ -1,0 +1,246 @@
+{
+  "fixtureId": "above-rounding-tolerance",
+  "records": [
+    {
+      "buyer": true,
+      "canonicalRecordId": "above-rounding-tolerance:trade:910000002501:execution",
+      "executionOrigin": "UNKNOWN",
+      "executionSide": "BUY",
+      "instrument": {
+        "instrumentId": "BINANCE:USDS_FUTURES:AAAUSDT",
+        "venueSymbol": "AAAUSDT"
+      },
+      "maker": false,
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "price": {
+        "scale": 2,
+        "unscaled": "1000"
+      },
+      "quantity": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "rawOrderId": "920000002501",
+      "rawTradeId": "910000002501",
+      "recordType": "EXECUTION",
+      "sourceAmount": {
+        "scale": 2,
+        "unscaled": "1000"
+      },
+      "sourceArtifactRole": "TRADE_HISTORY",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:AAAUSDT:910000002501",
+          "sourceRowNumber": 1
+        }
+      ],
+      "sourceRowNumber": 1,
+      "syntheticSourceRecordKey": "trade:AAAUSDT:910000002501"
+    },
+    {
+      "canonicalRecordId": "above-rounding-tolerance:trade:910000002501:fee",
+      "fee": {
+        "asset": "USDT",
+        "balanceEffect": {
+          "scale": 2,
+          "unscaled": "0"
+        },
+        "effect": "ZERO",
+        "sourceAmount": {
+          "scale": 2,
+          "unscaled": "0"
+        }
+      },
+      "instrument": {
+        "instrumentId": "BINANCE:USDS_FUTURES:AAAUSDT",
+        "venueSymbol": "AAAUSDT"
+      },
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "recordType": "FEE",
+      "sourceArtifactRole": "TRADE_HISTORY",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:AAAUSDT:910000002501",
+          "sourceRowNumber": 1
+        }
+      ],
+      "sourceRowNumber": 1,
+      "syntheticSourceRecordKey": "trade:AAAUSDT:910000002501"
+    },
+    {
+      "canonicalRecordId": "above-rounding-tolerance:trade:910000002501:pnl",
+      "instrument": {
+        "instrumentId": "BINANCE:USDS_FUTURES:AAAUSDT",
+        "venueSymbol": "AAAUSDT"
+      },
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "reportedRealizedPnl": {
+        "amount": {
+          "scale": 3,
+          "unscaled": "0"
+        },
+        "asset": "USDT"
+      },
+      "sourceArtifactRole": "TRADE_HISTORY",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:AAAUSDT:910000002501",
+          "sourceRowNumber": 1
+        }
+      ],
+      "sourceRowNumber": 1,
+      "syntheticSourceRecordKey": "trade:AAAUSDT:910000002501"
+    },
+    {
+      "buyer": false,
+      "canonicalRecordId": "above-rounding-tolerance:trade:910000002502:execution",
+      "executionOrigin": "UNKNOWN",
+      "executionSide": "SELL",
+      "instrument": {
+        "instrumentId": "BINANCE:USDS_FUTURES:AAAUSDT",
+        "venueSymbol": "AAAUSDT"
+      },
+      "maker": false,
+      "occurredAt": "2026-01-02T01:01:01.000000Z",
+      "price": {
+        "scale": 2,
+        "unscaled": "1200"
+      },
+      "quantity": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "rawOrderId": "920000002502",
+      "rawTradeId": "910000002502",
+      "recordType": "EXECUTION",
+      "sourceAmount": {
+        "scale": 2,
+        "unscaled": "1200"
+      },
+      "sourceArtifactRole": "TRADE_HISTORY",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:AAAUSDT:910000002502",
+          "sourceRowNumber": 2
+        }
+      ],
+      "sourceRowNumber": 2,
+      "syntheticSourceRecordKey": "trade:AAAUSDT:910000002502"
+    },
+    {
+      "canonicalRecordId": "above-rounding-tolerance:trade:910000002502:fee",
+      "fee": {
+        "asset": "USDT",
+        "balanceEffect": {
+          "scale": 2,
+          "unscaled": "0"
+        },
+        "effect": "ZERO",
+        "sourceAmount": {
+          "scale": 2,
+          "unscaled": "0"
+        }
+      },
+      "instrument": {
+        "instrumentId": "BINANCE:USDS_FUTURES:AAAUSDT",
+        "venueSymbol": "AAAUSDT"
+      },
+      "occurredAt": "2026-01-02T01:01:01.000000Z",
+      "recordType": "FEE",
+      "sourceArtifactRole": "TRADE_HISTORY",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:AAAUSDT:910000002502",
+          "sourceRowNumber": 2
+        }
+      ],
+      "sourceRowNumber": 2,
+      "syntheticSourceRecordKey": "trade:AAAUSDT:910000002502"
+    },
+    {
+      "canonicalRecordId": "above-rounding-tolerance:trade:910000002502:pnl",
+      "instrument": {
+        "instrumentId": "BINANCE:USDS_FUTURES:AAAUSDT",
+        "venueSymbol": "AAAUSDT"
+      },
+      "occurredAt": "2026-01-02T01:01:01.000000Z",
+      "recordType": "VENUE_REPORTED_PNL",
+      "reportedRealizedPnl": {
+        "amount": {
+          "scale": 3,
+          "unscaled": "2006"
+        },
+        "asset": "USDT"
+      },
+      "sourceArtifactRole": "TRADE_HISTORY",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:AAAUSDT:910000002502",
+          "sourceRowNumber": 2
+        }
+      ],
+      "sourceRowNumber": 2,
+      "syntheticSourceRecordKey": "trade:AAAUSDT:910000002502"
+    },
+    {
+      "averageClosePrice": {
+        "scale": 2,
+        "unscaled": "1200"
+      },
+      "canonicalRecordId": "above-rounding-tolerance:position:1:summary",
+      "closedInterval": {
+        "endExclusive": "2026-01-02T01:02:00.000000Z",
+        "startInclusive": "2026-01-02T01:01:00.000000Z"
+      },
+      "closedVolume": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "closingPnl": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "200"
+        },
+        "asset": "USDT"
+      },
+      "direction": "LONG",
+      "entryPrice": {
+        "scale": 2,
+        "unscaled": "1000"
+      },
+      "instrument": {
+        "instrumentId": "BINANCE:USDS_FUTURES:AAAUSDT",
+        "venueSymbol": "AAAUSDT"
+      },
+      "marginMode": "ISOLATED",
+      "maxQuantity": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "openedInterval": {
+        "endExclusive": "2026-01-02T01:01:00.000000Z",
+        "startInclusive": "2026-01-02T01:00:00.000000Z"
+      },
+      "recordType": "VENUE_POSITION_SUMMARY",
+      "sourceArtifactRole": "POSITION_HISTORY",
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1
+        }
+      ],
+      "sourceRowNumber": 1,
+      "status": "Closed",
+      "syntheticSourceRecordKey": "position:position-history:1"
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

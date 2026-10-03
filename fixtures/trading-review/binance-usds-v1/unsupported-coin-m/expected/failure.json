@@ -1,0 +1,18 @@
+{
+  "createdLedgerRevision": false,
+  "expectedLogClassification": "WARN",
+  "failureCategory": "PRODUCT",
+  "failureCode": "UNSUPPORTED_PRODUCT",
+  "fixtureId": "unsupported-coin-m",
+  "importStatus": "REJECTED",
+  "maskedEvidence": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "hashPrefix": "824549308705",
+      "sourceRowNumber": 1
+    }
+  ],
+  "retryable": true,
+  "schemaVersion": "1.0.0",
+  "userFacingMeaning": "현재 지원하는 USDⓈ-M Linear Perpetual 자료가 아니므로 지원 상품 export가 필요합니다."
+}

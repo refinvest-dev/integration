@@ -1,0 +1,18 @@
+{
+  "createdLedgerRevision": false,
+  "expectedLogClassification": "WARN",
+  "failureCategory": "SCHEMA",
+  "failureCode": "UNSUPPORTED_SOURCE_SCHEMA",
+  "fixtureId": "unsupported-source-schema",
+  "importStatus": "REJECTED",
+  "maskedEvidence": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "hashPrefix": "eb93b35cc379",
+      "sourceRowNumber": 1
+    }
+  ],
+  "retryable": true,
+  "schemaVersion": "1.0.0",
+  "userFacingMeaning": "지원하는 Binance V1 header 의미와 달라 지원 export 형식이 필요합니다."
+}

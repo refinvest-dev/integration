@@ -1,4 +1,8 @@
 {
+  "acceptanceScenarioIds": [
+    "TR-ACC-IMPORT-001",
+    "TR-ACC-RECON-001"
+  ],
   "artifacts": [
     {
       "path": "trade-history.csv",
@@ -13,6 +17,9 @@
       "sizeBytes": 209
     }
   ],
+  "canonicalSchemaVersion": "1.0.0",
+  "category": "ACCEPTED_AND_ELIGIBLE",
+  "contextScenarioId": "TR-RECON-SCENARIO-01",
   "declaredPositionMode": "ONE_WAY",
   "description": "단일 Long 진입 후 전량 청산",
   "expectedCanonicalRecordCount": 7,
@@ -40,19 +47,22 @@
       "unscaled": "1"
     }
   },
+  "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
   "normalizerVersion": "fixture-v1",
+  "physicalDialectValidation": "SYNTHETIC_ONLY",
   "productFamily": "LINEAR_PERPETUAL",
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
   "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
   "reviewTimezone": "Asia/Seoul",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "settlementAsset": "USDT",
-  "sourceDialect": {
+  "sourceDialects": {
     "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
     "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
   },
   "sourceTimezone": "Asia/Seoul",
   "tags": [
-    "ACCEPTED_ELIGIBLE",
+    "ACCEPTED_AND_ELIGIBLE",
     "SYNTHETIC",
     "NON_PRODUCTION"
   ]

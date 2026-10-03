@@ -1,0 +1,38 @@
+{
+  "allocations": [],
+  "canonicalManifestHash": "a30136a90c0fd2c5d57cb778d8ebde473ba22965008d37c8e49d4eacc552e6e1",
+  "canonicalManifestHashInputs": {
+    "canonicalRecordContentHash": "db0f330b079804d3c3a191fd0489158a2d8e741e6c956443cf2a1533ffdd9d02",
+    "canonicalSchemaVersion": "1.0.0",
+    "instrumentTermsHash": "5e458341f034961318f4d5d33cedda47717979a8480d3c7f1c05ef8031f0aad5",
+    "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
+    "normalizerVersion": "fixture-v1",
+    "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "sourceArtifactHashes": {
+      "POSITION_HISTORY": "6ebdf9cc0da0c08ed54bbd089803a9aebdb5ad462425b0ab8fd54d82c98dc7e9",
+      "TRADE_HISTORY": "3bcd40c2ac4e0a054d694d747edff0575fdf88b49973ad75cd8215098e547132"
+    }
+  },
+  "canonicalSchemaVersion": "1.0.0",
+  "conservation": {
+    "feesByAsset": "NOT_EVALUATED",
+    "passed": null,
+    "quantity": "NOT_EVALUATED",
+    "reportedPnl": "NOT_EVALUATED"
+  },
+  "episodes": [],
+  "fixtureId": "invalid-trade-id",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "FILE_FORMAT_INVALID"
+  },
+  "instrumentTermsVersion": "AAAUSDT_FIXTURE_TERMS_V1",
+  "manifestSchemaVersion": "1.1.0",
+  "normalizerVersion": "fixture-v1",
+  "orderedExecutionKeysByInstrument": {},
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "sourceRecordSetHash": "db0f330b079804d3c3a191fd0489158a2d8e741e6c956443cf2a1533ffdd9d02",
+  "summaryMatches": []
+}
