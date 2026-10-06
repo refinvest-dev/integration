@@ -1,0 +1,14 @@
+{
+  "createdLedgerRevision": false,
+  "failureCode": "RECORD_CONFLICT",
+  "fixtureId": "execution-identity-conflict",
+  "importStatus": "REJECTED",
+  "safeEvidence": {
+    "artifactRoles": [
+      "TRADE_HISTORY",
+      "POSITION_HISTORY"
+    ],
+    "containsRawValues": false
+  },
+  "schemaVersion": "3.0.0"
+}

@@ -1,6 +1,9 @@
 fixtures/trading-review/binance-usds-v1/** text eol=lf
 scripts/verify-trading-review-fixtures.py text eol=lf
 scripts/verify-trading-review-fixtures.ps1 text eol=lf
+scripts/trading_review_raw_v3_validator.py text eol=lf
 fixtures/trading-review/analytics-v1/** text eol=lf
 scripts/verify-trading-analytics-fixtures.py text eol=lf
 scripts/verify-trading-analytics-fixtures.ps1 text eol=lf
+fixtures/trading-review/binance-usds-v1-raw-v3/** text eol=lf
+fixtures/trading-review/binance-usds-v1-raw-v3/**/*.csv -text -eol whitespace=cr-at-eol

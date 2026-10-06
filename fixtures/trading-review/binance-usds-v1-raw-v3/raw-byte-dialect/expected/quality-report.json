@@ -1,0 +1,49 @@
+{
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:01.000000Z",
+      "rowCount": 2,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:01.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordCount": 7,
+  "commonAnalyzableInterval": {
+    "endInclusive": "2026-01-02T01:05:01.000000Z",
+    "startInclusive": "2026-01-02T01:00:01.000000Z"
+  },
+  "eligibleEpisodeCount": 1,
+  "excludedEpisodeCount": 0,
+  "excludedReasonCounts": {},
+  "fixtureId": "raw-byte-dialect",
+  "ignoredNonTradingRowCounts": {
+    "POSITION_HISTORY": 0,
+    "TRADE_HISTORY": 0
+  },
+  "qualityStatus": "ACCEPTABLE",
+  "reconciliationStatusCounts": {
+    "EXACT": 1
+  },
+  "rowCountsByArtifactRole": {
+    "POSITION_HISTORY": 1,
+    "TRADE_HISTORY": 2
+  },
+  "schemaVersion": "3.0.0",
+  "validationIssues": []
+}

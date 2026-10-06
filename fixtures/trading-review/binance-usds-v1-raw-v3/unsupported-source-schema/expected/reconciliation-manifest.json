@@ -1,0 +1,50 @@
+{
+  "allocations": [],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": null,
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": null,
+      "rowCount": 0,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordSetHash": "172a3887ff0f06cd49c0c943082411713161876203d6e5641720b805ae25989d",
+  "cashFlowConservationPassed": null,
+  "commonAnalyzableInterval": null,
+  "evidenceLinks": [],
+  "fixtureId": "unsupported-source-schema",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "UNSUPPORTED_SOURCE_SCHEMA"
+  },
+  "inputHash": "e5fb87bd82ad42c6b3fe4a33c08f64981076510b994c1d008425a6d83e4d5da2",
+  "manifestHash": "e79270d65a074969e6313eefba286566303d6e2f6d3fb2851b03dd7cd5e4c048",
+  "manifestVersion": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3",
+  "orderedExecutionKeysByInstrument": {},
+  "quantityConservationPassed": null,
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewUnits": [],
+  "sourceArtifactContentHashes": {
+    "POSITION_HISTORY": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+    "TRADE_HISTORY": "07a8d23eb48640fbe3074ed0634b2d3ab26bcce2c62964305f61266f7447d874"
+  },
+  "summaryMatches": [],
+  "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+}

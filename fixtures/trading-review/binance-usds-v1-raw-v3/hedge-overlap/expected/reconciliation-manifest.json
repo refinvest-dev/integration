@@ -1,0 +1,53 @@
+{
+  "allocations": [],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:10:01.000000Z",
+      "rowCount": 3,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:00.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:10:00.000000Z",
+      "rowCount": 2,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordSetHash": "19e50e4525b09cdbf0543bf0d5627f56671220d0a3e48b758272d83f412f0e5c",
+  "cashFlowConservationPassed": null,
+  "commonAnalyzableInterval": {
+    "endInclusive": "2026-01-02T01:10:00.000000Z",
+    "startInclusive": "2026-01-02T01:00:01.000000Z"
+  },
+  "evidenceLinks": [],
+  "fixtureId": "hedge-overlap",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "UNSUPPORTED_POSITION_MODE"
+  },
+  "inputHash": "2812853ebd7fe9e1664ac88a091d1564cf4614de7b4b4b9b54b606ddd664bd27",
+  "manifestHash": "dc7247402dee3b5eb60a7c379ec8cc1cfd2c73a7ec7c09a6957ca60668d14a4f",
+  "manifestVersion": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3",
+  "orderedExecutionKeysByInstrument": {},
+  "quantityConservationPassed": null,
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewUnits": [],
+  "sourceArtifactContentHashes": {
+    "POSITION_HISTORY": "d2798cbc326cf6bf8e00cf77b7bb41aef8b35fc8ca51f10da9bfe71f72a67b10",
+    "TRADE_HISTORY": "470f04f23a84321f514ad88b09da91ce2201e877dde63b06e32cafb37b740a4d"
+  },
+  "summaryMatches": [],
+  "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+}

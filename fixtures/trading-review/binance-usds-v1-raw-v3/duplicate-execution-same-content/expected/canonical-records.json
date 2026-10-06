@@ -1,0 +1,313 @@
+{
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:01.000000Z",
+      "rowCount": 3,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:01.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "fixtureId": "duplicate-execution-same-content",
+  "records": [
+    {
+      "executionOrigin": "UNKNOWN",
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F17_SYNTH_A",
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "price": {
+        "scale": 2,
+        "unscaled": "1000"
+      },
+      "quantity": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "rawOrderId": "841700001601",
+      "rawTradeId": "831700001601",
+      "recordHash": "b8ca00e756fe702677872cb654020fc4ba617650a4d30b9a15440f9dc04766e9",
+      "recordId": "duplicate-execution-same-content:trade:831700001601:execution",
+      "recordType": "EXECUTION",
+      "side": "BUY",
+      "sourceAmount": {
+        "scale": 2,
+        "unscaled": "1000"
+      },
+      "sourceEvidenceSnapshotIds": [
+        "evidence:duplicate-execution-same-content:trade_history:1",
+        "evidence:duplicate-execution-same-content:trade_history:2"
+      ],
+      "sourceExecutionKey": "trade:RV3F17_SYNTH_A:831700001601",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001601",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "b16327ab23f56d5788faa851be312b6686e262a7e54aa74350cad88d8ad8096f"
+        },
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001601",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "b16327ab23f56d5788faa851be312b6686e262a7e54aa74350cad88d8ad8096f"
+        }
+      ],
+      "venueSymbol": "RV3F17_SYNTH_A"
+    },
+    {
+      "feeKind": "ZERO",
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F17_SYNTH_A",
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "recordHash": "391cf40891b234594624e2f9409d2715d5012fa8a18bdf650319747ed4fb9278",
+      "recordId": "duplicate-execution-same-content:trade:831700001601:fee",
+      "recordType": "FEE",
+      "sourceAmount": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "0"
+        },
+        "asset": "USDT"
+      },
+      "sourceEvidenceSnapshotIds": [
+        "evidence:duplicate-execution-same-content:trade_history:1",
+        "evidence:duplicate-execution-same-content:trade_history:2"
+      ],
+      "sourceExecutionKey": "trade:RV3F17_SYNTH_A:831700001601",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001601",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "b16327ab23f56d5788faa851be312b6686e262a7e54aa74350cad88d8ad8096f"
+        },
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001601",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "b16327ab23f56d5788faa851be312b6686e262a7e54aa74350cad88d8ad8096f"
+        }
+      ],
+      "venueSymbol": "RV3F17_SYNTH_A"
+    },
+    {
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F17_SYNTH_A",
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "realizedPnl": {
+        "amount": {
+          "scale": 0,
+          "unscaled": "0"
+        },
+        "asset": "USDT"
+      },
+      "recordHash": "572486fd8bdf1b50dddc7a90c58d1dfbfc8583be24700771c018da8231bc7684",
+      "recordId": "duplicate-execution-same-content:trade:831700001601:pnl",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:duplicate-execution-same-content:trade_history:1",
+        "evidence:duplicate-execution-same-content:trade_history:2"
+      ],
+      "sourceExecutionKey": "trade:RV3F17_SYNTH_A:831700001601",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001601",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "b16327ab23f56d5788faa851be312b6686e262a7e54aa74350cad88d8ad8096f"
+        },
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001601",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "b16327ab23f56d5788faa851be312b6686e262a7e54aa74350cad88d8ad8096f"
+        }
+      ],
+      "venueSymbol": "RV3F17_SYNTH_A"
+    },
+    {
+      "executionOrigin": "UNKNOWN",
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F17_SYNTH_A",
+      "occurredAt": "2026-01-02T01:05:01.000000Z",
+      "price": {
+        "scale": 2,
+        "unscaled": "1100"
+      },
+      "quantity": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "rawOrderId": "841700001602",
+      "rawTradeId": "831700001602",
+      "recordHash": "99be7ab1ef9e09faa2979a1fd5dacea5f612bf4f7c77ae9f5dd7afc389b79b96",
+      "recordId": "duplicate-execution-same-content:trade:831700001602:execution",
+      "recordType": "EXECUTION",
+      "side": "SELL",
+      "sourceAmount": {
+        "scale": 2,
+        "unscaled": "1100"
+      },
+      "sourceEvidenceSnapshotIds": [
+        "evidence:duplicate-execution-same-content:trade_history:3"
+      ],
+      "sourceExecutionKey": "trade:RV3F17_SYNTH_A:831700001602",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001602",
+          "sourceRowNumber": 3,
+          "sourceRowSha256": "639a2a0d15f613a14b9e450bcf0f403128414a8fe8b3b9b1d65b57f205b303d1"
+        }
+      ],
+      "venueSymbol": "RV3F17_SYNTH_A"
+    },
+    {
+      "feeKind": "ZERO",
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F17_SYNTH_A",
+      "occurredAt": "2026-01-02T01:05:01.000000Z",
+      "recordHash": "c706466645db226c79a2407e58dbd19d5c6c2514f82a7d74515674cb8adeecde",
+      "recordId": "duplicate-execution-same-content:trade:831700001602:fee",
+      "recordType": "FEE",
+      "sourceAmount": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "0"
+        },
+        "asset": "USDT"
+      },
+      "sourceEvidenceSnapshotIds": [
+        "evidence:duplicate-execution-same-content:trade_history:3"
+      ],
+      "sourceExecutionKey": "trade:RV3F17_SYNTH_A:831700001602",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001602",
+          "sourceRowNumber": 3,
+          "sourceRowSha256": "639a2a0d15f613a14b9e450bcf0f403128414a8fe8b3b9b1d65b57f205b303d1"
+        }
+      ],
+      "venueSymbol": "RV3F17_SYNTH_A"
+    },
+    {
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F17_SYNTH_A",
+      "occurredAt": "2026-01-02T01:05:01.000000Z",
+      "realizedPnl": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "100"
+        },
+        "asset": "USDT"
+      },
+      "recordHash": "257c6ae6a256b7811f5a255be1ac93dfe76fe05130299b8166a7329947b5233a",
+      "recordId": "duplicate-execution-same-content:trade:831700001602:pnl",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:duplicate-execution-same-content:trade_history:3"
+      ],
+      "sourceExecutionKey": "trade:RV3F17_SYNTH_A:831700001602",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F17_SYNTH_A:831700001602",
+          "sourceRowNumber": 3,
+          "sourceRowSha256": "639a2a0d15f613a14b9e450bcf0f403128414a8fe8b3b9b1d65b57f205b303d1"
+        }
+      ],
+      "venueSymbol": "RV3F17_SYNTH_A"
+    },
+    {
+      "averageClosePrice": {
+        "scale": 2,
+        "unscaled": "1100"
+      },
+      "closedAt": "2026-01-02T01:05:01.000000Z",
+      "closedVolume": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "closingPnl": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "100"
+        },
+        "asset": "USDT"
+      },
+      "direction": "LONG",
+      "entryPrice": {
+        "scale": 2,
+        "unscaled": "1000"
+      },
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F17_SYNTH_A",
+      "marginMode": "ISOLATED",
+      "maxOpenInterest": {
+        "scale": 0,
+        "unscaled": "1"
+      },
+      "openedAt": "2026-01-02T01:00:01.000000Z",
+      "recordHash": "c6586747c2c26cf0554cdecfa6adea89bf78029a59bbca5511ec13ea5abefd84",
+      "recordId": "duplicate-execution-same-content:position:1:summary",
+      "recordType": "VENUE_POSITION_SUMMARY",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:duplicate-execution-same-content:position_history:1"
+      ],
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "6ed671844c20e08cf8ebfe15170f27ba32a9396e51acdbba7aeb4eb12215a011"
+        }
+      ],
+      "sourceStatus": "CLOSED",
+      "venueSymbol": "RV3F17_SYNTH_A"
+    }
+  ],
+  "schemaVersion": "FIXTURE_METADATA_CANONICAL_SCHEMA_V3",
+  "sourceEvidenceSnapshots": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "dialect": "BINANCE_USDS_TRADE_HISTORY_V1",
+      "evidenceKind": "RETAINED_SNAPSHOT",
+      "id": "evidence:duplicate-execution-same-content:trade_history:1",
+      "sourceRowHash": "b16327ab23f56d5788faa851be312b6686e262a7e54aa74350cad88d8ad8096f",
+      "sourceRowNumber": 1
+    },
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "dialect": "BINANCE_USDS_TRADE_HISTORY_V1",
+      "evidenceKind": "RETAINED_SNAPSHOT",
+      "id": "evidence:duplicate-execution-same-content:trade_history:2",
+      "sourceRowHash": "b16327ab23f56d5788faa851be312b6686e262a7e54aa74350cad88d8ad8096f",
+      "sourceRowNumber": 2
+    },
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "dialect": "BINANCE_USDS_TRADE_HISTORY_V1",
+      "evidenceKind": "RETAINED_SNAPSHOT",
+      "id": "evidence:duplicate-execution-same-content:trade_history:3",
+      "sourceRowHash": "639a2a0d15f613a14b9e450bcf0f403128414a8fe8b3b9b1d65b57f205b303d1",
+      "sourceRowNumber": 3
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "dialect": "BINANCE_USDS_POSITION_HISTORY_V1",
+      "evidenceKind": "RETAINED_SNAPSHOT",
+      "id": "evidence:duplicate-execution-same-content:position_history:1",
+      "sourceRowHash": "6ed671844c20e08cf8ebfe15170f27ba32a9396e51acdbba7aeb4eb12215a011",
+      "sourceRowNumber": 1
+    }
+  ]
+}

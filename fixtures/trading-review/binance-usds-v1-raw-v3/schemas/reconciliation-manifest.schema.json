@@ -1,0 +1,123 @@
+{
+  "$defs": {
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRole": {
+          "enum": [
+            "TRADE_HISTORY",
+            "POSITION_HISTORY"
+          ]
+        },
+        "coverageCompleteness": {
+          "const": "NOT_PROVEN"
+        },
+        "earliestObservedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fixtureCompletenessScope": {
+          "const": "SYNTHETIC_SCENARIO_ONLY"
+        },
+        "latestObservedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rowCount": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sourceTimezone": {
+          "type": "string"
+        },
+        "timestampPrecision": {
+          "const": "SECOND"
+        },
+        "venueExportCompletenessAsserted": {
+          "const": false
+        }
+      },
+      "required": [
+        "artifactRole",
+        "earliestObservedAt",
+        "latestObservedAt",
+        "rowCount",
+        "sourceTimezone",
+        "timestampPrecision",
+        "coverageCompleteness",
+        "fixtureCompletenessScope",
+        "venueExportCompletenessAsserted"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "allocations": {
+      "type": "array"
+    },
+    "artifactCoverages": {
+      "items": {
+        "$ref": "#/$defs/coverage"
+      },
+      "type": "array"
+    },
+    "canonicalRecordSetHash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "evidenceLinks": {
+      "type": "array"
+    },
+    "manifestHash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "manifestVersion": {
+      "const": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3"
+    },
+    "reconciliationVersion": {
+      "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1"
+    },
+    "reconstructionPolicyVersion": {
+      "const": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1"
+    },
+    "reviewUnits": {
+      "type": "array"
+    },
+    "summaryMatches": {
+      "type": "array"
+    },
+    "versionSetHash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "manifestVersion",
+    "fixtureId",
+    "inputHash",
+    "manifestHash",
+    "canonicalRecordSetHash",
+    "sourceArtifactContentHashes",
+    "versionSetHash",
+    "reconstructionPolicyVersion",
+    "reconciliationVersion",
+    "artifactCoverages",
+    "commonAnalyzableInterval",
+    "orderedExecutionKeysByInstrument",
+    "reviewUnits",
+    "allocations",
+    "summaryMatches",
+    "evidenceLinks",
+    "quantityConservationPassed",
+    "cashFlowConservationPassed",
+    "importResult"
+  ],
+  "title": "Trading Review raw v3 reconciliation manifest",
+  "type": "object"
+}

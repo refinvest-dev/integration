@@ -1,0 +1,14 @@
+{
+  "createdLedgerRevision": false,
+  "failureCode": "FILE_FORMAT_INVALID",
+  "fixtureId": "invalid-numeric-value",
+  "importStatus": "REJECTED",
+  "safeEvidence": {
+    "artifactRoles": [
+      "TRADE_HISTORY",
+      "POSITION_HISTORY"
+    ],
+    "containsRawValues": false
+  },
+  "schemaVersion": "3.0.0"
+}

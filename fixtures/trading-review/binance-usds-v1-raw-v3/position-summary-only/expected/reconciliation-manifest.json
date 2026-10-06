@@ -1,0 +1,135 @@
+{
+  "allocations": [],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": null,
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": null,
+      "rowCount": 0,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:00.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:00.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordSetHash": "a7dc4194049e6bca9d2ecca9396fc16970685237cecbd5dd60b8d76aa78a28c0",
+  "cashFlowConservationPassed": true,
+  "commonAnalyzableInterval": null,
+  "evidenceLinks": [],
+  "fixtureId": "position-summary-only",
+  "importResult": {
+    "accepted": true,
+    "failureCode": null
+  },
+  "inputHash": "85e2ed7d07c9d0db4f3f63a510505835c3cfeb7bd55a0f8b5736269b3c5ea067",
+  "manifestHash": "2636b2c6956e6c661ede93047e160deaf110752d612bf10a251d54b99f936dc9",
+  "manifestVersion": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3",
+  "orderedExecutionKeysByInstrument": {},
+  "quantityConservationPassed": true,
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewUnits": [
+    {
+      "allocations": [],
+      "averageEntryPrice": null,
+      "averageExitPrice": null,
+      "capability": [
+        "POSITION_MODE_USER_DECLARED",
+        "VENUE_POSITION_SUMMARY"
+      ],
+      "closedAt": null,
+      "closingVolume": null,
+      "direction": "LONG",
+      "eligible": false,
+      "exclusionReasons": [
+        "POSITION_SUMMARY_WITHOUT_TRADES"
+      ],
+      "executionRecordIds": [],
+      "grossTradingPnl": null,
+      "initialNotional": null,
+      "initialQuantity": null,
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F15_SYNTH_A",
+      "maxNotional": null,
+      "maxQuantity": null,
+      "netTradingPnl": null,
+      "openedAt": null,
+      "openingVolume": null,
+      "reconciliationStatus": "INCOMPLETE_TRADES",
+      "reconstructionStatus": "INCONSISTENT",
+      "reviewUnitId": "ep:position-summary-only:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "16f76c3eeb1e44373ede9f2ee98bbb07fc04ab0a0fe8c7304ac6804aa6a9515e"
+        }
+      ],
+      "tradingFee": null,
+      "tradingFeesByAsset": {},
+      "type": "FUTURES_POSITION_EPISODE",
+      "venuePositionPnl": {
+        "scale": 2,
+        "unscaled": "100"
+      },
+      "venuePositionSummaryRecordIds": [
+        "position-summary-only:position:1:summary"
+      ]
+    }
+  ],
+  "sourceArtifactContentHashes": {
+    "POSITION_HISTORY": "b3a38ea8371608800ff17d79561ad8a40e16f4da57a428888a0eb1b7e6cd2573",
+    "TRADE_HISTORY": "18426d3398ee1995917844198e26f2083a837f899fab7261e5fa89f2f898a77a"
+  },
+  "summaryMatches": [
+    {
+      "candidateReviewUnitIds": [],
+      "deltas": {
+        "grossTradingPnl": {
+          "scale": 0,
+          "unscaled": "0"
+        }
+      },
+      "exclusionReason": "POSITION_SUMMARY_WITHOUT_TRADES",
+      "reviewUnitId": null,
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "16f76c3eeb1e44373ede9f2ee98bbb07fc04ab0a0fe8c7304ac6804aa6a9515e"
+        }
+      ],
+      "status": "INCOMPLETE_TRADES",
+      "summaryRecordId": "position-summary-only:position:1:summary",
+      "summarySourceRow": 1,
+      "tolerances": {
+        "money": {
+          "scale": 3,
+          "unscaled": "5"
+        },
+        "price": {
+          "scale": 3,
+          "unscaled": "5"
+        },
+        "quantity": {
+          "scale": 1,
+          "unscaled": "5"
+        }
+      }
+    }
+  ],
+  "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+}

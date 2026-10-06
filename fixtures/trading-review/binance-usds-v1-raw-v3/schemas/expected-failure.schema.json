@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "createdLedgerRevision": {
+      "const": false
+    },
+    "importStatus": {
+      "const": "REJECTED"
+    },
+    "schemaVersion": {
+      "const": "3.0.0"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "importStatus",
+    "failureCode",
+    "createdLedgerRevision",
+    "safeEvidence"
+  ],
+  "title": "Trading Review raw v3 expected failure",
+  "type": "object"
+}

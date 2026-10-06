@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRole": {
+          "enum": [
+            "TRADE_HISTORY",
+            "POSITION_HISTORY"
+          ]
+        },
+        "coverageCompleteness": {
+          "const": "NOT_PROVEN"
+        },
+        "earliestObservedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fixtureCompletenessScope": {
+          "const": "SYNTHETIC_SCENARIO_ONLY"
+        },
+        "latestObservedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rowCount": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sourceTimezone": {
+          "type": "string"
+        },
+        "timestampPrecision": {
+          "const": "SECOND"
+        },
+        "venueExportCompletenessAsserted": {
+          "const": false
+        }
+      },
+      "required": [
+        "artifactRole",
+        "earliestObservedAt",
+        "latestObservedAt",
+        "rowCount",
+        "sourceTimezone",
+        "timestampPrecision",
+        "coverageCompleteness",
+        "fixtureCompletenessScope",
+        "venueExportCompletenessAsserted"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "artifactCoverages": {
+      "items": {
+        "$ref": "#/$defs/coverage"
+      },
+      "type": "array"
+    },
+    "qualityStatus": {
+      "enum": [
+        "ACCEPTABLE",
+        "ACCEPTABLE_WITH_EXCLUSIONS",
+        "REJECTED"
+      ]
+    },
+    "schemaVersion": {
+      "const": "3.0.0"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "qualityStatus",
+    "rowCountsByArtifactRole",
+    "ignoredNonTradingRowCounts",
+    "validationIssues",
+    "reconciliationStatusCounts",
+    "excludedReasonCounts",
+    "artifactCoverages",
+    "commonAnalyzableInterval",
+    "eligibleEpisodeCount",
+    "excludedEpisodeCount"
+  ],
+  "title": "Trading Review raw v3 quality report",
+  "type": "object"
+}

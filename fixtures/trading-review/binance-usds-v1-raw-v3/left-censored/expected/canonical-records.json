@@ -1,0 +1,185 @@
+{
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T00:50:00.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:00:00.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "fixtureId": "left-censored",
+  "records": [
+    {
+      "executionOrigin": "UNKNOWN",
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F09_SYNTH_A",
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "price": {
+        "scale": 2,
+        "unscaled": "900"
+      },
+      "quantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "rawOrderId": "840900000901",
+      "rawTradeId": "830900000901",
+      "recordHash": "c4329a87dc09583adef639c214557aed873ff31835dc539881e0b4f126cc96e5",
+      "recordId": "left-censored:trade:830900000901:execution",
+      "recordType": "EXECUTION",
+      "side": "BUY",
+      "sourceAmount": {
+        "scale": 2,
+        "unscaled": "1800"
+      },
+      "sourceEvidenceSnapshotIds": [
+        "evidence:left-censored:trade_history:1"
+      ],
+      "sourceExecutionKey": "trade:RV3F09_SYNTH_A:830900000901",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F09_SYNTH_A:830900000901",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "b2a57544824e07e640d731eddf0a76d6cddc4f925c0e02c45b81e14ef15ce283"
+        }
+      ],
+      "venueSymbol": "RV3F09_SYNTH_A"
+    },
+    {
+      "feeKind": "ZERO",
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F09_SYNTH_A",
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "recordHash": "ede64bc0500113acdc9cf14977469c66bd4e1664e785fe45d6e11927643e6a42",
+      "recordId": "left-censored:trade:830900000901:fee",
+      "recordType": "FEE",
+      "sourceAmount": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "0"
+        },
+        "asset": "USDT"
+      },
+      "sourceEvidenceSnapshotIds": [
+        "evidence:left-censored:trade_history:1"
+      ],
+      "sourceExecutionKey": "trade:RV3F09_SYNTH_A:830900000901",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F09_SYNTH_A:830900000901",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "b2a57544824e07e640d731eddf0a76d6cddc4f925c0e02c45b81e14ef15ce283"
+        }
+      ],
+      "venueSymbol": "RV3F09_SYNTH_A"
+    },
+    {
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F09_SYNTH_A",
+      "occurredAt": "2026-01-02T01:00:01.000000Z",
+      "realizedPnl": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "200"
+        },
+        "asset": "USDT"
+      },
+      "recordHash": "18178c4fd2143b6220fb0d44a0bc5ec78f105b1389fa4dfc66d462290930d812",
+      "recordId": "left-censored:trade:830900000901:pnl",
+      "recordType": "VENUE_REPORTED_PNL",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:left-censored:trade_history:1"
+      ],
+      "sourceExecutionKey": "trade:RV3F09_SYNTH_A:830900000901",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F09_SYNTH_A:830900000901",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "b2a57544824e07e640d731eddf0a76d6cddc4f925c0e02c45b81e14ef15ce283"
+        }
+      ],
+      "venueSymbol": "RV3F09_SYNTH_A"
+    },
+    {
+      "averageClosePrice": {
+        "scale": 2,
+        "unscaled": "900"
+      },
+      "closedAt": "2026-01-02T01:00:00.000000Z",
+      "closedVolume": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "closingPnl": {
+        "amount": {
+          "scale": 2,
+          "unscaled": "200"
+        },
+        "asset": "USDT"
+      },
+      "direction": "SHORT",
+      "entryPrice": {
+        "scale": 2,
+        "unscaled": "1000"
+      },
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F09_SYNTH_A",
+      "marginMode": "ISOLATED",
+      "maxOpenInterest": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "openedAt": "2026-01-02T00:50:00.000000Z",
+      "recordHash": "fa07992159f89579f0d54ce45d34245601c7929b565c90593f2a334821d8154f",
+      "recordId": "left-censored:position:1:summary",
+      "recordType": "VENUE_POSITION_SUMMARY",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:left-censored:position_history:1"
+      ],
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "8e669f962534697da28a302b485fac38473e35bc634089c146de70d8db5e88a0"
+        }
+      ],
+      "sourceStatus": "CLOSED",
+      "venueSymbol": "RV3F09_SYNTH_A"
+    }
+  ],
+  "schemaVersion": "FIXTURE_METADATA_CANONICAL_SCHEMA_V3",
+  "sourceEvidenceSnapshots": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "dialect": "BINANCE_USDS_TRADE_HISTORY_V1",
+      "evidenceKind": "RETAINED_SNAPSHOT",
+      "id": "evidence:left-censored:trade_history:1",
+      "sourceRowHash": "b2a57544824e07e640d731eddf0a76d6cddc4f925c0e02c45b81e14ef15ce283",
+      "sourceRowNumber": 1
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "dialect": "BINANCE_USDS_POSITION_HISTORY_V1",
+      "evidenceKind": "RETAINED_SNAPSHOT",
+      "id": "evidence:left-censored:position_history:1",
+      "sourceRowHash": "8e669f962534697da28a302b485fac38473e35bc634089c146de70d8db5e88a0",
+      "sourceRowNumber": 1
+    }
+  ]
+}

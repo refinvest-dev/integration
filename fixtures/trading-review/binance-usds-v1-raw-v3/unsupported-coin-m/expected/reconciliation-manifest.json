@@ -1,0 +1,53 @@
+{
+  "allocations": [],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:01.000000Z",
+      "rowCount": 2,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:00.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:00.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordSetHash": "961ec92240c83fb3d06ccd91c1314491bd02fb5fd268e44b63b510f17becaf0c",
+  "cashFlowConservationPassed": null,
+  "commonAnalyzableInterval": {
+    "endInclusive": "2026-01-02T01:05:00.000000Z",
+    "startInclusive": "2026-01-02T01:00:01.000000Z"
+  },
+  "evidenceLinks": [],
+  "fixtureId": "unsupported-coin-m",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "UNSUPPORTED_PRODUCT"
+  },
+  "inputHash": "4b316b29564def74a8bbd06119975eeb6dd93d553744c17dcd478c1b939c43d5",
+  "manifestHash": "24d5cc109a9753686e20c7cdcd4efbbd0708ad016f134e9e79cddcaa6a1246be",
+  "manifestVersion": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3",
+  "orderedExecutionKeysByInstrument": {},
+  "quantityConservationPassed": null,
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewUnits": [],
+  "sourceArtifactContentHashes": {
+    "POSITION_HISTORY": "8167c29f6bb1f2e27b28aafad6744d81b598dfabcf045462f051fdf669cc1c10",
+    "TRADE_HISTORY": "7374b643a3bd8eac7587db3089b8e64295f8c758b28cbc7ec7457b17124c614a"
+  },
+  "summaryMatches": [],
+  "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+}

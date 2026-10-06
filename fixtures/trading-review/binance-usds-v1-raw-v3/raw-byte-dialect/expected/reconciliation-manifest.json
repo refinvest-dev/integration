@@ -1,0 +1,358 @@
+{
+  "allocations": [
+    {
+      "action": "OPEN",
+      "allocatedFeeByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "2"
+        }
+      },
+      "allocatedQuantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "allocatedReportedPnl": {
+        "scale": 0,
+        "unscaled": "0"
+      },
+      "feeRecordId": "raw-byte-dialect:trade:833100000101:fee",
+      "recordId": "raw-byte-dialect:trade:833100000101:execution",
+      "reportedPnlRecordId": "raw-byte-dialect:trade:833100000101:pnl",
+      "reviewUnitId": "ep:raw-byte-dialect:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F31_SYNTH_A:833100000101",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "76951fd5662d912b53f75f1ad60d97700ba5776498e964d12499f9c647812aa9"
+        }
+      ]
+    },
+    {
+      "action": "CLOSE",
+      "allocatedFeeByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "2"
+        }
+      },
+      "allocatedQuantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "allocatedReportedPnl": {
+        "scale": 2,
+        "unscaled": "200"
+      },
+      "feeRecordId": "raw-byte-dialect:trade:833100000102:fee",
+      "recordId": "raw-byte-dialect:trade:833100000102:execution",
+      "reportedPnlRecordId": "raw-byte-dialect:trade:833100000102:pnl",
+      "reviewUnitId": "ep:raw-byte-dialect:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F31_SYNTH_A:833100000102",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "a6861a1b07f43880f68fd57cd6a22c97faa87489a7d935aa54763f77a8a5c191"
+        }
+      ]
+    }
+  ],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:01.000000Z",
+      "rowCount": 2,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:05:01.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordSetHash": "129ccffa052c9447776bf5cb23bc9c00dad95aeadcd12d3a67f5711e74ad077b",
+  "cashFlowConservationPassed": true,
+  "commonAnalyzableInterval": {
+    "endInclusive": "2026-01-02T01:05:01.000000Z",
+    "startInclusive": "2026-01-02T01:00:01.000000Z"
+  },
+  "evidenceLinks": [
+    {
+      "allocationRecordId": "raw-byte-dialect:trade:833100000101:execution",
+      "canonicalRecordIds": [
+        "raw-byte-dialect:trade:833100000101:execution",
+        "raw-byte-dialect:trade:833100000101:fee",
+        "raw-byte-dialect:trade:833100000101:pnl"
+      ],
+      "reviewUnitId": "ep:raw-byte-dialect:01",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:raw-byte-dialect:trade_history:1"
+      ]
+    },
+    {
+      "allocationRecordId": "raw-byte-dialect:trade:833100000102:execution",
+      "canonicalRecordIds": [
+        "raw-byte-dialect:trade:833100000102:execution",
+        "raw-byte-dialect:trade:833100000102:fee",
+        "raw-byte-dialect:trade:833100000102:pnl"
+      ],
+      "reviewUnitId": "ep:raw-byte-dialect:01",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:raw-byte-dialect:trade_history:2"
+      ]
+    }
+  ],
+  "fixtureId": "raw-byte-dialect",
+  "importResult": {
+    "accepted": true,
+    "failureCode": null
+  },
+  "inputHash": "a5d51c65fdf6ada71ef8779fba802b3d7a9e350cb64cbea83e9748a350418026",
+  "manifestHash": "52a2ae265ed6d5d30ad4372f1512e665c484a562605e81831b734811716932ca",
+  "manifestVersion": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3",
+  "orderedExecutionKeysByInstrument": {
+    "BINANCE:USDS_FUTURES:RV3F31_SYNTH_A": [
+      "trade:RV3F31_SYNTH_A:833100000101",
+      "trade:RV3F31_SYNTH_A:833100000102"
+    ]
+  },
+  "quantityConservationPassed": true,
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewUnits": [
+    {
+      "allocations": [
+        {
+          "action": "OPEN",
+          "allocatedFeeByAsset": {
+            "USDT": {
+              "scale": 2,
+              "unscaled": "2"
+            }
+          },
+          "allocatedQuantity": {
+            "scale": 0,
+            "unscaled": "2"
+          },
+          "allocatedReportedPnl": {
+            "scale": 0,
+            "unscaled": "0"
+          },
+          "feeRecordId": "raw-byte-dialect:trade:833100000101:fee",
+          "recordId": "raw-byte-dialect:trade:833100000101:execution",
+          "reportedPnlRecordId": "raw-byte-dialect:trade:833100000101:pnl",
+          "reviewUnitId": "ep:raw-byte-dialect:01",
+          "sourceProvenance": [
+            {
+              "artifactRole": "TRADE_HISTORY",
+              "sourceRecordKey": "trade:RV3F31_SYNTH_A:833100000101",
+              "sourceRowNumber": 1,
+              "sourceRowSha256": "76951fd5662d912b53f75f1ad60d97700ba5776498e964d12499f9c647812aa9"
+            }
+          ]
+        },
+        {
+          "action": "CLOSE",
+          "allocatedFeeByAsset": {
+            "USDT": {
+              "scale": 2,
+              "unscaled": "2"
+            }
+          },
+          "allocatedQuantity": {
+            "scale": 0,
+            "unscaled": "2"
+          },
+          "allocatedReportedPnl": {
+            "scale": 2,
+            "unscaled": "200"
+          },
+          "feeRecordId": "raw-byte-dialect:trade:833100000102:fee",
+          "recordId": "raw-byte-dialect:trade:833100000102:execution",
+          "reportedPnlRecordId": "raw-byte-dialect:trade:833100000102:pnl",
+          "reviewUnitId": "ep:raw-byte-dialect:01",
+          "sourceProvenance": [
+            {
+              "artifactRole": "TRADE_HISTORY",
+              "sourceRecordKey": "trade:RV3F31_SYNTH_A:833100000102",
+              "sourceRowNumber": 2,
+              "sourceRowSha256": "a6861a1b07f43880f68fd57cd6a22c97faa87489a7d935aa54763f77a8a5c191"
+            }
+          ]
+        }
+      ],
+      "averageEntryPrice": {
+        "denominator": {
+          "scale": 0,
+          "unscaled": "2"
+        },
+        "numerator": {
+          "scale": 2,
+          "unscaled": "2000"
+        }
+      },
+      "averageExitPrice": {
+        "denominator": {
+          "scale": 0,
+          "unscaled": "2"
+        },
+        "numerator": {
+          "scale": 2,
+          "unscaled": "2200"
+        }
+      },
+      "capability": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "MAX_EXPOSURE",
+        "POSITION_INCREASES",
+        "POSITION_MODE_OBSERVED_COMPATIBLE",
+        "POSITION_MODE_USER_DECLARED",
+        "VENUE_POSITION_SUMMARY",
+        "VENUE_REPORTED_PNL"
+      ],
+      "closedAt": "2026-01-02T01:05:01.000000Z",
+      "closingVolume": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "direction": "LONG",
+      "eligible": true,
+      "exclusionReasons": [],
+      "executionRecordIds": [
+        "raw-byte-dialect:trade:833100000101:execution",
+        "raw-byte-dialect:trade:833100000102:execution"
+      ],
+      "grossTradingPnl": {
+        "scale": 2,
+        "unscaled": "200"
+      },
+      "initialNotional": {
+        "scale": 2,
+        "unscaled": "2000"
+      },
+      "initialQuantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F31_SYNTH_A",
+      "maxNotional": {
+        "scale": 2,
+        "unscaled": "2000"
+      },
+      "maxQuantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "netTradingPnl": {
+        "scale": 2,
+        "unscaled": "196"
+      },
+      "openedAt": "2026-01-02T01:00:01.000000Z",
+      "openingVolume": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "reviewUnitId": "ep:raw-byte-dialect:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F31_SYNTH_A:833100000101",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "76951fd5662d912b53f75f1ad60d97700ba5776498e964d12499f9c647812aa9"
+        },
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F31_SYNTH_A:833100000102",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "a6861a1b07f43880f68fd57cd6a22c97faa87489a7d935aa54763f77a8a5c191"
+        },
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "064def34d8def522c8b061e7666d7569147fda7c5d3e4463f49e0d07b803b568"
+        }
+      ],
+      "tradingFee": {
+        "scale": 2,
+        "unscaled": "4"
+      },
+      "tradingFeesByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "4"
+        }
+      },
+      "type": "FUTURES_POSITION_EPISODE",
+      "venuePositionPnl": {
+        "scale": 2,
+        "unscaled": "200"
+      },
+      "venuePositionSummaryRecordIds": [
+        "raw-byte-dialect:position:1:summary"
+      ]
+    }
+  ],
+  "sourceArtifactContentHashes": {
+    "POSITION_HISTORY": "c3388229956d728e7231d7125024df931a26916f38506468b6fb105a1211e33b",
+    "TRADE_HISTORY": "24d1aa0bc5cd2b289612b3d27d818f8c7ee36380a7386241afab11267eee40cf"
+  },
+  "summaryMatches": [
+    {
+      "candidateReviewUnitIds": [
+        "ep:raw-byte-dialect:01"
+      ],
+      "deltas": {
+        "grossTradingPnl": {
+          "scale": 0,
+          "unscaled": "0"
+        }
+      },
+      "exclusionReason": null,
+      "reviewUnitId": "ep:raw-byte-dialect:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "064def34d8def522c8b061e7666d7569147fda7c5d3e4463f49e0d07b803b568"
+        }
+      ],
+      "status": "EXACT",
+      "summaryRecordId": "raw-byte-dialect:position:1:summary",
+      "summarySourceRow": 1,
+      "tolerances": {
+        "money": {
+          "scale": 3,
+          "unscaled": "5"
+        },
+        "price": {
+          "scale": 3,
+          "unscaled": "5"
+        },
+        "quantity": {
+          "scale": 1,
+          "unscaled": "5"
+        }
+      }
+    }
+  ],
+  "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+}

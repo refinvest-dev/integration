@@ -1,0 +1,14 @@
+{
+  "createdLedgerRevision": false,
+  "failureCode": "UNSUPPORTED_SOURCE_SCHEMA",
+  "fixtureId": "unsupported-source-schema",
+  "importStatus": "REJECTED",
+  "safeEvidence": {
+    "artifactRoles": [
+      "TRADE_HISTORY",
+      "POSITION_HISTORY"
+    ],
+    "containsRawValues": false
+  },
+  "schemaVersion": "3.0.0"
+}

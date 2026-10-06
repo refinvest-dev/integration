@@ -1,0 +1,14 @@
+{
+  "createdLedgerRevision": false,
+  "failureCode": "REQUIRED_COLUMN_MISSING",
+  "fixtureId": "required-column-missing",
+  "importStatus": "REJECTED",
+  "safeEvidence": {
+    "artifactRoles": [
+      "TRADE_HISTORY",
+      "POSITION_HISTORY"
+    ],
+    "containsRawValues": false
+  },
+  "schemaVersion": "3.0.0"
+}

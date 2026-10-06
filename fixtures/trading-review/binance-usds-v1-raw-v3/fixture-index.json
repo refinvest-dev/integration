@@ -1,0 +1,2046 @@
+{
+  "contextContract": {
+    "computeSnapshotPullRequest": 80,
+    "contextPullRequest": 29,
+    "coreSnapshotPullRequest": 57,
+    "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "sourceDialectVersionsByArtifactRole": {
+      "POSITION_HISTORY": "BINANCE_USDS_POSITION_HISTORY_V1",
+      "TRADE_HISTORY": "BINANCE_USDS_TRADE_HISTORY_V1"
+    }
+  },
+  "contextScenarios": [
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-01",
+      "fixtureId": "simple-long",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-02",
+      "fixtureId": "simple-short",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-03",
+      "fixtureId": "partial-entry",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-04",
+      "fixtureId": "partial-exit",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-05",
+      "fixtureId": "increase-and-reduce",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-06",
+      "fixtureId": "loss-context-increase",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-07",
+      "fixtureId": "long-to-short-reversal",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-08",
+      "fixtureId": "short-to-long-reversal",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-09",
+      "fixtureId": "left-censored",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-10",
+      "fixtureId": "right-censored",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-11",
+      "fixtureId": "same-timestamp-multiple-trades",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-12",
+      "fixtureId": "invalid-trade-id",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-13",
+      "fixtureId": "incomplete-trades",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-14",
+      "fixtureId": "episode-after-position-coverage",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-15",
+      "fixtureId": "position-summary-only",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-16",
+      "fixtureId": "exact-timestamp-non-unique-match",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-17",
+      "fixtureId": "duplicate-execution-same-content",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-18",
+      "fixtureId": "execution-identity-conflict",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-19",
+      "fixtureId": "fee-rebate",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-20",
+      "fixtureId": "different-fee-asset",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-21",
+      "fixtureId": "hedge-overlap",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-22",
+      "fixtureId": "unsupported-position-status",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-23",
+      "fixtureId": "position-pnl-mismatch",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-24",
+      "fixtureId": "within-rounding-tolerance",
+      "validationStatus": "IMPLEMENTED"
+    },
+    {
+      "contextScenarioId": "TR-RECON-SCENARIO-25",
+      "fixtureId": "above-rounding-tolerance",
+      "validationStatus": "IMPLEMENTED"
+    }
+  ],
+  "fixtureSetVersion": 3,
+  "fixtures": [
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-001",
+        "TR-ACC-RECON-001"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-01"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "bbd9b6071a1d80bd77fc517e43abbf2ef8cbf7c06bbdf762adba807eb39a3b63",
+          "sizeBytes": 9371
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "516be86e8f4edcdb279fddd31f1e58d62a782db63b8e0a3bff08a72da43f40c3",
+          "sizeBytes": 1472
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "f6cdc71f097ba2a54f0fb5fcf6376b15add5b7b640191fda1f2afbb78ed840f5",
+          "sizeBytes": 10724
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "b5a5b56b2639f62589313485fe3bde3772ed7ed2a13db83ff1f8ba19abf491d0",
+          "sizeBytes": 3638
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "219520c7e73a8da94df5b348ae76130553dceea76d93dcbd32bd3dd52a002199",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "8690ba24743abbf8f2b4369534fa45a5fedd23fb8ed93914c03b2cf2ec96a345",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "simple-long",
+      "path": "simple-long",
+      "sourceFixtureId": "simple-long",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-02"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "b47249a2209d8611490c8d643205eee36294ecaa3b8101b50497e610ed825781",
+          "sizeBytes": 9390
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "f320c6ec641fb25afd8d225c96a00680cf9eb6bb467f301251f17b81d97928ea",
+          "sizeBytes": 1473
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "ec037698e836028d01dddef098f2e0a626cbb03733f1c8b2bb4f2fcf080f4646",
+          "sizeBytes": 10761
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "ed1374bbd46429fe998517b0f2514311040fdb7e87d0ee3ef51af4d3f4ed0016",
+          "sizeBytes": 3588
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "78773802e305c84bd224123d6cc14c538d76d4c2dc223bfa046ccf3594119700",
+          "sizeBytes": 228
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "42ef3eeaa8de8f86e572f7ead4cb901d13396f0a708b757f7c364596b4c9d7b9",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "simple-short",
+      "path": "simple-short",
+      "sourceFixtureId": "simple-short",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-002"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-03"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "b2ed14caac77239050ba63d05ebcef00007eef47756f031046ac76dc2a2ac495",
+          "sizeBytes": 12772
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "cf198bdb6895c36ef9e8cb96b8d127ff3b7809e62c77e5973d20fb2ba5528634",
+          "sizeBytes": 1475
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "55a7aa7b65516731fc23c32010aa797935f6417784b5218b0c0f604df732f80f",
+          "sizeBytes": 13393
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "8a4aa591533a67f1c6a8bf220c54cdd578f085009046734617d0523be3732e4e",
+          "sizeBytes": 3615
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "646dda7b355d68634c23257fddf40ee32895b8b346e5704883b3070da73fa2a2",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "819f66fd0eec42ed60ea19aebf69db74a494ebfaabd53303fddfc83fd864ffb9",
+          "sizeBytes": 447
+        }
+      ],
+      "fixtureId": "partial-entry",
+      "path": "partial-entry",
+      "sourceFixtureId": "partial-entry",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-002"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-04"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "857b0b80ecedf2d8753dd2513782746cc96958db358b0fd12ade99ba14d91a9d",
+          "sizeBytes": 12750
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "cd26d4d35045c1c058ae53ad7ffb68f335a3f969f53bd4cce695d69018bd9790",
+          "sizeBytes": 1474
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "f8c35315fec75aba03698075b8ac3284b60d3c48e6eb769701d7a5e0b66faf71",
+          "sizeBytes": 13342
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "10f81c436587195857864d75b5ab47cec12fea1a63fcfb04f4cd4df42bdf0242",
+          "sizeBytes": 3614
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "46a1d1ad36d1e33c06ee3d2347a0bd1fe0fa7080b9cc19ce89f09db8deb8ce02",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "b73d0322508f56c86a350fe59b2ed83ec063117503b4e2d92c663154ac77270b",
+          "sizeBytes": 452
+        }
+      ],
+      "fixtureId": "partial-exit",
+      "path": "partial-exit",
+      "sourceFixtureId": "partial-exit",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-05"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "c674642f0ead742383199df62df3670498a7dbf1ee113db42d4683fcc871aaf8",
+          "sizeBytes": 16332
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "a9296945db46e40238eac0081143e20a1c45d49cd61abfd08898dc231c3a7706",
+          "sizeBytes": 1481
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "acd19f73549d0387de45dd9746e63200e5662e40ea4b267ee894d9d3294e08a7",
+          "sizeBytes": 16386
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "9ab4833208ad3e73ded0f53ffeda5e3cffc33d1c3cb0022cd2a4397973fa5566",
+          "sizeBytes": 3595
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "55f68cf29527986d214f21b4e96b775d6f2eaf429626a87969cb730b0cb0e3b3",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "8cf22fec2a543dc0f1c340e9991df344d66dfad58ae0d612f6bf36c534fe9a3f",
+          "sizeBytes": 568
+        }
+      ],
+      "fixtureId": "increase-and-reduce",
+      "path": "increase-and-reduce",
+      "sourceFixtureId": "increase-and-reduce",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-06"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "851bbd1a83aaff3d5f480d4c14d3958d6c808c694ca2f76a5fd8f29be8bbee5f",
+          "sizeBytes": 12975
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "fb5efb2b539162b70782c2a905b895eadd0390bc26ce1d01c615b4d11ad0d6a8",
+          "sizeBytes": 1483
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "476161cdf71c56b7e53e4aa16104e15266ee4bdefdc2716e0d3e88d7b8a78c61",
+          "sizeBytes": 13801
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "912654a7e4ad85a3891d9712dffb6a449acb4104e458674ee525f9ff7a0c71fc",
+          "sizeBytes": 3597
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "82c2280f1e3590fec59194c26bc89b9709007fa39d0e9a3666d868acdc7324c6",
+          "sizeBytes": 232
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "12fd02ee48e7c85d8056cfa9ae8f66b185e76bcfd7846a35f3a9b32ee4b35f04",
+          "sizeBytes": 445
+        }
+      ],
+      "fixtureId": "loss-context-increase",
+      "path": "loss-context-increase",
+      "sourceFixtureId": "loss-context-increase",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-003"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-07"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "9ba409cb59047af766609b6fa6462a141d1437e92d651125546b297e5ba1b23d",
+          "sizeBytes": 14684
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "ce0748217148e3aae5a621f60bb79b47c7f2d6fc5d9f48b5b871a7d13422e0f0",
+          "sizeBytes": 1484
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "24631675e30ff369b8f5bf3517173d1ad0cab57c42e40bf3cffcb96473512787",
+          "sizeBytes": 20477
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "6815e1aa0344d5c95a4ccb1151ec668431154d1c18ab3cb2a7216845153aadb1",
+          "sizeBytes": 3624
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "144114bc2e402060c18ad44dcecdf243c725d575b1b4043f9e51f898a619cc62",
+          "sizeBytes": 324
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "3a43c9856b09aa3ade1763dc7d9805f1ac8a6724341ef7ba4f72c8538cc6e659",
+          "sizeBytes": 449
+        }
+      ],
+      "fixtureId": "long-to-short-reversal",
+      "path": "long-to-short-reversal",
+      "sourceFixtureId": "long-to-short-reversal",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-08"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "0a6e4c6ef1348382d41fff1859a2a0114bb32a6092297b2f7e53a4696355b46e",
+          "sizeBytes": 14690
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "5095d1d020f4b959260eaf304211860f66e218fc9f309f09191a9a1a2ae1a97d",
+          "sizeBytes": 1484
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "904f2d4c8c4f85fbe6a4fc873ea40bf9657ab8db3712e7a66d0cba295d88fb05",
+          "sizeBytes": 20361
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "6d621acb6e9fe084788f9eafc9dd056af3b7919d528ce293a692bdfa956dd9dc",
+          "sizeBytes": 3598
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bc680f0592c9bdb6f54fe344031aee15fa7639373f4db71684e30c59741b59f4",
+          "sizeBytes": 327
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "e47f776d0ee58010541fd005b056851cfc69f989f42c99fe819f6b4caf681cbd",
+          "sizeBytes": 453
+        }
+      ],
+      "fixtureId": "short-to-long-reversal",
+      "path": "short-to-long-reversal",
+      "sourceFixtureId": "short-to-long-reversal",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-004"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-09"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "16ad6f3485dbb5445bf8691aa5e4fe5b891b11a96c5c7ce18d467d169ad64ece",
+          "sizeBytes": 6040
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "59422b89d08d17a09b08fb60b2a990ca1f8dd28e0fe77f964bee00d7b160d9c3",
+          "sizeBytes": 1432
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "ae0068dda7ea6780dfe5a1166e7b1b7a4524a0439413e552fe7ddce0948fdd63",
+          "sizeBytes": 7500
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "0eb21dedc867f6c64c9c6fa0c276190ddb618db83f6fda03d5bd0867e3902586",
+          "sizeBytes": 3511
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "d27bd1d68011e9b25d06afc5091cff5056c2c6da104092758e06cf48a0b6c3c0",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "fbe584135a6776e6c1f3096b4293cbba1830e4332126a092ded5b2def59883ab",
+          "sizeBytes": 214
+        }
+      ],
+      "fixtureId": "left-censored",
+      "path": "left-censored",
+      "sourceFixtureId": "left-censored",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-005"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-10"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "cb0ee4d9242427c1e74e5cd4605d0f7ea57e21b08d3939ace81fb63f2ea5cc07",
+          "sizeBytes": 4337
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "d7c3f49237602559d19d04ec351a817ac541ca31134131caa19d6afcb6ccb1aa",
+          "sizeBytes": 1384
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "658ad7e9f6fefc87062d02922176a64fadf4ded6f24c3b09995fae74f64399bf",
+          "sizeBytes": 6506
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "9dc970745353429aa1a7939e962ef52dc03f82bff213f260f9d70008544f4c2f",
+          "sizeBytes": 3462
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+          "sizeBytes": 129
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "d80eaa138108a3eb023eef920aed83a473aff3e9f1f0bb7468d650c29b279888",
+          "sizeBytes": 212
+        }
+      ],
+      "fixtureId": "right-censored",
+      "path": "right-censored",
+      "sourceFixtureId": "right-censored",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-11"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "1d18acc61fd24b084f44213b8473e5100103227bb77b45b281ca9c6c1f002da8",
+          "sizeBytes": 7950
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "62faed3048da805413b408b683fd9c59e2b2317fbd8008b4eb198f518520d056",
+          "sizeBytes": 1400
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "65a206c21a2876ebe43ae160e70f6e1e5795ead6e840c200a9c13decb5990425",
+          "sizeBytes": 9799
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "5396676d11c2fbfae09195603692d2aaec6895aa23cac621a3d5410321bb59aa",
+          "sizeBytes": 3452
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+          "sizeBytes": 129
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "0c861e03c2211034227a046c087997b1fe6f2c8382ac7d7bfd0fdcf0b630fd03",
+          "sizeBytes": 329
+        }
+      ],
+      "fixtureId": "same-timestamp-multiple-trades",
+      "path": "same-timestamp-multiple-trades",
+      "sourceFixtureId": "same-timestamp-multiple-trades",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "REJECTED_IMPORT",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-12"
+      ],
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "b83bdad198de001ac16109ff6e188ac82fd69d4989a5ee1cc6a3f4d9c353f4c6",
+          "sizeBytes": 1285
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "36f946ea0becb877ce89d75577d5451a142ead58513e09f8e502d50911c84553",
+          "sizeBytes": 304
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "4b0aec54b79cd0680b8def6923c21f06d43daa7248f23652d45baacf530af353",
+          "sizeBytes": 1303
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "2d380f2a8bb3b1389c0666181a9c64f84adc04f0770cb2a49593329689821c1b",
+          "sizeBytes": 1975
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "4d28fd8cafbbc5778f76205f6ab841496dfe71a4fce1407d73202bd43454642e",
+          "sizeBytes": 3469
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+          "sizeBytes": 129
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "d9cb0097d4e7bfa16d0c86bcf8e259faa57ea1ad675b73b174a6321570d3bbee",
+          "sizeBytes": 213
+        }
+      ],
+      "fixtureId": "invalid-trade-id",
+      "path": "invalid-trade-id",
+      "sourceFixtureId": "invalid-trade-id",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-006"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-13"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "65984c0ad29640eaf39c9e1ec28b6c613d101673d2b36fb377b0b19943e388da",
+          "sizeBytes": 9479
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "87ba8234159416285e45dd999c6673c00b104f15b071c0f5b9c4b384887127da",
+          "sizeBytes": 1579
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "5c4ef4d23fe257a8962e0657e446ebdc377d16ad2cb19b9b733fa9899e8b5798",
+          "sizeBytes": 10879
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "79119f79413c1e284d651e4017d68f4e54226f4aa8c2c4bd283a2fb3b0e73ee1",
+          "sizeBytes": 3619
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "a27da2c9d9801ac24338aaba759a56b71666633ce2bb6ea97ab49fd070e92c59",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "3695de2eba025fd78040e08bfbe2e979f212b54bb0d3dd65f42dd5c39a8912d5",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "incomplete-trades",
+      "path": "incomplete-trades",
+      "sourceFixtureId": "incomplete-trades",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-014"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "4a4bb964772027ecc4fe5f2dd31aba95f6448a0033cd64ac8ea6239e3f45a6d9",
+          "sizeBytes": 7772
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "ab77a6cbb453ec670453cc3256b9728c2e39b472cf52da45cfbc3faebfbedcac",
+          "sizeBytes": 1389
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "262ab11e158c10fea8641c4bbc439518ec2b83f41fe244eb0641f5d68bee00c9",
+          "sizeBytes": 9439
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "de3e85ac809bb6dec5acf21a558641e4edd5b84ec4012b38886eb634ee5f348f",
+          "sizeBytes": 3437
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+          "sizeBytes": 129
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "cc1916562d3ccc549f1a68a4aee0e0070ab7de762f50ef56ab33a59d696c1f3b",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "trade-episode-only",
+      "path": "trade-episode-only",
+      "sourceFixtureId": "trade-episode-only",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-014"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-15"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "af3f1dc4870591365184a485f4b4c7e8743afc310c5cceb793eec0ef4517039a",
+          "sizeBytes": 2656
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "ceb282ea659d6f8a1711858cd089833241d81991a7023016975273595fcf836c",
+          "sizeBytes": 1400
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "f4ba3be3789d951385f79523348d27807c72f95abd2dd620d3a0141d0fcdb59f",
+          "sizeBytes": 4345
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "01a4fc97162f186e4d78ae9195c075be12c84c82e580b4e97962dcdad6a3bb49",
+          "sizeBytes": 3469
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "b3a38ea8371608800ff17d79561ad8a40e16f4da57a428888a0eb1b7e6cd2573",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "18426d3398ee1995917844198e26f2083a837f899fab7261e5fa89f2f898a77a",
+          "sizeBytes": 97
+        }
+      ],
+      "fixtureId": "position-summary-only",
+      "path": "position-summary-only",
+      "sourceFixtureId": "position-summary-only",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "81eafa03bf6f457c408d5bcd3dc6adeb87df3bd110e9730653d0f324f358d2fa",
+          "sizeBytes": 18185
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "7da6c2847fef8b70c0197bab373b3ef26613697d84464103199d44d23cd46d2e",
+          "sizeBytes": 1486
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "8046597a33c5dd4164d9e7619ab3a9692a5c8fcbac02bd2dc06b07b7103d500d",
+          "sizeBytes": 20464
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "459af8ffc36c6212d97e0c0547ecafc4104df5fb17f5c44a08cb6f9a3c996cda",
+          "sizeBytes": 3570
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "80c5e455def1c4590f2685b6dfaa5cfd567fd91458a7888778f8372a02d2e68c",
+          "sizeBytes": 325
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "4020f5a4997c01e56c995d96c89431ac3dd2077e1adddffbf93a559428715f9c",
+          "sizeBytes": 567
+        }
+      ],
+      "fixtureId": "same-minute-unique-match",
+      "path": "same-minute-unique-match",
+      "sourceFixtureId": "same-minute-unique-match",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-019"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-17"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "4acb4c81f6d7039213765cd5a3778526c55d8807eb152288c83f48580d9edc18",
+          "sizeBytes": 11066
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "4cd0b4ee3d2c08368c9c12179af31a87127c906cf822f4e1e28bda12602f7d79",
+          "sizeBytes": 1493
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "edd2b3eeae3bf4e6a8f57a82ac8c80a2de9070ecf192c888d59eb1fc30da7add",
+          "sizeBytes": 11807
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "8a266b58d67fddd5bfa6fa2eb09a8768e20a12f683dd20f605f1549fc04d3035",
+          "sizeBytes": 3635
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "52461e07417b37a9d4f3e720b0c111f750e306883c7c42e096a36b4ebc6ddb19",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "4cfb1905b7d4844a0ea49d45d092382e46c933390d6bd33cd270e5cd7f5d179b",
+          "sizeBytes": 447
+        }
+      ],
+      "fixtureId": "duplicate-execution-same-content",
+      "path": "duplicate-execution-same-content",
+      "sourceFixtureId": "duplicate-execution-same-content",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-013"
+      ],
+      "category": "REJECTED_IMPORT",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-18"
+      ],
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "ef957247ac4c75f4a8ef2b567eed4a9b9f3b35779891e0e4c83d46f6f2c06700",
+          "sizeBytes": 1638
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "affa6852e35388878c7bf57166571a671fc7b3ba056da5ac7ec069dfc91dfe69",
+          "sizeBytes": 311
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "d8b0da1a0670c19126c2bcd9c39ea7608d536167145933ff2ccce5433dac37d2",
+          "sizeBytes": 1314
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "5bb79b249101e1458cf74f1f256c5887487ed0cf66dfc82226bcfc465052b8fc",
+          "sizeBytes": 1982
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "fed3b27feb5c009ff22d988791b3ae1f1bb60940e80f74a45892824dda841b51",
+          "sizeBytes": 3503
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+          "sizeBytes": 129
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "b2b51f9ce922ceb36d064ec355635e3742b85e6f1a024ab3c8c8c0f5e28732aa",
+          "sizeBytes": 327
+        }
+      ],
+      "fixtureId": "execution-identity-conflict",
+      "path": "execution-identity-conflict",
+      "sourceFixtureId": "execution-identity-conflict",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-19"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "e40a40c4b0da4f9b7d4a4f1fb0a96b61d0520a445243bbec2fe7770346572b42",
+          "sizeBytes": 9356
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "8230160c9a9d2cfea70bcde3276696e4f9d6428502b3f46e50099d504e8bebdd",
+          "sizeBytes": 1471
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "b5d9bde0989418ac76578ceba69ba322ab49f3a11def18289bbfd9c512009ccc",
+          "sizeBytes": 10690
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "aee5e125b9a860ff45a9e5f3ff195267ddb0facceb5348eb6afe891447012e26",
+          "sizeBytes": 3586
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "1b0ab70590682398ed19f9a083b1a883fdf6e93dcfc661382a7ea5378f0d59b6",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "68b4c088b06e63d26fc7045085dd891dde4dfce9cd67f794d98bb6a61d34d7ce",
+          "sizeBytes": 333
+        }
+      ],
+      "fixtureId": "fee-rebate",
+      "path": "fee-rebate",
+      "sourceFixtureId": "fee-rebate",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-011"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-20"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "5355d5f1739f2217ccb666f22b2a8a1b84bfc0a38fd26cb58e9bce311a496713",
+          "sizeBytes": 9518
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "67a14fdd0cd55507908a9268479478335baa960fbd58fc410c39d0761d35f9c4",
+          "sizeBytes": 1527
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "21602b598562c58740c8456e0ccda264a663d5afcb238213932804e7ddbbf0da",
+          "sizeBytes": 11009
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "453900c1df7f32e15fd5f4a9e45889a98cc973d964307a7cf6c80065c3efb923",
+          "sizeBytes": 3621
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "3ed9390ac605384bc48d805151a89e37f562f9c4f68bfd31afd89e96cff43fd0",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "799effd7b29fb7ae9cb9d89dca65b492532a4fabb39d0ab0642be396b2b78847",
+          "sizeBytes": 336
+        }
+      ],
+      "fixtureId": "different-fee-asset",
+      "path": "different-fee-asset",
+      "sourceFixtureId": "different-fee-asset",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-011"
+      ],
+      "category": "REJECTED_IMPORT",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-21"
+      ],
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "185368148c469cc9f3ea8ce222b6f3431ec7a76ab2d8e1ceb8fce0a576495e0c",
+          "sizeBytes": 2615
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "c164b7bb2a9aec250ddc5dc3a546221328683972947d5e733fc3ab7a223037e9",
+          "sizeBytes": 307
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "753b9ca571f126b6b77abbb4d4543e68515d7b0372b49cdc1bc30be3af7f5a5c",
+          "sizeBytes": 1454
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "74701f20b640692d760e614cc0350a27c1d840ae3aeb7fd5edcf9a80e0c65918",
+          "sizeBytes": 2132
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "356e7238add5e1579b1c5b15cb405cfdd2225fd307fbda851543ff858c08e669",
+          "sizeBytes": 3653
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "d2798cbc326cf6bf8e00cf77b7bb41aef8b35fc8ca51f10da9bfe71f72a67b10",
+          "sizeBytes": 326
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "470f04f23a84321f514ad88b09da91ce2201e877dde63b06e32cafb37b740a4d",
+          "sizeBytes": 447
+        }
+      ],
+      "fixtureId": "hedge-overlap",
+      "path": "hedge-overlap",
+      "sourceFixtureId": "hedge-overlap",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-010"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-22"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "adbbba134976d1dcc78117cf4901b86a575f8abdc72ab4727c754bb626100b2c",
+          "sizeBytes": 9657
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "6ce8d482ffe1358716e5e3f5fc73480fc827f8394fed05a35190972abaa58420",
+          "sizeBytes": 1555
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "3f8343bb6ff943ac02226e68b4609e4d8b47187dc799b296be16a78eb722ec82",
+          "sizeBytes": 11200
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "a52ebcd384c098ca2396b55b8f4e163199fbb86d04ccaafb30c4361ee3ccb75f",
+          "sizeBytes": 3630
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "131d4ccd12eaa0adf02cfac4cc1f68466f71b8bd1f7eb130e02c68c42fb4ab05",
+          "sizeBytes": 225
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "ee1ebce8d86cec1b58e350baa93a8bfcf3076186993d4bc397dd183e920b42d0",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "unsupported-position-status",
+      "path": "unsupported-position-status",
+      "sourceFixtureId": "unsupported-position-status",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-007"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-23"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "5a1ce205fd108629a4c723ae5c907c8efac23382a2db32a48812d7b4007ef3bb",
+          "sizeBytes": 9551
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "dd01bd8d98b2651c6c16032215360a8e7ae143ab9a1c03565724b714cdaa6194",
+          "sizeBytes": 1534
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "5d757bc70ef5d8f2fcc78e68fe48c445e3c807dde031376e57243847862067c6",
+          "sizeBytes": 10967
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "3d54d4bde5b5469be65c1d7b6db9c1c0fca88ddcbb658e80fe44ebd79631225b",
+          "sizeBytes": 3623
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "e98a25f8109fdde8cfd1433b6cfe9a335325fd2939176a0914ba9c13463214b6",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "f0ddbe7cb6450958f0a379c637fad598e5b91d1206e16187433e11cf3ac53031",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "position-pnl-mismatch",
+      "path": "position-pnl-mismatch",
+      "sourceFixtureId": "position-pnl-mismatch",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-009"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-24"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "afc4c7815c44a21043e5da7ce0bece3d12ace07deb7af76731d004e74af9cfbc",
+          "sizeBytes": 9624
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "84404ebe8cd1b51014323cd11d4abc2570bbd7b968827f5f4c9d5a46c48e448d",
+          "sizeBytes": 1506
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "e054594421b134d5ac332b059e5edc48170bd29275a1d5de7dfebfe12bffc677",
+          "sizeBytes": 11273
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "8306febbe98d588315e4803442f6d0e435c863d22023977452595119b92d8e6a",
+          "sizeBytes": 3627
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "dff7398939a36a98dd0d94a4e2bd558ac9fa942c3008453f0daf58aab6ddee72",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "aabc07ad0f40b0a44348d71cf980f3c8c3cccc67fbba9799caeebe8c28624525",
+          "sizeBytes": 337
+        }
+      ],
+      "fixtureId": "within-rounding-tolerance",
+      "path": "within-rounding-tolerance",
+      "sourceFixtureId": "within-rounding-tolerance",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-010"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-25"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "443e02d4640046d6a8ecfc8bbb48a2c397f69f17464dd0eb3ea565cb7756bcbf",
+          "sizeBytes": 9606
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "85e9b5c12bf8826b26e9a7d51bef9c4f2dff7e74e20c294057a0759bea325dad",
+          "sizeBytes": 1537
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "7e698f5c3c225d664abde774a914f760e51365d48ff135278be73328a05e76f5",
+          "sizeBytes": 11148
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "1bd500d6b8cc639403c47d0096e7189abf744b9195ed8b2fe0fa1567dd96dcd3",
+          "sizeBytes": 3626
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "d81f16b12df431dd014123204884f4fb4b5ff813086d7163743d861a7f29e6dc",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "6d11bb4abce886960c5bfc6335321fe200c6fd37fda87731aad51c0d98fa9422",
+          "sizeBytes": 337
+        }
+      ],
+      "fixtureId": "above-rounding-tolerance",
+      "path": "above-rounding-tolerance",
+      "sourceFixtureId": "above-rounding-tolerance",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-008"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "578b29da3bc83d4f81f41e9b09e5549e082e19fab92a880c441c1d5c61453151",
+          "sizeBytes": 18185
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "364243aafad3a8461860776f18c02abbf3430c68cd3f0aea363b780f3b45367e",
+          "sizeBytes": 1439
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "bcf2ec32bc814811e25bfaffbdc58962ea2f072095f425f5bd5e3e6f246ca370",
+          "sizeBytes": 20570
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "bed7d8d56705df6766ac82b4516686cf055d1dac1ab6057d9cdd8eca17955140",
+          "sizeBytes": 3492
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "9dc9ae98d055812e96d607a054f22b717f83bb884589a8454f215e295aa4f9e9",
+          "sizeBytes": 325
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "3f774011d6d183c6d4bedbb85947c7ffc3636d2fff2f3eadc53f123c3fe8851b",
+          "sizeBytes": 567
+        }
+      ],
+      "fixtureId": "ambiguous-position-match",
+      "path": "ambiguous-position-match",
+      "sourceFixtureId": "ambiguous-position-match",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-015"
+      ],
+      "category": "REJECTED_IMPORT",
+      "contextScenarioIds": [],
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "0c2d060828c30ab956da94012900a21a830cf340da5e2ebea1452aa1b47f3227",
+          "sizeBytes": 1295
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "5de4e27a33c8101eef5e8bbcdcd3f66f0bd498668402be7cda4e8dc194f93f54",
+          "sizeBytes": 309
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "9aedfaa3bd0e80cf984e5304b4ddfe3c68cc70cd3ede585efd18e820af779d54",
+          "sizeBytes": 1308
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "12469fef4d0af98de322c8e835e12caa5d18e3416fcf5382a15f010d53dc9d0d",
+          "sizeBytes": 1980
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "537f7b9f76d2f259be86655e17f0eb707f0876a73e43aab5dbadd2aacfaea538",
+          "sizeBytes": 3471
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+          "sizeBytes": 129
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "c1cce77f2b7e236d2c3a0a96f1659e0c4749707e3acc4dd725937a46ac1bb099",
+          "sizeBytes": 214
+        }
+      ],
+      "fixtureId": "invalid-numeric-value",
+      "path": "invalid-numeric-value",
+      "sourceFixtureId": "invalid-numeric-value",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-008"
+      ],
+      "category": "REJECTED_IMPORT",
+      "contextScenarioIds": [],
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "85e8aa8c2344bd291aef7d2089ecd339fe191dda73e4d4b31391b19222d79846",
+          "sizeBytes": 1299
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "84651158e28543bec301ea87b09e5509fc0f1fb9e4e3a9916cf4abfe6900540b",
+          "sizeBytes": 315
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "776bf34376179a5d0e07851c993b596b317445e2d65b0f0fdb9a22a107cfd4e0",
+          "sizeBytes": 1310
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "863acb100fd1944c23140278efeef043bc27caacdbc88d2117e56af6e4d0fd57",
+          "sizeBytes": 1986
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "e3b6370e3fef84234360c60261f6983d55d3cda597f92214608d463b280b34ab",
+          "sizeBytes": 3477
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+          "sizeBytes": 129
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "7513858cbe2ebeb010cf12fcddd9c9bc93956144fba5a71a3eec4adef4b4a588",
+          "sizeBytes": 200
+        }
+      ],
+      "fixtureId": "required-column-missing",
+      "path": "required-column-missing",
+      "sourceFixtureId": "required-column-missing",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-012"
+      ],
+      "category": "REJECTED_IMPORT",
+      "contextScenarioIds": [],
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "2f4645cc9654268506cb143f362cc225bd71b9f3a1f6c9812e0f9e47bf2578bd",
+          "sizeBytes": 1992
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "2d229da975b8a79d6a2499c965d9098f4653bece601764c2651e589cb54a22dd",
+          "sizeBytes": 306
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "e0bcb811942c394a6ead2d1126e4277f577e9fda210d89107ba286d5df2e5722",
+          "sizeBytes": 1459
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "c7a6cc2b7c2be8f79e2baa2885a2efaf881eb67af98b5fa645d6365502f4f79e",
+          "sizeBytes": 2131
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "6e19dbfc23993db3112464cc4cf91968af126a31863bb6dd95fd602200c9b91d",
+          "sizeBytes": 3622
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "8167c29f6bb1f2e27b28aafad6744d81b598dfabcf045462f051fdf669cc1c10",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "7374b643a3bd8eac7587db3089b8e64295f8c758b28cbc7ec7457b17124c614a",
+          "sizeBytes": 330
+        }
+      ],
+      "fixtureId": "unsupported-coin-m",
+      "path": "unsupported-coin-m",
+      "sourceFixtureId": "unsupported-coin-m",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-009"
+      ],
+      "category": "REJECTED_IMPORT",
+      "contextScenarioIds": [],
+      "expectedImportStatus": "REJECTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "f1a8888ab48818acbf1fe81ebe616fb1601781d58aa22c9285bd21f2d88b694b",
+          "sizeBytes": 1303
+        },
+        {
+          "path": "expected/failure.json",
+          "sha256": "1f2fa9f0c36fc849a2d826d5b93699251eaba7e8f6b026fd67937cb2d3ddbb08",
+          "sizeBytes": 319
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "1040c11f2e13ccdc86ac53b6078d132042b644f0f855fea1d9e3b6a5d8f0777e",
+          "sizeBytes": 1312
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "e34ac20e3925136af3a6e07caf16803edb98708569a5a1a922db46e721718c7f",
+          "sizeBytes": 1990
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "7a295565d8db7dd8b9a40eb4ff57fada29278208245b51b89634e3a35507b2f2",
+          "sizeBytes": 3481
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+          "sizeBytes": 129
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "07a8d23eb48640fbe3074ed0634b2d3ab26bcce2c62964305f61266f7447d874",
+          "sizeBytes": 212
+        }
+      ],
+      "fixtureId": "unsupported-source-schema",
+      "path": "unsupported-source-schema",
+      "sourceFixtureId": "unsupported-source-schema",
+      "specialContract": null
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-001",
+        "TR-ACC-RECON-001"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-01"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "6a1bd270e4b3b96e9accb0f2569b9216a1e13887bff61a2973b3a5fc244dac87",
+          "sizeBytes": 9461
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "59887d5035ba20200b6b4ec025dc3456ec3f0999eff4d5b16f9f156d99f33f90",
+          "sizeBytes": 1477
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "cce5d8a05cb76250a86916b5517df8a5d874439834ed8b2fa5af760a2967e809",
+          "sizeBytes": 10904
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "98b45d29908a1ce97e85721dad487dad36aad59f749548f3bf1bdd628a48008f",
+          "sizeBytes": 3643
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "c3388229956d728e7231d7125024df931a26916f38506468b6fb105a1211e33b",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "24d1aa0bc5cd2b289612b3d27d818f8c7ee36380a7386241afab11267eee40cf",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "raw-byte-dialect",
+      "path": "raw-byte-dialect",
+      "sourceFixtureId": "simple-long",
+      "specialContract": "raw-byte-dialect"
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-001",
+        "TR-ACC-RECON-001"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-01"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "6b78d47a9d3b78e7ca19c150eb1775002a30d117bcc5089e577cec43258e8ed7",
+          "sizeBytes": 9623
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "313a55c3cf0b726f6a9c1bd21960c3d447a7ff25e0cd22bbe344921c2455e039",
+          "sizeBytes": 1486
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "4e8c5caea9eb20ebb759623147786174cba3ec71f598daa67127423a4929c2c8",
+          "sizeBytes": 11228
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "9519d56c8be0494d99037e69e7d4176a4388228286364db5d225454c5d1b28ff",
+          "sizeBytes": 3652
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "a77c941b4f56129497125810e53048d005a17c645d311c5f863745318e7b3fba",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "b9d9018fa0f72e9e442391686612f4acb06490e6676d37c22257f5060d61e612",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "second-precision-position",
+      "path": "second-precision-position",
+      "sourceFixtureId": "simple-long",
+      "specialContract": "second-precision-position"
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-002"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-03"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "591700242de02f92f62e16c86d29145b97c93dc4f5425043841255f6043adb07",
+          "sizeBytes": 12997
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "2192c13f812fc155eedddd2311294a9094337463192628cf2aa7b42b92c97998",
+          "sizeBytes": 1484
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "6150b860ab46e10303fad291075f27727557717d2c638d9a5b1a4c7dbc62586a",
+          "sizeBytes": 13852
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "9aa2bfd6ccd3239d25a189600f6f096a0d8ecd9d8f0c21a3bed10e3ebcdca973",
+          "sizeBytes": 3624
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "6da3b292ea6616a33d64b5557ca160c4bf1ad55ae4d0830e8405cb003aac3772",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "aa9e9a9ff249e99329ec3836000f82f0300d1edb54134c44094b17418fc3eadc",
+          "sizeBytes": 447
+        }
+      ],
+      "fixtureId": "source-order-scrambled",
+      "path": "source-order-scrambled",
+      "sourceFixtureId": "partial-entry",
+      "specialContract": "source-order-scrambled"
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-001",
+        "TR-ACC-RECON-001"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-01"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "1d7f8d8bebbbffa3874a19e97ac9008812cc741c8cf6b1af645de479252d9e68",
+          "sizeBytes": 9529
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "ebcd582c0c60e00a226ca93aa1b5d50b4a81ea01ee21b60d8bd7ce8caebebba9",
+          "sizeBytes": 1475
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "d7e80627771e294edbb8b1a23bc484e2b97a9b9e5bdc38f90e85173cc1cfe510",
+          "sizeBytes": 10872
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "b5a0a4221f2f994f2df90f669073b01d68fc2f408587bd09628cff20d343879e",
+          "sizeBytes": 3653
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "f8126fd3fc664591a394aba62c7bbb6ef560afd4fda42d65e2b95a096013e71c",
+          "sizeBytes": 231
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "91e018e7973f1bce396973a25d0c5a2117ac90ee4fdfc99787cbc8d8668fe9d4",
+          "sizeBytes": 340
+        }
+      ],
+      "fixtureId": "unicode-symbol",
+      "path": "unicode-symbol",
+      "sourceFixtureId": "simple-long",
+      "specialContract": "unicode-symbol"
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-002"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-03"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "5ea67721f3a91ea554013f8279d95ff07d630c06b8eb315f6895650727202497",
+          "sizeBytes": 13072
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "81666c653ca03cb3164b78612854f39f7f389ae6fac0e8114c8d97876569880e",
+          "sizeBytes": 1487
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "047534898624a185d3a1c9bf0366a911c59d4eb4b2f201be7ab5f495310be204",
+          "sizeBytes": 14005
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "2829fe4235b121a790a01e9b14a8cc0f538c2cb2b931804048f1541a1b3ba16f",
+          "sizeBytes": 3627
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "1c77fac67f5767f31efc865aa608db157b98e7ce7e59e3e7f4dbb998a06d0ef4",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "b9c13b7cab1c23fdf95561c2c782fe6b8431ff1f27d67118c00c159ae62d8c8d",
+          "sizeBytes": 447
+        }
+      ],
+      "fixtureId": "multiple-fills-same-order",
+      "path": "multiple-fills-same-order",
+      "sourceFixtureId": "partial-entry",
+      "specialContract": "multiple-fills-same-order"
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-004"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-09"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "09e313109631d4ca5f81f04bb74e7c99d68f01bb5572b8ef1a2b12578364143b",
+          "sizeBytes": 6282
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "a6d6712534b51cc57acb2a110f3edf713feaa5d4b7e8ff601fd167b7d24feace",
+          "sizeBytes": 1454
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "42faed623c53143d009f93de5d24e9cd0e56a5287d55c413c3635f65e10b4388",
+          "sizeBytes": 7918
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "43982df3ef01172a7bff3cc85d969bf3b1622b4d401f1498d4500ee06655ebe0",
+          "sizeBytes": 3533
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "9e2ba4c45571ef762760da02da3adebc97a7a5e71cbd7a1f514b987318fe7204",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "eb7bc005f5ba90dc8480666786726f077d0a278c021fb518b8e5ab037e86b021",
+          "sizeBytes": 214
+        }
+      ],
+      "fixtureId": "left-censored-before-trade-coverage",
+      "path": "left-censored-before-trade-coverage",
+      "sourceFixtureId": "left-censored",
+      "specialContract": "left-censored-before-trade-coverage"
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-014",
+        "TR-ACC-RECON-012"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-14"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "3f874a188c43b84ae2bc3bcfdaff9ef19f583ead6a913ac52eb18c5c2af2b92d",
+          "sizeBytes": 9745
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "5ac27ed044aa8d4f27aabb88f4e39474f9af0612fd67760ee1098fab9c7b28fe",
+          "sizeBytes": 1522
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "1dca175a573e47ef918dd0dc444466b76b30ef6d772c1ef87c3a17029a62d7bc",
+          "sizeBytes": 12323
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "6ac696f1361b23a9e3b2a7eff1b2b239c1716ab5462005c659098ec87b37252a",
+          "sizeBytes": 3755
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "c447261d7a0331fdd32bbc4430f2049a81daf3f6fb3a0f251dd178cea0e4405d",
+          "sizeBytes": 234
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "d6704a1941fff7bee3156ae46e3c27d180d46062557806e23299df64a4b237ac",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "episode-after-position-coverage",
+      "path": "episode-after-position-coverage",
+      "sourceFixtureId": "trade-episode-only",
+      "specialContract": "episode-after-position-coverage"
+    },
+    {
+      "acceptanceScenarioIds": [],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-05"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "8a2dc9642990854877251e1f11f361bc1d6609b90f8b6c90434ba186fcf4a6b9",
+          "sizeBytes": 16812
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "e2103cab5c0140cc11f26d1665e2a2c82cc9b7e7469a9ab3f408196179421aad",
+          "sizeBytes": 1496
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "9ae37c0a8f92d1ca44d665c4b59370cba27371b7d1f4693489f7674529b4b8d0",
+          "sizeBytes": 17376
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "ea3052ebd4d44a63962990ef6ac42accb4a386168f99b36e199d2f03b9ba9151",
+          "sizeBytes": 3610
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "1e30176a401c13d805c63c27c6b595f3c085d52234b2bd2d5402d0610ceac714",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "a032b12fe449065e332d6f435f6e352bafbcc86bb6c251c9bd072f08a20de8b4",
+          "sizeBytes": 568
+        }
+      ],
+      "fixtureId": "common-window-exact-reconciliation",
+      "path": "common-window-exact-reconciliation",
+      "sourceFixtureId": "increase-and-reduce",
+      "specialContract": "common-window-exact-reconciliation"
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-IMPORT-001",
+        "TR-ACC-RECON-001"
+      ],
+      "category": "ACCEPTED_AND_ELIGIBLE",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-01"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "4f2bbbb198872cb21015f06b492f6fa019570a4ba1afe8557cbb7794c3c23a34",
+          "sizeBytes": 9605
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "c73d79cb42bd0903c8809bfe94709d902830b0be4f0db06a4d3bb2bdedbd166e",
+          "sizeBytes": 1485
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "e1747446df1c31ac3c9d9de2bfd43ce4edeb255ef7f930b7a4d5ced417236dfd",
+          "sizeBytes": 11192
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "e94253d43cc41b8b08615dadedb6f06d15dde8f5ae172c993fe8da3ac8f42402",
+          "sizeBytes": 3651
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "78dfb0fba54fe74c40b6ce782b72000dcad9c6268c0a4ba20f5da8491657c46d",
+          "sizeBytes": 227
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "4d38b47af17b4e2f0f4b0065f34a34b60750930c51b7aef6d4ba6a566407d62f",
+          "sizeBytes": 332
+        }
+      ],
+      "fixtureId": "closing-pnl-excludes-fee",
+      "path": "closing-pnl-excludes-fee",
+      "sourceFixtureId": "simple-long",
+      "specialContract": "closing-pnl-excludes-fee"
+    },
+    {
+      "acceptanceScenarioIds": [
+        "TR-ACC-RECON-008"
+      ],
+      "category": "ACCEPTED_BUT_EXCLUDED",
+      "contextScenarioIds": [
+        "TR-RECON-SCENARIO-16"
+      ],
+      "expectedImportStatus": "ACCEPTED",
+      "files": [
+        {
+          "path": "expected/canonical-records.json",
+          "sha256": "d704bfafa21da17668f9dc5a4b05fc6eacdcbf9472a0e5c5d6fe65c4773aed0d",
+          "sizeBytes": 18465
+        },
+        {
+          "path": "expected/quality-report.json",
+          "sha256": "f4dfd2c1be18f7da1e5b24601b76a5e6749ab9bca216f3f570000477f0150bfd",
+          "sizeBytes": 1447
+        },
+        {
+          "path": "expected/reconciliation-manifest.json",
+          "sha256": "90ac53431c84231abbde958445c5eebcc21ee481c5b2536651cc09b5265c6ecd",
+          "sizeBytes": 21154
+        },
+        {
+          "path": "fixture-manifest.json",
+          "sha256": "41c4c459d4903ae3917f3e4151ca29ebbafe6edd8559f2babd0e1480f64cf0a4",
+          "sizeBytes": 3530
+        },
+        {
+          "path": "position-history.csv",
+          "sha256": "c802add3ba14af4e4633e1380cdb4de76976cffd7ab22849ba98d51cd62a5572",
+          "sizeBytes": 325
+        },
+        {
+          "path": "trade-history.csv",
+          "sha256": "670c7a60acceecf66fff8f911a05fd1896b5cbac7bd54fdaff6e6144150cd6a1",
+          "sizeBytes": 567
+        }
+      ],
+      "fixtureId": "exact-timestamp-non-unique-match",
+      "path": "exact-timestamp-non-unique-match",
+      "sourceFixtureId": "ambiguous-position-match",
+      "specialContract": "exact-timestamp-non-unique-match"
+    }
+  ],
+  "packageFiles": [
+    {
+      "path": "README.md",
+      "sha256": "c8313bd7eb126e3b519e7f2ad3a4fd9b65b81cd52c55e618d3fb554792ecaf01",
+      "sizeBytes": 9116
+    },
+    {
+      "path": "schemas/canonical-records.schema.json",
+      "sha256": "41f65bf91292b65c41aa163e40f3fc6b421a983019eb2c84011a2a4a24d51b3a",
+      "sizeBytes": 2504
+    },
+    {
+      "path": "schemas/expected-failure.schema.json",
+      "sha256": "4ed813cbee18e05a8bed67f90555732f9d3fb0f27043ac180e76be8f1541fd06",
+      "sizeBytes": 472
+    },
+    {
+      "path": "schemas/fixture-manifest.schema.json",
+      "sha256": "b954e4a8d774d06be0f9c0b522aa5b0468b07a1cefa6023d9cf7ee1276463ac3",
+      "sizeBytes": 2254
+    },
+    {
+      "path": "schemas/quality-report.schema.json",
+      "sha256": "774ac2550573d82318bf1f6af11cb7b4cf34e7febb5d599ba81d5427bf3c6225",
+      "sizeBytes": 2065
+    },
+    {
+      "path": "schemas/reconciliation-manifest.schema.json",
+      "sha256": "ef53a12c7c7be1573dfdba5ae8eca7e43c5ff4afc0a784a29dde813e3fcac879",
+      "sizeBytes": 2828
+    }
+  ],
+  "physicalDialect": {
+    "bom": "REQUIRED_FOR_THIS_GOLDEN_SET",
+    "delimiter": ",",
+    "finalCrlf": true,
+    "lineEnding": "CRLF_ONLY",
+    "quoteCharactersObserved": false
+  },
+  "preservedV1": {
+    "fixtureSetVersion": 2,
+    "path": "../binance-usds-v1",
+    "treeHash": "cd13a5f7c13d6b2ad493fd374539227d8d61cf694e2ed883d833bb4b8dd716a8",
+    "treeHashAlgorithm": "sha256(canonical path:sha256 lines)"
+  },
+  "privacyNamespace": {
+    "actualRawDataIncluded": false,
+    "idPrefixes": {
+      "orderId": "84",
+      "tradeId": "83",
+      "uid": "88"
+    },
+    "symbolMarker": "RV3F*_SYNTH"
+  },
+  "schemaVersion": "3.0.0"
+}
