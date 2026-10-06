@@ -1,0 +1,2 @@
+﻿Uid,Time,Symbol,Side,Price,Quantity,Amount,Fee,Realized Profit,Buyer,Maker,Trade ID,Order ID
+880900000001,2026-01-02 10:00:01,RV3F09_SYNTH_A,BUY,9.00,2,18.00,0.00USDT,2.00,true,false,830900000901,840900000901

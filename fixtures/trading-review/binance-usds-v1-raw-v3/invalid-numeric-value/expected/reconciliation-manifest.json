@@ -1,0 +1,50 @@
+{
+  "allocations": [],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": null,
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": null,
+      "rowCount": 0,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordSetHash": "9837237fb2ccc166dbae904ac5aed51c87c6016d05a3a903fb8de3073f3490a4",
+  "cashFlowConservationPassed": null,
+  "commonAnalyzableInterval": null,
+  "evidenceLinks": [],
+  "fixtureId": "invalid-numeric-value",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "FILE_FORMAT_INVALID"
+  },
+  "inputHash": "9c66184be0f0c0804e200efcda9f8ce5c3a084ecb234c64125efdeadd09d82e3",
+  "manifestHash": "2b28e60b21d487fc4e279c92c9cb230cf74a2127fbe240e9e70b8070169c485a",
+  "manifestVersion": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3",
+  "orderedExecutionKeysByInstrument": {},
+  "quantityConservationPassed": null,
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewUnits": [],
+  "sourceArtifactContentHashes": {
+    "POSITION_HISTORY": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+    "TRADE_HISTORY": "c1cce77f2b7e236d2c3a0a96f1659e0c4749707e3acc4dd725937a46ac1bb099"
+  },
+  "summaryMatches": [],
+  "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+}

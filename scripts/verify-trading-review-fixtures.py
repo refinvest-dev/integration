@@ -514,9 +514,33 @@ def main() -> int:
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     try:
-        validate(args.root.resolve(), args.context_path.resolve())
+        resolved_root = args.root.resolve()
+        resolved_context = args.context_path.resolve()
+        index_path = resolved_root / "fixture-index.json"
+        try:
+            fixture_set_version = json.loads(index_path.read_text(encoding="utf-8")).get("fixtureSetVersion")
+        except (OSError, UnicodeError, json.JSONDecodeError) as error:
+            fail(f"Cannot read fixture index {index_path}: {error}")
+        if fixture_set_version == 3:
+            from trading_review_raw_v3_validator import (
+                RawV3ValidationFailure,
+                tamper_self_test_raw_v3,
+                validate_raw_v3,
+            )
+
+            try:
+                fixture_count = validate_raw_v3(resolved_root, resolved_context)
+                corruptions = tamper_self_test_raw_v3(resolved_root, resolved_context) if args.self_test else []
+            except RawV3ValidationFailure as error:
+                fail(str(error))
+            suffix = f"; corruption self-test {len(corruptions)}/{len(corruptions)}" if args.self_test else ""
+            print(f"OK  {fixture_count} Trading Review raw-v3 fixtures and 25 context scenarios{suffix}")
+            return 0
+        if fixture_set_version != 2:
+            fail(f"Unsupported fixtureSetVersion: {fixture_set_version!r}")
+        validate(resolved_root, resolved_context)
         if args.self_test:
-            tamper_self_test(args.root.resolve(), args.context_path.resolve())
+            tamper_self_test(resolved_root, resolved_context)
     except ValidationFailure as error:
         print(f"FAIL {error}")
         return 1

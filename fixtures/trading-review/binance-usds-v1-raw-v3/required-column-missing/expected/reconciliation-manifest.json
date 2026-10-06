@@ -1,0 +1,50 @@
+{
+  "allocations": [],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": null,
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": null,
+      "rowCount": 0,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordSetHash": "43c661ecfe8e7adb7fa424e29317c79fda14107118b9ade9488da77cafebf20e",
+  "cashFlowConservationPassed": null,
+  "commonAnalyzableInterval": null,
+  "evidenceLinks": [],
+  "fixtureId": "required-column-missing",
+  "importResult": {
+    "accepted": false,
+    "failureCode": "REQUIRED_COLUMN_MISSING"
+  },
+  "inputHash": "3141d54662663bc3e19cf947c235a7e3fc966b542178a65a22c60c25412c9cd5",
+  "manifestHash": "48c1f34779e0d2f1d0ce3fc448df0abe66f266456f8e297a47e6bc436cc1ec26",
+  "manifestVersion": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3",
+  "orderedExecutionKeysByInstrument": {},
+  "quantityConservationPassed": null,
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewUnits": [],
+  "sourceArtifactContentHashes": {
+    "POSITION_HISTORY": "bfadc9c9c1d30bd631f8904e0dd1cdbed43d029c9d9311956bb6fc3b61d143fe",
+    "TRADE_HISTORY": "7513858cbe2ebeb010cf12fcddd9c9bc93956144fba5a71a3eec4adef4b4a588"
+  },
+  "summaryMatches": [],
+  "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+}

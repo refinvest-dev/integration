@@ -1,0 +1,659 @@
+{
+  "allocations": [
+    {
+      "action": "OPEN",
+      "allocatedFeeByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "0"
+        }
+      },
+      "allocatedQuantity": {
+        "scale": 0,
+        "unscaled": "3"
+      },
+      "allocatedReportedPnl": {
+        "scale": 0,
+        "unscaled": "0"
+      },
+      "feeRecordId": "long-to-short-reversal:trade:830700000601:fee",
+      "recordId": "long-to-short-reversal:trade:830700000601:execution",
+      "reportedPnlRecordId": "long-to-short-reversal:trade:830700000601:pnl",
+      "reviewUnitId": "ep:long-to-short-reversal:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000601",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "a36c11fc64fc4902b89fbbcb8faefdde5f26ac538418d3a5de8ef3e6b3af5cbd"
+        }
+      ]
+    },
+    {
+      "action": "REVERSAL_CLOSE",
+      "allocatedFeeByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "3"
+        }
+      },
+      "allocatedQuantity": {
+        "scale": 0,
+        "unscaled": "3"
+      },
+      "allocatedReportedPnl": {
+        "scale": 2,
+        "unscaled": "-300"
+      },
+      "feeRecordId": "long-to-short-reversal:trade:830700000602:fee",
+      "recordId": "long-to-short-reversal:trade:830700000602:execution",
+      "reportedPnlRecordId": "long-to-short-reversal:trade:830700000602:pnl",
+      "reversalGroupId": "reversal:f8b78d8725f83d6a560a89a398a0338b383fca3956c47d1bea53905b827ed46b",
+      "reviewUnitId": "ep:long-to-short-reversal:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000602",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "ad41c1c02b46cc0081b89d0f3c4163253098520d7649769fa9556a0c3568bd9d"
+        }
+      ]
+    },
+    {
+      "action": "REVERSAL_OPEN",
+      "allocatedFeeByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "2"
+        }
+      },
+      "allocatedQuantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "allocatedReportedPnl": {
+        "scale": 2,
+        "unscaled": "0"
+      },
+      "feeRecordId": "long-to-short-reversal:trade:830700000602:fee",
+      "recordId": "long-to-short-reversal:trade:830700000602:execution",
+      "reportedPnlRecordId": "long-to-short-reversal:trade:830700000602:pnl",
+      "reversalGroupId": "reversal:f8b78d8725f83d6a560a89a398a0338b383fca3956c47d1bea53905b827ed46b",
+      "reviewUnitId": "ep:long-to-short-reversal:02",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000602",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "ad41c1c02b46cc0081b89d0f3c4163253098520d7649769fa9556a0c3568bd9d"
+        }
+      ]
+    },
+    {
+      "action": "CLOSE",
+      "allocatedFeeByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "0"
+        }
+      },
+      "allocatedQuantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "allocatedReportedPnl": {
+        "scale": 2,
+        "unscaled": "200"
+      },
+      "feeRecordId": "long-to-short-reversal:trade:830700000603:fee",
+      "recordId": "long-to-short-reversal:trade:830700000603:execution",
+      "reportedPnlRecordId": "long-to-short-reversal:trade:830700000603:pnl",
+      "reviewUnitId": "ep:long-to-short-reversal:02",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000603",
+          "sourceRowNumber": 3,
+          "sourceRowSha256": "a9ba031dd9f497242aabfae1791670f6ed30538deae6073b830b41f9d2442dd0"
+        }
+      ]
+    }
+  ],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:10:01.000000Z",
+      "rowCount": 3,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:10:01.000000Z",
+      "rowCount": 2,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "canonicalRecordSetHash": "3763209b694122da73528b5d63c7ebf1adfa2f1c65bbfdbbc50a469565c15c8a",
+  "cashFlowConservationPassed": true,
+  "commonAnalyzableInterval": {
+    "endInclusive": "2026-01-02T01:10:01.000000Z",
+    "startInclusive": "2026-01-02T01:00:01.000000Z"
+  },
+  "evidenceLinks": [
+    {
+      "allocationRecordId": "long-to-short-reversal:trade:830700000601:execution",
+      "canonicalRecordIds": [
+        "long-to-short-reversal:trade:830700000601:execution",
+        "long-to-short-reversal:trade:830700000601:fee",
+        "long-to-short-reversal:trade:830700000601:pnl"
+      ],
+      "reviewUnitId": "ep:long-to-short-reversal:01",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:long-to-short-reversal:trade_history:1"
+      ]
+    },
+    {
+      "allocationRecordId": "long-to-short-reversal:trade:830700000602:execution",
+      "canonicalRecordIds": [
+        "long-to-short-reversal:trade:830700000602:execution",
+        "long-to-short-reversal:trade:830700000602:fee",
+        "long-to-short-reversal:trade:830700000602:pnl"
+      ],
+      "reviewUnitId": "ep:long-to-short-reversal:01",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:long-to-short-reversal:trade_history:2"
+      ]
+    },
+    {
+      "allocationRecordId": "long-to-short-reversal:trade:830700000602:execution",
+      "canonicalRecordIds": [
+        "long-to-short-reversal:trade:830700000602:execution",
+        "long-to-short-reversal:trade:830700000602:fee",
+        "long-to-short-reversal:trade:830700000602:pnl"
+      ],
+      "reviewUnitId": "ep:long-to-short-reversal:02",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:long-to-short-reversal:trade_history:2"
+      ]
+    },
+    {
+      "allocationRecordId": "long-to-short-reversal:trade:830700000603:execution",
+      "canonicalRecordIds": [
+        "long-to-short-reversal:trade:830700000603:execution",
+        "long-to-short-reversal:trade:830700000603:fee",
+        "long-to-short-reversal:trade:830700000603:pnl"
+      ],
+      "reviewUnitId": "ep:long-to-short-reversal:02",
+      "sourceEvidenceSnapshotIds": [
+        "evidence:long-to-short-reversal:trade_history:3"
+      ]
+    }
+  ],
+  "fixtureId": "long-to-short-reversal",
+  "importResult": {
+    "accepted": true,
+    "failureCode": null
+  },
+  "inputHash": "011322fa3909d5365d211bd21222d5118f3f24adb3c37c8abebc985f54037f91",
+  "manifestHash": "f6fc92ab2a1749c73d5f258f1b008b772333c35f15218b645e05cbb1b4c315d6",
+  "manifestVersion": "FIXTURE_METADATA_RECONCILIATION_MANIFEST_V3",
+  "orderedExecutionKeysByInstrument": {
+    "BINANCE:USDS_FUTURES:RV3F07_SYNTH_A": [
+      "trade:RV3F07_SYNTH_A:830700000601",
+      "trade:RV3F07_SYNTH_A:830700000602",
+      "trade:RV3F07_SYNTH_A:830700000603"
+    ]
+  },
+  "quantityConservationPassed": true,
+  "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+  "reviewUnits": [
+    {
+      "allocations": [
+        {
+          "action": "OPEN",
+          "allocatedFeeByAsset": {
+            "USDT": {
+              "scale": 2,
+              "unscaled": "0"
+            }
+          },
+          "allocatedQuantity": {
+            "scale": 0,
+            "unscaled": "3"
+          },
+          "allocatedReportedPnl": {
+            "scale": 0,
+            "unscaled": "0"
+          },
+          "feeRecordId": "long-to-short-reversal:trade:830700000601:fee",
+          "recordId": "long-to-short-reversal:trade:830700000601:execution",
+          "reportedPnlRecordId": "long-to-short-reversal:trade:830700000601:pnl",
+          "reviewUnitId": "ep:long-to-short-reversal:01",
+          "sourceProvenance": [
+            {
+              "artifactRole": "TRADE_HISTORY",
+              "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000601",
+              "sourceRowNumber": 1,
+              "sourceRowSha256": "a36c11fc64fc4902b89fbbcb8faefdde5f26ac538418d3a5de8ef3e6b3af5cbd"
+            }
+          ]
+        },
+        {
+          "action": "REVERSAL_CLOSE",
+          "allocatedFeeByAsset": {
+            "USDT": {
+              "scale": 2,
+              "unscaled": "3"
+            }
+          },
+          "allocatedQuantity": {
+            "scale": 0,
+            "unscaled": "3"
+          },
+          "allocatedReportedPnl": {
+            "scale": 2,
+            "unscaled": "-300"
+          },
+          "feeRecordId": "long-to-short-reversal:trade:830700000602:fee",
+          "recordId": "long-to-short-reversal:trade:830700000602:execution",
+          "reportedPnlRecordId": "long-to-short-reversal:trade:830700000602:pnl",
+          "reversalGroupId": "reversal:f8b78d8725f83d6a560a89a398a0338b383fca3956c47d1bea53905b827ed46b",
+          "reviewUnitId": "ep:long-to-short-reversal:01",
+          "sourceProvenance": [
+            {
+              "artifactRole": "TRADE_HISTORY",
+              "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000602",
+              "sourceRowNumber": 2,
+              "sourceRowSha256": "ad41c1c02b46cc0081b89d0f3c4163253098520d7649769fa9556a0c3568bd9d"
+            }
+          ]
+        }
+      ],
+      "averageEntryPrice": {
+        "denominator": {
+          "scale": 0,
+          "unscaled": "3"
+        },
+        "numerator": {
+          "scale": 2,
+          "unscaled": "3000"
+        }
+      },
+      "averageExitPrice": {
+        "denominator": {
+          "scale": 0,
+          "unscaled": "3"
+        },
+        "numerator": {
+          "scale": 2,
+          "unscaled": "2700"
+        }
+      },
+      "capability": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "MAX_EXPOSURE",
+        "POSITION_INCREASES",
+        "POSITION_MODE_OBSERVED_COMPATIBLE",
+        "POSITION_MODE_USER_DECLARED",
+        "VENUE_POSITION_SUMMARY",
+        "VENUE_REPORTED_PNL"
+      ],
+      "closedAt": "2026-01-02T01:05:01.000000Z",
+      "closingVolume": {
+        "scale": 0,
+        "unscaled": "3"
+      },
+      "direction": "LONG",
+      "eligible": true,
+      "exclusionReasons": [],
+      "executionRecordIds": [
+        "long-to-short-reversal:trade:830700000601:execution",
+        "long-to-short-reversal:trade:830700000602:execution"
+      ],
+      "grossTradingPnl": {
+        "scale": 2,
+        "unscaled": "-300"
+      },
+      "initialNotional": {
+        "scale": 2,
+        "unscaled": "3000"
+      },
+      "initialQuantity": {
+        "scale": 0,
+        "unscaled": "3"
+      },
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F07_SYNTH_A",
+      "maxNotional": {
+        "scale": 2,
+        "unscaled": "3000"
+      },
+      "maxQuantity": {
+        "scale": 0,
+        "unscaled": "3"
+      },
+      "netTradingPnl": {
+        "scale": 2,
+        "unscaled": "-303"
+      },
+      "openedAt": "2026-01-02T01:00:01.000000Z",
+      "openingVolume": {
+        "scale": 0,
+        "unscaled": "3"
+      },
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "reviewUnitId": "ep:long-to-short-reversal:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000601",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "a36c11fc64fc4902b89fbbcb8faefdde5f26ac538418d3a5de8ef3e6b3af5cbd"
+        },
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000602",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "ad41c1c02b46cc0081b89d0f3c4163253098520d7649769fa9556a0c3568bd9d"
+        },
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "021b34db273d8f89c5de321d0cda3b62c9e65b66a275832603cccd87e1684288"
+        }
+      ],
+      "tradingFee": {
+        "scale": 2,
+        "unscaled": "3"
+      },
+      "tradingFeesByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "3"
+        }
+      },
+      "type": "FUTURES_POSITION_EPISODE",
+      "venuePositionPnl": {
+        "scale": 2,
+        "unscaled": "-300"
+      },
+      "venuePositionSummaryRecordIds": [
+        "long-to-short-reversal:position:1:summary"
+      ]
+    },
+    {
+      "allocations": [
+        {
+          "action": "REVERSAL_OPEN",
+          "allocatedFeeByAsset": {
+            "USDT": {
+              "scale": 2,
+              "unscaled": "2"
+            }
+          },
+          "allocatedQuantity": {
+            "scale": 0,
+            "unscaled": "2"
+          },
+          "allocatedReportedPnl": {
+            "scale": 2,
+            "unscaled": "0"
+          },
+          "feeRecordId": "long-to-short-reversal:trade:830700000602:fee",
+          "recordId": "long-to-short-reversal:trade:830700000602:execution",
+          "reportedPnlRecordId": "long-to-short-reversal:trade:830700000602:pnl",
+          "reversalGroupId": "reversal:f8b78d8725f83d6a560a89a398a0338b383fca3956c47d1bea53905b827ed46b",
+          "reviewUnitId": "ep:long-to-short-reversal:02",
+          "sourceProvenance": [
+            {
+              "artifactRole": "TRADE_HISTORY",
+              "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000602",
+              "sourceRowNumber": 2,
+              "sourceRowSha256": "ad41c1c02b46cc0081b89d0f3c4163253098520d7649769fa9556a0c3568bd9d"
+            }
+          ]
+        },
+        {
+          "action": "CLOSE",
+          "allocatedFeeByAsset": {
+            "USDT": {
+              "scale": 2,
+              "unscaled": "0"
+            }
+          },
+          "allocatedQuantity": {
+            "scale": 0,
+            "unscaled": "2"
+          },
+          "allocatedReportedPnl": {
+            "scale": 2,
+            "unscaled": "200"
+          },
+          "feeRecordId": "long-to-short-reversal:trade:830700000603:fee",
+          "recordId": "long-to-short-reversal:trade:830700000603:execution",
+          "reportedPnlRecordId": "long-to-short-reversal:trade:830700000603:pnl",
+          "reviewUnitId": "ep:long-to-short-reversal:02",
+          "sourceProvenance": [
+            {
+              "artifactRole": "TRADE_HISTORY",
+              "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000603",
+              "sourceRowNumber": 3,
+              "sourceRowSha256": "a9ba031dd9f497242aabfae1791670f6ed30538deae6073b830b41f9d2442dd0"
+            }
+          ]
+        }
+      ],
+      "averageEntryPrice": {
+        "denominator": {
+          "scale": 0,
+          "unscaled": "2"
+        },
+        "numerator": {
+          "scale": 2,
+          "unscaled": "1800"
+        }
+      },
+      "averageExitPrice": {
+        "denominator": {
+          "scale": 0,
+          "unscaled": "2"
+        },
+        "numerator": {
+          "scale": 2,
+          "unscaled": "1600"
+        }
+      },
+      "capability": [
+        "CLOSED_OUTCOME",
+        "FEES",
+        "INITIAL_EXPOSURE",
+        "MAX_EXPOSURE",
+        "POSITION_INCREASES",
+        "POSITION_MODE_OBSERVED_COMPATIBLE",
+        "POSITION_MODE_USER_DECLARED",
+        "VENUE_POSITION_SUMMARY",
+        "VENUE_REPORTED_PNL"
+      ],
+      "closedAt": "2026-01-02T01:10:01.000000Z",
+      "closingVolume": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "direction": "SHORT",
+      "eligible": true,
+      "exclusionReasons": [],
+      "executionRecordIds": [
+        "long-to-short-reversal:trade:830700000602:execution",
+        "long-to-short-reversal:trade:830700000603:execution"
+      ],
+      "grossTradingPnl": {
+        "scale": 2,
+        "unscaled": "200"
+      },
+      "initialNotional": {
+        "scale": 2,
+        "unscaled": "1800"
+      },
+      "initialQuantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F07_SYNTH_A",
+      "maxNotional": {
+        "scale": 2,
+        "unscaled": "1800"
+      },
+      "maxQuantity": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "netTradingPnl": {
+        "scale": 2,
+        "unscaled": "198"
+      },
+      "openedAt": "2026-01-02T01:05:01.000000Z",
+      "openingVolume": {
+        "scale": 0,
+        "unscaled": "2"
+      },
+      "reconciliationStatus": "EXACT",
+      "reconstructionStatus": "COMPLETE",
+      "reviewUnitId": "ep:long-to-short-reversal:02",
+      "sourceProvenance": [
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000602",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "ad41c1c02b46cc0081b89d0f3c4163253098520d7649769fa9556a0c3568bd9d"
+        },
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRecordKey": "trade:RV3F07_SYNTH_A:830700000603",
+          "sourceRowNumber": 3,
+          "sourceRowSha256": "a9ba031dd9f497242aabfae1791670f6ed30538deae6073b830b41f9d2442dd0"
+        },
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:2",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "949e12f9e173f3c89eccbbec04f587f57e300a7db441457e157f6e8bc3da41a7"
+        }
+      ],
+      "tradingFee": {
+        "scale": 2,
+        "unscaled": "2"
+      },
+      "tradingFeesByAsset": {
+        "USDT": {
+          "scale": 2,
+          "unscaled": "2"
+        }
+      },
+      "type": "FUTURES_POSITION_EPISODE",
+      "venuePositionPnl": {
+        "scale": 2,
+        "unscaled": "200"
+      },
+      "venuePositionSummaryRecordIds": [
+        "long-to-short-reversal:position:2:summary"
+      ]
+    }
+  ],
+  "sourceArtifactContentHashes": {
+    "POSITION_HISTORY": "144114bc2e402060c18ad44dcecdf243c725d575b1b4043f9e51f898a619cc62",
+    "TRADE_HISTORY": "3a43c9856b09aa3ade1763dc7d9805f1ac8a6724341ef7ba4f72c8538cc6e659"
+  },
+  "summaryMatches": [
+    {
+      "candidateReviewUnitIds": [
+        "ep:long-to-short-reversal:01"
+      ],
+      "deltas": {
+        "grossTradingPnl": {
+          "scale": 0,
+          "unscaled": "0"
+        }
+      },
+      "exclusionReason": null,
+      "reviewUnitId": "ep:long-to-short-reversal:01",
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:1",
+          "sourceRowNumber": 1,
+          "sourceRowSha256": "021b34db273d8f89c5de321d0cda3b62c9e65b66a275832603cccd87e1684288"
+        }
+      ],
+      "status": "EXACT",
+      "summaryRecordId": "long-to-short-reversal:position:1:summary",
+      "summarySourceRow": 1,
+      "tolerances": {
+        "money": {
+          "scale": 3,
+          "unscaled": "5"
+        },
+        "price": {
+          "scale": 3,
+          "unscaled": "5"
+        },
+        "quantity": {
+          "scale": 1,
+          "unscaled": "5"
+        }
+      }
+    },
+    {
+      "candidateReviewUnitIds": [
+        "ep:long-to-short-reversal:02"
+      ],
+      "deltas": {
+        "grossTradingPnl": {
+          "scale": 0,
+          "unscaled": "0"
+        }
+      },
+      "exclusionReason": null,
+      "reviewUnitId": "ep:long-to-short-reversal:02",
+      "sourceProvenance": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "sourceRecordKey": "position:position-history:2",
+          "sourceRowNumber": 2,
+          "sourceRowSha256": "949e12f9e173f3c89eccbbec04f587f57e300a7db441457e157f6e8bc3da41a7"
+        }
+      ],
+      "status": "EXACT",
+      "summaryRecordId": "long-to-short-reversal:position:2:summary",
+      "summarySourceRow": 2,
+      "tolerances": {
+        "money": {
+          "scale": 3,
+          "unscaled": "5"
+        },
+        "price": {
+          "scale": 3,
+          "unscaled": "5"
+        },
+        "quantity": {
+          "scale": 1,
+          "unscaled": "5"
+        }
+      }
+    }
+  ],
+  "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+}

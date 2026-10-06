@@ -1,0 +1,114 @@
+{
+  "$defs": {
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRole": {
+          "enum": [
+            "TRADE_HISTORY",
+            "POSITION_HISTORY"
+          ]
+        },
+        "coverageCompleteness": {
+          "const": "NOT_PROVEN"
+        },
+        "earliestObservedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fixtureCompletenessScope": {
+          "const": "SYNTHETIC_SCENARIO_ONLY"
+        },
+        "latestObservedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rowCount": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sourceTimezone": {
+          "type": "string"
+        },
+        "timestampPrecision": {
+          "const": "SECOND"
+        },
+        "venueExportCompletenessAsserted": {
+          "const": false
+        }
+      },
+      "required": [
+        "artifactRole",
+        "earliestObservedAt",
+        "latestObservedAt",
+        "rowCount",
+        "sourceTimezone",
+        "timestampPrecision",
+        "coverageCompleteness",
+        "fixtureCompletenessScope",
+        "venueExportCompletenessAsserted"
+      ],
+      "type": "object"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRole": {
+          "enum": [
+            "TRADE_HISTORY",
+            "POSITION_HISTORY"
+          ]
+        },
+        "sourceRecordKey": {
+          "type": "string"
+        },
+        "sourceRowNumber": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "sourceRowSha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifactRole",
+        "sourceRecordKey",
+        "sourceRowNumber",
+        "sourceRowSha256"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "artifactCoverages": {
+      "items": {
+        "$ref": "#/$defs/coverage"
+      },
+      "type": "array"
+    },
+    "records": {
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "FIXTURE_METADATA_CANONICAL_SCHEMA_V3"
+    },
+    "sourceEvidenceSnapshots": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "artifactCoverages",
+    "sourceEvidenceSnapshots",
+    "records"
+  ],
+  "title": "Trading Review raw v3 canonical records",
+  "type": "object"
+}

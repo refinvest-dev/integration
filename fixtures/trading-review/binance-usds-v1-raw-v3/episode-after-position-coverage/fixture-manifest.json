@@ -1,0 +1,110 @@
+{
+  "acceptanceScenarioIds": [
+    "TR-ACC-IMPORT-014",
+    "TR-ACC-RECON-012"
+  ],
+  "artifactCoverages": [
+    {
+      "artifactRole": "TRADE_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T01:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T01:01:01.000000Z",
+      "rowCount": 2,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    },
+    {
+      "artifactRole": "POSITION_HISTORY",
+      "coverageCompleteness": "NOT_PROVEN",
+      "earliestObservedAt": "2026-01-02T00:00:01.000000Z",
+      "fixtureCompletenessScope": "SYNTHETIC_SCENARIO_ONLY",
+      "latestObservedAt": "2026-01-02T00:05:01.000000Z",
+      "rowCount": 1,
+      "sourceTimezone": "Asia/Seoul",
+      "timestampPrecision": "SECOND",
+      "venueExportCompletenessAsserted": false
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "position-history.csv",
+      "role": "POSITION_HISTORY",
+      "sha256": "c447261d7a0331fdd32bbc4430f2049a81daf3f6fb3a0f251dd178cea0e4405d",
+      "sizeBytes": 234
+    },
+    {
+      "path": "trade-history.csv",
+      "role": "TRADE_HISTORY",
+      "sha256": "d6704a1941fff7bee3156ae46e3c27d180d46062557806e23299df64a4b237ac",
+      "sizeBytes": 332
+    }
+  ],
+  "commonAnalyzableInterval": null,
+  "contextScenarioIds": [
+    "TR-RECON-SCENARIO-14"
+  ],
+  "declaredPositionMode": "ONE_WAY",
+  "expectedEpisodeCount": 2,
+  "expectedFailureCode": null,
+  "expectedImportStatus": "ACCEPTED",
+  "fixtureId": "episode-after-position-coverage",
+  "fixtureSetVersion": 3,
+  "instrumentDescriptors": [
+    {
+      "fixtureMetadataTermsId": "FIXTURE_METADATA:F37:RV3F37_SYNTH_A",
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F37_SYNTH_A",
+      "sourceSymbol": "RV3F37_SYNTH_A"
+    },
+    {
+      "fixtureMetadataTermsId": "FIXTURE_METADATA:F37:COVERAGE_SENTINEL",
+      "instrumentId": "BINANCE:USDS_FUTURES:RV3F37_SYNTH_COVERAGE",
+      "sourceSymbol": "RV3F37_SYNTH_COVERAGE"
+    }
+  ],
+  "manualVerification": {
+    "allocationActionsChecked": true,
+    "eligibilityAndExclusionsChecked": true,
+    "feeTotalsByAssetChecked": true,
+    "grossFeeNetDistinctionChecked": true,
+    "maxOpenInterestAndClosedVolumeChecked": true,
+    "priceAveragesChecked": true,
+    "provenanceChainChecked": true,
+    "realizedPnlConservationChecked": true,
+    "signedQuantityTransitionsChecked": true
+  },
+  "physicalDialect": {
+    "bom": "UTF-8",
+    "delimiter": ",",
+    "finalRecordTerminator": true,
+    "lineEnding": "CRLF",
+    "quoteCharactersObserved": false
+  },
+  "privacy": {
+    "containsProductionData": false,
+    "namespace": "RAW_V3_SYNTHETIC_F37",
+    "source": "HAND_AUTHORED_SYNTHETIC"
+  },
+  "schemaVersion": "3.0.0",
+  "sourceDialects": {
+    "positionHistory": "BINANCE_USDS_POSITION_HISTORY_V1",
+    "tradeHistory": "BINANCE_USDS_TRADE_HISTORY_V1"
+  },
+  "sourceTimezone": "Asia/Seoul",
+  "versionMetadata": {
+    "adapterVersion": "FIXTURE_ONLY_RAW_V3_ADAPTER",
+    "canonicalSchemaVersion": "FIXTURE_METADATA_CANONICAL_SCHEMA_V3",
+    "evidenceSchemaVersion": "FIXTURE_METADATA_EVIDENCE_SCHEMA_V3",
+    "fixtureOnly": true,
+    "normalizerVersion": "FIXTURE_ONLY_RAW_V3_NORMALIZER",
+    "reconciliationVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "reconstructionPolicyVersion": "BINANCE_USDS_LINEAR_PERPETUAL_ONE_WAY_V1",
+    "serializerVersion": "FIXTURE_ONLY_CANONICAL_JSON_V1",
+    "sourceDialectVersionsByArtifactRole": {
+      "POSITION_HISTORY": "BINANCE_USDS_POSITION_HISTORY_V1",
+      "TRADE_HISTORY": "BINANCE_USDS_TRADE_HISTORY_V1"
+    },
+    "versionSetHash": "73a4fafcedc396a490243f37fcae8d06747cc5d96d504c82e62f10b1c3fa07a2"
+  }
+}
