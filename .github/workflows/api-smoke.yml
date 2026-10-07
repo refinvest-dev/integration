@@ -127,11 +127,30 @@ jobs:
         run: sudo apt-get update && sudo apt-get install --yes postgresql-client
 
       - name: Run isolated API smoke and Web browser acceptance
+        id: integration-smoke
         shell: pwsh
         working-directory: integration
         run: |
           ./scripts/new-ci-environment.ps1
           ./scripts/run-web-acceptance-ci.ps1
+
+      - name: Record tested revisions
+        if: always()
+        shell: pwsh
+        working-directory: integration
+        run: >-
+          ./scripts/write-compatibility-evidence.ps1
+          -VerificationName api-smoke-and-web-acceptance
+          -VerificationOutcome '${{ steps.integration-smoke.outcome }}'
+          -RequiredRepositories context,coreApi,computeApi,web,integration
+
+      - name: Upload compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-smoke-and-web-acceptance-compatibility-evidence
+          path: integration/.integration-data/evidence/compatibility.json
+          if-no-files-found: warn
 
       - name: Upload integration logs
         if: always()
