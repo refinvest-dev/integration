@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   verify:
-    name: Verify Context/Core/Compute snapshots
+    name: Verify Context/Core/Compute/Web snapshots
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
     steps:
@@ -34,6 +34,7 @@ jobs:
             context
             core-api
             compute-api
+            web
           permission-contents: read
 
       - name: Checkout context
@@ -57,11 +58,18 @@ jobs:
           token: ${{ steps.sibling-token.outputs.token }}
           path: compute-api/refinvest
 
+      - name: Checkout Web
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/web
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: web/web
+
       - name: Verify OpenAPI snapshots
         id: contract-sync
         shell: pwsh
         working-directory: integration
-        run: ./scripts/verify-contract-sync.ps1
+        run: ./scripts/verify-contract-sync.ps1 -IncludeWeb
 
       - name: Verify Core document snapshots
         id: core-doc-sync
@@ -102,6 +110,7 @@ jobs:
           ./scripts/write-compatibility-evidence.ps1
           -VerificationName snapshot-sync
           -VerificationOutcome '${{ steps.snapshot-sync.outputs.outcome }}'
+          -RequiredRepositories context,coreApi,computeApi,web,integration
 
       - name: Upload compatibility evidence
         if: always()

@@ -4,13 +4,22 @@ param(
     [string]$ContextPath = (Join-Path $PSScriptRoot '..\..\context'),
     [string]$CoreApiPath = (Join-Path $PSScriptRoot '..\..\api\refinvest'),
     [string]$ComputeApiPath = (Join-Path $PSScriptRoot '..\..\compute-api\refinvest'),
+    [string]$WebPath = (Join-Path $PSScriptRoot '..\..\web\web'),
+    [switch]$RequireWebContract,
     [string]$Profile = 'api-smoke',
     [string]$RegistryId = 'api-smoke'
 )
 
 $ErrorActionPreference = 'Stop'
 
-& (Join-Path $PSScriptRoot 'verify-contract-sync.ps1') -ContextPath $ContextPath -CoreApiPath $CoreApiPath -ComputeApiPath $ComputeApiPath
+$contractSyncParameters = @{
+    ContextPath = $ContextPath
+    CoreApiPath = $CoreApiPath
+    ComputeApiPath = $ComputeApiPath
+    WebPath = $WebPath
+    IncludeWeb = $RequireWebContract
+}
+& (Join-Path $PSScriptRoot 'verify-contract-sync.ps1') @contractSyncParameters
 & (Join-Path $PSScriptRoot 'initialize-compute-schema.ps1') -EnvironmentFile $EnvironmentFile -ComputeApiPath $ComputeApiPath
 & (Join-Path $PSScriptRoot 'publish-compute-fixture.ps1') -EnvironmentFile $EnvironmentFile -ComputeApiPath $ComputeApiPath
 

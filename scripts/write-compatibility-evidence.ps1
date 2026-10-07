@@ -144,6 +144,8 @@ $contracts = [ordered]@{
     contextComputeApi = Get-NormalizedTextSha256 (Join-Path $ContextPath 'openapi\compute-api.yaml')
     coreComputeApi = Get-NormalizedTextSha256 (Join-Path $CoreApiPath 'openapi\compute-api.yaml')
     computeComputeApi = Get-NormalizedTextSha256 (Join-Path $ComputeApiPath 'openapi\compute-api.yaml')
+    webCoreApi = Get-NormalizedTextSha256 (Join-Path $WebPath 'docs\api\open-api.yaml')
+    webComputeApi = Get-NormalizedTextSha256 (Join-Path $WebPath 'docs\api\compute-api.yaml')
 }
 
 $validationErrors = @()
@@ -154,11 +156,17 @@ if ($VerificationOutcome -ceq 'success') {
         }
     }
 
-    foreach ($comparison in @(
+    $contractComparisons = @(
         @('contextCoreApi', 'coreCoreApi'),
         @('contextComputeApi', 'coreComputeApi'),
         @('contextComputeApi', 'computeComputeApi')
-    )) {
+    )
+    if ($RequiredRepositories -contains 'web') {
+        $contractComparisons += ,@('contextCoreApi', 'webCoreApi')
+        $contractComparisons += ,@('contextComputeApi', 'webComputeApi')
+    }
+
+    foreach ($comparison in $contractComparisons) {
         $source = $contracts[$comparison[0]]
         $replica = $contracts[$comparison[1]]
         if (-not $source.available -or -not $replica.available) {

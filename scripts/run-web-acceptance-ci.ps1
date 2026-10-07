@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot '..\.env.local'),
+    [string]$ContextPath = (Join-Path $PSScriptRoot '..\..\context'),
     [string]$WebPath = (Join-Path $PSScriptRoot '..\..\web\web'),
     [string]$CoreApiPath = (Join-Path $PSScriptRoot '..\..\api\refinvest'),
     [string]$ComputeApiPath = (Join-Path $PSScriptRoot '..\..\compute-api\refinvest'),
@@ -16,7 +17,15 @@ $recordsBefore = Get-IntegrationProcessRecords -RootPath $root -RegistryId $Regi
 try {
 # This retains the contract-sync, immutable-fixture, Core-to-Compute, and
 # terminal-result checks before exercising the browser against that same stack.
-& (Join-Path $PSScriptRoot 'run-api-smoke-ci.ps1') -EnvironmentFile $EnvironmentFile -CoreApiPath $CoreApiPath -ComputeApiPath $ComputeApiPath -Profile $Profile -RegistryId $RegistryId
+& (Join-Path $PSScriptRoot 'run-api-smoke-ci.ps1') `
+    -EnvironmentFile $EnvironmentFile `
+    -ContextPath $ContextPath `
+    -CoreApiPath $CoreApiPath `
+    -ComputeApiPath $ComputeApiPath `
+    -WebPath $WebPath `
+    -RequireWebContract `
+    -Profile $Profile `
+    -RegistryId $RegistryId
 
 & (Join-Path $PSScriptRoot 'start-web.ps1') -EnvironmentFile $EnvironmentFile -WebPath $WebPath -Profile $Profile -RegistryId $RegistryId
 
