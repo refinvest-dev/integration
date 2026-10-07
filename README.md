@@ -433,8 +433,10 @@ fails. A detached CI checkout records a null branch while preserving the exact
 commit SHA. Dirty local worktrees are reported as `dirty`; secret values and
 remote URLs are never recorded.
 Successful evidence generation also requires the selected repositories to be
-present and the Context/Core/Compute contract hashes to match. Missing sibling
-checkouts are still recorded when a failed or skipped CI run generates evidence.
+present and the Context/Core/Compute contract hashes to match. When Web is a
+required repository, its Core API and `$ref`-only Compute API snapshot hashes
+must also match Context. Missing sibling checkouts are still recorded when a
+failed or skipped CI run generates evidence.
 
 `compatibility.example.yaml` remains available only for an explicitly selected
 local combination that has not been exercised by the automated harness. Any
@@ -444,19 +446,20 @@ compatibility evidence records observations and never supersedes context.
 
 `.github/workflows/contract-sync.yml` runs the mandatory OpenAPI and Core
 document snapshot checks for integration pull requests, pushes to `main`, daily
-scheduled runs, and manual dispatches. It checks out `context`, `core-api`, and
-`compute-api` beside this repository using the same sibling paths as the local
-harness. The scheduled run detects drift introduced by changes merged directly
-in any sibling repository.
+scheduled runs, and manual dispatches. It checks out `context`, `core-api`,
+`compute-api`, and `web` beside this repository using the same sibling paths as
+the local harness. The OpenAPI gate verifies both Web snapshots as well as Core
+and Compute snapshots. The scheduled run detects drift introduced by changes
+merged directly in any sibling repository.
 
 Before enabling the workflow for private sibling repositories, install a GitHub
-App on exactly `integration`, `context`, `core-api`, and `compute-api` with
-`Contents: Read` permission. Configure the integration repository with:
+App on exactly `integration`, `context`, `core-api`, `compute-api`, and `web`
+with `Contents: Read` permission. Configure the integration repository with:
 
 - Actions variable `REFINVEST_CI_APP_CLIENT_ID`
 - Actions secret `REFINVEST_CI_APP_PRIVATE_KEY`
 
-The workflow creates a short-lived token scoped to the three sibling
+The workflow creates a short-lived token scoped to the four sibling
 repositories. It does not receive OAuth credentials, database passwords, or
 internal API keys. Pull requests from forks are skipped because repository
 secrets are intentionally unavailable to them. Compatibility evidence records

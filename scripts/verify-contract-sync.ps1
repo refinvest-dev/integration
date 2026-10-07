@@ -2,7 +2,9 @@
 param(
     [string]$ContextPath = (Join-Path $PSScriptRoot "..\..\context"),
     [string]$CoreApiPath = (Join-Path $PSScriptRoot "..\..\api\refinvest"),
-    [string]$ComputeApiPath = (Join-Path $PSScriptRoot "..\..\compute-api\refinvest")
+    [string]$ComputeApiPath = (Join-Path $PSScriptRoot "..\..\compute-api\refinvest"),
+    [string]$WebPath = (Join-Path $PSScriptRoot "..\..\web\web"),
+    [switch]$IncludeWeb
 )
 
 $ErrorActionPreference = "Stop"
@@ -48,5 +50,14 @@ Assert-SameFile `
 Assert-SameFile `
     (Join-Path $ContextPath "openapi\compute-api.yaml") `
     (Join-Path $ComputeApiPath "openapi\compute-api.yaml")
+
+if ($IncludeWeb) {
+    Assert-SameFile `
+        (Join-Path $ContextPath "openapi\core-api.yaml") `
+        (Join-Path $WebPath "docs\api\open-api.yaml")
+    Assert-SameFile `
+        (Join-Path $ContextPath "openapi\compute-api.yaml") `
+        (Join-Path $WebPath "docs\api\compute-api.yaml")
+}
 
 Write-Host "OpenAPI snapshots are synchronized with context."
