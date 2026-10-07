@@ -17,6 +17,8 @@ ADR, OpenAPI 계약 또는 개별 서비스의 business code를 소유하지 않
 
 - `scripts/verify-contract-sync.ps1`은 E2E 전 필수 검사다. context의 OpenAPI와 Core/Compute의
   동기화 snapshot이 일치하지 않으면 테스트를 진행하지 않는다.
+- Core 문서 snapshot 변경은 `../api/refinvest/scripts/verify-context-doc-sync.ps1`로
+  context 정본과의 일치 여부를 검증한다.
 - integration은 Git submodule, runtime library dependency, 또는 구현 레포의 source root가 아니다.
   sibling checkout 경로는 script parameter로 바꿀 수 있어야 한다.
 - Core와 Compute의 internal API key는 `REFINVEST_INTERNAL_API_KEY` 하나를 정본으로 사용한다.

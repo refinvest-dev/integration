@@ -442,10 +442,12 @@ compatibility evidence records observations and never supersedes context.
 
 ## GitHub Actions contract sync
 
-`.github/workflows/contract-sync.yml` runs the mandatory OpenAPI snapshot check
-for integration pull requests, pushes to `main`, and manual dispatches. It
-checks out `context`, `core-api`, and `compute-api` beside this repository using
-the same sibling paths as the local harness.
+`.github/workflows/contract-sync.yml` runs the mandatory OpenAPI and Core
+document snapshot checks for integration pull requests, pushes to `main`, daily
+scheduled runs, and manual dispatches. It checks out `context`, `core-api`, and
+`compute-api` beside this repository using the same sibling paths as the local
+harness. The scheduled run detects drift introduced by changes merged directly
+in any sibling repository.
 
 Before enabling the workflow for private sibling repositories, install a GitHub
 App on exactly `integration`, `context`, `core-api`, and `compute-api` with
@@ -457,7 +459,8 @@ App on exactly `integration`, `context`, `core-api`, and `compute-api` with
 The workflow creates a short-lived token scoped to the three sibling
 repositories. It does not receive OAuth credentials, database passwords, or
 internal API keys. Pull requests from forks are skipped because repository
-secrets are intentionally unavailable to them.
+secrets are intentionally unavailable to them. Compatibility evidence records
+the combined OpenAPI and Core document verification as `snapshot-sync`.
 
 ## GitHub Actions API smoke
 
