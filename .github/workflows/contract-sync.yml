@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '17 0 * * *'
   workflow_dispatch:
 
 permissions:
@@ -61,14 +63,45 @@ jobs:
         working-directory: integration
         run: ./scripts/verify-contract-sync.ps1
 
+      - name: Verify Core document snapshots
+        id: core-doc-sync
+        if: always()
+        shell: pwsh
+        working-directory: integration
+        run: >-
+          ../api/refinvest/scripts/verify-context-doc-sync.ps1
+          -ContextPath ../context
+
+      - name: Resolve snapshot verification outcome
+        id: snapshot-sync
+        if: always()
+        shell: pwsh
+        run: |
+          $outcomes = @(
+            '${{ steps.contract-sync.outcome }}',
+            '${{ steps.core-doc-sync.outcome }}'
+          )
+          if ($outcomes -contains 'failure') {
+            'outcome=failure' >> $env:GITHUB_OUTPUT
+          }
+          elseif ($outcomes -contains 'cancelled') {
+            'outcome=cancelled' >> $env:GITHUB_OUTPUT
+          }
+          elseif (@($outcomes | Where-Object { $_ -ne 'success' }).Count -gt 0) {
+            'outcome=skipped' >> $env:GITHUB_OUTPUT
+          }
+          else {
+            'outcome=success' >> $env:GITHUB_OUTPUT
+          }
+
       - name: Record tested revisions
         if: always()
         shell: pwsh
         working-directory: integration
         run: >-
           ./scripts/write-compatibility-evidence.ps1
-          -VerificationName contract-sync
-          -VerificationOutcome '${{ steps.contract-sync.outcome }}'
+          -VerificationName snapshot-sync
+          -VerificationOutcome '${{ steps.snapshot-sync.outputs.outcome }}'
 
       - name: Upload compatibility evidence
         if: always()
