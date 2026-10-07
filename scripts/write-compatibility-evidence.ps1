@@ -25,6 +25,16 @@ function Get-PortableRelativePath {
 
     $baseFullPath = [IO.Path]::GetFullPath($BasePath).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
     $targetFullPath = [IO.Path]::GetFullPath($TargetPath)
+    $relativePathMethod = [IO.Path].GetMethods() |
+        Where-Object { $_.Name -ceq 'GetRelativePath' -and $_.GetParameters().Count -eq 2 } |
+        Select-Object -First 1
+    if ($null -ne $relativePathMethod) {
+        return ([string]$relativePathMethod.Invoke($null, @($BasePath, $targetFullPath))).Replace('\', '/')
+    }
+
+    # Windows PowerShell 5.1 runs on .NET Framework, which does not expose
+    # Path.GetRelativePath. Its absolute drive paths are safe to compare as
+    # file URIs; PowerShell 7+ takes the cross-platform branch above.
     $targetUriPath = if ($TargetIsDirectory) {
         $targetFullPath.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
     }
