@@ -1,4 +1,6 @@
-# Copy to compatibility.local.yaml after selecting the revisions under test.
+# Prefer scripts/write-compatibility-evidence.ps1 for machine-readable evidence.
+# Copy this file to compatibility.local.yaml only for an explicitly selected
+# local combination that has not been exercised by the automated harness.
 # context is normative; this file only records a tested implementation combination.
 contextRevision: REPLACE_WITH_CONTEXT_COMMIT
 

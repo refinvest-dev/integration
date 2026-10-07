@@ -416,9 +416,29 @@ different value. Compute receives that same value as its internal API key.
 
 ## Compatibility evidence
 
-After a successful run, copy `compatibility.example.yaml` to
-`compatibility.local.yaml` and record the exact Core, Compute, Web, and context
-revisions tested together. This is evidence only; it never supersedes context.
+Generate machine-readable evidence for the exact sibling revisions and normalized
+OpenAPI hashes used by a local run:
+
+```powershell
+.\scripts\write-compatibility-evidence.ps1 `
+  -VerificationName local-api-smoke `
+  -VerificationOutcome success `
+  -RequiredRepositories context,coreApi,computeApi,web,integration
+```
+
+The ignored output is written to
+`.integration-data/evidence/compatibility.json`. Contract-sync and API-smoke CI
+runs generate and upload the same evidence even when their verification step
+fails. A detached CI checkout records a null branch while preserving the exact
+commit SHA. Dirty local worktrees are reported as `dirty`; secret values and
+remote URLs are never recorded.
+Successful evidence generation also requires the selected repositories to be
+present and the Context/Core/Compute contract hashes to match. Missing sibling
+checkouts are still recorded when a failed or skipped CI run generates evidence.
+
+`compatibility.example.yaml` remains available only for an explicitly selected
+local combination that has not been exercised by the automated harness. Any
+compatibility evidence records observations and never supersedes context.
 
 ## GitHub Actions contract sync
 

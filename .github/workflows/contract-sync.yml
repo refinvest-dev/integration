@@ -56,6 +56,24 @@ jobs:
           path: compute-api/refinvest
 
       - name: Verify OpenAPI snapshots
+        id: contract-sync
         shell: pwsh
         working-directory: integration
         run: ./scripts/verify-contract-sync.ps1
+
+      - name: Record tested revisions
+        if: always()
+        shell: pwsh
+        working-directory: integration
+        run: >-
+          ./scripts/write-compatibility-evidence.ps1
+          -VerificationName contract-sync
+          -VerificationOutcome '${{ steps.contract-sync.outcome }}'
+
+      - name: Upload compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-sync-compatibility-evidence
+          path: integration/.integration-data/evidence/compatibility.json
+          if-no-files-found: warn
