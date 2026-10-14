@@ -61,3 +61,65 @@ if ($IncludeWeb) {
 }
 
 Write-Host "OpenAPI snapshots are synchronized with context."
+
+# The identity vector is owned by Context. Compare fixture bytes, not a second oracle.
+function Assert-SameBytes([string]$Source, [string]$Replica) {
+    if (-not (Test-Path -LiteralPath $Source -PathType Leaf)) { throw "Contract source does not exist: $Source" }
+    if (-not (Test-Path -LiteralPath $Replica -PathType Leaf)) { throw "Contract replica does not exist: $Replica" }
+    $sourceBytes = [IO.File]::ReadAllBytes($Source)
+    $replicaBytes = [IO.File]::ReadAllBytes($Replica)
+    if ($sourceBytes.Length -ne $replicaBytes.Length) { throw "Contract fixture is out of sync: $Replica" }
+    for ($index = 0; $index -lt $sourceBytes.Length; $index++) {
+        if ($sourceBytes[$index] -ne $replicaBytes[$index]) { throw "Contract fixture is out of sync: $Replica" }
+    }
+    Write-Host "OK  $Replica"
+}
+
+$contextRevision = (& git -C $ContextPath rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0 -or $contextRevision -cnotmatch '^[0-9a-f]{40}$') {
+    throw "Unable to resolve Context commit at $ContextPath"
+}
+$revisionSnapshots = @(
+    (Join-Path $CoreApiPath 'openapi/CONTEXT_REVISION'),
+    (Join-Path $ComputeApiPath 'openapi/CONTEXT_REVISION')
+)
+if ($IncludeWeb) { $revisionSnapshots += (Join-Path $WebPath 'docs/api/CONTEXT_REVISION') }
+foreach ($revisionSnapshot in $revisionSnapshots) {
+    if (-not (Test-Path -LiteralPath $revisionSnapshot -PathType Leaf)) {
+        throw "Context revision snapshot does not exist: $revisionSnapshot"
+    }
+    $revision = [IO.File]::ReadAllText($revisionSnapshot).Trim()
+    if ($revision -cne $contextRevision) {
+        throw "Context revision is out of sync: $revisionSnapshot (expected $contextRevision)"
+    }
+    Write-Host "OK  $revisionSnapshot"
+}
+
+$fixturePath = Join-Path $ContextPath 'fixtures/trading-normalization'
+$coreFixturePath = Join-Path $CoreApiPath 'tradingreview/application/src/test/resources/trading-normalization'
+$computeFixturePath = Join-Path $ComputeApiPath 'tests/fixtures/trading_review/normalization_identity/v1'
+foreach ($name in @('README.md', 'input-identity-v1.json', 'input-identity-v1.schema.json', 'wire-v1.json')) {
+    $source = Join-Path $fixturePath $name
+    Assert-SameBytes $source (Join-Path $coreFixturePath $name)
+    Assert-SameBytes $source (Join-Path $computeFixturePath $name)
+}
+
+$vector = Get-Content -LiteralPath (Join-Path $fixturePath 'input-identity-v1.json') -Raw | ConvertFrom-Json
+if ([string]::IsNullOrWhiteSpace($vector.specificationVersion) -or
+    $vector.specificationVersion -cne $vector.inputIdentity.hashSpecificationVersion) {
+    throw 'Normalization identity specification version is inconsistent.'
+}
+$canonicalBytes = [Text.Encoding]::UTF8.GetBytes($vector.canonicalJson)
+$canonicalHex = [BitConverter]::ToString($canonicalBytes).Replace('-', '').ToLowerInvariant()
+if ($canonicalHex -cne $vector.canonicalUtf8Hex) {
+    throw 'Normalization identity canonical UTF-8 bytes do not match the Context vector.'
+}
+$sha256 = [Security.Cryptography.SHA256]::Create()
+try {
+    $calculatedHash = [BitConverter]::ToString($sha256.ComputeHash($canonicalBytes)).Replace('-', '').ToLowerInvariant()
+}
+finally { $sha256.Dispose() }
+if ($calculatedHash -cne $vector.expectedSha256) {
+    throw 'Normalization identity SHA-256 does not match the Context vector.'
+}
+Write-Host "Normalization identity vector synchronized: $($vector.specificationVersion) $calculatedHash"
