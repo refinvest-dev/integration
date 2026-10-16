@@ -102,7 +102,8 @@ foreach ($revisionSnapshot in $revisionSnapshots) {
 $fixturePath = Join-Path $ContextPath 'fixtures/trading-normalization'
 $coreFixturePath = Join-Path $CoreApiPath 'tradingreview/application/src/test/resources/trading-normalization'
 $computeFixturePath = Join-Path $ComputeApiPath 'tests/fixtures/trading_review/normalization_identity/v1'
-foreach ($name in @('README.md', 'input-identity-v1.json', 'input-identity-v1.schema.json', 'wire-v1.json')) {
+foreach ($name in @('README.md', 'input-identity-v1.json', 'input-identity-v1.schema.json',
+                    'result-integrity-v1.json', 'result-integrity-v1.schema.json', 'wire-v1.json')) {
     $source = Join-Path $fixturePath $name
     Assert-SameBytes $source (Join-Path $coreFixturePath $name)
     Assert-SameBytes $source (Join-Path $computeFixturePath $name)
@@ -127,3 +128,38 @@ if ($calculatedHash -cne $vector.expectedSha256) {
     throw 'Normalization identity SHA-256 does not match the Context vector.'
 }
 Write-Host "Normalization identity vector synchronized: $($vector.specificationVersion) $calculatedHash"
+
+# Hash the Context oracle's stored canonical bytes directly. This is an independent
+# fixture check, not an implementation of the production canonicalization rules.
+$resultVector = Get-Content -LiteralPath (Join-Path $fixturePath 'result-integrity-v1.json') -Raw | ConvertFrom-Json
+if ($resultVector.specificationVersion -cne $resultVector.terminalPayload.resultHashSpecificationVersion -or
+    $resultVector.resultSchemaVersion -cne $resultVector.terminalPayload.resultSchemaVersion) {
+    throw 'Normalization result vector versions are inconsistent.'
+}
+foreach ($entry in @($resultVector.sectionVectors.PSObject.Properties | ForEach-Object { $_.Value }) +
+                    @($resultVector.manifestVector, $resultVector.resultDigestManifestVector)) {
+    $bytes = [Text.Encoding]::UTF8.GetBytes($entry.canonicalJson)
+    $hex = [BitConverter]::ToString($bytes).Replace('-', '').ToLowerInvariant()
+    if ($hex -cne $entry.canonicalUtf8Hex) {
+        throw 'Normalization result canonical UTF-8 bytes do not match the Context vector.'
+    }
+    $hash = [Security.Cryptography.SHA256]::Create()
+    try { $digest = [BitConverter]::ToString($hash.ComputeHash($bytes)).Replace('-', '').ToLowerInvariant() }
+    finally { $hash.Dispose() }
+    if ($digest -cne $entry.expectedSha256) {
+        throw 'Normalization result SHA-256 does not match the Context vector.'
+    }
+}
+$payload = $resultVector.terminalPayload
+if ($payload.reconciliationManifest.manifestHash -cne $resultVector.manifestVector.expectedSha256 -or
+    $payload.resultDigestManifest.reconciliationManifestHash -cne $resultVector.manifestVector.expectedSha256 -or
+    $payload.resultHash -cne $resultVector.resultDigestManifestVector.expectedSha256) {
+    throw 'Normalization result manifest or overall hash is inconsistent.'
+}
+foreach ($sectionDigest in $payload.sectionDigests) {
+    $section = $resultVector.sectionVectors.PSObject.Properties[$sectionDigest.sectionType]
+    if ($null -eq $section -or $sectionDigest.sectionHash -cne $section.Value.expectedSha256) {
+        throw "Normalization result section hash is inconsistent: $($sectionDigest.sectionType)"
+    }
+}
+Write-Host "Normalization result vector synchronized: $($resultVector.specificationVersion) $($payload.resultHash)"
