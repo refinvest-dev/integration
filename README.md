@@ -16,6 +16,41 @@ own product contracts, domain rules, or service business code.
 `context` is the normative source. `compatibility.local.yaml` only records a
 specific implementation combination that was tested against it.
 
+## Trading Normalization runtime contract
+
+`scripts/test-trading-normalization-runtime-contract.ps1`는 Core public API의 합성 CSV
+업로드와 Validate 명령에서 시작하여 durable dispatch, 실제 Compute HTTP DTO, worker,
+terminal payload까지 검증한다. Context OpenAPI와 Core·Compute·Web snapshot, Context
+identity fixed vector의 byte equality 및 canonical UTF-8/SHA-256 검사는 프로세스를
+시작하기 전에 자동 실행된다. Core LedgerRevision publication은 범위에 포함되지 않는다.
+
+```powershell
+.\scripts\verify-contract-sync.ps1 -IncludeWeb
+.\scripts\verify-trading-review-fixtures.ps1 -Dataset raw-v3
+.\scripts\test-trading-normalization-runtime-contract.ps1
+# 기본 포트가 사용 중이면 명시적으로 변경한다.
+.\scripts\test-trading-normalization-runtime-contract.ps1 -CorePort 8180 -ComputePort 8181
+```
+
+기본 sibling checkout은 `../context`, `../api/refinvest`, `../compute-api/refinvest`,
+`../web/web`이다. 다른 위치에서는 `-ContextPath`, `-CorePath`, `-ComputePath`,
+`-WebPath`를 지정한다. 로컬 PostgreSQL의 전용 DB `refinvest_integration`과
+`.env.local`의 `REFINVEST_INTERNAL_API_KEY`가 필요하다. 스크립트는 DB 이름과
+loopback 접속 대상을 확인하고, Core는 `public`, Compute는 실행마다 생성하는
+`tnorm_*` schema를 사용한다. 합성 Artifact는 Core의 로컬 암호화 raw storage에
+업로드되며 Compute는 Core가 발급한 read grant URL로 받는다. 외부 storage와
+Binance 네트워크는 사용하지 않는다.
+
+검증 범위는 정상 identity·hash·VersionSet 왕복, terminal payload OpenAPI,
+locator refresh, 입력 hash 불일치, 지원하지 않는 hash 버전, source bytes hash
+불일치, idempotency conflict, Compute API 재시작 후 persistence와 replay다.
+locator refresh는 worker를 멈춘 사이 이 실행의 Compute schema에서 최초 grant
+revision의 만료 시각만 조정하는 test fault를 사용한다. 이후 Core가 실제 새 grant를
+발급하고 같은 job이 완료되는지 확인한다. 종료 시 시작한 프로세스를 정리하며
+DB와 로그는 `.integration-data/`에 보존한다. 실패하면 non-zero로 종료하고
+`evidence.json`, 로그 경로, Core Session·Run·Compute job ID와 안전한 오류 코드를
+출력한다. 해당 디렉터리와 `.env.local`은 커밋하지 않는다.
+
 ## Performance fixture
 
 The deterministic ten-year, five-asset synthetic fixture, six benchmark scenarios, expected-result
