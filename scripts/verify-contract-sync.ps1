@@ -1,13 +1,17 @@
 [CmdletBinding()]
 param(
-    [string]$ContextPath = (Join-Path $PSScriptRoot "..\..\context"),
-    [string]$CoreApiPath = (Join-Path $PSScriptRoot "..\..\api\refinvest"),
-    [string]$ComputeApiPath = (Join-Path $PSScriptRoot "..\..\compute-api\refinvest"),
-    [string]$WebPath = (Join-Path $PSScriptRoot "..\..\web\web"),
+    [string]$ContextPath,
+    [string]$CoreApiPath,
+    [string]$ComputeApiPath,
+    [string]$WebPath,
     [switch]$IncludeWeb
 )
 
 $ErrorActionPreference = "Stop"
+if (-not $ContextPath) { $ContextPath = Join-Path $PSScriptRoot '..\..\context' }
+if (-not $CoreApiPath) { $CoreApiPath = Join-Path $PSScriptRoot '..\..\api\refinvest' }
+if (-not $ComputeApiPath) { $ComputeApiPath = Join-Path $PSScriptRoot '..\..\compute-api\refinvest' }
+if (-not $WebPath) { $WebPath = Join-Path $PSScriptRoot '..\..\web\web' }
 
 function Assert-SameFile([string]$Source, [string]$Replica) {
     if (-not (Test-Path -LiteralPath $Source)) {

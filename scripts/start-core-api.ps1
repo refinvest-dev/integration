@@ -25,6 +25,7 @@ if ($allowed.reuse) {
     return
 }
 Set-CoreIntegrationEnvironment $values
+$env:SERVER_ADDRESS = '127.0.0.1'
 if ($Observability) {
     $scrapePassword = $values['REFINVEST_METRICS_SCRAPE_PASSWORD']
     if ([string]::IsNullOrWhiteSpace($scrapePassword)) {

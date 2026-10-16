@@ -7,6 +7,7 @@ param(
     [string]$SnapshotProfile = 'integration-e2e-v1',
     [string]$Profile = 'default',
     [string]$RegistryId = 'default',
+    [switch]$TradingReview,
     [switch]$Observability
 )
 
@@ -36,7 +37,9 @@ $logDir = Join-Path $PSScriptRoot '..\.integration-data\logs'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 $startParameters = @{
     FilePath = Get-IntegrationPython -ComputeApiPath $ComputeApiPath
-    ArgumentList = '-c "from refinvest.app.worker import worker_main; worker_main()"'
+    ArgumentList = if ($TradingReview) {
+        '-c "from refinvest.app.trading_review_worker import trading_review_worker_main; trading_review_worker_main()"'
+    } else { '-c "from refinvest.app.worker import worker_main; worker_main()"' }
     WorkingDirectory = $ComputeApiPath
     RedirectStandardOutput = Join-Path $logDir "$RegistryId-compute-worker.out.log"
     RedirectStandardError = Join-Path $logDir "$RegistryId-compute-worker.err.log"

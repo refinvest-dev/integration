@@ -42,7 +42,13 @@ $startParameters = @{
     RedirectStandardError = Join-Path $logDir "$RegistryId-compute-api.err.log"
     PassThru = $true
 }
-if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) { $startParameters.WindowStyle = 'Hidden' }
+if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+    # Windows' default Proactor loop can fail creating its internal socketpair
+    # (WinError 10014) when launched through Start-Process on this host.
+    $pythonCode = "import asyncio; asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()); import uvicorn; uvicorn.run('refinvest.app.main:app', host='127.0.0.1', port=$port)"
+    $startParameters.ArgumentList = @('-c', ('"' + $pythonCode + '"'))
+    $startParameters.WindowStyle = 'Hidden'
+}
 Normalize-IntegrationProcessPathEnvironment
 $process = Start-Process @startParameters
 Register-IntegrationProcess -RootPath (Join-Path $PSScriptRoot '..') -Name 'compute-api' -Process $process `
