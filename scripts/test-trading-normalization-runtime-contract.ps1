@@ -9,7 +9,8 @@ param(
     [int]$CorePort,
     [int]$ComputePort,
     [string]$DatabaseName = 'refinvest_integration',
-    [int]$TimeoutSeconds = 180
+    [int]$TimeoutSeconds = 180,
+    [switch]$ResultIntegrity
 )
 $ErrorActionPreference = 'Stop'
 if (-not $TestRoot) { $TestRoot = Join-Path $PSScriptRoot '..' }
@@ -165,12 +166,34 @@ try {
     $started = $true
     & (Join-Path $PSScriptRoot 'start-compute-api.ps1') -EnvironmentFile $activeEnvironmentFile `
         -ComputeApiPath $ComputePath -Schema $computeSchema -Profile $registry -RegistryId $registry
-    & (Join-Path $PSScriptRoot 'start-compute-worker.ps1') -EnvironmentFile $activeEnvironmentFile `
-        -ComputeApiPath $ComputePath -Schema $computeSchema -Profile $registry -RegistryId $registry -TradingReview
     & (Join-Path $PSScriptRoot 'start-core-api.ps1') -EnvironmentFile $activeEnvironmentFile `
         -CoreApiPath $CorePath -Profile $registry -RegistryId $registry
     & (Join-Path $PSScriptRoot 'wait-for-http.ps1') -Uri "http://127.0.0.1:$ComputePort/health" -TimeoutSeconds 90
     & (Join-Path $PSScriptRoot 'wait-for-http.ps1') -Uri "http://127.0.0.1:$CorePort/actuator/health" -TimeoutSeconds 600
+    # Start the worker only after API health and a fresh DB connection. On Windows,
+    # a transient socket failure can terminate the worker before the first claim.
+    $worker = & (Join-Path $PSScriptRoot 'start-compute-worker.ps1') -EnvironmentFile $activeEnvironmentFile `
+        -ComputeApiPath $ComputePath -Schema $computeSchema -Profile $registry -RegistryId $registry -TradingReview
+    $workerAlive = $false
+    for ($probe = 0; $probe -lt 12; $probe++) {
+        Start-Sleep -Milliseconds 250
+        $workerAlive = $null -ne (Get-Process -Id $worker.processId -ErrorAction SilentlyContinue)
+        if (-not $workerAlive) { break }
+    }
+    if (-not $workerAlive) {
+        & (Join-Path $PSScriptRoot 'stop-integration.ps1') -RegistryId $registry -Service compute-worker | Out-Null
+        $worker = & (Join-Path $PSScriptRoot 'start-compute-worker.ps1') -EnvironmentFile $activeEnvironmentFile `
+            -ComputeApiPath $ComputePath -Schema $computeSchema -Profile $registry -RegistryId $registry -TradingReview
+        $workerAlive = $false
+        for ($probe = 0; $probe -lt 12; $probe++) {
+            Start-Sleep -Milliseconds 250
+            $workerAlive = $null -ne (Get-Process -Id $worker.processId -ErrorAction SilentlyContinue)
+            if (-not $workerAlive) { break }
+        }
+        if (-not $workerAlive) {
+            throw 'Compute worker exited during bounded startup verification.'
+        }
+    }
     $scenario = 'runtime'
     $token = & (Join-Path $PSScriptRoot 'seed-core-member.ps1') -EnvironmentFile $activeEnvironmentFile -Tier PRO |
         Select-Object -Last 1
@@ -184,12 +207,14 @@ try {
     $env:TRADING_RUNTIME_COMPUTE_SCHEMA = $computeSchema
     $env:TRADING_RUNTIME_API_KEY = $values.REFINVEST_INTERNAL_API_KEY
     $env:TRADING_RUNTIME_VERSION_SET = $versionJson
+    $runtimeArguments = @()
+    if ($ResultIntegrity) { $runtimeArguments += '--result-integrity' }
     & $python (Join-Path $PSScriptRoot 'test_trading_normalization_runtime_contract.py') `
         --core-url "http://127.0.0.1:$CorePort" --compute-url "http://127.0.0.1:$ComputePort" `
         --fixture-root $fixtureRoot --context-path $ContextPath --run-dir $runDir `
         --fixture-port $fixturePort --test-root $TestRoot --environment-file $activeEnvironmentFile `
         --core-path $CorePath --compute-path $ComputePath --compute-schema $computeSchema --registry $registry `
-        --timeout $TimeoutSeconds
+        --timeout $TimeoutSeconds @runtimeArguments
     if ($LASTEXITCODE -ne 0) { throw 'Runtime contract scenario failed. See evidence and logs.' }
     Write-Host "Trading Normalization runtime contract PASS. Evidence: $runDir"
 } catch {

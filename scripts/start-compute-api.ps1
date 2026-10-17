@@ -45,7 +45,9 @@ $startParameters = @{
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
     # Windows' default Proactor loop can fail creating its internal socketpair
     # (WinError 10014) when launched through Start-Process on this host.
-    $pythonCode = "import asyncio; asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()); import uvicorn; uvicorn.run('refinvest.app.main:app', host='127.0.0.1', port=$port)"
+    # Uvicorn 0.36+ selects Proactor explicitly for loop=auto even after a
+    # Selector policy is installed. loop=none lets asyncio.Runner use that policy.
+    $pythonCode = "import asyncio; asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()); import uvicorn; uvicorn.run('refinvest.app.main:app', host='127.0.0.1', port=$port, loop='none')"
     $startParameters.ArgumentList = @('-c', ('"' + $pythonCode + '"'))
     $startParameters.WindowStyle = 'Hidden'
 }
