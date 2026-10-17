@@ -16,7 +16,6 @@ import sys
 import threading
 import time
 import uuid
-from datetime import UTC, datetime, timedelta
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -24,6 +23,17 @@ import httpx
 import jsonschema
 import psycopg
 import yaml
+from trading_normalization_result_verifier import (
+    SPEC,
+    IntegrityFailure,
+    collect_v1_resource,
+    negative_scenarios,
+    pagination_independence,
+    schema_validate,
+    self_test,
+    verify,
+    verify_transport,
+)
 
 
 class ScenarioFailure(Exception):
@@ -205,7 +215,10 @@ def main() -> int:
     parser.add_argument("--compute-schema", required=True)
     parser.add_argument("--registry", required=True)
     parser.add_argument("--timeout", type=int, default=180)
+    parser.add_argument("--result-integrity", action="store_true")
     args = parser.parse_args()
+    if args.result_integrity:
+        self_test(args.context_path)
     evidence: dict[str, object] = {
         "runId": args.run_dir.name,
         "contextCommit": git_revision(args.context_path),
@@ -214,6 +227,10 @@ def main() -> int:
         "contractSync": "PASS", "fixedVector": "PASS", "scenarios": {},
         "computeSchema": os.environ["TRADING_RUNTIME_COMPUTE_SCHEMA"],
     }
+    if args.result_integrity:
+        evidence["resultFixedVector"] = "PASS"
+        evidence["runtimeIdentityGate"] = os.environ.get("TRADING_RUNTIME_IDENTITY_GATE", "NOT_RUN")
+        evidence["resultHashSpecificationVersion"] = SPEC
     vector_paths = {
         "context": args.context_path / "fixtures/trading-normalization/input-identity-v1.json",
         "core": args.core_path / "tradingreview/application/src/test/resources/trading-normalization/input-identity-v1.json",
@@ -320,8 +337,18 @@ def main() -> int:
             require(status["status"] == "COMPLETED", str(status.get("failure", {}).get("code", "JOB_NOT_COMPLETED")))
             descriptor = request(compute, "GET",
                 f"{args.compute_url}/trading-review/normalization-jobs/{job_id}/result", 200)
-            payload = request(compute, "GET",
-                f"{args.compute_url}/trading-review/terminal-payloads/{descriptor['payloadId']}", 200)
+            resource_url = f"{args.compute_url}/trading-review/terminal-payloads/{descriptor['payloadId']}"
+            if args.result_integrity:
+                raw_response = compute.get(resource_url, headers={"Accept-Encoding": "identity"})
+                require(raw_response.status_code == 200, "TERMINAL_RESOURCE_UNAVAILABLE")
+                try:
+                    payload = verify_transport(raw_response.content, descriptor,
+                                               raw_response.headers.get("Content-Type", ""),
+                                               raw_response.headers.get("Content-Encoding", ""))
+                except IntegrityFailure as error:
+                    raise ScenarioFailure(error.code) from None
+            else:
+                payload = request(compute, "GET", resource_url, 200)
             check_schema(args.context_path, payload)
             require(run_id == status["coreNormalizationRunId"] == descriptor["coreNormalizationRunId"] ==
                     payload["coreNormalizationRunId"], "TERMINAL_RUN_ID_DRIFT")
@@ -338,10 +365,88 @@ def main() -> int:
             require(descriptor["resultHash"] == payload["resultHash"] and
                     descriptor["reconciliationManifestHash"] ==
                     payload["reconciliationManifest"]["manifestHash"], "RESULT_HASH_DRIFT")
+            if args.result_integrity:
+                scenario = "result_integrity"
+                scenario_started = time.monotonic()
+                try:
+                    schema_validate(args.context_path, payload, descriptor)
+                    result = verify(payload, descriptor,
+                                    {role: uploaded[role]["id"] for role in artifacts},
+                                    {role: artifacts[role]["sha256"] for role in artifacts})
+                    evidence["resultIntegrity"] = {
+                        "transportBytes": len(raw_response.content),
+                        "transportHashPrefix": descriptor["payloadSha256"][:12],
+                        "counts": result["counts"],
+                        "sectionHashPrefixes": {k: v[:12] for k, v in result["sectionHashes"].items()},
+                        "manifestHashPrefix": result["manifestHash"][:12],
+                        "resultHashPrefix": result["resultHash"][:12],
+                        "evidenceReferences": "PASS",
+                    }
+                    evidence["pagination"] = pagination_independence(
+                        payload, {role: uploaded[role]["id"] for role in artifacts})
+                    resource_id = descriptor["payloadId"]
+                    require(collect_v1_resource([(resource_id, raw_response.content),
+                                                 (resource_id, raw_response.content)], resource_id)
+                            == raw_response.content, "DUPLICATE_RESOURCE_DRIFT")
+                    for name, pages, expected in (
+                        ("missingResource", [], "RESULT_COUNT_MISMATCH"),
+                        ("conflictingResource", [(resource_id, raw_response.content),
+                                                 (resource_id, raw_response.content + b" ")], "RESULT_ITEM_CONFLICT"),
+                    ):
+                        try:
+                            collect_v1_resource(pages, resource_id)
+                        except IntegrityFailure as error:
+                            require(error.code == expected, "PAGE_COLLECTION_WRONG_FAILURE")
+                        else:
+                            raise ScenarioFailure("PAGE_COLLECTION_NOT_DETECTED")
+                    evidence["pagination"].update(duplicateResource="PASS", missingResource="PASS",
+                                                   conflictingResource="PASS")
+                    evidence["tamper"] = negative_scenarios(
+                        raw_response.content, descriptor, payload,
+                        {role: uploaded[role]["id"] for role in artifacts})
+                except IntegrityFailure as error:
+                    evidence["integrityFailure"] = {"section": error.section,
+                                                    "expectedPrefix": error.expected,
+                                                    "actualPrefix": error.actual}
+                    raise ScenarioFailure(error.code) from None
+                mark_pass(evidence, scenario, scenario_started)
+                scenario = "primary"
             mark_pass(evidence, "primary", scenario_started)
             evidence["inputSetHash"] = run["input_fingerprint"]
             evidence["versionSetHash"] = run["target_version_set_json"]["versionSetHash"]
             evidence["resultHash"] = descriptor["resultHash"]
+
+            if args.result_integrity:
+                scenario = "persistence_restart"
+                scenario_started = time.monotonic()
+                scripts = args.test_root / "scripts"
+                process_script(scripts / "stop-integration.ps1", "-RegistryId", args.registry,
+                               "-Service", "compute-api")
+                process_script(scripts / "start-compute-api.ps1", "-EnvironmentFile",
+                               str(args.environment_file), "-ComputeApiPath", str(args.compute_path),
+                               "-Schema", args.compute_schema, "-Profile", args.registry,
+                               "-RegistryId", args.registry)
+                poll(lambda: health_code(compute, f"{args.compute_url}/health"),
+                     lambda code: code == 200, args.timeout, "Compute API restart")
+                after_descriptor = request(compute, "GET",
+                    f"{args.compute_url}/trading-review/normalization-jobs/{job_id}/result", 200)
+                after_response = compute.get(resource_url, headers={"Accept-Encoding": "identity"})
+                require(after_response.status_code == 200, "RESTART_RESOURCE_UNAVAILABLE")
+                try:
+                    after_payload = verify_transport(after_response.content, after_descriptor,
+                        after_response.headers.get("Content-Type", ""),
+                        after_response.headers.get("Content-Encoding", ""))
+                    verify(after_payload, after_descriptor,
+                           {role: uploaded[role]["id"] for role in artifacts},
+                           {role: artifacts[role]["sha256"] for role in artifacts})
+                except IntegrityFailure as error:
+                    raise ScenarioFailure(error.code) from None
+                require(after_descriptor == descriptor and after_response.content == raw_response.content,
+                        "RESTART_RESULT_DRIFT")
+                evidence["restartIntegrity"] = "PASS"
+                mark_pass(evidence, scenario, scenario_started)
+                return_code = 0
+                return 0
 
             scenario = "hash_mismatch"
             scenario_started = time.monotonic()
@@ -577,9 +682,9 @@ def main() -> int:
                         all(source not in data for source in raw_sources),
                         "SENSITIVE_LOG_EXPOSURE")
             mark_pass(evidence, scenario, scenario_started)
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - always write safe failure evidence
         evidence["scenarios"][scenario] = "FAIL"
-        evidence["safeFailureCode"] = error.code if isinstance(error, ScenarioFailure) else type(error).__name__
+        evidence["safeFailureCode"] = error.code if isinstance(error, (ScenarioFailure, IntegrityFailure)) else type(error).__name__
         evidence["lastState"] = str(error) if isinstance(error, ScenarioFailure) else type(error).__name__
         return_code = 1
     else:
