@@ -66,6 +66,14 @@ if ($IncludeWeb) {
 
 Write-Host "OpenAPI snapshots are synchronized with context."
 
+# Core owns document snapshots, including the result delivery policy and
+# acceptance/failure rules that are not represented in OpenAPI.
+$coreDocVerifier = Join-Path $CoreApiPath 'scripts/verify-context-doc-sync.ps1'
+if (-not (Test-Path -LiteralPath $coreDocVerifier -PathType Leaf)) {
+    throw "Core document snapshot verifier does not exist: $coreDocVerifier"
+}
+& $coreDocVerifier -ContextPath $ContextPath
+
 # The identity vector is owned by Context. Compare fixture bytes, not a second oracle.
 function Assert-SameBytes([string]$Source, [string]$Replica) {
     if (-not (Test-Path -LiteralPath $Source -PathType Leaf)) { throw "Contract source does not exist: $Source" }
