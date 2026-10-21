@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import hashlib
+import io
 import json
 import os
 import subprocess
@@ -138,6 +140,23 @@ def upload(client: httpx.Client, core_url: str, session_id: str, role: str,
         files={"file": (path.name, content, "text/csv"),
                "metadata": (None, json.dumps(metadata), "application/json")},
     )
+
+
+def missing_maker_column(source: Path, destination: Path) -> str:
+    """Make a non-sensitive source rejection fixture without changing trade values."""
+    with source.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        require(reader.fieldnames is not None and "Maker" in reader.fieldnames,
+                "SOURCE_FIXTURE_HEADER_INVALID")
+        headers = [name for name in reader.fieldnames if name != "Maker"]
+        output = io.StringIO(newline="")
+        writer = csv.DictWriter(output, fieldnames=headers, lineterminator="\r\n",
+                                extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(reader)
+    content = output.getvalue().encode("utf-8-sig")
+    destination.write_bytes(content)
+    return hashlib.sha256(content).hexdigest()
 
 
 def check_schema(context: Path, payload: dict) -> None:
@@ -415,6 +434,80 @@ def main() -> int:
             evidence["inputSetHash"] = run["input_fingerprint"]
             evidence["versionSetHash"] = run["target_version_set_json"]["versionSetHash"]
             evidence["resultHash"] = descriptor["resultHash"]
+
+            scenario = "source_rejection_quality_null"
+            scenario_started = time.monotonic()
+            rejected_book = request(core, "POST",
+                f"{args.core_url}/trading-accounts/{account['id']}/books", 201,
+                headers={"Idempotency-Key": f"rejected-book-{uuid.uuid4().hex}"},
+                json={"displayName": "Synthetic rejection", "productFamily": "LINEAR_PERPETUAL",
+                      "positionMode": "ONE_WAY", "settlementAsset": "USDT", "reviewTimezone": "UTC"})
+            book_id = int(rejected_book["id"])
+            before = row(connection, """select latest_ledger_revision_id::text as latest
+                from trading_books where id=%s""", (book_id,))
+            require(before is not None, "REJECTION_BOOK_MISSING")
+            rejected_session = request(core, "POST",
+                f"{args.core_url}/trading-books/{book_id}/imports", 201,
+                headers={"Idempotency-Key": f"rejected-import-{uuid.uuid4().hex}"},
+                json={"sourceTimezone": "Asia/Seoul", "reviewTimezone": "UTC",
+                      "declaredPositionMode": "ONE_WAY"})
+            rejected_session_id = rejected_session["id"]
+            evidence["rejectedSessionId"] = rejected_session_id
+            missing_column_path = args.run_dir / "synthetic-trade-missing-maker.csv"
+            missing_column_sha = missing_maker_column(
+                args.fixture_root / artifacts["TRADE_HISTORY"]["path"], missing_column_path)
+            upload(core, args.core_url, rejected_session_id, "TRADE_HISTORY",
+                   missing_column_path, missing_column_sha)
+            position = artifacts["POSITION_HISTORY"]
+            upload(core, args.core_url, rejected_session_id, "POSITION_HISTORY",
+                   args.fixture_root / position["path"], position["sha256"])
+            validation = request(core, "POST",
+                f"{args.core_url}/trading-import-sessions/{rejected_session_id}/validation", 202,
+                headers={"Idempotency-Key": f"rejected-validate-{uuid.uuid4().hex}"}, json={})
+            require(validation["status"] == "VALIDATING", "REJECTION_NOT_DISPATCHED")
+            terminal = poll(lambda: request(core, "GET",
+                f"{args.core_url}/trading-import-sessions/{rejected_session_id}", 200),
+                lambda value: value["status"] in {"REJECTED", "PROCESSING_FAILED", "ACCEPTED"},
+                args.timeout, scenario)
+            require(terminal["status"] == "REJECTED", "SOURCE_NOT_REJECTED")
+            require(terminal.get("failure", {}).get("code") == "REQUIRED_COLUMN_MISSING",
+                    "SOURCE_FAILURE_CODE_MISMATCH")
+            require("qualitySummary" in terminal and terminal["qualitySummary"] is None,
+                    "REJECTED_QUALITY_NOT_EXPLICIT_NULL")
+            require(terminal.get("completedAt") is not None and
+                    terminal.get("createdLedgerRevisionId") is None,
+                    "REJECTED_PUBLIC_SHAPE_INVALID")
+            rejected_run = row(connection, """select id::text, compute_job_id, status,
+                last_failure_code from trading_normalization_runs where import_session_id=%s
+                order by created_at desc limit 1""", (int(rejected_session_id),))
+            require(rejected_run is not None and rejected_run["status"] == "TERMINAL_FAILURE" and
+                    rejected_run["compute_job_id"] is not None, "REJECTION_RUN_NOT_TERMINAL")
+            failed_job_id = rejected_run["compute_job_id"]
+            failed_job = request(compute, "GET",
+                f"{args.compute_url}/trading-review/normalization-jobs/{failed_job_id}", 200)
+            require(failed_job["status"] == "FAILED" and
+                    failed_job.get("failure", {}).get("code") == "REQUIRED_COLUMN_MISSING" and
+                    failed_job.get("terminalPayloadId") is None and
+                    failed_job.get("qualityReport") is None, "COMPUTE_FAILURE_SHAPE_INVALID")
+            require(compute.get(f"{args.compute_url}/trading-review/normalization-jobs/{failed_job_id}/result")
+                    .status_code == 409, "FAILED_RESULT_AVAILABLE")
+            after = row(connection, """select latest_ledger_revision_id::text as latest
+                from trading_books where id=%s""", (book_id,))
+            require(after is not None and after["latest"] == before["latest"],
+                    "REJECTED_LATEST_CHANGED")
+            revision = row(connection, """select count(*) as total from trading_ledger_revisions
+                where trading_book_id=%s""", (book_id,))
+            ack = row(connection, """select count(*) as total from trading_normalization_ack_dispatches
+                where core_import_session_id=%s""", (int(rejected_session_id),))
+            require(revision is not None and revision["total"] == 0 and
+                    ack is not None and ack["total"] == 0, "REJECTED_REVISION_OR_ACK_CREATED")
+            retention = row(connection, """select count(*) as total from trading_source_artifacts
+                where import_session_id=%s and retention_status='ACTIVE' and
+                raw_expires_at > CURRENT_TIMESTAMP""", (int(rejected_session_id),))
+            require(retention is not None and retention["total"] == 2,
+                    "REJECTED_RAW_RETENTION_CHANGED")
+            evidence.setdefault("safeFailureCodes", {})[scenario] = "REQUIRED_COLUMN_MISSING"
+            mark_pass(evidence, scenario, scenario_started)
 
             if args.result_integrity:
                 scenario = "persistence_restart"

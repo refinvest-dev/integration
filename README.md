@@ -51,6 +51,11 @@ DB와 로그는 `.integration-data/`에 보존한다. 실패하면 non-zero로 �
 `evidence.json`, 로그 경로, Core Session·Run·Compute job ID와 안전한 오류 코드를
 출력한다. 해당 디렉터리와 `.env.local`은 커밋하지 않는다.
 
+`TR-ACC-IMPORT-QUALITY-001`도 같은 runtime script에서 검증한다. 비민감 synthetic Trade
+History에서 필수 `Maker` column만 제거해 Core upload/validation부터 Compute `FAILED`와
+Core terminal polling까지 실행한다. 공개 `REJECTED` 응답의 `qualitySummary: null`, safe
+failure code, LedgerRevision·ACK 미생성 및 Book latest pointer 불변을 실제 HTTP/DB 경로에서 확인한다.
+
 ## Performance fixture
 
 The deterministic ten-year, five-asset synthetic fixture, six benchmark scenarios, expected-result
