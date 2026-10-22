@@ -56,6 +56,39 @@ History에서 필수 `Maker` column만 제거해 Core upload/validation부터 Co
 Core terminal polling까지 실행한다. 공개 `REJECTED` 응답의 `qualitySummary: null`, safe
 failure code, LedgerRevision·ACK 미생성 및 Book latest pointer 불변을 실제 HTTP/DB 경로에서 확인한다.
 
+## Trading LedgerRevision publication E2E
+
+`scripts/test-trading-normalization-publication.ps1`는 위 runtime의 환경 구성과 프로세스
+helper를 재사용해 정상 결과의 Core publication까지 검증한다. 로컬 PostgreSQL과 `.env.local`이
+필요하다. 기본 sibling checkout 경로는 위와 같고 `-ContextPath`, `-CorePath`,
+`-ComputePath`, `-WebPath`, `-EnvironmentFile`, `-CorePort`, `-ComputePort`,
+`-TimeoutSeconds`를 지정할 수 있다.
+
+```powershell
+.\scripts\verify-contract-sync.ps1 -IncludeWeb
+.\scripts\test-trading-normalization-publication.ps1
+# 기본 포트가 사용 중인 경우
+.\scripts\test-trading-normalization-publication.ps1 -CorePort 8380 -ComputePort 8381
+```
+
+비민감 synthetic Binance Trade/Position History 두 파일을 Core public API에 업로드하고
+validation, durable dispatch, Compute worker terminal `COMPLETED`, Core Session `ACCEPTED`,
+Run·dispatch `PUBLISHED`, LedgerRevision 정확히 하나, Book latest pointer를 확인한다.
+Context fixed vector self-test와 실제 terminal bytes SHA-256, 10개 logical count, 9개
+section digest, manifest/result hash를 독립 계산한다. 발행된 canonical record, Evidence,
+ReviewUnit, allocation, quality/capability/manifest, DB count와 staging cleanup을 검사한다.
+Core가 `RESULT_READY`에 도달한 뒤 publication 잠금을 잠시 잡아 commit된 streaming
+staging의 identity·section count도 terminal descriptor와 직접 비교한다.
+Compute API 중단으로 ACK의 일시 실패를 만들고, Revision 보존과 ACK 재시도·완료를 검증한다.
+추가 polling 후 중복 Revision, record, allocation이 없는지도 확인한다.
+
+실행별 안전한 상태·count·hash prefix와 로그 경로는
+`.integration-data/trading-normalization/<runId>/evidence.json`에 남긴다. 실패는 non-zero다.
+전체 crash recovery 조합과 limited-heap stress 검증은 후속 작업이다. 이 fixture는
+고정된 source ID·timestamp를 사용하지만 Core가 HTTP 생성 시 부여하는 Book/Artifact ID가
+inputSetHash에 포함되므로 실행 간 전체 resultHash 값은 고정되지 않는다. 매 실행마다
+Context 규칙으로 실제 hash를 독립 재계산해 일치 여부를 검증한다.
+
 ## Performance fixture
 
 The deterministic ten-year, five-asset synthetic fixture, six benchmark scenarios, expected-result

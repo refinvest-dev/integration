@@ -1,21 +1,25 @@
 # Trading Normalization Result Integrity runtime drift
 
-기준 Context commit: `5803a9b3a024942ed8bcb9b5267c5972462d8e4c` (PR #33). 이 문서는 계약 정본이 아니라 snapshot 동기화 후의 구현 차이와 후속 작업 입력이다. 정본은 Context의 ADR-066, `TRADING_NORMALIZATION_RESULT_INTEGRITY.md`, OpenAPI와 fixed vector다.
+기준 Context commit: `bd1c26d5e63b4b3ba51932df77d1510362599a79`.
+이 문서는 계약 정본이 아니다. 정본은 Context의 ADR-066,
+`TRADING_NORMALIZATION_RESULT_INTEGRITY.md`, OpenAPI, fixed vector다.
 
-## Compute
+## 현재 검증된 경로
 
-- `trading_review_payload.build_normalization_payload`는 새 `counts`, `sectionDigests`, `resultDigestManifest`, `resultSchemaVersion`, `resultHashSpecificationVersion`을 생성하지 않는다. 공개 `ReconciliationManifestPayload`의 추가 필드와 `manifestHash` 계산도 공개 DTO 기준으로 맞춰야 한다.
-- `trading_review.service`의 내부 `ReconciliationManifest`/`NormalizationResult` 기반 hash는 새 공개 manifest/result hash가 아니다. section별 deterministic ordering과 canonical projection을 구현하고 Context vector로 검증해야 한다.
-- terminal descriptor의 Pydantic 모델과 route는 새 필수 count/digest/version, `transportMode`를 반환하지 않는다. `payloadSha256`은 전송 entity bytes hash로 유지하고 semantic hash와 분리해야 한다.
-- failure 처리와 테스트는 `RESULT_HASH_MISMATCH` 외 count, section, manifest, unsupported schema, invalid Evidence reference 등 새 code를 구분해야 한다. 기존 OpenAPI contract test는 이전 payload shape를 전제한다.
+- Compute는 V1 `counts`, `sectionDigests`, `resultDigestManifest`, manifest/result hash와
+  terminal descriptor를 생성한다. Integration result integrity runtime은 실제 terminal
+  resource와 Context fixed vector의 canonical/hash 규칙을 독립 검사한다.
+- Core는 terminal bytes를 수신해 streaming staging·count/section/manifest/result hash 및
+  참조 무결성을 검증하고, 하나의 LedgerRevision과 관계 행을 발행한 뒤 staging을 제거한다.
+- `test-trading-normalization-publication.ps1`는 synthetic Trade/Position History로
+  commit된 staging identity·count, Session `ACCEPTED`, Run·dispatch `PUBLISHED`, Revision 1개, Book latest pointer,
+  10개 logical count, 9개 section digest, Evidence 참조, ACK 일시 실패 후 재시도와
+  중복 방지를 실제 HTTP/DB 경로에서 확인한다.
+- 기존 runtime contract는 입력 identity와 `REJECTED` 경로를, result integrity runtime은
+  전송·tamper·restart 경계를 각각 검증한다.
 
-## Core
+## 남은 검증
 
-- `TradingNormalizationDispatcher`는 현재 terminal status에서 `markResultReady`까지만 진행한다. descriptor 조회, payload bytes 재조회/hash 검사, declared count와 staging 행 수 검증, section/manifest/result hash 독립 재계산이 필요하다.
-- Evidence snapshot과 canonical record/allocation의 참조 무결성 및 중복 item 충돌 검사, LedgerRevision의 완료 후 publication, durable ACK 경로가 아직 없다. 새 failure taxonomy를 publication 실패에 연결해야 한다.
-- 고정 Context result vector를 이용해 후속 publication 구현의 canonical bytes와 expected hash를 검증해야 한다.
-
-## Web 및 Integration
-
-- Web은 Core 공개 계약 snapshot만 사용하고 result hash를 계산하지 않는다. 현재 별도 API type 생성 명령이 없다.
-- Integration은 Context와 Core·Compute fixture byte 일치 및 저장된 canonical bytes의 SHA-256을 확인한다. 이 검증은 production hasher의 대체물이 아니다.
+- limited-heap stress와 큰 payload의 여러 streaming staging batch 검증.
+- Core/Compute crash 지점별 spool·staging·ACK recovery 전체 조합.
+- V1에는 page/chunk endpoint가 없어 실제 multi-page transport 검증은 할 수 없다.

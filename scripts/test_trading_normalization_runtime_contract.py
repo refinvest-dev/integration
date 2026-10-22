@@ -219,6 +219,251 @@ def assert_no_result(client: httpx.Client, compute_url: str, job_id: str) -> Non
     require(response.status_code != 200, "UNEXPECTED_SUCCESS_RESULT")
 
 
+def publication_counts(connection: psycopg.Connection, revision_id: str,
+                       book_id: str, run_id: str) -> dict:
+    queries = {
+        "revisions": ("select count(*) as total from trading_ledger_revisions where run_id=%s::uuid", (run_id,)),
+        "canonicalRecords": ("select count(*) as total from trading_ledger_revision_records where revision_id=%s::uuid", (revision_id,)),
+        "sourceEvidenceSnapshots": ("select count(*) as total from trading_source_evidence_snapshots where trading_book_id=%s", (int(book_id),)),
+        "reviewUnits": ("select count(*) as total from trading_ledger_review_units where revision_id=%s::uuid", (revision_id,)),
+        "allocations": ("select count(*) as total from trading_ledger_allocations where revision_id=%s::uuid", (revision_id,)),
+        "staging": ("select count(*) as total from trading_normalization_result_staging where run_id=%s::uuid", (run_id,)),
+        "stagedItems": ("select count(*) as total from trading_normalization_staged_items where run_id=%s::uuid", (run_id,)),
+        "acks": ("select count(*) as total from trading_normalization_ack_dispatches where run_id=%s::uuid", (run_id,)),
+    }
+    return {name: row(connection, query, parameters)["total"]
+            for name, (query, parameters) in queries.items()}
+
+
+def publication_diagnosis(connection: psycopg.Connection | None,
+                          compute_db: psycopg.Connection | None, evidence: dict) -> dict:
+    diagnosis = {}
+    run_id = evidence.get("coreRunId")
+    session_id = evidence.get("coreSessionId")
+    job_id = evidence.get("computeJobId")
+    if connection is not None and session_id:
+        try:
+            diagnosis["session"] = row(connection, """select status,failure_code,
+                created_ledger_revision_id is not null as revision_created
+                from trading_import_sessions where id=%s""", (int(session_id),))
+        except Exception:
+            diagnosis["session"] = "UNAVAILABLE"
+    if connection is not None and run_id:
+        for name, query in {
+            "run": "select status,last_failure_code from trading_normalization_runs where id=%s::uuid",
+            "dispatch": "select status,last_failure_code from trading_normalization_dispatches where run_id=%s::uuid",
+            "staging": "select state from trading_normalization_result_staging where run_id=%s::uuid",
+            "revision": "select count(*) as total from trading_ledger_revisions where run_id=%s::uuid",
+            "ack": "select status,last_failure_code,attempt_count from trading_normalization_ack_dispatches where run_id=%s::uuid",
+        }.items():
+            try:
+                diagnosis[name] = row(connection, query, (run_id,))
+            except Exception:
+                diagnosis[name] = "UNAVAILABLE"
+    if compute_db is not None and job_id:
+        try:
+            diagnosis["computeJob"] = row(compute_db,
+                "select status from trading_review_jobs where job_id=%s::uuid", (job_id,))
+        except Exception:
+            diagnosis["computeJob"] = "UNAVAILABLE"
+    return diagnosis
+
+
+def verify_publication(args, evidence: dict, core: httpx.Client, compute: httpx.Client,
+                       connection: psycopg.Connection, compute_db: psycopg.Connection,
+                       book: dict, session_id: str, run_id: str, job_id: str,
+                       run: dict, job: dict, status: dict, descriptor: dict,
+                       payload: dict, result: dict, uploaded: dict, artifacts: dict) -> None:
+    require(payload["attemptToken"] == descriptor["attemptToken"] == status["attemptToken"],
+            "TERMINAL_ATTEMPT_DRIFT")
+    attempt = row(connection, """select attempt_number,attempt_token::text,compute_job_id
+        from trading_normalization_attempts where run_id=%s::uuid order by attempt_number desc limit 1""",
+                  (run_id,))
+    require(attempt is not None and attempt["attempt_token"] == descriptor["attemptToken"] and
+            attempt["compute_job_id"] == job_id, "CORE_ATTEMPT_DRIFT")
+    terminal = row(compute_db, """select attempt_number,attempt_token,deletion_generation,
+        payload_sha256,result_hash from trading_review_terminal_payloads where payload_id=%s::uuid""",
+                   (descriptor["payloadId"],))
+    require(terminal is not None and terminal["attempt_token"] == attempt["attempt_token"] and
+            terminal["deletion_generation"] == run["deletion_generation"] and
+            terminal["payload_sha256"] == descriptor["payloadSha256"] and
+            terminal["result_hash"] == result["resultHash"], "COMPUTE_TERMINAL_IDENTITY_DRIFT")
+    require(payload["counts"]["canonicalRecordCount"] > 0 and
+            payload["counts"]["sourceEvidenceSnapshotCount"] > 0 and
+            payload["counts"]["reviewUnitCount"] > 0 and
+            payload["counts"]["positionAllocationCount"] > 0 and
+            any(u.get("reconstructionStatus") == "COMPLETE" for u in
+                payload["reconciliationManifest"]["reviewUnits"]), "FIXTURE_NOT_COMPLETE")
+    public = poll(lambda: request(core, "GET",
+                  f"{args.core_url}/trading-import-sessions/{session_id}", 200),
+                  lambda s: s["status"] in {"ACCEPTED", "REJECTED", "PROCESSING_FAILED"},
+                  args.timeout, "Core publication")
+    require(public["status"] == "ACCEPTED" and public["failure"] is None and
+            public["qualitySummary"] is not None and public["createdLedgerRevisionId"],
+            "SESSION_NOT_ACCEPTED")
+    revision_id = public["createdLedgerRevisionId"]
+    published = row(connection, """select r.id::text,r.run_id::text,r.trading_book_id,
+        r.import_session_id,r.input_set_hash,r.input_hash_specification_version,
+        r.input_identity_json,r.target_version_set_json,r.result_schema_version,
+        r.result_hash_specification_version,r.result_hash,r.ledger_content_hash,
+        r.reconciliation_manifest_hash,r.reconciliation_manifest_json,r.coverage_json,
+        r.capability_json,r.quality_report_json,r.counts_json,r.section_digests_json,r.published_at,
+        b.latest_ledger_revision_id::text as latest,s.created_ledger_revision_id::text as created,
+        s.deletion_generation,s.status as session_status,n.status as run_status,
+        n.current_attempt,n.attempt_token::text as attempt_token,d.status as dispatch_status
+        from trading_ledger_revisions r join trading_books b on b.id=r.trading_book_id
+        join trading_import_sessions s on s.id=r.import_session_id
+        join trading_normalization_runs n on n.id=r.run_id
+        join trading_normalization_dispatches d on d.run_id=r.run_id
+        where r.id=%s::uuid""", (revision_id,))
+    require(published is not None and published["run_id"] == run_id and
+            published["trading_book_id"] == int(book["id"]) and
+            published["import_session_id"] == int(session_id) and
+            published["latest"] == revision_id == published["created"] and
+            published["session_status"] == "ACCEPTED" and
+            published["run_status"] == published["dispatch_status"] == "PUBLISHED",
+            "PUBLICATION_STATE_DRIFT")
+    require(published["input_set_hash"] == run["input_fingerprint"] == descriptor["inputSetHash"] and
+            published["input_hash_specification_version"] == payload["hashSpecificationVersion"] and
+            published["input_identity_json"] == run["input_identity_json"] and
+            published["target_version_set_json"] == payload["targetVersionSet"] and
+            published["deletion_generation"] == payload["deletionGeneration"] and
+            published["current_attempt"] == attempt["attempt_number"] and
+            published["attempt_token"] == attempt["attempt_token"], "PUBLISHED_IDENTITY_DRIFT")
+    require(published["result_schema_version"] == payload["resultSchemaVersion"] and
+            published["result_hash_specification_version"] == payload["resultHashSpecificationVersion"] and
+            published["result_hash"] == result["resultHash"] and
+            published["ledger_content_hash"] == result["sectionHashes"]["CANONICAL_RECORDS"] and
+            published["reconciliation_manifest_hash"] == result["manifestHash"] and
+            published["counts_json"] == result["counts"] and
+            published["section_digests_json"] == payload["sectionDigests"] and
+            published["reconciliation_manifest_json"] == payload["reconciliationManifest"] and
+            published["coverage_json"] == payload["artifactCoverages"] and
+            published["capability_json"] == payload["capability"] and
+            published["quality_report_json"] == payload["qualityReport"],
+            "PUBLISHED_CONTENT_DRIFT")
+    counts = publication_counts(connection, revision_id, book["id"], run_id)
+    declared = result["counts"]
+    stored_counts = {
+        "artifactCoverageCount": len(published["coverage_json"]),
+        "canonicalRecordCount": counts["canonicalRecords"],
+        "sourceEvidenceSnapshotCount": counts["sourceEvidenceSnapshots"],
+        "reviewUnitCount": counts["reviewUnits"],
+        "positionAllocationCount": counts["allocations"],
+        "excludedReviewUnitCount": sum(bool(u["exclusionReasons"]) for u in
+                                      published["reconciliation_manifest_json"]["reviewUnits"]),
+        "capabilityCount": len(published["capability_json"]),
+        "validationIssueCount": len(published["quality_report_json"]["validationIssues"]),
+        "reconciliationMatchCount": len(published["reconciliation_manifest_json"]["reconciliationMatches"]),
+        "reconciliationIssueCount": len(published["reconciliation_manifest_json"]["reconciliationIssues"]),
+    }
+    require(counts["revisions"] == 1 and counts["canonicalRecords"] == declared["canonicalRecordCount"] and
+            counts["sourceEvidenceSnapshots"] == declared["sourceEvidenceSnapshotCount"] and
+            counts["reviewUnits"] == declared["reviewUnitCount"] and
+            counts["allocations"] == declared["positionAllocationCount"] and
+            counts["staging"] == counts["stagedItems"] == 0 and counts["acks"] == 1,
+            "PUBLISHED_ROW_COUNT_DRIFT")
+    require(stored_counts == declared, "PUBLISHED_MANIFEST_COUNT_DRIFT")
+    for record in payload["canonicalRecords"]:
+        saved = row(connection, """select r.record_json from trading_records r
+            join trading_ledger_revision_records m on m.trading_book_id=r.trading_book_id
+            and m.record_id=r.record_id where m.revision_id=%s::uuid and r.record_id=%s""",
+                    (revision_id, record["recordId"]))
+        require(saved is not None and saved["record_json"] == record, "PUBLISHED_RECORD_DRIFT")
+    for item in payload["sourceEvidenceSnapshots"]:
+        saved = row(connection, """select e.evidence_json,a.artifact_role,a.import_session_id
+            from trading_source_evidence_snapshots e join trading_source_artifacts a
+            on a.id=e.source_artifact_id where e.trading_book_id=%s and e.snapshot_id=%s
+            and e.source_row_number=%s""",
+                    (int(book["id"]), item["snapshotId"], item["sourceRowNumber"]))
+        require(saved is not None and saved["evidence_json"] == item and
+                saved["artifact_role"] == item["artifactRole"] and
+                saved["import_session_id"] == int(session_id) and
+                item["sourceRowNumber"] <= next(a["rowCount"] for a in
+                    json.loads((args.fixture_root / "fixture-manifest.json").read_text(encoding="utf-8"))["artifactCoverages"]
+                    if a["artifactRole"] == item["artifactRole"]), "PUBLISHED_EVIDENCE_DRIFT")
+    for unit in payload["reconciliationManifest"]["reviewUnits"]:
+        saved = row(connection, """select unit_json from trading_ledger_review_units
+            where revision_id=%s::uuid and review_unit_id=%s""",
+                    (revision_id, unit["reviewUnitId"]))
+        require(saved is not None and saved["unit_json"] == unit, "PUBLISHED_UNIT_DRIFT")
+        for allocation in unit["allocations"]:
+            saved = row(connection, """select allocation_json from trading_ledger_allocations
+                where revision_id=%s::uuid and allocation_id=%s""",
+                        (revision_id, allocation["allocationId"]))
+            require(saved is not None and saved["allocation_json"] == allocation,
+                    "PUBLISHED_ALLOCATION_DRIFT")
+    ack = row(connection, """select status,disposition,attempt_count,payload_id,created_at,
+        payload_sha256,result_hash,attempt_token::text,deletion_generation,last_failure_code
+        from trading_normalization_ack_dispatches where run_id=%s::uuid""", (run_id,))
+    require(ack is not None and ack["disposition"] == "PERSISTED" and
+            ack["payload_id"] == descriptor["payloadId"] and
+            ack["payload_sha256"] == descriptor["payloadSha256"] and
+            ack["result_hash"] == result["resultHash"] and
+            ack["attempt_token"] == descriptor["attemptToken"] and
+            ack["deletion_generation"] == descriptor["deletionGeneration"] and
+            ack["created_at"] >= published["published_at"], "ACK_OUTBOX_DRIFT")
+    evidence["publication"] = {"revisionId": revision_id, "counts": counts,
+        "logicalCounts": declared, "sectionHashPrefixes":
+        {k: v[:12] for k, v in result["sectionHashes"].items()},
+        "manifestHashPrefix": result["manifestHash"][:12],
+        "resultHashPrefix": result["resultHash"][:12],
+        "transportHashPrefix": descriptor["payloadSha256"][:12],
+        "identity": "PASS", "evidenceReferences": "PASS"}
+    require(ack["status"] == "PENDING", "ACK_FAULT_WINDOW_MISSED")
+    scripts = args.test_root / "scripts"
+    process_script(scripts / "stop-integration.ps1", "-RegistryId", args.registry,
+                   "-Service", "compute-api")
+    failed_ack = poll(lambda: row(connection, """select status,attempt_count,last_failure_code
+        from trading_normalization_ack_dispatches where run_id=%s::uuid""", (run_id,)),
+        lambda a: a["attempt_count"] > 0 and a["last_failure_code"] is not None,
+        args.timeout, "ACK failure while Compute API stopped")
+    require(failed_ack["status"] == "PENDING" and
+            failed_ack["last_failure_code"] == "TEMPORARY_DEPENDENCY_FAILURE" and
+            publication_counts(connection, revision_id, book["id"], run_id) == counts,
+            "ACK_FAILURE_CHANGED_PUBLICATION")
+    process_script(scripts / "start-compute-api.ps1", "-EnvironmentFile",
+                   str(args.environment_file), "-ComputeApiPath", str(args.compute_path),
+                   "-Schema", args.compute_schema, "-Profile", args.registry,
+                   "-RegistryId", args.registry)
+    poll(lambda: health_code(compute, f"{args.compute_url}/health"),
+         lambda code: code == 200, args.timeout, "Compute API restart")
+    completed_ack = poll(lambda: row(connection, """select status,attempt_count
+        from trading_normalization_ack_dispatches where run_id=%s::uuid""", (run_id,)),
+        lambda a: a["status"] in {"ACKNOWLEDGED", "TERMINAL_FAILURE"},
+        args.timeout, "ACK delivery")
+    require(completed_ack["status"] == "ACKNOWLEDGED" and
+            completed_ack["attempt_count"] > failed_ack["attempt_count"], "ACK_NOT_DELIVERED")
+    compute_ack = row(compute_db, """select acknowledged_at,acknowledged_core_aggregate_id
+        from trading_review_terminal_payloads where payload_id=%s::uuid""",
+                      (descriptor["payloadId"],))
+    require(compute_ack is not None and compute_ack["acknowledged_at"] is not None and
+            compute_ack["acknowledged_core_aggregate_id"] == session_id,
+            "COMPUTE_ACK_NOT_PERSISTED")
+    before = publication_counts(connection, revision_id, book["id"], run_id)
+    time.sleep(22)  # At least one result and ACK scheduler cycle after the first acknowledgement.
+    replay = request(core, "GET", f"{args.core_url}/trading-import-sessions/{session_id}", 200)
+    require(replay["status"] == "ACCEPTED" and
+            replay["createdLedgerRevisionId"] == revision_id and
+            publication_counts(connection, revision_id, book["id"], run_id) == before,
+            "PUBLICATION_REPLAY_DRIFT")
+    latest = row(connection, "select latest_ledger_revision_id::text as latest from trading_books where id=%s",
+                 (int(book["id"]),))
+    require(latest is not None and latest["latest"] == revision_id, "REPLAY_CHANGED_LATEST")
+    raw_sources = [(args.fixture_root / artifacts[role]["path"]).read_text(encoding="utf-8")
+                   for role in ("TRADE_HISTORY", "POSITION_HISTORY")]
+    forbidden = [os.environ["TRADING_RUNTIME_ACCESS_TOKEN"],
+                 os.environ["TRADING_RUNTIME_API_KEY"], *raw_sources,
+                 *[json.dumps(record, separators=(",", ":")) for record in payload["canonicalRecords"]]]
+    for output in evidence["logPaths"].values():
+        for path in (Path(output), Path(str(output).replace(".out.log", ".err.log"))):
+            data = path.read_text(encoding="utf-8", errors="replace")
+            require("/internal/trading-review/artifact-grants/" not in data and
+                    all(secret not in data for secret in forbidden), "SENSITIVE_LOG_EXPOSURE")
+    evidence["publication"]["ack"] = "ACKNOWLEDGED_AFTER_RETRY"
+    evidence["publication"]["idempotency"] = "PASS"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--core-url", required=True)
@@ -235,8 +480,9 @@ def main() -> int:
     parser.add_argument("--registry", required=True)
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--result-integrity", action="store_true")
+    parser.add_argument("--publication", action="store_true")
     args = parser.parse_args()
-    if args.result_integrity:
+    if args.result_integrity or args.publication:
         self_test(args.context_path)
     evidence: dict[str, object] = {
         "runId": args.run_dir.name,
@@ -274,6 +520,7 @@ def main() -> int:
     started = time.monotonic()
     connection = None
     compute_db = None
+    stage_lock = None
     fault_server = None
     try:
         manifest = json.loads((args.fixture_root / "fixture-manifest.json").read_text(encoding="utf-8"))
@@ -354,10 +601,23 @@ def main() -> int:
                 lambda s: s["status"] in {"COMPLETED", "FAILED", "CANCELLED"},
                 args.timeout, "Compute terminal")
             require(status["status"] == "COMPLETED", str(status.get("failure", {}).get("code", "JOB_NOT_COMPLETED")))
+            if args.publication:
+                ready = poll(lambda: row(connection, """select status from trading_normalization_runs
+                    where id=%s::uuid""", (run_id,)),
+                    lambda r: r["status"] in {"RESULT_READY", "PUBLISHING", "PUBLISHED", "TERMINAL_FAILURE"},
+                    args.timeout, "Core result ready")
+                require(ready["status"] == "RESULT_READY", "CORE_RESULT_NOT_READY")
+                # Core has finished terminal polling. Hold its publication lock
+                # while the committed streaming stage is inspected below.
+                stage_lock = db_connection("public")
+                stage_lock.autocommit = False
+                locked_session = row(stage_lock, """select id from trading_import_sessions
+                    where id=%s for update""", (int(session_id),))
+                require(locked_session is not None, "STAGING_SESSION_LOCK_FAILED")
             descriptor = request(compute, "GET",
                 f"{args.compute_url}/trading-review/normalization-jobs/{job_id}/result", 200)
             resource_url = f"{args.compute_url}/trading-review/terminal-payloads/{descriptor['payloadId']}"
-            if args.result_integrity:
+            if args.result_integrity or args.publication:
                 raw_response = compute.get(resource_url, headers={"Accept-Encoding": "identity"})
                 require(raw_response.status_code == 200, "TERMINAL_RESOURCE_UNAVAILABLE")
                 try:
@@ -384,7 +644,7 @@ def main() -> int:
             require(descriptor["resultHash"] == payload["resultHash"] and
                     descriptor["reconciliationManifestHash"] ==
                     payload["reconciliationManifest"]["manifestHash"], "RESULT_HASH_DRIFT")
-            if args.result_integrity:
+            if args.result_integrity or args.publication:
                 scenario = "result_integrity"
                 scenario_started = time.monotonic()
                 try:
@@ -430,10 +690,49 @@ def main() -> int:
                     raise ScenarioFailure(error.code) from None
                 mark_pass(evidence, scenario, scenario_started)
                 scenario = "primary"
+            if args.publication:
+                stage = poll(lambda: row(connection, """select run_id::text,compute_job_id,
+                    attempt_token::text,deletion_generation,transport_sha256,result_hash,
+                    counts_json,section_digests_json,manifest_hash,base_json is not null as complete
+                    from trading_normalization_result_staging where run_id=%s::uuid""", (run_id,)),
+                    lambda s: s["complete"], args.timeout, "Core staging")
+                require(stage["run_id"] == run_id and stage["compute_job_id"] == job_id and
+                        stage["attempt_token"] == descriptor["attemptToken"] and
+                        stage["deletion_generation"] == descriptor["deletionGeneration"] and
+                        stage["transport_sha256"] == descriptor["payloadSha256"] and
+                        stage["result_hash"] == result["resultHash"] and
+                        stage["counts_json"] == result["counts"] and
+                        stage["section_digests_json"] == descriptor["sectionDigests"] and
+                        stage["manifest_hash"] == result["manifestHash"],
+                        "CORE_STAGING_IDENTITY_DRIFT")
+                with connection.cursor() as cursor:
+                    cursor.execute("""select section_type,count(*) from trading_normalization_staged_items
+                        where run_id=%s::uuid group by section_type""", (run_id,))
+                    staged_counts = dict(cursor.fetchall())
+                expected_stage_counts = {section["sectionType"]: section["itemCount"]
+                                         for section in descriptor["sectionDigests"]}
+                expected_stage_counts["VALIDATION_ISSUES"] = result["counts"]["validationIssueCount"]
+                require(all(staged_counts.get(section, 0) == count for section, count in
+                            expected_stage_counts.items()), "CORE_STAGING_COUNT_DRIFT")
+                evidence["stagingIdentity"] = "PASS"
+                evidence["stagingCounts"] = expected_stage_counts
+                stage_lock.commit()
+                stage_lock.close()
+                stage_lock = None
             mark_pass(evidence, "primary", scenario_started)
             evidence["inputSetHash"] = run["input_fingerprint"]
             evidence["versionSetHash"] = run["target_version_set_json"]["versionSetHash"]
             evidence["resultHash"] = descriptor["resultHash"]
+
+            if args.publication:
+                scenario = "ledger_publication"
+                scenario_started = time.monotonic()
+                verify_publication(args, evidence, core, compute, connection, compute_db,
+                                   book, session_id, run_id, job_id, run, job, status,
+                                   descriptor, payload, result, uploaded, artifacts)
+                mark_pass(evidence, scenario, scenario_started)
+                return_code = 0
+                return return_code
 
             scenario = "source_rejection_quality_null"
             scenario_started = time.monotonic()
@@ -779,6 +1078,8 @@ def main() -> int:
         evidence["scenarios"][scenario] = "FAIL"
         evidence["safeFailureCode"] = error.code if isinstance(error, (ScenarioFailure, IntegrityFailure)) else type(error).__name__
         evidence["lastState"] = str(error) if isinstance(error, ScenarioFailure) else type(error).__name__
+        if args.publication:
+            evidence["diagnosis"] = publication_diagnosis(connection, compute_db, evidence)
         return_code = 1
     else:
         return_code = 0
@@ -786,6 +1087,9 @@ def main() -> int:
         if fault_server is not None:
             fault_server.shutdown()
             fault_server.server_close()
+        if stage_lock is not None:
+            stage_lock.rollback()
+            stage_lock.close()
         if connection is not None:
             connection.close()
         if compute_db is not None:
