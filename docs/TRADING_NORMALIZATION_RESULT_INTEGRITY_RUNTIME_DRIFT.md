@@ -12,7 +12,7 @@
 - Core는 terminal bytes를 수신해 streaming staging·count/section/manifest/result hash 및
   참조 무결성을 검증하고, 하나의 LedgerRevision과 관계 행을 발행한 뒤 staging을 제거한다.
 - `test-trading-normalization-publication.ps1`는 synthetic Trade/Position History로
-  Session `ACCEPTED`, Run·dispatch `PUBLISHED`, Revision 1개, Book latest pointer,
+  commit된 staging identity·count, Session `ACCEPTED`, Run·dispatch `PUBLISHED`, Revision 1개, Book latest pointer,
   10개 logical count, 9개 section digest, Evidence 참조, ACK 일시 실패 후 재시도와
   중복 방지를 실제 HTTP/DB 경로에서 확인한다.
 - 기존 runtime contract는 입력 identity와 `REJECTED` 경로를, result integrity runtime은

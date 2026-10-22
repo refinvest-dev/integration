@@ -77,6 +77,8 @@ Run·dispatch `PUBLISHED`, LedgerRevision 정확히 하나, Book latest pointer�
 Context fixed vector self-test와 실제 terminal bytes SHA-256, 10개 logical count, 9개
 section digest, manifest/result hash를 독립 계산한다. 발행된 canonical record, Evidence,
 ReviewUnit, allocation, quality/capability/manifest, DB count와 staging cleanup을 검사한다.
+Core가 `RESULT_READY`에 도달한 뒤 publication 잠금을 잠시 잡아 commit된 streaming
+staging의 identity·section count도 terminal descriptor와 직접 비교한다.
 Compute API 중단으로 ACK의 일시 실패를 만들고, Revision 보존과 ACK 재시도·완료를 검증한다.
 추가 polling 후 중복 Revision, record, allocation이 없는지도 확인한다.
 

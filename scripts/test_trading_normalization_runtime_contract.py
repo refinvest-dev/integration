@@ -520,6 +520,7 @@ def main() -> int:
     started = time.monotonic()
     connection = None
     compute_db = None
+    stage_lock = None
     fault_server = None
     try:
         manifest = json.loads((args.fixture_root / "fixture-manifest.json").read_text(encoding="utf-8"))
@@ -600,6 +601,19 @@ def main() -> int:
                 lambda s: s["status"] in {"COMPLETED", "FAILED", "CANCELLED"},
                 args.timeout, "Compute terminal")
             require(status["status"] == "COMPLETED", str(status.get("failure", {}).get("code", "JOB_NOT_COMPLETED")))
+            if args.publication:
+                ready = poll(lambda: row(connection, """select status from trading_normalization_runs
+                    where id=%s::uuid""", (run_id,)),
+                    lambda r: r["status"] in {"RESULT_READY", "PUBLISHING", "PUBLISHED", "TERMINAL_FAILURE"},
+                    args.timeout, "Core result ready")
+                require(ready["status"] == "RESULT_READY", "CORE_RESULT_NOT_READY")
+                # Core has finished terminal polling. Hold its publication lock
+                # while the committed streaming stage is inspected below.
+                stage_lock = db_connection("public")
+                stage_lock.autocommit = False
+                locked_session = row(stage_lock, """select id from trading_import_sessions
+                    where id=%s for update""", (int(session_id),))
+                require(locked_session is not None, "STAGING_SESSION_LOCK_FAILED")
             descriptor = request(compute, "GET",
                 f"{args.compute_url}/trading-review/normalization-jobs/{job_id}/result", 200)
             resource_url = f"{args.compute_url}/trading-review/terminal-payloads/{descriptor['payloadId']}"
@@ -676,6 +690,35 @@ def main() -> int:
                     raise ScenarioFailure(error.code) from None
                 mark_pass(evidence, scenario, scenario_started)
                 scenario = "primary"
+            if args.publication:
+                stage = poll(lambda: row(connection, """select run_id::text,compute_job_id,
+                    attempt_token::text,deletion_generation,transport_sha256,result_hash,
+                    counts_json,section_digests_json,manifest_hash,base_json is not null as complete
+                    from trading_normalization_result_staging where run_id=%s::uuid""", (run_id,)),
+                    lambda s: s["complete"], args.timeout, "Core staging")
+                require(stage["run_id"] == run_id and stage["compute_job_id"] == job_id and
+                        stage["attempt_token"] == descriptor["attemptToken"] and
+                        stage["deletion_generation"] == descriptor["deletionGeneration"] and
+                        stage["transport_sha256"] == descriptor["payloadSha256"] and
+                        stage["result_hash"] == result["resultHash"] and
+                        stage["counts_json"] == result["counts"] and
+                        stage["section_digests_json"] == descriptor["sectionDigests"] and
+                        stage["manifest_hash"] == result["manifestHash"],
+                        "CORE_STAGING_IDENTITY_DRIFT")
+                with connection.cursor() as cursor:
+                    cursor.execute("""select section_type,count(*) from trading_normalization_staged_items
+                        where run_id=%s::uuid group by section_type""", (run_id,))
+                    staged_counts = dict(cursor.fetchall())
+                expected_stage_counts = {section["sectionType"]: section["itemCount"]
+                                         for section in descriptor["sectionDigests"]}
+                expected_stage_counts["VALIDATION_ISSUES"] = result["counts"]["validationIssueCount"]
+                require(all(staged_counts.get(section, 0) == count for section, count in
+                            expected_stage_counts.items()), "CORE_STAGING_COUNT_DRIFT")
+                evidence["stagingIdentity"] = "PASS"
+                evidence["stagingCounts"] = expected_stage_counts
+                stage_lock.commit()
+                stage_lock.close()
+                stage_lock = None
             mark_pass(evidence, "primary", scenario_started)
             evidence["inputSetHash"] = run["input_fingerprint"]
             evidence["versionSetHash"] = run["target_version_set_json"]["versionSetHash"]
@@ -1044,6 +1087,9 @@ def main() -> int:
         if fault_server is not None:
             fault_server.shutdown()
             fault_server.server_close()
+        if stage_lock is not None:
+            stage_lock.rollback()
+            stage_lock.close()
         if connection is not None:
             connection.close()
         if compute_db is not None:

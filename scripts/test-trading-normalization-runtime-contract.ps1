@@ -128,7 +128,10 @@ try {
         'refinvest.trading-review.normalization.instrument-terms-json' = $terms
         'refinvest.trading-review.grant-base-url' = "http://127.0.0.1:$CorePort"
     }
-    if ($Publication) { $springConfig['refinvest.compute.ack-delay'] = 'PT20S' }
+    if ($Publication) {
+        $springConfig['refinvest.compute.ack-delay'] = 'PT20S'
+        $springConfig['refinvest.compute.result-delay'] = 'PT1M'
+    }
     $env:SPRING_APPLICATION_JSON = $springConfig | ConvertTo-Json -Depth 6 -Compress
     $env:REFINVEST_INTERNAL_API_KEY = $values.REFINVEST_INTERNAL_API_KEY
     $env:REFINVEST_TRADING_REVIEW_TZDB_VERSION = 'integration-pinned-tzdb-v1'
