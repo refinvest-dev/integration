@@ -37,5 +37,9 @@ V1 endpoint가 없어 이 runtime에서 실행하지 않는다.
 
 `evidence.json`에는 commit, ID, count, hash prefix, scenario 결과, 시간과 로그 경로를
 남긴다. API key, JWT, signed locator, raw CSV 및 canonical record 본문은 기록하지 않는다.
-Core terminal staging, Session `ACCEPTED`, LedgerRevision publication은 이 테스트의
-대상이 아니다.
+이 스크립트는 Core publication 상태를 성공 조건으로 사용하지 않는다. 정상 발행 경로는
+`scripts/test-trading-normalization-publication.ps1`이 같은 HTTP/DB runtime helper와
+synthetic CSV를 재사용해 별도로 검증한다. 새 E2E는 Core의 streaming staging 이후
+Session `ACCEPTED`, Run·dispatch `PUBLISHED`, LedgerRevision과 관계 행·latest pointer,
+staging 제거, 실패 후 재시도된 ACK 및 중복 방지를 확인한다. 이 테스트의 순서 변경,
+중복 resource, tamper, controlled restart 시나리오는 result integrity runtime이 담당한다.

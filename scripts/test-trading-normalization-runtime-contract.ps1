@@ -10,7 +10,8 @@ param(
     [int]$ComputePort,
     [string]$DatabaseName = 'refinvest_integration',
     [int]$TimeoutSeconds = 180,
-    [switch]$ResultIntegrity
+    [switch]$ResultIntegrity,
+    [switch]$Publication
 )
 $ErrorActionPreference = 'Stop'
 if (-not $TestRoot) { $TestRoot = Join-Path $PSScriptRoot '..' }
@@ -127,6 +128,7 @@ try {
         'refinvest.trading-review.normalization.instrument-terms-json' = $terms
         'refinvest.trading-review.grant-base-url' = "http://127.0.0.1:$CorePort"
     }
+    if ($Publication) { $springConfig['refinvest.compute.ack-delay'] = 'PT20S' }
     $env:SPRING_APPLICATION_JSON = $springConfig | ConvertTo-Json -Depth 6 -Compress
     $env:REFINVEST_INTERNAL_API_KEY = $values.REFINVEST_INTERNAL_API_KEY
     $env:REFINVEST_TRADING_REVIEW_TZDB_VERSION = 'integration-pinned-tzdb-v1'
@@ -209,6 +211,7 @@ try {
     $env:TRADING_RUNTIME_VERSION_SET = $versionJson
     $runtimeArguments = @()
     if ($ResultIntegrity) { $runtimeArguments += '--result-integrity' }
+    if ($Publication) { $runtimeArguments += '--publication' }
     & $python (Join-Path $PSScriptRoot 'test_trading_normalization_runtime_contract.py') `
         --core-url "http://127.0.0.1:$CorePort" --compute-url "http://127.0.0.1:$ComputePort" `
         --fixture-root $fixtureRoot --context-path $ContextPath --run-dir $runDir `
