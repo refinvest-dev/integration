@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Trading Analytics Input Identity V1 fixed vector",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specificationVersion", "analysisConfig", "expectedAnalysisConfigHash", "inputIdentity", "expectedInputHash", "artifactSamples", "grantVariants", "runtimeVariants"],
+  "properties": {
+    "specificationVersion": {"const": "TRADING_ANALYTICS_INPUT_HASH_V1"},
+    "analysisConfig": {"type": "object", "required": ["schemaVersion", "analysisPeriod", "reviewTimezone", "timezoneDatabaseVersion", "outcomeBasis", "fundingTreatment", "eligibleReviewUnitPolicy", "reversalTreatment", "reentryWindow", "baselinePolicy", "metricMinimums", "findingMinimums"]},
+    "expectedAnalysisConfigHash": {"$ref": "#/$defs/sha"},
+    "inputIdentity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["hashSpecificationVersion", "ledgerRevisionId", "ledgerRevisionContent", "reconciliationManifest", "ledgerContentHash", "analysisConfigHash", "targetVersionSet", "capabilitySnapshot"],
+      "properties": {
+        "hashSpecificationVersion": {"const": "TRADING_ANALYTICS_INPUT_HASH_V1"},
+        "ledgerRevisionId": {"type": "string", "minLength": 1},
+        "ledgerRevisionContent": {"$ref": "#/$defs/artifact"},
+        "reconciliationManifest": {"$ref": "#/$defs/manifestArtifact"},
+        "ledgerContentHash": {"$ref": "#/$defs/sha"},
+        "analysisConfigHash": {"$ref": "#/$defs/sha"},
+        "targetVersionSet": {"type": "object", "required": ["metricDefinitionVersionsByMetricId", "findingRuleSetVersion", "analysisConfigVersion", "evidenceSchemaVersion", "implementationDigest", "versionSetHash"]},
+        "capabilitySnapshot": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "expectedInputHash": {"$ref": "#/$defs/sha"},
+    "artifactSamples": {"type": "object", "additionalProperties": false, "required": ["ledgerRevisionContent", "reconciliationManifest"], "properties": {"ledgerRevisionContent": {"type": "object", "required": ["schemaVersion", "ledgerRevisionId", "ledgerContentHash", "canonicalSchemaVersion", "reviewUnitSchemaVersion", "instrumentDescriptors", "canonicalRecords", "sourceEvidenceReferences", "reviewUnitEngineInputs"]}, "reconciliationManifest": {"type": "object", "required": ["manifestHash", "reviewUnits", "capability", "counts"]}}},
+    "grantVariants": {"type": "array", "minItems": 2, "items": {"type": "object", "additionalProperties": false, "required": ["accessUri", "expiresAt"], "properties": {"accessUri": {"type": "string"}, "expiresAt": {"type": "string"}}}},
+    "runtimeVariants": {"type": "array", "minItems": 2, "items": {"type": "object", "additionalProperties": false, "required": ["jobId", "coreLogicalJobId", "coreAnalysisRunId", "attemptToken", "deletionGeneration"], "properties": {"jobId": {"type": "string"}, "coreLogicalJobId": {"type": "string"}, "coreAnalysisRunId": {"type": "string"}, "attemptToken": {"type": "string"}, "deletionGeneration": {"type": "integer", "minimum": 0}}}}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["coreReferenceId", "mediaType", "byteSize", "sha256"], "properties": {"coreReferenceId": {"type": "string"}, "mediaType": {"type": "string"}, "byteSize": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha"}}},
+    "manifestArtifact": {"type": "object", "additionalProperties": false, "required": ["coreReferenceId", "mediaType", "byteSize", "sha256", "manifestHash"], "properties": {"coreReferenceId": {"type": "string"}, "mediaType": {"type": "string"}, "byteSize": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha"}, "manifestHash": {"$ref": "#/$defs/sha"}}}
+  }
+}
