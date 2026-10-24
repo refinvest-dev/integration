@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Trading Analytics Result Integrity V1 fixed vector",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specificationVersion", "resultSchemaVersion", "referenceCatalog", "sections", "counts", "sectionDigests", "evidenceHash", "resultDigestManifest", "expectedResultHash"],
+  "properties": {
+    "specificationVersion": {"const": "TRADING_ANALYTICS_RESULT_HASH_V1"},
+    "resultSchemaVersion": {"const": "TRADING_ANALYTICS_RESULT_SCHEMA_V1"},
+    "referenceCatalog": {"type": "object", "additionalProperties": false, "required": ["reviewUnitIds", "allocations", "recordIds", "sourceEvidenceSnapshotIds"], "properties": {"reviewUnitIds": {"type": "array", "items": {"type": "string"}}, "allocations": {"type": "array", "items": {"type": "object", "required": ["allocationId", "reviewUnitId", "recordId"]}}, "recordIds": {"type": "array", "items": {"type": "string"}}, "sourceEvidenceSnapshotIds": {"type": "array", "items": {"type": "string"}}}},
+    "sections": {
+      "type": "object", "additionalProperties": false,
+      "required": ["OUTCOME_CLASSIFICATIONS", "OBSERVATIONS", "METRICS", "RELATIONS", "EVIDENCE_MEMBERSHIPS", "FINDINGS"],
+      "properties": {
+        "OUTCOME_CLASSIFICATIONS": {"type": "array", "items": {"type": "object", "required": ["reviewUnitId", "outcome", "membershipId"]}},
+        "OBSERVATIONS": {"type": "array", "items": {"type": "object", "required": ["observationId", "definitionId", "observedAt", "membershipIds"]}},
+        "METRICS": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/metric"}},
+        "RELATIONS": {"type": "array", "items": {"type": "object", "required": ["relationId", "lossId", "candidates", "relatedEntryIds"]}},
+        "EVIDENCE_MEMBERSHIPS": {"type": "array", "items": {"type": "object", "required": ["membershipId", "metricId", "reviewUnitId", "role", "allocationRecordIds", "canonicalRecordIds", "sourceEvidenceSnapshotIds"]}},
+        "FINDINGS": {"type": "array", "maxItems": 0}
+      }
+    },
+    "counts": {"type": "object", "additionalProperties": false, "required": ["outcomeClassificationCount", "observationCount", "metricCount", "relationCount", "evidenceMembershipCount", "findingCount"], "properties": {"outcomeClassificationCount": {"type": "integer", "minimum": 0}, "observationCount": {"type": "integer", "minimum": 0}, "metricCount": {"const": 3}, "relationCount": {"type": "integer", "minimum": 0}, "evidenceMembershipCount": {"type": "integer", "minimum": 0}, "findingCount": {"const": 0}}},
+    "sectionDigests": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/digest"}},
+    "evidenceHash": {"$ref": "#/$defs/sha"},
+    "resultDigestManifest": {"type": "object", "additionalProperties": false, "required": ["resultHashSpecificationVersion", "resultSchemaVersion", "inputHash", "inputHashSpecificationVersion", "analysisConfigHash", "targetVersionSet", "counts", "sectionDigests"], "properties": {"resultHashSpecificationVersion": {"const": "TRADING_ANALYTICS_RESULT_HASH_V1"}, "resultSchemaVersion": {"const": "TRADING_ANALYTICS_RESULT_SCHEMA_V1"}, "inputHash": {"$ref": "#/$defs/sha"}, "inputHashSpecificationVersion": {"const": "TRADING_ANALYTICS_INPUT_HASH_V1"}, "analysisConfigHash": {"$ref": "#/$defs/sha"}, "targetVersionSet": {"type": "object"}, "counts": {"type": "object"}, "sectionDigests": {"type": "array"}}},
+    "expectedResultHash": {"$ref": "#/$defs/sha"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "digest": {"type": "object", "additionalProperties": false, "required": ["sectionType", "itemCount", "hashSpecificationVersion", "sectionHash"], "properties": {"sectionType": {"enum": ["OUTCOME_CLASSIFICATIONS", "OBSERVATIONS", "METRICS", "RELATIONS", "EVIDENCE_MEMBERSHIPS", "FINDINGS"]}, "itemCount": {"type": "integer", "minimum": 0}, "hashSpecificationVersion": {"const": "TRADING_ANALYTICS_RESULT_HASH_V1"}, "sectionHash": {"$ref": "#/$defs/sha"}}},
+    "metric": {
+      "type": "object",
+      "required": ["metricId", "definitionId", "definitionVersion", "status", "findingEligibility", "requiredCapabilities", "populationCount", "eligibleCount", "excludedCount", "excludedReasonCounts", "scalarInputs", "relationIds", "membershipIds", "values", "metricHash"],
+      "properties": {"definitionId": {"enum": ["ENTRY_WITHIN_WINDOW_AFTER_LOSS", "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS", "WIN_LOSS_HOLDING_DURATION_DIFFERENCE"]}, "metricHash": {"$ref": "#/$defs/sha"}},
+      "allOf": [
+        {"if": {"properties": {"definitionId": {"const": "ENTRY_WITHIN_WINDOW_AFTER_LOSS"}}}, "then": {"properties": {"values": {"type": "object", "required": ["eligibleLossCount", "lossWithEntryCount", "relatedEntryCount", "sameSymbolCount", "differentSymbolCount", "sameInstrumentRelatedEntryCount", "differentInstrumentRelatedEntryCount", "entryWithinWindowRate", "elapsedTimeDistribution"]}}}},
+        {"if": {"properties": {"definitionId": {"const": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS"}}}, "then": {"properties": {"values": {"type": "object", "required": ["pairCount", "increasedCount", "equalCount", "decreasedCount", "medianNextEntryVsLossEpisodeRatio", "ratioDistribution", "percentageDeltaDistribution", "absoluteDeltaByCurrency", "pairs"]}}}},
+        {"if": {"properties": {"definitionId": {"const": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE"}}}, "then": {"properties": {"values": {"type": "object", "required": ["winCount", "lossCount", "breakevenCount", "unavailableCount", "winDistribution", "lossDistribution", "medianDifferenceMicroseconds", "medianRatio", "medianRatioReason"]}}}}
+      ]
+    }
+  }
+}

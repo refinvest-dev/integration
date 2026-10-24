@@ -1,0 +1,257 @@
+{
+  "specificationVersion": "TRADING_ANALYTICS_INPUT_HASH_V1",
+  "analysisConfig": {
+    "schemaVersion": 1,
+    "analysisPeriod": {
+      "startInclusive": "2025-01-01T00:00:00Z",
+      "endExclusive": "2025-02-01T00:00:00Z"
+    },
+    "reviewTimezone": "UTC",
+    "timezoneDatabaseVersion": "2025a",
+    "outcomeBasis": "NET_TRADING_PNL",
+    "fundingTreatment": "EXCLUDED",
+    "eligibleReviewUnitPolicy": "COMPLETE_AND_RECONCILED_ONLY",
+    "reversalTreatment": "SEPARATE",
+    "reentryWindow": "PT30M",
+    "baselinePolicy": "PRIOR_PERIOD_SAME_INSTRUMENT_DIRECTION",
+    "metricMinimums": {
+      "reentryEligibleLosses": 1,
+      "exposurePairs": 2,
+      "priorBaselineEpisodes": 3,
+      "holdingWins": 2,
+      "holdingLosses": 2
+    },
+    "findingMinimums": {
+      "reentryEligibleLosses": 5,
+      "exposurePairs": 5,
+      "holdingWins": 5,
+      "holdingLosses": 5
+    }
+  },
+  "expectedAnalysisConfigHash": "cb99a38fd6d1506e6b6d1fc91fafee0b40b13ec946219eac8abeee06ea1ce1af",
+  "inputIdentity": {
+    "hashSpecificationVersion": "TRADING_ANALYTICS_INPUT_HASH_V1",
+    "ledgerRevisionId": "ledger-v1",
+    "ledgerRevisionContent": {
+      "coreReferenceId": "ledger-ref-v1",
+      "mediaType": "application/vnd.refinvest.trading-analysis-input.v1+json",
+      "byteSize": 1617,
+      "sha256": "283b8538c98ace6cd4f7058e0ed26247a8342b3f65805b0bbb08ead86d987510"
+    },
+    "reconciliationManifest": {
+      "coreReferenceId": "manifest-ref-v1",
+      "mediaType": "application/vnd.refinvest.trading-reconciliation-manifest.v1+json",
+      "byteSize": 2436,
+      "sha256": "735b0d86d05e11ea01a17677992f49c0f4a278ccb7c7b5b31aec3dcc694739c8",
+      "manifestHash": "83627e83b0f7ff4df5dbd45e8e08d380fe942fc26c02590374a1c0f7607c310b"
+    },
+    "ledgerContentHash": "80febb81585bda781f5164a75f4210280054b1c741e9cc2881314885cd16e3e9",
+    "analysisConfigHash": "cb99a38fd6d1506e6b6d1fc91fafee0b40b13ec946219eac8abeee06ea1ce1af",
+    "targetVersionSet": {
+      "metricDefinitionVersionsByMetricId": {
+        "ENTRY_WITHIN_WINDOW_AFTER_LOSS": "1",
+        "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS": "1",
+        "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": "1"
+      },
+      "findingRuleSetVersion": "TRADING_FINDING_RULES_DISABLED_V1",
+      "analysisConfigVersion": "ANALYSIS_CONFIG_V1",
+      "evidenceSchemaVersion": "TRADING_EVIDENCE_V1",
+      "implementationDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "versionSetHash": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "capabilitySnapshot": [
+      "INITIAL_EXPOSURE"
+    ]
+  },
+  "expectedInputHash": "fd11891b4aa4086c5b520cf947809ea9d165372aafe6ee99589a3ec45bc69851",
+  "artifactSamples": {
+    "ledgerRevisionContent": {
+      "schemaVersion": "TRADING_ANALYTICS_LEDGER_INPUT_V1",
+      "ledgerRevisionId": "ledger-v1",
+      "ledgerContentHash": "80febb81585bda781f5164a75f4210280054b1c741e9cc2881314885cd16e3e9",
+      "canonicalSchemaVersion": "CANONICAL_V1",
+      "reviewUnitSchemaVersion": "REVIEW_UNIT_V1",
+      "instrumentDescriptors": [
+        {
+          "instrumentId": "instrument-synthetic-1",
+          "sourceSymbol": "SYNTHETICUSDT",
+          "venueSymbol": "SYNTHETICUSDT",
+          "settlementAsset": "USDT",
+          "quantityStep": "0.01",
+          "priceTick": "0.01",
+          "contractMultiplier": "1",
+          "settlementPrecision": 8,
+          "instrumentTermsVersion": "TERMS_V1"
+        }
+      ],
+      "canonicalRecords": [
+        {
+          "recordId": "record-synthetic-1",
+          "instrumentId": "instrument-synthetic-1",
+          "sourceEvidenceSnapshotId": "evidence-synthetic-1",
+          "recordHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "recordType": "EXECUTION",
+          "sourceExecutionKey": "execution-synthetic-1",
+          "occurredAt": "2025-01-01T00:00:00Z",
+          "side": "BUY",
+          "price": {
+            "value": "1.23",
+            "sourceScale": 4
+          },
+          "quantity": {
+            "value": "2",
+            "sourceScale": 0
+          },
+          "executionOrigin": "UNKNOWN"
+        }
+      ],
+      "sourceEvidenceReferences": [
+        {
+          "snapshotId": "evidence-synthetic-1",
+          "recordId": "record-synthetic-1",
+          "coreArtifactId": "artifact-trade-example",
+          "sourceRowNumber": 1,
+          "sourceRowHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "reviewUnitEngineInputs": [
+        {
+          "reviewUnitId": "unit-synthetic-1",
+          "evidenceRecordIds": [
+            "record-synthetic-1"
+          ],
+          "stableEpisodeTimeAvailable": false,
+          "allocationEvidence": [
+            {
+              "allocationId": "allocation-synthetic-1",
+              "evidenceRecordIds": [
+                "record-synthetic-1"
+              ],
+              "allocatedFee": {
+                "amount": "0",
+                "currency": "USDT",
+                "sourceScale": 0
+              },
+              "allocatedReportedPnl": {
+                "amount": "0",
+                "currency": "USDT",
+                "sourceScale": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "reconciliationManifest": {
+      "manifestVersion": "MANIFEST_V1",
+      "manifestHashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V1",
+      "inputSetHash": "1122481b2c208afc1cae751f952f1b9a670f446f404d42c1e581a3b83f25552e",
+      "executionInputHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "canonicalRecordSetHash": "80febb81585bda781f5164a75f4210280054b1c741e9cc2881314885cd16e3e9",
+      "instrumentTermsHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "versionSetHash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "sourceArtifactHashesByRole": {
+        "TRADE_HISTORY": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "POSITION_HISTORY": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+      "reconciliationVersion": "RECONCILIATION_V1",
+      "artifactCoverages": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "earliestObservedAt": "2025-01-01T00:00:00Z",
+          "latestObservedAt": "2025-01-01T00:00:00Z",
+          "rowCount": 1,
+          "sourceTimezone": "UTC",
+          "timestampPrecision": "SECOND",
+          "coverageCompleteness": "NOT_PROVEN"
+        },
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "earliestObservedAt": "2025-01-01T00:00:00Z",
+          "latestObservedAt": "2025-01-01T00:00:00Z",
+          "rowCount": 1,
+          "sourceTimezone": "UTC",
+          "timestampPrecision": "SECOND",
+          "coverageCompleteness": "NOT_PROVEN"
+        }
+      ],
+      "reviewUnits": [
+        {
+          "reviewUnitId": "unit-synthetic-1",
+          "type": "FUTURES_POSITION_EPISODE",
+          "instrumentId": "instrument-synthetic-1",
+          "direction": "LONG",
+          "outcomeClassification": "UNAVAILABLE",
+          "reconstructionStatus": "RIGHT_CENSORED",
+          "reconciliationStatus": "INCOMPLETE_TRADES",
+          "allocations": [
+            {
+              "allocationId": "allocation-synthetic-1",
+              "recordId": "record-synthetic-1",
+              "reviewUnitId": "unit-synthetic-1",
+              "action": "OPEN",
+              "allocatedQuantity": {
+                "value": "2",
+                "sourceScale": 0
+              }
+            }
+          ],
+          "capability": [
+            "INITIAL_EXPOSURE"
+          ],
+          "exclusionReasons": [
+            "EPISODE_RIGHT_CENSORED"
+          ]
+        }
+      ],
+      "capability": [
+        "INITIAL_EXPOSURE"
+      ],
+      "quantityConservationPassed": true,
+      "cashFlowConservationPassed": true,
+      "manifestHash": "83627e83b0f7ff4df5dbd45e8e08d380fe942fc26c02590374a1c0f7607c310b",
+      "reconciliationMatches": [],
+      "reconciliationIssues": [],
+      "qualityReportHash": "74b1df1cfd742d6314552678e07730ff8db97ea657992f68c33892ed864f7db5",
+      "counts": {
+        "artifactCoverageCount": 2,
+        "canonicalRecordCount": 1,
+        "sourceEvidenceSnapshotCount": 1,
+        "reviewUnitCount": 1,
+        "positionAllocationCount": 1,
+        "excludedReviewUnitCount": 1,
+        "capabilityCount": 1,
+        "validationIssueCount": 1,
+        "reconciliationMatchCount": 0,
+        "reconciliationIssueCount": 0
+      }
+    }
+  },
+  "grantVariants": [
+    {
+      "accessUri": "https://internal.invalid/grant-one",
+      "expiresAt": "2025-01-01T00:04:00Z"
+    },
+    {
+      "accessUri": "https://internal.invalid/grant-two",
+      "expiresAt": "2025-01-01T00:05:00Z"
+    }
+  ],
+  "runtimeVariants": [
+    {
+      "jobId": "job-one",
+      "coreLogicalJobId": "logical-one",
+      "coreAnalysisRunId": "run-one",
+      "attemptToken": "attempt-1",
+      "deletionGeneration": 1
+    },
+    {
+      "jobId": "job-one",
+      "coreLogicalJobId": "logical-one",
+      "coreAnalysisRunId": "run-one",
+      "attemptToken": "attempt-2",
+      "deletionGeneration": 2
+    }
+  ]
+}

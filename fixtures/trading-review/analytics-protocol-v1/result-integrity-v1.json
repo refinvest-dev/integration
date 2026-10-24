@@ -1,0 +1,1183 @@
+{
+  "specificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+  "resultSchemaVersion": "TRADING_ANALYTICS_RESULT_SCHEMA_V1",
+  "referenceCatalog": {
+    "reviewUnitIds": [
+      "baseline-1",
+      "baseline-2",
+      "baseline-3",
+      "censored-1",
+      "entry-1",
+      "loss-1",
+      "loss-2",
+      "win-1",
+      "win-2"
+    ],
+    "allocations": [
+      {
+        "allocationId": "allocation-baseline-1",
+        "reviewUnitId": "baseline-1",
+        "recordId": "record-baseline-1"
+      },
+      {
+        "allocationId": "allocation-baseline-2",
+        "reviewUnitId": "baseline-2",
+        "recordId": "record-baseline-2"
+      },
+      {
+        "allocationId": "allocation-baseline-3",
+        "reviewUnitId": "baseline-3",
+        "recordId": "record-baseline-3"
+      },
+      {
+        "allocationId": "allocation-censored-1",
+        "reviewUnitId": "censored-1",
+        "recordId": "record-censored-1"
+      },
+      {
+        "allocationId": "allocation-entry-1",
+        "reviewUnitId": "entry-1",
+        "recordId": "record-entry-1"
+      },
+      {
+        "allocationId": "allocation-loss-1",
+        "reviewUnitId": "loss-1",
+        "recordId": "record-loss-1"
+      },
+      {
+        "allocationId": "allocation-loss-2",
+        "reviewUnitId": "loss-2",
+        "recordId": "record-loss-2"
+      },
+      {
+        "allocationId": "allocation-win-1",
+        "reviewUnitId": "win-1",
+        "recordId": "record-win-1"
+      },
+      {
+        "allocationId": "allocation-win-2",
+        "reviewUnitId": "win-2",
+        "recordId": "record-win-2"
+      }
+    ],
+    "recordIds": [
+      "record-baseline-1",
+      "record-baseline-2",
+      "record-baseline-3",
+      "record-censored-1",
+      "record-entry-1",
+      "record-loss-1",
+      "record-loss-2",
+      "record-win-1",
+      "record-win-2"
+    ],
+    "sourceEvidenceSnapshotIds": [
+      "snapshot-baseline-1",
+      "snapshot-baseline-2",
+      "snapshot-baseline-3",
+      "snapshot-censored-1",
+      "snapshot-entry-1",
+      "snapshot-loss-1",
+      "snapshot-loss-2",
+      "snapshot-win-1",
+      "snapshot-win-2"
+    ]
+  },
+  "sections": {
+    "OUTCOME_CLASSIFICATIONS": [
+      {
+        "reviewUnitId": "censored-1",
+        "outcome": "UNAVAILABLE",
+        "netTradingPnl": null,
+        "settlementCurrency": null,
+        "allocatedReportedPnl": [],
+        "allocatedFees": [],
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:censored-1:EXCLUDED:RECONSTRUCTION_NOT_COMPLETE"
+      },
+      {
+        "reviewUnitId": "loss-1",
+        "outcome": "LOSS",
+        "netTradingPnl": "-10",
+        "settlementCurrency": "USDT",
+        "allocatedReportedPnl": [
+          {
+            "recordId": "record-loss-1",
+            "amount": "-9",
+            "currency": "USDT"
+          }
+        ],
+        "allocatedFees": [
+          {
+            "recordId": "record-loss-1",
+            "amount": "1",
+            "currency": "USDT"
+          }
+        ],
+        "membershipId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS:loss-1:SUBJECT:"
+      },
+      {
+        "reviewUnitId": "loss-2",
+        "outcome": "LOSS",
+        "netTradingPnl": "-5",
+        "settlementCurrency": "USDT",
+        "allocatedReportedPnl": [],
+        "allocatedFees": [],
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-2:COMPARISON:"
+      },
+      {
+        "reviewUnitId": "win-1",
+        "outcome": "WIN",
+        "netTradingPnl": "5",
+        "settlementCurrency": "USDT",
+        "allocatedReportedPnl": [],
+        "allocatedFees": [],
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-1:SUBJECT:"
+      },
+      {
+        "reviewUnitId": "win-2",
+        "outcome": "WIN",
+        "netTradingPnl": "10",
+        "settlementCurrency": "USDT",
+        "allocatedReportedPnl": [],
+        "allocatedFees": [],
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-2:SUBJECT:"
+      }
+    ],
+    "OBSERVATIONS": [
+      {
+        "observationId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS:loss-1:loss-1:ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "definitionId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "definitionVersion": "1",
+        "subjectReviewUnitIds": [
+          "loss-1"
+        ],
+        "observedAt": "2025-01-10T00:00:00Z",
+        "attributes": [
+          {
+            "reviewUnitId": "loss-1",
+            "name": "closedAt",
+            "value": "2025-01-10T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "elapsedMicroseconds",
+            "value": "300000000"
+          }
+        ],
+        "membershipIds": [
+          "ENTRY_WITHIN_WINDOW_AFTER_LOSS:loss-1:SUBJECT:"
+        ],
+        "relationIds": [
+          "loss-1:ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+        ]
+      },
+      {
+        "observationId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:loss-1:entry-1",
+        "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+        "definitionVersion": "1",
+        "subjectReviewUnitIds": [
+          "entry-1",
+          "loss-1"
+        ],
+        "observedAt": "2025-01-10T00:05:00Z",
+        "attributes": [
+          {
+            "reviewUnitId": "entry-1",
+            "name": "contractMultiplier",
+            "value": "1"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "initialNotional",
+            "value": "100"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "initialPrice",
+            "value": "50"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "initialQuantity",
+            "value": "2.00"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "ratio",
+            "value": "1/1"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "settlementCurrency",
+            "value": "USDT"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "contractMultiplier",
+            "value": "1"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "initialNotional",
+            "value": "100"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "initialPrice",
+            "value": "50"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "initialQuantity",
+            "value": "2.00"
+          }
+        ],
+        "membershipIds": [
+          "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:entry-1:COMPARISON:",
+          "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:loss-1:SUBJECT:"
+        ],
+        "relationIds": [
+          "loss-1:ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+        ]
+      },
+      {
+        "observationId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-1:0",
+        "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "definitionVersion": "1",
+        "subjectReviewUnitIds": [
+          "loss-1"
+        ],
+        "observedAt": "2025-01-10T00:00:00Z",
+        "attributes": [
+          {
+            "reviewUnitId": "loss-1",
+            "name": "closedAt",
+            "value": "2025-01-10T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "holdingDurationMicroseconds",
+            "value": "30"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "netTradingPnl",
+            "value": "-10"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "openedAt",
+            "value": "2025-01-09T23:59:59.99997Z"
+          }
+        ],
+        "relationIds": [],
+        "membershipIds": [
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-1:COMPARISON:"
+        ]
+      },
+      {
+        "observationId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-2:0",
+        "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "definitionVersion": "1",
+        "subjectReviewUnitIds": [
+          "loss-2"
+        ],
+        "observedAt": "2025-01-13T00:00:00Z",
+        "attributes": [
+          {
+            "reviewUnitId": "loss-2",
+            "name": "closedAt",
+            "value": "2025-01-13T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "loss-2",
+            "name": "holdingDurationMicroseconds",
+            "value": "30"
+          },
+          {
+            "reviewUnitId": "loss-2",
+            "name": "netTradingPnl",
+            "value": "-5"
+          },
+          {
+            "reviewUnitId": "loss-2",
+            "name": "openedAt",
+            "value": "2025-01-12T23:59:59.99997Z"
+          }
+        ],
+        "relationIds": [],
+        "membershipIds": [
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-2:COMPARISON:"
+        ]
+      },
+      {
+        "observationId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-1:0",
+        "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "definitionVersion": "1",
+        "subjectReviewUnitIds": [
+          "win-1"
+        ],
+        "observedAt": "2025-01-11T00:00:00Z",
+        "attributes": [
+          {
+            "reviewUnitId": "win-1",
+            "name": "closedAt",
+            "value": "2025-01-11T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "win-1",
+            "name": "holdingDurationMicroseconds",
+            "value": "30"
+          },
+          {
+            "reviewUnitId": "win-1",
+            "name": "netTradingPnl",
+            "value": "5"
+          },
+          {
+            "reviewUnitId": "win-1",
+            "name": "openedAt",
+            "value": "2025-01-10T23:59:59.99997Z"
+          }
+        ],
+        "membershipIds": [
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-1:SUBJECT:"
+        ],
+        "relationIds": []
+      },
+      {
+        "observationId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-2:0",
+        "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "definitionVersion": "1",
+        "subjectReviewUnitIds": [
+          "win-2"
+        ],
+        "observedAt": "2025-01-12T00:00:00Z",
+        "attributes": [
+          {
+            "reviewUnitId": "win-2",
+            "name": "closedAt",
+            "value": "2025-01-12T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "win-2",
+            "name": "holdingDurationMicroseconds",
+            "value": "30"
+          },
+          {
+            "reviewUnitId": "win-2",
+            "name": "netTradingPnl",
+            "value": "10"
+          },
+          {
+            "reviewUnitId": "win-2",
+            "name": "openedAt",
+            "value": "2025-01-11T23:59:59.99997Z"
+          }
+        ],
+        "relationIds": [],
+        "membershipIds": [
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-2:SUBJECT:"
+        ]
+      }
+    ],
+    "METRICS": [
+      {
+        "metricId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "definitionId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "definitionVersion": "1",
+        "status": "AVAILABLE",
+        "findingEligibility": "INELIGIBLE_SAMPLE",
+        "requiredCapabilities": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "STABLE_EPISODE_TIME"
+        ],
+        "populationCount": 1,
+        "eligibleCount": 1,
+        "excludedCount": 0,
+        "excludedReasonCounts": {},
+        "scalarInputs": [
+          {
+            "reviewUnitId": "entry-1",
+            "name": "openedAt",
+            "value": "2025-01-10T00:05:00Z"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "closedAt",
+            "value": "2025-01-10T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "elapsedMicroseconds",
+            "value": "300000000"
+          }
+        ],
+        "relationIds": [
+          "loss-1:ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+        ],
+        "membershipIds": [
+          "ENTRY_WITHIN_WINDOW_AFTER_LOSS:entry-1:RELATED_ENTRY:",
+          "ENTRY_WITHIN_WINDOW_AFTER_LOSS:entry-1:RELATION_CANDIDATE:",
+          "ENTRY_WITHIN_WINDOW_AFTER_LOSS:loss-1:SUBJECT:"
+        ],
+        "values": {
+          "eligibleLossCount": 1,
+          "lossWithEntryCount": 1,
+          "relatedEntryCount": 1,
+          "sameSymbolCount": 1,
+          "differentSymbolCount": 0,
+          "sameInstrumentRelatedEntryCount": 1,
+          "differentInstrumentRelatedEntryCount": 0,
+          "entryWithinWindowRate": {
+            "numerator": "1",
+            "denominator": "1"
+          },
+          "elapsedTimeDistribution": {
+            "count": 1,
+            "minimum": {
+              "numerator": "300000000",
+              "denominator": "1"
+            },
+            "p25": {
+              "numerator": "300000000",
+              "denominator": "1"
+            },
+            "median": {
+              "numerator": "300000000",
+              "denominator": "1"
+            },
+            "p75": {
+              "numerator": "300000000",
+              "denominator": "1"
+            },
+            "maximum": {
+              "numerator": "300000000",
+              "denominator": "1"
+            },
+            "mean": {
+              "numerator": "300000000",
+              "denominator": "1"
+            }
+          }
+        },
+        "metricHash": "f08bc101121e93a8653676e0dfcca67f9c76dc6b7358c64b1fa1f11a32118b9f"
+      },
+      {
+        "metricId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+        "definitionId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+        "definitionVersion": "1",
+        "status": "INSUFFICIENT_SAMPLE",
+        "findingEligibility": "INELIGIBLE_METRIC_STATUS",
+        "requiredCapabilities": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "INITIAL_EXPOSURE",
+          "STABLE_EPISODE_TIME"
+        ],
+        "populationCount": 1,
+        "eligibleCount": 1,
+        "excludedCount": 0,
+        "excludedReasonCounts": {},
+        "scalarInputs": [
+          {
+            "reviewUnitId": "baseline-1",
+            "name": "contractMultiplier",
+            "value": "1"
+          },
+          {
+            "reviewUnitId": "baseline-1",
+            "name": "initialPrice",
+            "value": "50"
+          },
+          {
+            "reviewUnitId": "baseline-1",
+            "name": "initialQuantity",
+            "value": "2.00"
+          },
+          {
+            "reviewUnitId": "baseline-2",
+            "name": "contractMultiplier",
+            "value": "1"
+          },
+          {
+            "reviewUnitId": "baseline-2",
+            "name": "initialPrice",
+            "value": "50"
+          },
+          {
+            "reviewUnitId": "baseline-2",
+            "name": "initialQuantity",
+            "value": "2.00"
+          },
+          {
+            "reviewUnitId": "baseline-3",
+            "name": "contractMultiplier",
+            "value": "1"
+          },
+          {
+            "reviewUnitId": "baseline-3",
+            "name": "initialPrice",
+            "value": "50"
+          },
+          {
+            "reviewUnitId": "baseline-3",
+            "name": "initialQuantity",
+            "value": "2.00"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "contractMultiplier",
+            "value": "1"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "initialNotional",
+            "value": "100"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "initialPrice",
+            "value": "50"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "initialQuantity",
+            "value": "2.00"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "ratio",
+            "value": "1/1"
+          },
+          {
+            "reviewUnitId": "entry-1",
+            "name": "settlementCurrency",
+            "value": "USDT"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "contractMultiplier",
+            "value": "1"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "initialNotional",
+            "value": "100"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "initialPrice",
+            "value": "50"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "initialQuantity",
+            "value": "2.00"
+          }
+        ],
+        "relationIds": [
+          "loss-1:ENTRY_WITHIN_WINDOW_AFTER_LOSS"
+        ],
+        "membershipIds": [
+          "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:baseline-1:PRIOR_BASELINE:",
+          "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:baseline-2:PRIOR_BASELINE:",
+          "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:baseline-3:PRIOR_BASELINE:",
+          "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:entry-1:COMPARISON:",
+          "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:loss-1:SUBJECT:"
+        ],
+        "values": {
+          "pairCount": 1,
+          "increasedCount": 0,
+          "equalCount": 1,
+          "decreasedCount": 0,
+          "medianNextEntryVsLossEpisodeRatio": null,
+          "ratioDistribution": null,
+          "percentageDeltaDistribution": null,
+          "absoluteDeltaByCurrency": [],
+          "pairs": [
+            {
+              "lossId": "loss-1",
+              "entryId": "entry-1",
+              "currency": "USDT",
+              "lossNotional": "100",
+              "entryNotional": "100",
+              "absoluteDelta": "0",
+              "ratio": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "percentageDelta": {
+                "numerator": "0",
+                "denominator": "1"
+              },
+              "sameInstrument": true,
+              "sameDirection": true,
+              "baselineEpisodeIds": [
+                "baseline-1",
+                "baseline-2",
+                "baseline-3"
+              ],
+              "baselineMedian": {
+                "numerator": "100",
+                "denominator": "1"
+              },
+              "baselineRatio": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "baselineDelta": {
+                "numerator": "0",
+                "denominator": "1"
+              },
+              "baselineReason": null
+            }
+          ]
+        },
+        "metricHash": "4f7efa98ab849f56a97b62972ea5311d84f2cfae7f8e92bfd06b061c2e437f01"
+      },
+      {
+        "metricId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "definitionId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "definitionVersion": "1",
+        "status": "AVAILABLE",
+        "findingEligibility": "INELIGIBLE_SAMPLE",
+        "requiredCapabilities": [
+          "CLOSED_OUTCOME",
+          "FEES",
+          "STABLE_EPISODE_TIME"
+        ],
+        "populationCount": 5,
+        "eligibleCount": 4,
+        "excludedCount": 1,
+        "excludedReasonCounts": {
+          "RECONSTRUCTION_NOT_COMPLETE": 1
+        },
+        "scalarInputs": [
+          {
+            "reviewUnitId": "loss-1",
+            "name": "closedAt",
+            "value": "2025-01-10T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "holdingDurationMicroseconds",
+            "value": "30"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "netTradingPnl",
+            "value": "-10"
+          },
+          {
+            "reviewUnitId": "loss-1",
+            "name": "openedAt",
+            "value": "2025-01-09T23:59:59.99997Z"
+          },
+          {
+            "reviewUnitId": "loss-2",
+            "name": "closedAt",
+            "value": "2025-01-13T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "loss-2",
+            "name": "holdingDurationMicroseconds",
+            "value": "30"
+          },
+          {
+            "reviewUnitId": "loss-2",
+            "name": "netTradingPnl",
+            "value": "-5"
+          },
+          {
+            "reviewUnitId": "loss-2",
+            "name": "openedAt",
+            "value": "2025-01-12T23:59:59.99997Z"
+          },
+          {
+            "reviewUnitId": "win-1",
+            "name": "closedAt",
+            "value": "2025-01-11T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "win-1",
+            "name": "holdingDurationMicroseconds",
+            "value": "30"
+          },
+          {
+            "reviewUnitId": "win-1",
+            "name": "netTradingPnl",
+            "value": "5"
+          },
+          {
+            "reviewUnitId": "win-1",
+            "name": "openedAt",
+            "value": "2025-01-10T23:59:59.99997Z"
+          },
+          {
+            "reviewUnitId": "win-2",
+            "name": "closedAt",
+            "value": "2025-01-12T00:00:00Z"
+          },
+          {
+            "reviewUnitId": "win-2",
+            "name": "holdingDurationMicroseconds",
+            "value": "30"
+          },
+          {
+            "reviewUnitId": "win-2",
+            "name": "netTradingPnl",
+            "value": "10"
+          },
+          {
+            "reviewUnitId": "win-2",
+            "name": "openedAt",
+            "value": "2025-01-11T23:59:59.99997Z"
+          }
+        ],
+        "relationIds": [],
+        "membershipIds": [
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:censored-1:EXCLUDED:RECONSTRUCTION_NOT_COMPLETE",
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-1:COMPARISON:",
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-2:COMPARISON:",
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-1:SUBJECT:",
+          "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-2:SUBJECT:"
+        ],
+        "values": {
+          "winCount": 2,
+          "lossCount": 2,
+          "breakevenCount": 0,
+          "unavailableCount": 1,
+          "winDistribution": {
+            "count": 2,
+            "minimum": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "p25": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "median": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "p75": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "maximum": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "mean": {
+              "numerator": "30",
+              "denominator": "1"
+            }
+          },
+          "lossDistribution": {
+            "count": 2,
+            "minimum": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "p25": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "median": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "p75": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "maximum": {
+              "numerator": "30",
+              "denominator": "1"
+            },
+            "mean": {
+              "numerator": "30",
+              "denominator": "1"
+            }
+          },
+          "medianDifferenceMicroseconds": {
+            "numerator": "0",
+            "denominator": "1"
+          },
+          "medianRatio": {
+            "numerator": "1",
+            "denominator": "1"
+          },
+          "medianRatioReason": null
+        },
+        "metricHash": "7630a19f3a23036b2de0e263511c11274d1824cc76a90125068685b62f456fd3"
+      }
+    ],
+    "RELATIONS": [
+      {
+        "relationId": "loss-1:ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "lossId": "loss-1",
+        "closedAt": "2025-01-10T00:00:00Z",
+        "candidates": [
+          {
+            "entryId": "entry-1",
+            "role": "SELECTED_EARLIEST",
+            "openedAt": "2025-01-10T00:05:00Z",
+            "membershipId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS:entry-1:RELATION_CANDIDATE:"
+          }
+        ],
+        "relatedEntryIds": [
+          "entry-1"
+        ],
+        "elapsedMicroseconds": 300000000,
+        "membershipIds": [
+          "ENTRY_WITHIN_WINDOW_AFTER_LOSS:entry-1:RELATED_ENTRY:",
+          "ENTRY_WITHIN_WINDOW_AFTER_LOSS:entry-1:RELATION_CANDIDATE:",
+          "ENTRY_WITHIN_WINDOW_AFTER_LOSS:loss-1:SUBJECT:"
+        ]
+      }
+    ],
+    "EVIDENCE_MEMBERSHIPS": [
+      {
+        "membershipId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS:entry-1:RELATED_ENTRY:",
+        "metricId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "reviewUnitId": "entry-1",
+        "role": "RELATED_ENTRY",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-entry-1"
+        ],
+        "canonicalRecordIds": [
+          "record-entry-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-entry-1"
+        ]
+      },
+      {
+        "membershipId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS:entry-1:RELATION_CANDIDATE:",
+        "metricId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "reviewUnitId": "entry-1",
+        "role": "RELATION_CANDIDATE",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-entry-1"
+        ],
+        "canonicalRecordIds": [
+          "record-entry-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-entry-1"
+        ]
+      },
+      {
+        "membershipId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS:loss-1:SUBJECT:",
+        "metricId": "ENTRY_WITHIN_WINDOW_AFTER_LOSS",
+        "reviewUnitId": "loss-1",
+        "role": "SUBJECT",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-loss-1"
+        ],
+        "canonicalRecordIds": [
+          "record-loss-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-loss-1"
+        ]
+      },
+      {
+        "membershipId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:baseline-1:PRIOR_BASELINE:",
+        "metricId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+        "reviewUnitId": "baseline-1",
+        "role": "PRIOR_BASELINE",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-baseline-1"
+        ],
+        "canonicalRecordIds": [
+          "record-baseline-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-baseline-1"
+        ]
+      },
+      {
+        "membershipId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:baseline-2:PRIOR_BASELINE:",
+        "metricId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+        "reviewUnitId": "baseline-2",
+        "role": "PRIOR_BASELINE",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-baseline-2"
+        ],
+        "canonicalRecordIds": [
+          "record-baseline-2"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-baseline-2"
+        ]
+      },
+      {
+        "membershipId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:baseline-3:PRIOR_BASELINE:",
+        "metricId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+        "reviewUnitId": "baseline-3",
+        "role": "PRIOR_BASELINE",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-baseline-3"
+        ],
+        "canonicalRecordIds": [
+          "record-baseline-3"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-baseline-3"
+        ]
+      },
+      {
+        "membershipId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:entry-1:COMPARISON:",
+        "metricId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+        "reviewUnitId": "entry-1",
+        "role": "COMPARISON",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-entry-1"
+        ],
+        "canonicalRecordIds": [
+          "record-entry-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-entry-1"
+        ]
+      },
+      {
+        "membershipId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS:loss-1:SUBJECT:",
+        "metricId": "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS",
+        "reviewUnitId": "loss-1",
+        "role": "SUBJECT",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-loss-1"
+        ],
+        "canonicalRecordIds": [
+          "record-loss-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-loss-1"
+        ]
+      },
+      {
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:censored-1:EXCLUDED:RECONSTRUCTION_NOT_COMPLETE",
+        "metricId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "reviewUnitId": "censored-1",
+        "role": "EXCLUDED",
+        "exclusionReason": "RECONSTRUCTION_NOT_COMPLETE",
+        "reasons": [
+          "RECONSTRUCTION_NOT_COMPLETE"
+        ],
+        "allocationRecordIds": [
+          "allocation-censored-1"
+        ],
+        "canonicalRecordIds": [
+          "record-censored-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-censored-1"
+        ]
+      },
+      {
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-1:COMPARISON:",
+        "metricId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "reviewUnitId": "loss-1",
+        "role": "COMPARISON",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-loss-1"
+        ],
+        "canonicalRecordIds": [
+          "record-loss-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-loss-1"
+        ]
+      },
+      {
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:loss-2:COMPARISON:",
+        "metricId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "reviewUnitId": "loss-2",
+        "role": "COMPARISON",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-loss-2"
+        ],
+        "canonicalRecordIds": [
+          "record-loss-2"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-loss-2"
+        ]
+      },
+      {
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-1:SUBJECT:",
+        "metricId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "reviewUnitId": "win-1",
+        "role": "SUBJECT",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-win-1"
+        ],
+        "canonicalRecordIds": [
+          "record-win-1"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-win-1"
+        ]
+      },
+      {
+        "membershipId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE:win-2:SUBJECT:",
+        "metricId": "WIN_LOSS_HOLDING_DURATION_DIFFERENCE",
+        "reviewUnitId": "win-2",
+        "role": "SUBJECT",
+        "exclusionReason": null,
+        "reasons": [],
+        "allocationRecordIds": [
+          "allocation-win-2"
+        ],
+        "canonicalRecordIds": [
+          "record-win-2"
+        ],
+        "sourceEvidenceSnapshotIds": [
+          "snapshot-win-2"
+        ]
+      }
+    ],
+    "FINDINGS": []
+  },
+  "counts": {
+    "outcomeClassificationCount": 5,
+    "observationCount": 6,
+    "metricCount": 3,
+    "relationCount": 1,
+    "evidenceMembershipCount": 13,
+    "findingCount": 0
+  },
+  "sectionDigests": [
+    {
+      "sectionType": "EVIDENCE_MEMBERSHIPS",
+      "itemCount": 13,
+      "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+      "sectionHash": "258bbaa8327e00f427b103d14c78c46958c57abcb3e17d5d4e89505ea2bf1d71"
+    },
+    {
+      "sectionType": "FINDINGS",
+      "itemCount": 0,
+      "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+      "sectionHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "sectionType": "METRICS",
+      "itemCount": 3,
+      "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+      "sectionHash": "40a00970dd3c37b4c15e1cb5df79be888a35a6385d8170df9065f50ae86c42bb"
+    },
+    {
+      "sectionType": "OBSERVATIONS",
+      "itemCount": 6,
+      "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+      "sectionHash": "03e4cfa44ad85394ea52cf3a0152dae036b2fc9346015e07aa12507c782ada56"
+    },
+    {
+      "sectionType": "OUTCOME_CLASSIFICATIONS",
+      "itemCount": 5,
+      "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+      "sectionHash": "b5082d7b7726efe46eaa77e30125a5ae6b47e35a6bff214b1c27f049775270ba"
+    },
+    {
+      "sectionType": "RELATIONS",
+      "itemCount": 1,
+      "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+      "sectionHash": "3366e538004f70e8361a97161045b6d8fb782e5c0e0917ff731df47087f2e23b"
+    }
+  ],
+  "evidenceHash": "258bbaa8327e00f427b103d14c78c46958c57abcb3e17d5d4e89505ea2bf1d71",
+  "resultDigestManifest": {
+    "resultHashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+    "resultSchemaVersion": "TRADING_ANALYTICS_RESULT_SCHEMA_V1",
+    "inputHash": "fd11891b4aa4086c5b520cf947809ea9d165372aafe6ee99589a3ec45bc69851",
+    "inputHashSpecificationVersion": "TRADING_ANALYTICS_INPUT_HASH_V1",
+    "analysisConfigHash": "cb99a38fd6d1506e6b6d1fc91fafee0b40b13ec946219eac8abeee06ea1ce1af",
+    "targetVersionSet": {
+      "metricDefinitionVersionsByMetricId": {
+        "ENTRY_WITHIN_WINDOW_AFTER_LOSS": "1",
+        "INITIAL_EXPOSURE_CHANGE_AFTER_LOSS": "1",
+        "WIN_LOSS_HOLDING_DURATION_DIFFERENCE": "1"
+      },
+      "findingRuleSetVersion": "TRADING_FINDING_RULES_DISABLED_V1",
+      "analysisConfigVersion": "ANALYSIS_CONFIG_V1",
+      "evidenceSchemaVersion": "TRADING_EVIDENCE_V1",
+      "implementationDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "versionSetHash": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "counts": {
+      "outcomeClassificationCount": 5,
+      "observationCount": 6,
+      "metricCount": 3,
+      "relationCount": 1,
+      "evidenceMembershipCount": 13,
+      "findingCount": 0
+    },
+    "sectionDigests": [
+      {
+        "sectionType": "EVIDENCE_MEMBERSHIPS",
+        "itemCount": 13,
+        "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+        "sectionHash": "258bbaa8327e00f427b103d14c78c46958c57abcb3e17d5d4e89505ea2bf1d71"
+      },
+      {
+        "sectionType": "FINDINGS",
+        "itemCount": 0,
+        "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+        "sectionHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "sectionType": "METRICS",
+        "itemCount": 3,
+        "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+        "sectionHash": "40a00970dd3c37b4c15e1cb5df79be888a35a6385d8170df9065f50ae86c42bb"
+      },
+      {
+        "sectionType": "OBSERVATIONS",
+        "itemCount": 6,
+        "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+        "sectionHash": "03e4cfa44ad85394ea52cf3a0152dae036b2fc9346015e07aa12507c782ada56"
+      },
+      {
+        "sectionType": "OUTCOME_CLASSIFICATIONS",
+        "itemCount": 5,
+        "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+        "sectionHash": "b5082d7b7726efe46eaa77e30125a5ae6b47e35a6bff214b1c27f049775270ba"
+      },
+      {
+        "sectionType": "RELATIONS",
+        "itemCount": 1,
+        "hashSpecificationVersion": "TRADING_ANALYTICS_RESULT_HASH_V1",
+        "sectionHash": "3366e538004f70e8361a97161045b6d8fb782e5c0e0917ff731df47087f2e23b"
+      }
+    ]
+  },
+  "expectedResultHash": "29fc9f6665cfe683c8d1a17be8292ab756a3057306738a06e3f6c752ecc4ff5d"
+}

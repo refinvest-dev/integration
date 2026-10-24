@@ -171,3 +171,20 @@ foreach ($sectionDigest in $payload.sectionDigests) {
     }
 }
 Write-Host "Normalization result vector synchronized: $($resultVector.specificationVersion) $($payload.resultHash)"
+
+# Analytics identity and result vectors are Context-owned protocol fixtures.
+# Keep byte-for-byte snapshots in each runtime repository and this harness so
+# the Core/Compute implementations can consume the same independent oracle.
+$analyticsFixturePath = Join-Path $ContextPath 'fixtures/trading-analytics'
+$coreAnalyticsFixturePath = Join-Path $CoreApiPath 'tradingreview/application/src/test/resources/trading-analytics-protocol/v1'
+$computeAnalyticsFixturePath = Join-Path $ComputeApiPath 'tests/fixtures/trading_review/analytics_protocol/v1'
+$integrationAnalyticsFixturePath = Join-Path $PSScriptRoot '..\fixtures\trading-review\analytics-protocol-v1'
+foreach ($name in @('README.md', 'input-identity-v1.json', 'input-identity-v1.schema.json',
+                    'result-integrity-v1.json', 'result-integrity-v1.schema.json')) {
+    $source = Join-Path $analyticsFixturePath $name
+    Assert-SameBytes $source (Join-Path $coreAnalyticsFixturePath $name)
+    Assert-SameBytes $source (Join-Path $computeAnalyticsFixturePath $name)
+    Assert-SameBytes $source (Join-Path $integrationAnalyticsFixturePath $name)
+}
+
+Write-Host 'Trading Analytics V1 vectors synchronized with Context.'
