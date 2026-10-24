@@ -59,15 +59,18 @@ jobs:
           token: ${{ steps.sibling-token.outputs.token }}
           path: compute-api/refinvest
 
-      - name: Verify contract snapshots
-        shell: pwsh
-        working-directory: integration
-        run: ./scripts/verify-contract-sync.ps1
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: Install Analytics contract verifier dependencies
+        run: python -m pip install -r integration/scripts/requirements-contract-sync.txt
+
+      - name: Verify contract snapshots
+        shell: pwsh
+        working-directory: integration
+        run: ./scripts/verify-contract-sync.ps1
 
       - name: Test comparison decisions
         working-directory: integration
