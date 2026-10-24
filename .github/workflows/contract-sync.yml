@@ -65,6 +65,14 @@ jobs:
           token: ${{ steps.sibling-token.outputs.token }}
           path: web/web
 
+      - name: Set up Python for Analytics contract verification
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Analytics contract verifier dependencies
+        run: python -m pip install -r integration/scripts/requirements-contract-sync.txt
+
       - name: Verify OpenAPI snapshots
         id: contract-sync
         shell: pwsh

@@ -93,7 +93,8 @@ if ($LASTEXITCODE -ne 0 -or $contextRevision -cnotmatch '^[0-9a-f]{40}$') {
 }
 $revisionSnapshots = @(
     (Join-Path $CoreApiPath 'openapi/CONTEXT_REVISION'),
-    (Join-Path $ComputeApiPath 'openapi/CONTEXT_REVISION')
+    (Join-Path $ComputeApiPath 'openapi/CONTEXT_REVISION'),
+    (Join-Path $PSScriptRoot '../CONTEXT_REVISION')
 )
 if ($IncludeWeb) { $revisionSnapshots += (Join-Path $WebPath 'docs/api/CONTEXT_REVISION') }
 foreach ($revisionSnapshot in $revisionSnapshots) {
@@ -188,3 +189,15 @@ foreach ($name in @('README.md', 'input-identity-v1.json', 'input-identity-v1.sc
 }
 
 Write-Host 'Trading Analytics V1 vectors synchronized with Context.'
+
+# Context owns the Analytics create response schemas and their fixed-vector checks.
+# The OpenAPI snapshots above must match before this normative verifier runs.
+$analyticsContractVerifier = Join-Path $ContextPath 'scripts/verify-trading-analytics-contract.py'
+if (-not (Test-Path -LiteralPath $analyticsContractVerifier -PathType Leaf)) {
+    throw "Context Analytics contract verifier does not exist: $analyticsContractVerifier"
+}
+& python $analyticsContractVerifier
+if ($LASTEXITCODE -ne 0) {
+    throw 'Context Analytics create/replay contract verification failed.'
+}
+Write-Host 'Trading Analytics create 202, replay 200, and conflict 409 contract verified.'
