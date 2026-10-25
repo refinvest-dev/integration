@@ -173,6 +173,81 @@ foreach ($sectionDigest in $payload.sectionDigests) {
 }
 Write-Host "Normalization result vector synchronized: $($resultVector.specificationVersion) $($payload.resultHash)"
 
+# The V1 oracle remains pinned. The V2 oracle adds one singleton section and
+# uses a new schema/hash pair; both versions stay independently verifiable.
+$v1Sections = @('ARTIFACT_COVERAGES', 'CANONICAL_RECORDS', 'CAPABILITIES',
+                'QUALITY_REPORT', 'RECONCILIATION_ISSUES', 'RECONCILIATION_MANIFEST',
+                'RECONCILIATION_MATCHES', 'REVIEW_UNITS', 'SOURCE_EVIDENCE_SNAPSHOTS') | Sort-Object -CaseSensitive
+if ($resultVector.specificationVersion -cne 'TRADING_NORMALIZATION_RESULT_HASH_V1' -or
+    $resultVector.resultSchemaVersion -cne 'TRADING_NORMALIZATION_RESULT_V1' -or
+    $null -ne $payload.analyticsInputSupplement -or
+    @($payload.sectionDigests).Count -ne 9 -or
+    (@($payload.sectionDigests | ForEach-Object { $_.sectionType }) -join ',') -cne ($v1Sections -join ',')) {
+    throw 'Normalization V1 result contract has changed.'
+}
+
+$v2Name = 'result-integrity-v2.json'
+$v2Source = Join-Path $fixturePath $v2Name
+$v2Replicas = @(
+    (Join-Path $coreFixturePath $v2Name),
+    (Join-Path $ComputeApiPath 'tests/fixtures/trading_review/normalization_identity/v2/result-integrity-v2.json'),
+    (Join-Path $PSScriptRoot '../fixtures/trading-review/normalization-result-v2/result-integrity-v2.json')
+)
+foreach ($replica in $v2Replicas) { Assert-SameBytes $v2Source $replica }
+$v2 = Get-Content -LiteralPath $v2Replicas[2] -Raw | ConvertFrom-Json
+$v2Payload = $v2.terminalPayload
+$v2Spec = 'TRADING_NORMALIZATION_RESULT_HASH_V2'
+$v2Schema = 'TRADING_NORMALIZATION_RESULT_V2'
+if ($v2.specificationVersion -cne $v2Spec -or $v2.resultSchemaVersion -cne $v2Schema -or
+    $v2Payload.resultHashSpecificationVersion -cne $v2Spec -or
+    $v2Payload.resultSchemaVersion -cne $v2Schema -or
+    $v2Payload.resultDigestManifest.resultHashSpecificationVersion -cne $v2Spec -or
+    $v2Payload.resultDigestManifest.resultSchemaVersion -cne $v2Schema -or
+    $v2Payload.reconciliationManifest.manifestHashSpecificationVersion -cne 'TRADING_NORMALIZATION_RESULT_HASH_V1' -or
+    $v2Payload.analyticsInputSupplement.schemaVersion -cne 'TRADING_ANALYTICS_INPUT_SUPPLEMENT_V1') {
+    throw 'Normalization V2 result schema/hash version pair is inconsistent.'
+}
+$v2Sections = @('ANALYTICS_INPUT_SUPPLEMENT') + $v1Sections | Sort-Object -CaseSensitive
+if (@($v2Payload.sectionDigests).Count -ne 10 -or
+    @($v2.sectionVectors.PSObject.Properties).Count -ne 10 -or
+    (@($v2Payload.sectionDigests | ForEach-Object { $_.sectionType }) -join ',') -cne ($v2Sections -join ',') -or
+    ($v2Payload.resultDigestManifest.sectionDigests | ConvertTo-Json -Depth 20 -Compress) -cne
+    ($v2Payload.sectionDigests | ConvertTo-Json -Depth 20 -Compress)) {
+    throw 'Normalization V2 section composition or order is inconsistent.'
+}
+foreach ($digest in $v2Payload.sectionDigests) {
+    $entry = $v2.sectionVectors.PSObject.Properties[$digest.sectionType]
+    if ($null -eq $entry -or $digest.hashSpecificationVersion -cne $v2Spec -or
+        $digest.sectionHash -cne $entry.Value.expectedSha256) {
+        throw "Normalization V2 section digest is inconsistent: $($digest.sectionType)"
+    }
+}
+foreach ($entry in @($v2.sectionVectors.PSObject.Properties | ForEach-Object { $_.Value }) +
+                    @($v2.manifestVector, $v2.resultDigestManifestVector)) {
+    $bytes = [Text.Encoding]::UTF8.GetBytes($entry.canonicalJson)
+    $hex = [BitConverter]::ToString($bytes).Replace('-', '').ToLowerInvariant()
+    $hash = [Security.Cryptography.SHA256]::Create()
+    try { $digest = [BitConverter]::ToString($hash.ComputeHash($bytes)).Replace('-', '').ToLowerInvariant() }
+    finally { $hash.Dispose() }
+    if ($hex -cne $entry.canonicalUtf8Hex -or $digest -cne $entry.expectedSha256) {
+        throw 'Normalization V2 fixed vector bytes or SHA-256 are inconsistent.'
+    }
+}
+$manifestDigest = $v2Payload.sectionDigests | Where-Object { $_.sectionType -ceq 'RECONCILIATION_MANIFEST' }
+if ($v2Payload.reconciliationManifest.manifestHash -cne $v2.manifestVector.expectedSha256 -or
+    $manifestDigest.sectionHash -cne $v2.manifestVector.expectedSha256 -or
+    $v2Payload.resultDigestManifest.reconciliationManifestHash -cne $v2.manifestVector.expectedSha256 -or
+    $v2Payload.resultHash -cne $v2.resultDigestManifestVector.expectedSha256) {
+    throw 'Normalization V2 manifest or result hash is inconsistent.'
+}
+foreach ($name in @('verify-trading-normalization-result-integrity.py',
+                     'verify-trading-normalization-result-v2.py')) {
+    $verifier = Join-Path $ContextPath "scripts/$name"
+    if (-not (Test-Path -LiteralPath $verifier -PathType Leaf)) { throw "Missing Context verifier: $verifier" }
+    & python -B $verifier
+    if ($LASTEXITCODE -ne 0) { throw "Normalization schema/vector verification failed: $name" }
+}
+Write-Host "Normalization V1/V2 schema and vector contracts verified: $($v2Payload.resultHash)"
 # Analytics identity and result vectors are Context-owned protocol fixtures.
 # Keep byte-for-byte snapshots in each runtime repository and this harness so
 # the Core/Compute implementations can consume the same independent oracle.

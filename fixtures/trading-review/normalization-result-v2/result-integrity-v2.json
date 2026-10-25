@@ -1,0 +1,680 @@
+{
+  "specificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+  "resultSchemaVersion": "TRADING_NORMALIZATION_RESULT_V2",
+  "terminalPayload": {
+    "jobId": "job-synthetic-1",
+    "coreLogicalJobId": "logical-synthetic-1",
+    "coreNormalizationRunId": "run-synthetic-1",
+    "coreImportSessionId": "session-example",
+    "attemptToken": "attempt-synthetic-1",
+    "deletionGeneration": 1,
+    "status": "COMPLETED",
+    "targetVersionSet": {
+      "normalizer": {
+        "sourceDialectVersionsByArtifactRole": {
+          "TRADE_HISTORY": "TRADE_V1",
+          "POSITION_HISTORY": "POSITION_V1"
+        },
+        "adapterVersion": "ADAPTER_V1",
+        "normalizerVersion": "NORMALIZER_V1",
+        "canonicalSchemaVersion": "CANONICAL_V1",
+        "implementationDigest": "digest-normalizer-example",
+        "versionSetHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "reconstruction": {
+        "instrumentTermsVersionByInstrument": {
+          "instrument-example": "TERMS_V1"
+        },
+        "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+        "reconciliationVersion": "RECONCILIATION_V1",
+        "reviewUnitSchemaVersion": "REVIEW_UNIT_V1",
+        "evidenceSchemaVersion": "EVIDENCE_V1",
+        "implementationDigest": "digest-reconstruction-example",
+        "versionSetHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "versionSetHash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "inputSetHash": "1122481b2c208afc1cae751f952f1b9a670f446f404d42c1e581a3b83f25552e",
+    "hashSpecificationVersion": "TRADING_INPUT_SET_HASH_V1",
+    "resultSchemaVersion": "TRADING_NORMALIZATION_RESULT_V2",
+    "resultHashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+    "counts": {
+      "artifactCoverageCount": 2,
+      "canonicalRecordCount": 6,
+      "sourceEvidenceSnapshotCount": 2,
+      "reviewUnitCount": 1,
+      "positionAllocationCount": 2,
+      "excludedReviewUnitCount": 1,
+      "capabilityCount": 1,
+      "validationIssueCount": 1,
+      "reconciliationMatchCount": 0,
+      "reconciliationIssueCount": 0
+    },
+    "sectionDigests": [
+      {
+        "sectionType": "ANALYTICS_INPUT_SUPPLEMENT",
+        "itemCount": 1,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "10216371ce2030861875936528985dfc57cd4916fb97b0dcc17e598b96886149"
+      },
+      {
+        "sectionType": "ARTIFACT_COVERAGES",
+        "itemCount": 2,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "a99442f53a9f28a113afe42153a4a4db0ad4053369a06991804be6a85215b89d"
+      },
+      {
+        "sectionType": "CANONICAL_RECORDS",
+        "itemCount": 6,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "48868bca4b45c972bff23b8026ee24bea3bc57815138de9493209a8f9cb1ab5e"
+      },
+      {
+        "sectionType": "CAPABILITIES",
+        "itemCount": 1,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "0cc5e6ad55a608d1a0c8110bd05b440a938f5fea170a5d9744709cebb11815a1"
+      },
+      {
+        "sectionType": "QUALITY_REPORT",
+        "itemCount": 1,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "74b1df1cfd742d6314552678e07730ff8db97ea657992f68c33892ed864f7db5"
+      },
+      {
+        "sectionType": "RECONCILIATION_ISSUES",
+        "itemCount": 0,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "sectionType": "RECONCILIATION_MANIFEST",
+        "itemCount": 1,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "0374d28b67f24403f6e46eb0c077843ff8eb6a90c7e5d37d7a14efe397cecf0d"
+      },
+      {
+        "sectionType": "RECONCILIATION_MATCHES",
+        "itemCount": 0,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "sectionType": "REVIEW_UNITS",
+        "itemCount": 1,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "cf831e85c2decda3c9c01305b8a37ea948b499b8bd2362c6d9bfe3e9994ae52e"
+      },
+      {
+        "sectionType": "SOURCE_EVIDENCE_SNAPSHOTS",
+        "itemCount": 2,
+        "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+        "sectionHash": "4bcbc5c8051c8c5caf34238ba4d3b7dcbf7b374cc12307498d9c7ac03bb6459d"
+      }
+    ],
+    "resultDigestManifest": {
+      "resultHashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+      "resultSchemaVersion": "TRADING_NORMALIZATION_RESULT_V2",
+      "inputSetHash": "1122481b2c208afc1cae751f952f1b9a670f446f404d42c1e581a3b83f25552e",
+      "inputHashSpecificationVersion": "TRADING_INPUT_SET_HASH_V1",
+      "targetVersionSet": {
+        "normalizer": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "digest-normalizer-example",
+          "versionSetHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "reconstruction": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_UNIT_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "digest-reconstruction-example",
+          "versionSetHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "versionSetHash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "counts": {
+        "artifactCoverageCount": 2,
+        "canonicalRecordCount": 6,
+        "sourceEvidenceSnapshotCount": 2,
+        "reviewUnitCount": 1,
+        "positionAllocationCount": 2,
+        "excludedReviewUnitCount": 1,
+        "capabilityCount": 1,
+        "validationIssueCount": 1,
+        "reconciliationMatchCount": 0,
+        "reconciliationIssueCount": 0
+      },
+      "sectionDigests": [
+        {
+          "sectionType": "ANALYTICS_INPUT_SUPPLEMENT",
+          "itemCount": 1,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "10216371ce2030861875936528985dfc57cd4916fb97b0dcc17e598b96886149"
+        },
+        {
+          "sectionType": "ARTIFACT_COVERAGES",
+          "itemCount": 2,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "a99442f53a9f28a113afe42153a4a4db0ad4053369a06991804be6a85215b89d"
+        },
+        {
+          "sectionType": "CANONICAL_RECORDS",
+          "itemCount": 6,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "48868bca4b45c972bff23b8026ee24bea3bc57815138de9493209a8f9cb1ab5e"
+        },
+        {
+          "sectionType": "CAPABILITIES",
+          "itemCount": 1,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "0cc5e6ad55a608d1a0c8110bd05b440a938f5fea170a5d9744709cebb11815a1"
+        },
+        {
+          "sectionType": "QUALITY_REPORT",
+          "itemCount": 1,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "74b1df1cfd742d6314552678e07730ff8db97ea657992f68c33892ed864f7db5"
+        },
+        {
+          "sectionType": "RECONCILIATION_ISSUES",
+          "itemCount": 0,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "sectionType": "RECONCILIATION_MANIFEST",
+          "itemCount": 1,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "0374d28b67f24403f6e46eb0c077843ff8eb6a90c7e5d37d7a14efe397cecf0d"
+        },
+        {
+          "sectionType": "RECONCILIATION_MATCHES",
+          "itemCount": 0,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "sectionType": "REVIEW_UNITS",
+          "itemCount": 1,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "cf831e85c2decda3c9c01305b8a37ea948b499b8bd2362c6d9bfe3e9994ae52e"
+        },
+        {
+          "sectionType": "SOURCE_EVIDENCE_SNAPSHOTS",
+          "itemCount": 2,
+          "hashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V2",
+          "sectionHash": "4bcbc5c8051c8c5caf34238ba4d3b7dcbf7b374cc12307498d9c7ac03bb6459d"
+        }
+      ],
+      "reconciliationManifestHash": "0374d28b67f24403f6e46eb0c077843ff8eb6a90c7e5d37d7a14efe397cecf0d"
+    },
+    "artifactCoverages": [
+      {
+        "artifactRole": "POSITION_HISTORY",
+        "earliestObservedAt": "2025-01-01T00:00:00Z",
+        "latestObservedAt": "2025-01-01T00:00:00Z",
+        "rowCount": 1,
+        "sourceTimezone": "UTC",
+        "timestampPrecision": "SECOND",
+        "coverageCompleteness": "NOT_PROVEN"
+      },
+      {
+        "artifactRole": "TRADE_HISTORY",
+        "earliestObservedAt": "2025-01-01T00:00:00Z",
+        "latestObservedAt": "2025-01-01T00:00:00Z",
+        "rowCount": 1,
+        "sourceTimezone": "UTC",
+        "timestampPrecision": "SECOND",
+        "coverageCompleteness": "NOT_PROVEN"
+      }
+    ],
+    "canonicalRecords": [
+      {
+        "recordId": "record-execution-2",
+        "instrumentId": "instrument-synthetic-1",
+        "sourceEvidenceSnapshotId": "evidence-synthetic-2",
+        "recordHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "recordType": "EXECUTION",
+        "sourceExecutionKey": "execution-synthetic-2",
+        "occurredAt": "2025-01-01T00:01:00Z",
+        "side": "BUY",
+        "price": {
+          "value": "1.23",
+          "sourceScale": 4
+        },
+        "quantity": {
+          "value": "2",
+          "sourceScale": 0
+        },
+        "executionOrigin": "UNKNOWN"
+      },
+      {
+        "recordId": "record-fee-1",
+        "instrumentId": "instrument-synthetic-1",
+        "sourceEvidenceSnapshotId": "evidence-synthetic-1",
+        "recordHash": "4444444444444444444444444444444444444444444444444444444444444444",
+        "recordType": "FEE",
+        "sourceExecutionKey": "execution-synthetic-1",
+        "occurredAt": "2025-01-01T00:00:00Z",
+        "sourceAmount": {
+          "amount": "0.1",
+          "currency": "USDT",
+          "sourceScale": 2
+        },
+        "feeKind": "COST"
+      },
+      {
+        "recordId": "record-fee-2",
+        "instrumentId": "instrument-synthetic-1",
+        "sourceEvidenceSnapshotId": "evidence-synthetic-2",
+        "recordHash": "5555555555555555555555555555555555555555555555555555555555555555",
+        "recordType": "FEE",
+        "sourceExecutionKey": "execution-synthetic-2",
+        "occurredAt": "2025-01-01T00:01:00Z",
+        "sourceAmount": {
+          "amount": "0",
+          "currency": "USDT",
+          "sourceScale": 2
+        },
+        "feeKind": "ZERO"
+      },
+      {
+        "recordId": "record-pnl-1",
+        "instrumentId": "instrument-synthetic-1",
+        "sourceEvidenceSnapshotId": "evidence-synthetic-1",
+        "recordHash": "6666666666666666666666666666666666666666666666666666666666666666",
+        "recordType": "VENUE_REPORTED_PNL",
+        "sourceExecutionKey": "execution-synthetic-1",
+        "occurredAt": "2025-01-01T00:00:00Z",
+        "realizedPnl": {
+          "amount": "0",
+          "currency": "USDT",
+          "sourceScale": 2
+        }
+      },
+      {
+        "recordId": "record-pnl-2",
+        "instrumentId": "instrument-synthetic-1",
+        "sourceEvidenceSnapshotId": "evidence-synthetic-2",
+        "recordHash": "7777777777777777777777777777777777777777777777777777777777777777",
+        "recordType": "VENUE_REPORTED_PNL",
+        "sourceExecutionKey": "execution-synthetic-2",
+        "occurredAt": "2025-01-01T00:01:00Z",
+        "realizedPnl": {
+          "amount": "0",
+          "currency": "USDT",
+          "sourceScale": 2
+        }
+      },
+      {
+        "recordId": "record-synthetic-1",
+        "instrumentId": "instrument-synthetic-1",
+        "sourceEvidenceSnapshotId": "evidence-synthetic-1",
+        "recordHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "recordType": "EXECUTION",
+        "sourceExecutionKey": "execution-synthetic-1",
+        "occurredAt": "2025-01-01T00:00:00Z",
+        "side": "BUY",
+        "price": {
+          "value": "1.23",
+          "sourceScale": 4
+        },
+        "quantity": {
+          "value": "2",
+          "sourceScale": 0
+        },
+        "executionOrigin": "UNKNOWN"
+      }
+    ],
+    "sourceEvidenceSnapshots": [
+      {
+        "snapshotId": "evidence-synthetic-1",
+        "coreArtifactId": "artifact-trade-example",
+        "artifactRole": "TRADE_HISTORY",
+        "sourceRowNumber": 1,
+        "sourceRowHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "dialect": "SYNTHETIC_V1",
+        "maskingPolicyVersion": "MASK_V1",
+        "allowlistedFields": [
+          {
+            "name": "kind",
+            "value": "synthetic"
+          }
+        ],
+        "capturedAt": "2025-01-01T00:00:01Z"
+      },
+      {
+        "snapshotId": "evidence-synthetic-2",
+        "coreArtifactId": "artifact-trade-example",
+        "artifactRole": "TRADE_HISTORY",
+        "sourceRowNumber": 2,
+        "sourceRowHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "dialect": "SYNTHETIC_V1",
+        "maskingPolicyVersion": "MASK_V1",
+        "allowlistedFields": [
+          {
+            "name": "kind",
+            "value": "synthetic"
+          }
+        ],
+        "capturedAt": "2025-01-01T00:00:01Z"
+      }
+    ],
+    "reconciliationManifest": {
+      "manifestVersion": "MANIFEST_V1",
+      "manifestHashSpecificationVersion": "TRADING_NORMALIZATION_RESULT_HASH_V1",
+      "inputSetHash": "1122481b2c208afc1cae751f952f1b9a670f446f404d42c1e581a3b83f25552e",
+      "executionInputHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "canonicalRecordSetHash": "48868bca4b45c972bff23b8026ee24bea3bc57815138de9493209a8f9cb1ab5e",
+      "instrumentTermsHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "versionSetHash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "sourceArtifactHashesByRole": {
+        "TRADE_HISTORY": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "POSITION_HISTORY": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+      "reconciliationVersion": "RECONCILIATION_V1",
+      "artifactCoverages": [
+        {
+          "artifactRole": "POSITION_HISTORY",
+          "earliestObservedAt": "2025-01-01T00:00:00Z",
+          "latestObservedAt": "2025-01-01T00:00:00Z",
+          "rowCount": 1,
+          "sourceTimezone": "UTC",
+          "timestampPrecision": "SECOND",
+          "coverageCompleteness": "NOT_PROVEN"
+        },
+        {
+          "artifactRole": "TRADE_HISTORY",
+          "earliestObservedAt": "2025-01-01T00:00:00Z",
+          "latestObservedAt": "2025-01-01T00:00:00Z",
+          "rowCount": 1,
+          "sourceTimezone": "UTC",
+          "timestampPrecision": "SECOND",
+          "coverageCompleteness": "NOT_PROVEN"
+        }
+      ],
+      "reviewUnits": [
+        {
+          "reviewUnitId": "unit-synthetic-1",
+          "type": "FUTURES_POSITION_EPISODE",
+          "instrumentId": "instrument-synthetic-1",
+          "direction": "LONG",
+          "outcomeClassification": "UNAVAILABLE",
+          "reconstructionStatus": "RIGHT_CENSORED",
+          "reconciliationStatus": "INCOMPLETE_TRADES",
+          "allocations": [
+            {
+              "allocationId": "allocation-synthetic-1",
+              "recordId": "record-synthetic-1",
+              "reviewUnitId": "unit-synthetic-1",
+              "action": "OPEN",
+              "allocatedQuantity": {
+                "value": "2",
+                "sourceScale": 0
+              },
+              "allocatedFee": {
+                "amount": "0.1",
+                "currency": "USDT",
+                "sourceScale": 2
+              },
+              "allocatedReportedPnl": {
+                "amount": "0",
+                "currency": "USDT",
+                "sourceScale": 2
+              }
+            },
+            {
+              "allocationId": "allocation-synthetic-2",
+              "recordId": "record-execution-2",
+              "reviewUnitId": "unit-synthetic-1",
+              "action": "INCREASE",
+              "allocatedQuantity": {
+                "value": "2",
+                "sourceScale": 0
+              },
+              "allocatedFee": {
+                "amount": "0",
+                "currency": "USDT",
+                "sourceScale": 2
+              },
+              "allocatedReportedPnl": {
+                "amount": "0",
+                "currency": "USDT",
+                "sourceScale": 2
+              }
+            }
+          ],
+          "capability": [
+            "INITIAL_EXPOSURE"
+          ],
+          "exclusionReasons": [
+            "EPISODE_RIGHT_CENSORED"
+          ]
+        }
+      ],
+      "capability": [
+        "INITIAL_EXPOSURE"
+      ],
+      "quantityConservationPassed": true,
+      "cashFlowConservationPassed": true,
+      "manifestHash": "0374d28b67f24403f6e46eb0c077843ff8eb6a90c7e5d37d7a14efe397cecf0d",
+      "reconciliationMatches": [],
+      "reconciliationIssues": [],
+      "qualityReportHash": "74b1df1cfd742d6314552678e07730ff8db97ea657992f68c33892ed864f7db5",
+      "counts": {
+        "artifactCoverageCount": 2,
+        "canonicalRecordCount": 6,
+        "sourceEvidenceSnapshotCount": 2,
+        "reviewUnitCount": 1,
+        "positionAllocationCount": 2,
+        "excludedReviewUnitCount": 1,
+        "capabilityCount": 1,
+        "validationIssueCount": 1,
+        "reconciliationMatchCount": 0,
+        "reconciliationIssueCount": 0
+      }
+    },
+    "capability": [
+      "INITIAL_EXPOSURE"
+    ],
+    "qualityReport": {
+      "qualityStatus": "ACCEPTABLE_WITH_EXCLUSIONS",
+      "rowCountsByArtifactRole": {
+        "TRADE_HISTORY": 1,
+        "POSITION_HISTORY": 1
+      },
+      "ignoredNonTradingRowCounts": {
+        "TRADE_HISTORY": 0,
+        "POSITION_HISTORY": 0
+      },
+      "validationIssues": [
+        {
+          "code": "SYNTHETIC_WARNING",
+          "severity": "WARNING",
+          "artifactRole": "TRADE_HISTORY",
+          "sourceRowNumber": 1
+        }
+      ],
+      "reconciliationStatusCounts": {
+        "INCOMPLETE_TRADES": 1
+      },
+      "excludedReasonCounts": {
+        "EPISODE_RIGHT_CENSORED": 1
+      }
+    },
+    "ledgerContentHash": "48868bca4b45c972bff23b8026ee24bea3bc57815138de9493209a8f9cb1ab5e",
+    "resultHash": "7db5c57de11f98f71b1860a144919afcc4581dd91c3763b05f2367f39021ad99",
+    "createdAt": "2025-01-01T00:00:00Z",
+    "terminalAt": "2025-01-01T00:00:02Z",
+    "analyticsInputSupplement": {
+      "schemaVersion": "TRADING_ANALYTICS_INPUT_SUPPLEMENT_V1",
+      "reviewUnitEngineInputs": [
+        {
+          "reviewUnitId": "unit-synthetic-1",
+          "evidenceRecordIds": [
+            "record-execution-2",
+            "record-fee-1",
+            "record-fee-2",
+            "record-pnl-1",
+            "record-pnl-2",
+            "record-synthetic-1"
+          ],
+          "stableEpisodeTimeAvailable": false,
+          "allocationEvidence": [
+            {
+              "allocationId": "allocation-synthetic-1",
+              "evidenceRecordIds": [
+                "record-fee-1",
+                "record-pnl-1",
+                "record-synthetic-1"
+              ],
+              "allocatedFee": {
+                "amount": "0.1",
+                "currency": "USDT",
+                "sourceScale": 2
+              },
+              "allocatedReportedPnl": {
+                "amount": "0",
+                "currency": "USDT",
+                "sourceScale": 2
+              }
+            },
+            {
+              "allocationId": "allocation-synthetic-2",
+              "evidenceRecordIds": [
+                "record-execution-2",
+                "record-fee-2",
+                "record-pnl-2"
+              ],
+              "allocatedFee": {
+                "amount": "0",
+                "currency": "USDT",
+                "sourceScale": 2
+              },
+              "allocatedReportedPnl": {
+                "amount": "0",
+                "currency": "USDT",
+                "sourceScale": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "sectionVectors": {
+    "ANALYTICS_INPUT_SUPPLEMENT": {
+      "canonicalJson": "{\"reviewUnitEngineInputs\":[{\"allocationEvidence\":[{\"allocatedFee\":{\"amount\":\"0.1\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocatedReportedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocationId\":\"allocation-synthetic-1\",\"evidenceRecordIds\":[\"record-fee-1\",\"record-pnl-1\",\"record-synthetic-1\"]},{\"allocatedFee\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocatedReportedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocationId\":\"allocation-synthetic-2\",\"evidenceRecordIds\":[\"record-execution-2\",\"record-fee-2\",\"record-pnl-2\"]}],\"evidenceRecordIds\":[\"record-execution-2\",\"record-fee-1\",\"record-fee-2\",\"record-pnl-1\",\"record-pnl-2\",\"record-synthetic-1\"],\"reviewUnitId\":\"unit-synthetic-1\",\"stableEpisodeTimeAvailable\":false}],\"schemaVersion\":\"TRADING_ANALYTICS_INPUT_SUPPLEMENT_V1\"}",
+      "canonicalUtf8Hex": "7b22726576696577556e6974456e67696e65496e70757473223a5b7b22616c6c6f636174696f6e45766964656e6365223a5b7b22616c6c6f6361746564466565223a7b22616d6f756e74223a22302e31222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f63617465645265706f72746564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f636174696f6e4964223a22616c6c6f636174696f6e2d73796e7468657469632d31222c2265766964656e63655265636f7264496473223a5b227265636f72642d6665652d31222c227265636f72642d706e6c2d31222c227265636f72642d73796e7468657469632d31225d7d2c7b22616c6c6f6361746564466565223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f63617465645265706f72746564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f636174696f6e4964223a22616c6c6f636174696f6e2d73796e7468657469632d32222c2265766964656e63655265636f7264496473223a5b227265636f72642d657865637574696f6e2d32222c227265636f72642d6665652d32222c227265636f72642d706e6c2d32225d7d5d2c2265766964656e63655265636f7264496473223a5b227265636f72642d657865637574696f6e2d32222c227265636f72642d6665652d31222c227265636f72642d6665652d32222c227265636f72642d706e6c2d31222c227265636f72642d706e6c2d32222c227265636f72642d73796e7468657469632d31225d2c22726576696577556e69744964223a22756e69742d73796e7468657469632d31222c22737461626c65457069736f646554696d65417661696c61626c65223a66616c73657d5d2c22736368656d6156657273696f6e223a2254524144494e475f414e414c59544943535f494e5055545f535550504c454d454e545f5631227d",
+      "expectedSha256": "10216371ce2030861875936528985dfc57cd4916fb97b0dcc17e598b96886149"
+    },
+    "ARTIFACT_COVERAGES": {
+      "canonicalJson": "[{\"artifactRole\":\"POSITION_HISTORY\",\"coverageCompleteness\":\"NOT_PROVEN\",\"earliestObservedAt\":\"2025-01-01T00:00:00Z\",\"latestObservedAt\":\"2025-01-01T00:00:00Z\",\"rowCount\":1,\"sourceTimezone\":\"UTC\",\"timestampPrecision\":\"SECOND\"},{\"artifactRole\":\"TRADE_HISTORY\",\"coverageCompleteness\":\"NOT_PROVEN\",\"earliestObservedAt\":\"2025-01-01T00:00:00Z\",\"latestObservedAt\":\"2025-01-01T00:00:00Z\",\"rowCount\":1,\"sourceTimezone\":\"UTC\",\"timestampPrecision\":\"SECOND\"}]",
+      "canonicalUtf8Hex": "5b7b226172746966616374526f6c65223a22504f534954494f4e5f484953544f5259222c22636f766572616765436f6d706c6574656e657373223a224e4f545f50524f56454e222c226561726c696573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c226c61746573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c22726f77436f756e74223a312c22736f7572636554696d657a6f6e65223a22555443222c2274696d657374616d70507265636973696f6e223a225345434f4e44227d2c7b226172746966616374526f6c65223a2254524144455f484953544f5259222c22636f766572616765436f6d706c6574656e657373223a224e4f545f50524f56454e222c226561726c696573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c226c61746573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c22726f77436f756e74223a312c22736f7572636554696d657a6f6e65223a22555443222c2274696d657374616d70507265636973696f6e223a225345434f4e44227d5d",
+      "expectedSha256": "a99442f53a9f28a113afe42153a4a4db0ad4053369a06991804be6a85215b89d"
+    },
+    "CANONICAL_RECORDS": {
+      "canonicalJson": "[{\"executionOrigin\":\"UNKNOWN\",\"instrumentId\":\"instrument-synthetic-1\",\"occurredAt\":\"2025-01-01T00:01:00Z\",\"price\":{\"sourceScale\":4,\"value\":\"1.23\"},\"quantity\":{\"sourceScale\":0,\"value\":\"2\"},\"recordId\":\"record-execution-2\",\"recordType\":\"EXECUTION\",\"side\":\"BUY\",\"sourceEvidenceSnapshotId\":\"evidence-synthetic-2\",\"sourceExecutionKey\":\"execution-synthetic-2\"},{\"feeKind\":\"COST\",\"instrumentId\":\"instrument-synthetic-1\",\"occurredAt\":\"2025-01-01T00:00:00Z\",\"recordId\":\"record-fee-1\",\"recordType\":\"FEE\",\"sourceAmount\":{\"amount\":\"0.1\",\"currency\":\"USDT\",\"sourceScale\":2},\"sourceEvidenceSnapshotId\":\"evidence-synthetic-1\",\"sourceExecutionKey\":\"execution-synthetic-1\"},{\"feeKind\":\"ZERO\",\"instrumentId\":\"instrument-synthetic-1\",\"occurredAt\":\"2025-01-01T00:01:00Z\",\"recordId\":\"record-fee-2\",\"recordType\":\"FEE\",\"sourceAmount\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"sourceEvidenceSnapshotId\":\"evidence-synthetic-2\",\"sourceExecutionKey\":\"execution-synthetic-2\"},{\"instrumentId\":\"instrument-synthetic-1\",\"occurredAt\":\"2025-01-01T00:00:00Z\",\"realizedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"recordId\":\"record-pnl-1\",\"recordType\":\"VENUE_REPORTED_PNL\",\"sourceEvidenceSnapshotId\":\"evidence-synthetic-1\",\"sourceExecutionKey\":\"execution-synthetic-1\"},{\"instrumentId\":\"instrument-synthetic-1\",\"occurredAt\":\"2025-01-01T00:01:00Z\",\"realizedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"recordId\":\"record-pnl-2\",\"recordType\":\"VENUE_REPORTED_PNL\",\"sourceEvidenceSnapshotId\":\"evidence-synthetic-2\",\"sourceExecutionKey\":\"execution-synthetic-2\"},{\"executionOrigin\":\"UNKNOWN\",\"instrumentId\":\"instrument-synthetic-1\",\"occurredAt\":\"2025-01-01T00:00:00Z\",\"price\":{\"sourceScale\":4,\"value\":\"1.23\"},\"quantity\":{\"sourceScale\":0,\"value\":\"2\"},\"recordId\":\"record-synthetic-1\",\"recordType\":\"EXECUTION\",\"side\":\"BUY\",\"sourceEvidenceSnapshotId\":\"evidence-synthetic-1\",\"sourceExecutionKey\":\"execution-synthetic-1\"}]",
+      "canonicalUtf8Hex": "5b7b22657865637574696f6e4f726967696e223a22554e4b4e4f574e222c22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f636375727265644174223a22323032352d30312d30315430303a30313a30305a222c227072696365223a7b22736f757263655363616c65223a342c2276616c7565223a22312e3233227d2c227175616e74697479223a7b22736f757263655363616c65223a302c2276616c7565223a2232227d2c227265636f72644964223a227265636f72642d657865637574696f6e2d32222c227265636f726454797065223a22455845435554494f4e222c2273696465223a22425559222c22736f7572636545766964656e6365536e617073686f744964223a2265766964656e63652d73796e7468657469632d32222c22736f75726365457865637574696f6e4b6579223a22657865637574696f6e2d73796e7468657469632d32227d2c7b226665654b696e64223a22434f5354222c22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f636375727265644174223a22323032352d30312d30315430303a30303a30305a222c227265636f72644964223a227265636f72642d6665652d31222c227265636f726454797065223a22464545222c22736f75726365416d6f756e74223a7b22616d6f756e74223a22302e31222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22736f7572636545766964656e6365536e617073686f744964223a2265766964656e63652d73796e7468657469632d31222c22736f75726365457865637574696f6e4b6579223a22657865637574696f6e2d73796e7468657469632d31227d2c7b226665654b696e64223a225a45524f222c22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f636375727265644174223a22323032352d30312d30315430303a30313a30305a222c227265636f72644964223a227265636f72642d6665652d32222c227265636f726454797065223a22464545222c22736f75726365416d6f756e74223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22736f7572636545766964656e6365536e617073686f744964223a2265766964656e63652d73796e7468657469632d32222c22736f75726365457865637574696f6e4b6579223a22657865637574696f6e2d73796e7468657469632d32227d2c7b22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f636375727265644174223a22323032352d30312d30315430303a30303a30305a222c227265616c697a6564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c227265636f72644964223a227265636f72642d706e6c2d31222c227265636f726454797065223a2256454e55455f5245504f525445445f504e4c222c22736f7572636545766964656e6365536e617073686f744964223a2265766964656e63652d73796e7468657469632d31222c22736f75726365457865637574696f6e4b6579223a22657865637574696f6e2d73796e7468657469632d31227d2c7b22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f636375727265644174223a22323032352d30312d30315430303a30313a30305a222c227265616c697a6564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c227265636f72644964223a227265636f72642d706e6c2d32222c227265636f726454797065223a2256454e55455f5245504f525445445f504e4c222c22736f7572636545766964656e6365536e617073686f744964223a2265766964656e63652d73796e7468657469632d32222c22736f75726365457865637574696f6e4b6579223a22657865637574696f6e2d73796e7468657469632d32227d2c7b22657865637574696f6e4f726967696e223a22554e4b4e4f574e222c22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f636375727265644174223a22323032352d30312d30315430303a30303a30305a222c227072696365223a7b22736f757263655363616c65223a342c2276616c7565223a22312e3233227d2c227175616e74697479223a7b22736f757263655363616c65223a302c2276616c7565223a2232227d2c227265636f72644964223a227265636f72642d73796e7468657469632d31222c227265636f726454797065223a22455845435554494f4e222c2273696465223a22425559222c22736f7572636545766964656e6365536e617073686f744964223a2265766964656e63652d73796e7468657469632d31222c22736f75726365457865637574696f6e4b6579223a22657865637574696f6e2d73796e7468657469632d31227d5d",
+      "expectedSha256": "48868bca4b45c972bff23b8026ee24bea3bc57815138de9493209a8f9cb1ab5e"
+    },
+    "CAPABILITIES": {
+      "canonicalJson": "[\"INITIAL_EXPOSURE\"]",
+      "canonicalUtf8Hex": "5b22494e495449414c5f4558504f53555245225d",
+      "expectedSha256": "0cc5e6ad55a608d1a0c8110bd05b440a938f5fea170a5d9744709cebb11815a1"
+    },
+    "QUALITY_REPORT": {
+      "canonicalJson": "{\"excludedReasonCounts\":{\"EPISODE_RIGHT_CENSORED\":1},\"ignoredNonTradingRowCounts\":{\"POSITION_HISTORY\":0,\"TRADE_HISTORY\":0},\"qualityStatus\":\"ACCEPTABLE_WITH_EXCLUSIONS\",\"reconciliationStatusCounts\":{\"INCOMPLETE_TRADES\":1},\"rowCountsByArtifactRole\":{\"POSITION_HISTORY\":1,\"TRADE_HISTORY\":1},\"validationIssues\":[{\"artifactRole\":\"TRADE_HISTORY\",\"code\":\"SYNTHETIC_WARNING\",\"severity\":\"WARNING\",\"sourceRowNumber\":1}]}",
+      "canonicalUtf8Hex": "7b226578636c75646564526561736f6e436f756e7473223a7b22455049534f44455f52494748545f43454e534f524544223a317d2c2269676e6f7265644e6f6e54726164696e67526f77436f756e7473223a7b22504f534954494f4e5f484953544f5259223a302c2254524144455f484953544f5259223a307d2c227175616c697479537461747573223a2241434345505441424c455f574954485f4558434c5553494f4e53222c227265636f6e63696c696174696f6e537461747573436f756e7473223a7b22494e434f4d504c4554455f545241444553223a317d2c22726f77436f756e747342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a312c2254524144455f484953544f5259223a317d2c2276616c69646174696f6e497373756573223a5b7b226172746966616374526f6c65223a2254524144455f484953544f5259222c22636f6465223a2253594e5448455449435f5741524e494e47222c227365766572697479223a225741524e494e47222c22736f75726365526f774e756d626572223a317d5d7d",
+      "expectedSha256": "74b1df1cfd742d6314552678e07730ff8db97ea657992f68c33892ed864f7db5"
+    },
+    "RECONCILIATION_ISSUES": {
+      "canonicalJson": "[]",
+      "canonicalUtf8Hex": "5b5d",
+      "expectedSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "RECONCILIATION_MATCHES": {
+      "canonicalJson": "[]",
+      "canonicalUtf8Hex": "5b5d",
+      "expectedSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "REVIEW_UNITS": {
+      "canonicalJson": "[{\"allocations\":[{\"action\":\"OPEN\",\"allocatedFee\":{\"amount\":\"0.1\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocatedQuantity\":{\"sourceScale\":0,\"value\":\"2\"},\"allocatedReportedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocationId\":\"allocation-synthetic-1\",\"recordId\":\"record-synthetic-1\",\"reviewUnitId\":\"unit-synthetic-1\"},{\"action\":\"INCREASE\",\"allocatedFee\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocatedQuantity\":{\"sourceScale\":0,\"value\":\"2\"},\"allocatedReportedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocationId\":\"allocation-synthetic-2\",\"recordId\":\"record-execution-2\",\"reviewUnitId\":\"unit-synthetic-1\"}],\"capability\":[\"INITIAL_EXPOSURE\"],\"direction\":\"LONG\",\"exclusionReasons\":[\"EPISODE_RIGHT_CENSORED\"],\"instrumentId\":\"instrument-synthetic-1\",\"outcomeClassification\":\"UNAVAILABLE\",\"reconciliationStatus\":\"INCOMPLETE_TRADES\",\"reconstructionStatus\":\"RIGHT_CENSORED\",\"reviewUnitId\":\"unit-synthetic-1\",\"type\":\"FUTURES_POSITION_EPISODE\"}]",
+      "canonicalUtf8Hex": "5b7b22616c6c6f636174696f6e73223a5b7b22616374696f6e223a224f50454e222c22616c6c6f6361746564466565223a7b22616d6f756e74223a22302e31222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f63617465645175616e74697479223a7b22736f757263655363616c65223a302c2276616c7565223a2232227d2c22616c6c6f63617465645265706f72746564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f636174696f6e4964223a22616c6c6f636174696f6e2d73796e7468657469632d31222c227265636f72644964223a227265636f72642d73796e7468657469632d31222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31227d2c7b22616374696f6e223a22494e435245415345222c22616c6c6f6361746564466565223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f63617465645175616e74697479223a7b22736f757263655363616c65223a302c2276616c7565223a2232227d2c22616c6c6f63617465645265706f72746564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f636174696f6e4964223a22616c6c6f636174696f6e2d73796e7468657469632d32222c227265636f72644964223a227265636f72642d657865637574696f6e2d32222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31227d5d2c226361706162696c697479223a5b22494e495449414c5f4558504f53555245225d2c22646972656374696f6e223a224c4f4e47222c226578636c7573696f6e526561736f6e73223a5b22455049534f44455f52494748545f43454e534f524544225d2c22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f7574636f6d65436c617373696669636174696f6e223a22554e415641494c41424c45222c227265636f6e63696c696174696f6e537461747573223a22494e434f4d504c4554455f545241444553222c227265636f6e737472756374696f6e537461747573223a2252494748545f43454e534f524544222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31222c2274797065223a22465554555245535f504f534954494f4e5f455049534f4445227d5d",
+      "expectedSha256": "cf831e85c2decda3c9c01305b8a37ea948b499b8bd2362c6d9bfe3e9994ae52e"
+    },
+    "SOURCE_EVIDENCE_SNAPSHOTS": {
+      "canonicalJson": "[{\"allowlistedFields\":[{\"name\":\"kind\",\"value\":\"synthetic\"}],\"artifactRole\":\"TRADE_HISTORY\",\"coreArtifactId\":\"artifact-trade-example\",\"dialect\":\"SYNTHETIC_V1\",\"maskingPolicyVersion\":\"MASK_V1\",\"snapshotId\":\"evidence-synthetic-1\",\"sourceRowHash\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"sourceRowNumber\":1},{\"allowlistedFields\":[{\"name\":\"kind\",\"value\":\"synthetic\"}],\"artifactRole\":\"TRADE_HISTORY\",\"coreArtifactId\":\"artifact-trade-example\",\"dialect\":\"SYNTHETIC_V1\",\"maskingPolicyVersion\":\"MASK_V1\",\"snapshotId\":\"evidence-synthetic-2\",\"sourceRowHash\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\",\"sourceRowNumber\":2}]",
+      "canonicalUtf8Hex": "5b7b22616c6c6f776c69737465644669656c6473223a5b7b226e616d65223a226b696e64222c2276616c7565223a2273796e746865746963227d5d2c226172746966616374526f6c65223a2254524144455f484953544f5259222c22636f726541727469666163744964223a2261727469666163742d74726164652d6578616d706c65222c226469616c656374223a2253594e5448455449435f5631222c226d61736b696e67506f6c69637956657273696f6e223a224d41534b5f5631222c22736e617073686f744964223a2265766964656e63652d73796e7468657469632d31222c22736f75726365526f7748617368223a2262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262222c22736f75726365526f774e756d626572223a317d2c7b22616c6c6f776c69737465644669656c6473223a5b7b226e616d65223a226b696e64222c2276616c7565223a2273796e746865746963227d5d2c226172746966616374526f6c65223a2254524144455f484953544f5259222c22636f726541727469666163744964223a2261727469666163742d74726164652d6578616d706c65222c226469616c656374223a2253594e5448455449435f5631222c226d61736b696e67506f6c69637956657273696f6e223a224d41534b5f5631222c22736e617073686f744964223a2265766964656e63652d73796e7468657469632d32222c22736f75726365526f7748617368223a2264646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464222c22736f75726365526f774e756d626572223a327d5d",
+      "expectedSha256": "4bcbc5c8051c8c5caf34238ba4d3b7dcbf7b374cc12307498d9c7ac03bb6459d"
+    },
+    "RECONCILIATION_MANIFEST": {
+      "canonicalJson": "{\"artifactCoverages\":[{\"artifactRole\":\"POSITION_HISTORY\",\"coverageCompleteness\":\"NOT_PROVEN\",\"earliestObservedAt\":\"2025-01-01T00:00:00Z\",\"latestObservedAt\":\"2025-01-01T00:00:00Z\",\"rowCount\":1,\"sourceTimezone\":\"UTC\",\"timestampPrecision\":\"SECOND\"},{\"artifactRole\":\"TRADE_HISTORY\",\"coverageCompleteness\":\"NOT_PROVEN\",\"earliestObservedAt\":\"2025-01-01T00:00:00Z\",\"latestObservedAt\":\"2025-01-01T00:00:00Z\",\"rowCount\":1,\"sourceTimezone\":\"UTC\",\"timestampPrecision\":\"SECOND\"}],\"canonicalRecordSetHash\":\"48868bca4b45c972bff23b8026ee24bea3bc57815138de9493209a8f9cb1ab5e\",\"capability\":[\"INITIAL_EXPOSURE\"],\"cashFlowConservationPassed\":true,\"counts\":{\"artifactCoverageCount\":2,\"canonicalRecordCount\":6,\"capabilityCount\":1,\"excludedReviewUnitCount\":1,\"positionAllocationCount\":2,\"reconciliationIssueCount\":0,\"reconciliationMatchCount\":0,\"reviewUnitCount\":1,\"sourceEvidenceSnapshotCount\":2,\"validationIssueCount\":1},\"executionInputHash\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"inputSetHash\":\"1122481b2c208afc1cae751f952f1b9a670f446f404d42c1e581a3b83f25552e\",\"instrumentTermsHash\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\",\"manifestHashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V1\",\"manifestVersion\":\"MANIFEST_V1\",\"qualityReportHash\":\"74b1df1cfd742d6314552678e07730ff8db97ea657992f68c33892ed864f7db5\",\"quantityConservationPassed\":true,\"reconciliationIssues\":[],\"reconciliationMatches\":[],\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnits\":[{\"allocations\":[{\"action\":\"OPEN\",\"allocatedFee\":{\"amount\":\"0.1\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocatedQuantity\":{\"sourceScale\":0,\"value\":\"2\"},\"allocatedReportedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocationId\":\"allocation-synthetic-1\",\"recordId\":\"record-synthetic-1\",\"reviewUnitId\":\"unit-synthetic-1\"},{\"action\":\"INCREASE\",\"allocatedFee\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocatedQuantity\":{\"sourceScale\":0,\"value\":\"2\"},\"allocatedReportedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocationId\":\"allocation-synthetic-2\",\"recordId\":\"record-execution-2\",\"reviewUnitId\":\"unit-synthetic-1\"}],\"capability\":[\"INITIAL_EXPOSURE\"],\"direction\":\"LONG\",\"exclusionReasons\":[\"EPISODE_RIGHT_CENSORED\"],\"instrumentId\":\"instrument-synthetic-1\",\"outcomeClassification\":\"UNAVAILABLE\",\"reconciliationStatus\":\"INCOMPLETE_TRADES\",\"reconstructionStatus\":\"RIGHT_CENSORED\",\"reviewUnitId\":\"unit-synthetic-1\",\"type\":\"FUTURES_POSITION_EPISODE\"}],\"sourceArtifactHashesByRole\":{\"POSITION_HISTORY\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"TRADE_HISTORY\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"},\"versionSetHash\":\"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}",
+      "canonicalUtf8Hex": "7b226172746966616374436f76657261676573223a5b7b226172746966616374526f6c65223a22504f534954494f4e5f484953544f5259222c22636f766572616765436f6d706c6574656e657373223a224e4f545f50524f56454e222c226561726c696573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c226c61746573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c22726f77436f756e74223a312c22736f7572636554696d657a6f6e65223a22555443222c2274696d657374616d70507265636973696f6e223a225345434f4e44227d2c7b226172746966616374526f6c65223a2254524144455f484953544f5259222c22636f766572616765436f6d706c6574656e657373223a224e4f545f50524f56454e222c226561726c696573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c226c61746573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c22726f77436f756e74223a312c22736f7572636554696d657a6f6e65223a22555443222c2274696d657374616d70507265636973696f6e223a225345434f4e44227d5d2c2263616e6f6e6963616c5265636f726453657448617368223a2234383836386263613462343563393732626666323362383032366565323462656133626335373831353133386465393439333230396138663963623161623565222c226361706162696c697479223a5b22494e495449414c5f4558504f53555245225d2c2263617368466c6f77436f6e736572766174696f6e506173736564223a747275652c22636f756e7473223a7b226172746966616374436f766572616765436f756e74223a322c2263616e6f6e6963616c5265636f7264436f756e74223a362c226361706162696c697479436f756e74223a312c226578636c75646564526576696577556e6974436f756e74223a312c22706f736974696f6e416c6c6f636174696f6e436f756e74223a322c227265636f6e63696c696174696f6e4973737565436f756e74223a302c227265636f6e63696c696174696f6e4d61746368436f756e74223a302c22726576696577556e6974436f756e74223a312c22736f7572636545766964656e6365536e617073686f74436f756e74223a322c2276616c69646174696f6e4973737565436f756e74223a317d2c22657865637574696f6e496e70757448617368223a2263636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363222c22696e70757453657448617368223a2231313232343831623263323038616663316361653735316639353266316239613637306634343666343034643432633165353831613362383366323535353265222c22696e737472756d656e745465726d7348617368223a2264646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464222c226d616e69666573744861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5631222c226d616e696665737456657273696f6e223a224d414e49464553545f5631222c227175616c6974795265706f727448617368223a2237346231646631636664373432643633313435353236373865303737333066663864623937656136353739393266363863333338393265643836346637646235222c227175616e74697479436f6e736572766174696f6e506173736564223a747275652c227265636f6e63696c696174696f6e497373756573223a5b5d2c227265636f6e63696c696174696f6e4d617463686573223a5b5d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e697473223a5b7b22616c6c6f636174696f6e73223a5b7b22616374696f6e223a224f50454e222c22616c6c6f6361746564466565223a7b22616d6f756e74223a22302e31222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f63617465645175616e74697479223a7b22736f757263655363616c65223a302c2276616c7565223a2232227d2c22616c6c6f63617465645265706f72746564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f636174696f6e4964223a22616c6c6f636174696f6e2d73796e7468657469632d31222c227265636f72644964223a227265636f72642d73796e7468657469632d31222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31227d2c7b22616374696f6e223a22494e435245415345222c22616c6c6f6361746564466565223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f63617465645175616e74697479223a7b22736f757263655363616c65223a302c2276616c7565223a2232227d2c22616c6c6f63617465645265706f72746564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f636174696f6e4964223a22616c6c6f636174696f6e2d73796e7468657469632d32222c227265636f72644964223a227265636f72642d657865637574696f6e2d32222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31227d5d2c226361706162696c697479223a5b22494e495449414c5f4558504f53555245225d2c22646972656374696f6e223a224c4f4e47222c226578636c7573696f6e526561736f6e73223a5b22455049534f44455f52494748545f43454e534f524544225d2c22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f7574636f6d65436c617373696669636174696f6e223a22554e415641494c41424c45222c227265636f6e63696c696174696f6e537461747573223a22494e434f4d504c4554455f545241444553222c227265636f6e737472756374696f6e537461747573223a2252494748545f43454e534f524544222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31222c2274797065223a22465554555245535f504f534954494f4e5f455049534f4445227d5d2c22736f7572636541727469666163744861736865734279526f6c65223a7b22504f534954494f4e5f484953544f5259223a2262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262222c2254524144455f484953544f5259223a2261616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161227d2c2276657273696f6e53657448617368223a2265656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565227d",
+      "expectedSha256": "0374d28b67f24403f6e46eb0c077843ff8eb6a90c7e5d37d7a14efe397cecf0d"
+    }
+  },
+  "manifestVector": {
+    "canonicalJson": "{\"artifactCoverages\":[{\"artifactRole\":\"POSITION_HISTORY\",\"coverageCompleteness\":\"NOT_PROVEN\",\"earliestObservedAt\":\"2025-01-01T00:00:00Z\",\"latestObservedAt\":\"2025-01-01T00:00:00Z\",\"rowCount\":1,\"sourceTimezone\":\"UTC\",\"timestampPrecision\":\"SECOND\"},{\"artifactRole\":\"TRADE_HISTORY\",\"coverageCompleteness\":\"NOT_PROVEN\",\"earliestObservedAt\":\"2025-01-01T00:00:00Z\",\"latestObservedAt\":\"2025-01-01T00:00:00Z\",\"rowCount\":1,\"sourceTimezone\":\"UTC\",\"timestampPrecision\":\"SECOND\"}],\"canonicalRecordSetHash\":\"48868bca4b45c972bff23b8026ee24bea3bc57815138de9493209a8f9cb1ab5e\",\"capability\":[\"INITIAL_EXPOSURE\"],\"cashFlowConservationPassed\":true,\"counts\":{\"artifactCoverageCount\":2,\"canonicalRecordCount\":6,\"capabilityCount\":1,\"excludedReviewUnitCount\":1,\"positionAllocationCount\":2,\"reconciliationIssueCount\":0,\"reconciliationMatchCount\":0,\"reviewUnitCount\":1,\"sourceEvidenceSnapshotCount\":2,\"validationIssueCount\":1},\"executionInputHash\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"inputSetHash\":\"1122481b2c208afc1cae751f952f1b9a670f446f404d42c1e581a3b83f25552e\",\"instrumentTermsHash\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\",\"manifestHashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V1\",\"manifestVersion\":\"MANIFEST_V1\",\"qualityReportHash\":\"74b1df1cfd742d6314552678e07730ff8db97ea657992f68c33892ed864f7db5\",\"quantityConservationPassed\":true,\"reconciliationIssues\":[],\"reconciliationMatches\":[],\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnits\":[{\"allocations\":[{\"action\":\"OPEN\",\"allocatedFee\":{\"amount\":\"0.1\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocatedQuantity\":{\"sourceScale\":0,\"value\":\"2\"},\"allocatedReportedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocationId\":\"allocation-synthetic-1\",\"recordId\":\"record-synthetic-1\",\"reviewUnitId\":\"unit-synthetic-1\"},{\"action\":\"INCREASE\",\"allocatedFee\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocatedQuantity\":{\"sourceScale\":0,\"value\":\"2\"},\"allocatedReportedPnl\":{\"amount\":\"0\",\"currency\":\"USDT\",\"sourceScale\":2},\"allocationId\":\"allocation-synthetic-2\",\"recordId\":\"record-execution-2\",\"reviewUnitId\":\"unit-synthetic-1\"}],\"capability\":[\"INITIAL_EXPOSURE\"],\"direction\":\"LONG\",\"exclusionReasons\":[\"EPISODE_RIGHT_CENSORED\"],\"instrumentId\":\"instrument-synthetic-1\",\"outcomeClassification\":\"UNAVAILABLE\",\"reconciliationStatus\":\"INCOMPLETE_TRADES\",\"reconstructionStatus\":\"RIGHT_CENSORED\",\"reviewUnitId\":\"unit-synthetic-1\",\"type\":\"FUTURES_POSITION_EPISODE\"}],\"sourceArtifactHashesByRole\":{\"POSITION_HISTORY\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"TRADE_HISTORY\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"},\"versionSetHash\":\"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}",
+    "canonicalUtf8Hex": "7b226172746966616374436f76657261676573223a5b7b226172746966616374526f6c65223a22504f534954494f4e5f484953544f5259222c22636f766572616765436f6d706c6574656e657373223a224e4f545f50524f56454e222c226561726c696573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c226c61746573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c22726f77436f756e74223a312c22736f7572636554696d657a6f6e65223a22555443222c2274696d657374616d70507265636973696f6e223a225345434f4e44227d2c7b226172746966616374526f6c65223a2254524144455f484953544f5259222c22636f766572616765436f6d706c6574656e657373223a224e4f545f50524f56454e222c226561726c696573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c226c61746573744f627365727665644174223a22323032352d30312d30315430303a30303a30305a222c22726f77436f756e74223a312c22736f7572636554696d657a6f6e65223a22555443222c2274696d657374616d70507265636973696f6e223a225345434f4e44227d5d2c2263616e6f6e6963616c5265636f726453657448617368223a2234383836386263613462343563393732626666323362383032366565323462656133626335373831353133386465393439333230396138663963623161623565222c226361706162696c697479223a5b22494e495449414c5f4558504f53555245225d2c2263617368466c6f77436f6e736572766174696f6e506173736564223a747275652c22636f756e7473223a7b226172746966616374436f766572616765436f756e74223a322c2263616e6f6e6963616c5265636f7264436f756e74223a362c226361706162696c697479436f756e74223a312c226578636c75646564526576696577556e6974436f756e74223a312c22706f736974696f6e416c6c6f636174696f6e436f756e74223a322c227265636f6e63696c696174696f6e4973737565436f756e74223a302c227265636f6e63696c696174696f6e4d61746368436f756e74223a302c22726576696577556e6974436f756e74223a312c22736f7572636545766964656e6365536e617073686f74436f756e74223a322c2276616c69646174696f6e4973737565436f756e74223a317d2c22657865637574696f6e496e70757448617368223a2263636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363222c22696e70757453657448617368223a2231313232343831623263323038616663316361653735316639353266316239613637306634343666343034643432633165353831613362383366323535353265222c22696e737472756d656e745465726d7348617368223a2264646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464222c226d616e69666573744861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5631222c226d616e696665737456657273696f6e223a224d414e49464553545f5631222c227175616c6974795265706f727448617368223a2237346231646631636664373432643633313435353236373865303737333066663864623937656136353739393266363863333338393265643836346637646235222c227175616e74697479436f6e736572766174696f6e506173736564223a747275652c227265636f6e63696c696174696f6e497373756573223a5b5d2c227265636f6e63696c696174696f6e4d617463686573223a5b5d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e697473223a5b7b22616c6c6f636174696f6e73223a5b7b22616374696f6e223a224f50454e222c22616c6c6f6361746564466565223a7b22616d6f756e74223a22302e31222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f63617465645175616e74697479223a7b22736f757263655363616c65223a302c2276616c7565223a2232227d2c22616c6c6f63617465645265706f72746564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f636174696f6e4964223a22616c6c6f636174696f6e2d73796e7468657469632d31222c227265636f72644964223a227265636f72642d73796e7468657469632d31222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31227d2c7b22616374696f6e223a22494e435245415345222c22616c6c6f6361746564466565223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f63617465645175616e74697479223a7b22736f757263655363616c65223a302c2276616c7565223a2232227d2c22616c6c6f63617465645265706f72746564506e6c223a7b22616d6f756e74223a2230222c2263757272656e6379223a2255534454222c22736f757263655363616c65223a327d2c22616c6c6f636174696f6e4964223a22616c6c6f636174696f6e2d73796e7468657469632d32222c227265636f72644964223a227265636f72642d657865637574696f6e2d32222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31227d5d2c226361706162696c697479223a5b22494e495449414c5f4558504f53555245225d2c22646972656374696f6e223a224c4f4e47222c226578636c7573696f6e526561736f6e73223a5b22455049534f44455f52494748545f43454e534f524544225d2c22696e737472756d656e744964223a22696e737472756d656e742d73796e7468657469632d31222c226f7574636f6d65436c617373696669636174696f6e223a22554e415641494c41424c45222c227265636f6e63696c696174696f6e537461747573223a22494e434f4d504c4554455f545241444553222c227265636f6e737472756374696f6e537461747573223a2252494748545f43454e534f524544222c22726576696577556e69744964223a22756e69742d73796e7468657469632d31222c2274797065223a22465554555245535f504f534954494f4e5f455049534f4445227d5d2c22736f7572636541727469666163744861736865734279526f6c65223a7b22504f534954494f4e5f484953544f5259223a2262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262222c2254524144455f484953544f5259223a2261616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161227d2c2276657273696f6e53657448617368223a2265656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565227d",
+    "expectedSha256": "0374d28b67f24403f6e46eb0c077843ff8eb6a90c7e5d37d7a14efe397cecf0d"
+  },
+  "resultDigestManifestVector": {
+    "canonicalJson": "{\"counts\":{\"artifactCoverageCount\":2,\"canonicalRecordCount\":6,\"capabilityCount\":1,\"excludedReviewUnitCount\":1,\"positionAllocationCount\":2,\"reconciliationIssueCount\":0,\"reconciliationMatchCount\":0,\"reviewUnitCount\":1,\"sourceEvidenceSnapshotCount\":2,\"validationIssueCount\":1},\"inputHashSpecificationVersion\":\"TRADING_INPUT_SET_HASH_V1\",\"inputSetHash\":\"1122481b2c208afc1cae751f952f1b9a670f446f404d42c1e581a3b83f25552e\",\"reconciliationManifestHash\":\"0374d28b67f24403f6e46eb0c077843ff8eb6a90c7e5d37d7a14efe397cecf0d\",\"resultHashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"resultSchemaVersion\":\"TRADING_NORMALIZATION_RESULT_V2\",\"sectionDigests\":[{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":1,\"sectionHash\":\"10216371ce2030861875936528985dfc57cd4916fb97b0dcc17e598b96886149\",\"sectionType\":\"ANALYTICS_INPUT_SUPPLEMENT\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":2,\"sectionHash\":\"a99442f53a9f28a113afe42153a4a4db0ad4053369a06991804be6a85215b89d\",\"sectionType\":\"ARTIFACT_COVERAGES\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":6,\"sectionHash\":\"48868bca4b45c972bff23b8026ee24bea3bc57815138de9493209a8f9cb1ab5e\",\"sectionType\":\"CANONICAL_RECORDS\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":1,\"sectionHash\":\"0cc5e6ad55a608d1a0c8110bd05b440a938f5fea170a5d9744709cebb11815a1\",\"sectionType\":\"CAPABILITIES\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":1,\"sectionHash\":\"74b1df1cfd742d6314552678e07730ff8db97ea657992f68c33892ed864f7db5\",\"sectionType\":\"QUALITY_REPORT\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":0,\"sectionHash\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"sectionType\":\"RECONCILIATION_ISSUES\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":1,\"sectionHash\":\"0374d28b67f24403f6e46eb0c077843ff8eb6a90c7e5d37d7a14efe397cecf0d\",\"sectionType\":\"RECONCILIATION_MANIFEST\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":0,\"sectionHash\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"sectionType\":\"RECONCILIATION_MATCHES\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":1,\"sectionHash\":\"cf831e85c2decda3c9c01305b8a37ea948b499b8bd2362c6d9bfe3e9994ae52e\",\"sectionType\":\"REVIEW_UNITS\"},{\"hashSpecificationVersion\":\"TRADING_NORMALIZATION_RESULT_HASH_V2\",\"itemCount\":2,\"sectionHash\":\"4bcbc5c8051c8c5caf34238ba4d3b7dcbf7b374cc12307498d9c7ac03bb6459d\",\"sectionType\":\"SOURCE_EVIDENCE_SNAPSHOTS\"}],\"targetVersionSet\":{\"normalizer\":{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"digest-normalizer-example\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"},\"versionSetHash\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\"},\"reconstruction\":{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"digest-reconstruction-example\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_UNIT_V1\",\"versionSetHash\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"},\"versionSetHash\":\"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}}",
+    "canonicalUtf8Hex": "7b22636f756e7473223a7b226172746966616374436f766572616765436f756e74223a322c2263616e6f6e6963616c5265636f7264436f756e74223a362c226361706162696c697479436f756e74223a312c226578636c75646564526576696577556e6974436f756e74223a312c22706f736974696f6e416c6c6f636174696f6e436f756e74223a322c227265636f6e63696c696174696f6e4973737565436f756e74223a302c227265636f6e63696c696174696f6e4d61746368436f756e74223a302c22726576696577556e6974436f756e74223a312c22736f7572636545766964656e6365536e617073686f74436f756e74223a322c2276616c69646174696f6e4973737565436f756e74223a317d2c22696e7075744861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f494e5055545f5345545f484153485f5631222c22696e70757453657448617368223a2231313232343831623263323038616663316361653735316639353266316239613637306634343666343034643432633165353831613362383366323535353265222c227265636f6e63696c696174696f6e4d616e696665737448617368223a2230333734643238623637663234343033663665343665623063303737383433666638656236613930633765356433376437613134656665333937636563663064222c22726573756c744861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c22726573756c74536368656d6156657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f5632222c2273656374696f6e44696765737473223a5b7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a312c2273656374696f6e48617368223a2231303231363337316365323033303836313837353933363532383938356466633537636434393136666239376230646363313765353938623936383836313439222c2273656374696f6e54797065223a22414e414c59544943535f494e5055545f535550504c454d454e54227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a322c2273656374696f6e48617368223a2261393934343266353361396632386131313361666534323135336134613464623061643430353333363961303639393138303462653661383532313562383964222c2273656374696f6e54797065223a2241525449464143545f434f56455241474553227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a362c2273656374696f6e48617368223a2234383836386263613462343563393732626666323362383032366565323462656133626335373831353133386465393439333230396138663963623161623565222c2273656374696f6e54797065223a2243414e4f4e4943414c5f5245434f524453227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a312c2273656374696f6e48617368223a2230636335653661643535613630386431613063383131306264303562343430613933386635666561313730613564393734343730396365626231313831356131222c2273656374696f6e54797065223a224341504142494c4954494553227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a312c2273656374696f6e48617368223a2237346231646631636664373432643633313435353236373865303737333066663864623937656136353739393266363863333338393265643836346637646235222c2273656374696f6e54797065223a225155414c4954595f5245504f5254227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a302c2273656374696f6e48617368223a2234663533636461313863326261613063303335346262356639613365636265356564313261623464386531316261383733633266313131363132303262393435222c2273656374696f6e54797065223a225245434f4e43494c494154494f4e5f495353554553227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a312c2273656374696f6e48617368223a2230333734643238623637663234343033663665343665623063303737383433666638656236613930633765356433376437613134656665333937636563663064222c2273656374696f6e54797065223a225245434f4e43494c494154494f4e5f4d414e4946455354227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a302c2273656374696f6e48617368223a2234663533636461313863326261613063303335346262356639613365636265356564313261623464386531316261383733633266313131363132303262393435222c2273656374696f6e54797065223a225245434f4e43494c494154494f4e5f4d415443484553227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a312c2273656374696f6e48617368223a2263663833316538356332646563646133633963303133303562386133376561393438623439396238626432333632633664396266653365393939346165353265222c2273656374696f6e54797065223a225245564945575f554e495453227d2c7b226861736853706563696669636174696f6e56657273696f6e223a2254524144494e475f4e4f524d414c495a4154494f4e5f524553554c545f484153485f5632222c226974656d436f756e74223a322c2273656374696f6e48617368223a2234626362633563383035316338633563616633343233386261346433623764636266376233373463633132333037343938643963376163303362623634353964222c2273656374696f6e54797065223a22534f555243455f45564944454e43455f534e415053484f5453227d5d2c2274617267657456657273696f6e536574223a7b226e6f726d616c697a6572223a7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a226469676573742d6e6f726d616c697a65722d6578616d706c65222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d2c2276657273696f6e53657448617368223a2263636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363227d2c227265636f6e737472756374696f6e223a7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a226469676573742d7265636f6e737472756374696f6e2d6578616d706c65222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f554e49545f5631222c2276657273696f6e53657448617368223a2264646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464227d2c2276657273696f6e53657448617368223a2265656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565227d7d",
+    "expectedSha256": "7db5c57de11f98f71b1860a144919afcc4581dd91c3763b05f2367f39021ad99"
+  },
+  "invalidCases": [
+    {
+      "id": "UNKNOWN_ALLOCATION_EVIDENCE_RECORD",
+      "mutation": {
+        "path": "/terminalPayload/analyticsInputSupplement/reviewUnitEngineInputs/0/allocationEvidence/1/evidenceRecordIds/0",
+        "value": "record-absent"
+      },
+      "expectedCode": "EVIDENCE_REFERENCE_INVALID"
+    },
+    {
+      "id": "MISSING_ALLOCATION_ROW",
+      "mutation": {
+        "path": "/terminalPayload/analyticsInputSupplement/reviewUnitEngineInputs/0/allocationEvidence",
+        "removeIndex": 1
+      },
+      "expectedCode": "EVIDENCE_REFERENCE_INVALID"
+    },
+    {
+      "id": "NULL_REAL_ZERO_FEE",
+      "mutation": {
+        "path": "/terminalPayload/analyticsInputSupplement/reviewUnitEngineInputs/0/allocationEvidence/1/allocatedFee",
+        "value": null
+      },
+      "expectedCode": "RESULT_SCHEMA_UNSUPPORTED"
+    },
+    {
+      "id": "CAPABILITY_DISAGREEMENT",
+      "mutation": {
+        "path": "/terminalPayload/analyticsInputSupplement/reviewUnitEngineInputs/0/stableEpisodeTimeAvailable",
+        "value": true
+      },
+      "expectedCode": "EVIDENCE_REFERENCE_INVALID"
+    },
+    {
+      "id": "PUBLIC_ALLOCATION_MONEY_DISAGREEMENT",
+      "mutation": {
+        "path": "/terminalPayload/analyticsInputSupplement/reviewUnitEngineInputs/0/allocationEvidence/1/allocatedReportedPnl/amount",
+        "value": "1"
+      },
+      "expectedCode": "EVIDENCE_REFERENCE_INVALID"
+    }
+  ]
+}
