@@ -517,6 +517,9 @@ compatibility evidence records observations and never supersedes context.
 
 ## GitHub Actions contract sync
 
+Context snapshot propagation rules, per-repository revision semantics, and
+the bot PR rollout are documented in [Contract snapshot propagation](docs/CONTRACT_PROPAGATION.md).
+
 `.github/workflows/contract-sync.yml` runs the mandatory OpenAPI and Core
 document snapshot checks for integration pull requests, pushes to `main`, daily
 scheduled runs, and manual dispatches. It checks out `context`, `core-api`,

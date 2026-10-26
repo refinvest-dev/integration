@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "repositories": {
+    "coreApi": { "revision": "openapi/CONTEXT_REVISION" },
+    "computeApi": { "revision": "openapi/CONTEXT_REVISION" },
+    "web": { "revision": "docs/api/CONTEXT_REVISION" },
+    "integration": { "revision": "CONTEXT_REVISION" }
+  },
+  "mappings": [
+    {
+      "source": "openapi/core-api.yaml",
+      "mode": "text",
+      "targets": [
+        { "repository": "coreApi", "path": "openapi/core-api.yaml" },
+        { "repository": "web", "path": "docs/api/open-api.yaml" }
+      ]
+    },
+    {
+      "source": "openapi/compute-api.yaml",
+      "mode": "text",
+      "targets": [
+        { "repository": "coreApi", "path": "openapi/compute-api.yaml" },
+        { "repository": "computeApi", "path": "openapi/compute-api.yaml" },
+        { "repository": "web", "path": "docs/api/compute-api.yaml" }
+      ]
+    },
+    {
+      "source": "AI_AGENT.md",
+      "mode": "text",
+      "targets": [{ "repository": "coreApi", "path": "docs/AI_AGENT.md" }]
+    },
+    {
+      "sourceDirectory": "docs",
+      "files": "*.md",
+      "mode": "text",
+      "targets": [{ "repository": "coreApi", "directory": "docs" }],
+      "reservedTargets": ["docs/README.md", "docs/GIT_WORKFLOW.md"]
+    },
+    {
+      "sourceDirectory": "fixtures/trading-normalization",
+      "files": [
+        "README.md",
+        "input-identity-v1.json",
+        "input-identity-v1.schema.json",
+        "result-integrity-v1.json",
+        "result-integrity-v1.schema.json",
+        "wire-v1.json"
+      ],
+      "mode": "bytes",
+      "targets": [
+        { "repository": "coreApi", "directory": "tradingreview/application/src/test/resources/trading-normalization" },
+        { "repository": "computeApi", "directory": "tests/fixtures/trading_review/normalization_identity/v1" }
+      ]
+    },
+    {
+      "source": "fixtures/trading-normalization/result-integrity-v2.json",
+      "mode": "bytes",
+      "targets": [
+        { "repository": "coreApi", "path": "tradingreview/application/src/test/resources/trading-normalization/result-integrity-v2.json" },
+        { "repository": "computeApi", "path": "tests/fixtures/trading_review/normalization_identity/v2/result-integrity-v2.json" },
+        { "repository": "integration", "path": "fixtures/trading-review/normalization-result-v2/result-integrity-v2.json" }
+      ]
+    },
+    {
+      "sourceDirectory": "fixtures/trading-analytics",
+      "files": [
+        "README.md",
+        "input-identity-v1.json",
+        "input-identity-v1.schema.json",
+        "result-integrity-v1.json",
+        "result-integrity-v1.schema.json"
+      ],
+      "mode": "bytes",
+      "targets": [
+        { "repository": "coreApi", "directory": "tradingreview/application/src/test/resources/trading-analytics-protocol/v1" },
+        { "repository": "computeApi", "directory": "tests/fixtures/trading_review/analytics_protocol/v1" },
+        { "repository": "integration", "directory": "fixtures/trading-review/analytics-protocol-v1" }
+      ]
+    }
+  ],
+  "unmappedContractPrefixes": ["openapi/", "docs/", "fixtures/"],
+  "informationalPrefixes": ["scripts/"],
+  "informationalFiles": ["AGENTS.md", "fixtures/trading-analytics/verify-v1.mjs"]
+}

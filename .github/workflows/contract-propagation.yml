@@ -1,0 +1,143 @@
+name: Propagate Context snapshots
+
+on:
+  repository_dispatch:
+    types: [context-snapshot]
+  workflow_dispatch:
+    inputs:
+      context_revision:
+        description: Merged Context commit SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: context-snapshot-propagation
+  cancel-in-progress: false
+
+jobs:
+  propagate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create read-only Context token
+        id: context-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.REFINVEST_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: context
+          permission-contents: read
+
+      - name: Create snapshot PR token
+        id: propagation-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.REFINVEST_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            integration
+            core-api
+            compute-api
+            web
+          permission-contents: write
+          permission-pull-requests: write
+          permission-actions: write
+
+      - name: Checkout integration
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/integration
+          token: ${{ steps.propagation-token.outputs.token }}
+          path: integration
+          fetch-depth: 0
+
+      - name: Checkout Context
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/context
+          token: ${{ steps.context-token.outputs.token }}
+          path: context
+          ref: ${{ inputs.context_revision || github.event.client_payload.context_revision }}
+          fetch-depth: 0
+
+      - name: Checkout Core API
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/core-api
+          token: ${{ steps.propagation-token.outputs.token }}
+          path: api/refinvest
+          fetch-depth: 0
+
+      - name: Checkout Compute API
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/compute-api
+          token: ${{ steps.propagation-token.outputs.token }}
+          path: compute-api/refinvest
+          fetch-depth: 0
+
+      - name: Checkout Web
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/web
+          token: ${{ steps.propagation-token.outputs.token }}
+          path: web/web
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Open or update snapshot PRs
+        id: propagate
+        env:
+          CONTEXT_REVISION: ${{ inputs.context_revision || github.event.client_payload.context_revision }}
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GH_TOKEN: ${{ steps.propagation-token.outputs.token }}
+        run: |
+          python -B integration/scripts/publish_contract_sync.py \
+            --context context --revision "$CONTEXT_REVISION" \
+            --owner "$REPOSITORY_OWNER" \
+            --output "$RUNNER_TEMP/contract-propagation.json"
+          echo "context_ref=$(jq -r '.contextRevision' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
+          echo "core_ref=$(jq -r '.heads.coreApi' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
+          echo "compute_ref=$(jq -r '.heads.computeApi' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
+          echo "web_ref=$(jq -r '.heads.web' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
+          echo "integration_ref=$(jq -r '.heads.integration' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
+          echo "run_api_smoke=$(jq -r '.runApiSmoke' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch candidate contract verification
+        env:
+          GH_TOKEN: ${{ steps.propagation-token.outputs.token }}
+        run: |
+          gh workflow run contract-sync.yml --repo '${{ github.repository_owner }}/integration' \
+            -f context_ref='${{ steps.propagate.outputs.context_ref }}' \
+            -f core_ref='${{ steps.propagate.outputs.core_ref }}' \
+            -f compute_ref='${{ steps.propagate.outputs.compute_ref }}' \
+            -f web_ref='${{ steps.propagate.outputs.web_ref }}' \
+            -f integration_ref='${{ steps.propagate.outputs.integration_ref }}'
+
+      - name: Dispatch candidate API smoke
+        if: steps.propagate.outputs.run_api_smoke == 'true'
+        env:
+          GH_TOKEN: ${{ steps.propagation-token.outputs.token }}
+        run: |
+          gh workflow run api-smoke.yml --repo '${{ github.repository_owner }}/integration' \
+            -f context_ref='${{ steps.propagate.outputs.context_ref }}' \
+            -f core_ref='${{ steps.propagate.outputs.core_ref }}' \
+            -f compute_ref='${{ steps.propagate.outputs.compute_ref }}' \
+            -f web_ref='${{ steps.propagate.outputs.web_ref }}' \
+            -f integration_ref='${{ steps.propagate.outputs.integration_ref }}'
+
+      - name: Upload propagation result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-propagation-result
+          path: ${{ runner.temp }}/contract-propagation.json
+          if-no-files-found: ignore

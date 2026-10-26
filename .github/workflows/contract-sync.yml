@@ -8,6 +8,22 @@ on:
   schedule:
     - cron: '17 0 * * *'
   workflow_dispatch:
+    inputs:
+      context_ref:
+        description: Context commit or ref for candidate verification
+        type: string
+      core_ref:
+        description: Core API commit or ref
+        type: string
+      compute_ref:
+        description: Compute API commit or ref
+        type: string
+      web_ref:
+        description: Web commit or ref
+        type: string
+      integration_ref:
+        description: Integration commit or ref
+        type: string
 
 permissions:
   contents: read
@@ -22,6 +38,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: integration
+          ref: ${{ inputs.integration_ref || github.sha }}
 
       - name: Create read-only sibling checkout token
         id: sibling-token
@@ -43,6 +60,8 @@ jobs:
           repository: ${{ github.repository_owner }}/context
           token: ${{ steps.sibling-token.outputs.token }}
           path: context
+          ref: ${{ inputs.context_ref || 'main' }}
+          fetch-depth: 0
 
       - name: Checkout Core API
         uses: actions/checkout@v4
@@ -50,6 +69,7 @@ jobs:
           repository: ${{ github.repository_owner }}/core-api
           token: ${{ steps.sibling-token.outputs.token }}
           path: api/refinvest
+          ref: ${{ inputs.core_ref || 'main' }}
 
       - name: Checkout Compute API
         uses: actions/checkout@v4
@@ -57,6 +77,7 @@ jobs:
           repository: ${{ github.repository_owner }}/compute-api
           token: ${{ steps.sibling-token.outputs.token }}
           path: compute-api/refinvest
+          ref: ${{ inputs.compute_ref || 'main' }}
 
       - name: Checkout Web
         uses: actions/checkout@v4
@@ -64,6 +85,7 @@ jobs:
           repository: ${{ github.repository_owner }}/web
           token: ${{ steps.sibling-token.outputs.token }}
           path: web/web
+          ref: ${{ inputs.web_ref || 'main' }}
 
       - name: Set up Python for Analytics contract verification
         uses: actions/setup-python@v5
