@@ -87,26 +87,14 @@ function Assert-SameBytes([string]$Source, [string]$Replica) {
     Write-Host "OK  $Replica"
 }
 
-$contextRevision = (& git -C $ContextPath rev-parse HEAD).Trim()
-if ($LASTEXITCODE -ne 0 -or $contextRevision -cnotmatch '^[0-9a-f]{40}$') {
-    throw "Unable to resolve Context commit at $ContextPath"
-}
-$revisionSnapshots = @(
-    (Join-Path $CoreApiPath 'openapi/CONTEXT_REVISION'),
-    (Join-Path $ComputeApiPath 'openapi/CONTEXT_REVISION'),
-    (Join-Path $PSScriptRoot '../CONTEXT_REVISION')
+$revisionArguments = @(
+    '-B', (Join-Path $PSScriptRoot 'contract_sync.py'), 'verify-revisions',
+    '--context', $ContextPath, '--core-api', $CoreApiPath,
+    '--compute-api', $ComputeApiPath, '--integration', (Join-Path $PSScriptRoot '..')
 )
-if ($IncludeWeb) { $revisionSnapshots += (Join-Path $WebPath 'docs/api/CONTEXT_REVISION') }
-foreach ($revisionSnapshot in $revisionSnapshots) {
-    if (-not (Test-Path -LiteralPath $revisionSnapshot -PathType Leaf)) {
-        throw "Context revision snapshot does not exist: $revisionSnapshot"
-    }
-    $revision = [IO.File]::ReadAllText($revisionSnapshot).Trim()
-    if ($revision -cne $contextRevision) {
-        throw "Context revision is out of sync: $revisionSnapshot (expected $contextRevision)"
-    }
-    Write-Host "OK  $revisionSnapshot"
-}
+if ($IncludeWeb) { $revisionArguments += @('--include-web', '--web', $WebPath) }
+& python @revisionArguments
+if ($LASTEXITCODE -ne 0) { throw 'Context revision provenance verification failed.' }
 
 $fixturePath = Join-Path $ContextPath 'fixtures/trading-normalization'
 $coreFixturePath = Join-Path $CoreApiPath 'tradingreview/application/src/test/resources/trading-normalization'
