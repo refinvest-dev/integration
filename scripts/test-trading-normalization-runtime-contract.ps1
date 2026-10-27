@@ -11,9 +11,11 @@ param(
     [string]$DatabaseName = 'refinvest_integration',
     [int]$TimeoutSeconds = 180,
     [switch]$ResultIntegrity,
-    [switch]$Publication
+    [switch]$Publication,
+    [switch]$ResultVersionPin
 )
 $ErrorActionPreference = 'Stop'
+if ($ResultVersionPin) { $Publication = $true }
 if (-not $TestRoot) { $TestRoot = Join-Path $PSScriptRoot '..' }
 if (-not $ContextPath) { $ContextPath = Join-Path $TestRoot '..\context' }
 if (-not $CorePath) { $CorePath = Join-Path $TestRoot '..\api\refinvest' }
@@ -163,16 +165,31 @@ try {
             -CorePath $CorePath
         if ($LASTEXITCODE -ne 0) { throw 'Core trading migration failed.' }
     } else { Write-Host 'Core trading migrations are already applied in the integration database.' }
-    & (Join-Path $PSScriptRoot 'initialize-compute-schema.ps1') -EnvironmentFile $activeEnvironmentFile `
-        -ComposeFile (Join-Path $TestRoot 'compose.yaml') -ComputeApiPath $ComputePath -Schema $computeSchema
+    if ($ResultVersionPin) {
+        Set-ComputeIntegrationEnvironment $values $TestRoot $computeSchema
+        & $python -B (Join-Path $PSScriptRoot 'initialize-trading-normalization-compute.py') `
+            --compute-path $ComputePath --schema $computeSchema
+    } else {
+        & (Join-Path $PSScriptRoot 'initialize-compute-schema.ps1') -EnvironmentFile $activeEnvironmentFile `
+            -ComposeFile (Join-Path $TestRoot 'compose.yaml') -ComputeApiPath $ComputePath -Schema $computeSchema
+    }
     if ($LASTEXITCODE -ne 0) { throw 'Compute migration failed.' }
     Remove-Item Env:PGOPTIONS -ErrorAction SilentlyContinue
     $scenario = 'startup'
     $started = $true
-    & (Join-Path $PSScriptRoot 'start-compute-api.ps1') -EnvironmentFile $activeEnvironmentFile `
-        -ComputeApiPath $ComputePath -Schema $computeSchema -Profile $registry -RegistryId $registry
-    & (Join-Path $PSScriptRoot 'start-core-api.ps1') -EnvironmentFile $activeEnvironmentFile `
-        -CoreApiPath $CorePath -Profile $registry -RegistryId $registry
+    if ($ResultVersionPin) {
+        & (Join-Path $PSScriptRoot 'start-trading-normalization-service.ps1') -EnvironmentFile $activeEnvironmentFile `
+            -Service compute-api -ComputePath $ComputePath -DatabaseSchema $computeSchema `
+            -RegistryId $registry -EvidenceDirectory $runDir
+        & (Join-Path $PSScriptRoot 'start-trading-normalization-service.ps1') -EnvironmentFile $activeEnvironmentFile `
+            -CorePath $CorePath -RegistryId $registry -ComputeBaseUrl "http://127.0.0.1:$fixturePort" `
+            -EvidenceDirectory $runDir
+    } else {
+        & (Join-Path $PSScriptRoot 'start-compute-api.ps1') -EnvironmentFile $activeEnvironmentFile `
+            -ComputeApiPath $ComputePath -Schema $computeSchema -Profile $registry -RegistryId $registry
+        & (Join-Path $PSScriptRoot 'start-core-api.ps1') -EnvironmentFile $activeEnvironmentFile `
+            -CoreApiPath $CorePath -Profile $registry -RegistryId $registry
+    }
     & (Join-Path $PSScriptRoot 'wait-for-http.ps1') -Uri "http://127.0.0.1:$ComputePort/health" -TimeoutSeconds 90
     & (Join-Path $PSScriptRoot 'wait-for-http.ps1') -Uri "http://127.0.0.1:$CorePort/actuator/health" -TimeoutSeconds 600
     # Start the worker only after API health and a fresh DB connection. On Windows,
@@ -209,12 +226,14 @@ try {
     $env:TRADING_RUNTIME_DB_NAME = $DatabaseName
     $env:TRADING_RUNTIME_DB_USER = $values.POSTGRES_USER
     $env:TRADING_RUNTIME_DB_PASSWORD = $values.POSTGRES_PASSWORD
+    $env:TRADING_RUNTIME_PSQL = $psql
     $env:TRADING_RUNTIME_COMPUTE_SCHEMA = $computeSchema
     $env:TRADING_RUNTIME_API_KEY = $values.REFINVEST_INTERNAL_API_KEY
     $env:TRADING_RUNTIME_VERSION_SET = $versionJson
     $runtimeArguments = @()
     if ($ResultIntegrity) { $runtimeArguments += '--result-integrity' }
     if ($Publication) { $runtimeArguments += '--publication' }
+    if ($ResultVersionPin) { $runtimeArguments += '--result-version-pin' }
     & $python (Join-Path $PSScriptRoot 'test_trading_normalization_runtime_contract.py') `
         --core-url "http://127.0.0.1:$CorePort" --compute-url "http://127.0.0.1:$ComputePort" `
         --fixture-root $fixtureRoot --context-path $ContextPath --run-dir $runDir `
@@ -222,6 +241,9 @@ try {
         --core-path $CorePath --compute-path $ComputePath --compute-schema $computeSchema --registry $registry `
         --timeout $TimeoutSeconds @runtimeArguments
     if ($LASTEXITCODE -ne 0) { throw 'Runtime contract scenario failed. See evidence and logs.' }
+    if ($ResultVersionPin) {
+        Write-Host 'V1 result pin executable scenarios PASS; ORCH-028 NOT RUN (missing admission/dispatch pause control).'
+    }
     Write-Host "Trading Normalization runtime contract PASS. Evidence: $runDir"
 } catch {
     [Console]::Error.WriteLine("Scenario $scenario failed: $($_.Exception.Message)")
