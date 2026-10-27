@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -16,17 +18,17 @@ from contract_sync import (
     REPOSITORIES, ContractSyncError, apply_plan, context_files, default_roots,
     expand_map, git, load_map, plan,
 )
+from contract_evidence import BRANCH, REMOTE_NAMES, render_body
 
 
-BRANCH = "automation/context-snapshots"
-REMOTE_NAMES = {
-    "coreApi": "core-api", "computeApi": "compute-api",
-    "web": "web", "integration": "integration",
-}
+def assert_remote_main(root: Path, expected: str) -> None:
+    latest = run("git", "ls-remote", "origin", "refs/heads/main", cwd=root).split()
+    if not latest or latest[0] != expected:
+        raise ContractSyncError(f"main changed during propagation: {root}; rerun with latest SHAs")
 
 
 def run(*args: str, cwd: Path | None = None) -> str:
-    result = subprocess.run(args, cwd=cwd, capture_output=True, text=True, check=False)
+    result = subprocess.run(args, cwd=cwd, capture_output=True, text=True, encoding="utf-8", check=False)
     if result.returncode:
         raise ContractSyncError(
             f"{' '.join(args)} failed: {result.stderr.strip() or result.stdout.strip()}"
@@ -49,6 +51,8 @@ def prepare_branch(
         run("git", "fetch", "origin", f"{BRANCH}:refs/remotes/origin/{BRANCH}", cwd=root)
         marker = manifest["repositories"][repository]["revision"]
         pinned = git(root, "show", f"origin/{BRANCH}:{marker}").decode("ascii").strip()
+        if not re.fullmatch(r"[0-9a-f]{40}", pinned):
+            raise ContractSyncError(f"Invalid Context marker on bot branch: {repository}")
         previous = expand_map(
             manifest, context_files(context, pinned), allow_missing=True
         )
@@ -71,20 +75,17 @@ def prepare_branch(
         run("git", "switch", "-c", BRANCH, "origin/main", cwd=root)
 
 
-def upsert_pr(root: Path, owner: str, repository: str, revision: str, files: list[str]) -> None:
+def upsert_pr(root: Path, owner: str, repository: str, manifest: dict) -> dict:
     full_name = f"{owner}/{REMOTE_NAMES[repository]}"
     existing = json.loads(run(
         "gh", "pr", "list", "--repo", full_name, "--head", BRANCH,
-        "--state", "open", "--json", "number", cwd=root,
+        "--base", "main", "--state", "open", "--json", "number", cwd=root,
     ))
+    if len(existing) > 1:
+        raise ContractSyncError(f"Ambiguous bot PRs: {full_name}")
+    revision = manifest["contextRevision"]
     title = f"chore(contract): sync Context {revision[:12]}"
-    body = (
-        f"Context source commit: `{revision}`\n\n"
-        "Mechanical snapshot propagation only. Review API and normative document "
-        "changes for product-code impact before merging.\n\n"
-        "Copied snapshot paths:\n"
-        + "".join(f"- `{path}`\n" for path in files)
-    )
+    body = render_body(manifest, repository)
     with tempfile.NamedTemporaryFile(
         mode="w", encoding="utf-8", suffix=".md", delete=False
     ) as handle:
@@ -92,6 +93,10 @@ def upsert_pr(root: Path, owner: str, repository: str, revision: str, files: lis
         body_path = Path(handle.name)
     try:
         if existing:
+            current = json.loads(run("gh", "api", f"repos/{full_name}/pulls/{existing[0]['number']}"))
+            if (current["head"]["sha"] != manifest["heads"][repository]
+                    or current["head"]["repo"]["full_name"] != full_name):
+                raise ContractSyncError(f"PR head changed: {full_name}")
             run("gh", "pr", "edit", str(existing[0]["number"]),
                 "--repo", full_name, "--title", title,
                 "--body-file", str(body_path), cwd=root)
@@ -103,10 +108,24 @@ def upsert_pr(root: Path, owner: str, repository: str, revision: str, files: lis
             )
     finally:
         body_path.unlink()
+    prs = json.loads(run("gh", "pr", "list", "--repo", full_name, "--head", BRANCH,
+                         "--base", "main", "--state", "open", "--json", "number"))
+    if len(prs) != 1:
+        raise ContractSyncError(f"Expected one bot PR: {full_name}")
+    pr = json.loads(run("gh", "api", f"repos/{full_name}/pulls/{prs[0]['number']}"))
+    if (pr["head"]["sha"] != manifest["heads"][repository]
+            or pr["head"]["repo"]["full_name"] != full_name
+            or pr["base"]["repo"]["full_name"] != full_name
+            or pr["head"]["ref"] != BRANCH or pr["base"]["ref"] != "main"):
+        raise ContractSyncError(f"Unexpected PR head/base: {full_name}")
+    return {"number": pr["number"], "head": pr["head"]["sha"],
+            "base": manifest["bases"][repository]}
 
 
 def publish(context: Path, revision: str, roots: dict[str, Path], owner: str) -> dict:
     manifest = load_map()
+    if not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ContractSyncError("Dispatch requires a full Context commit SHA")
     revision = git(context, "rev-parse", "--verify", f"{revision}^{{commit}}")\
         .decode("ascii").strip()
     run("git", "fetch", "origin", "main", cwd=context)
@@ -117,24 +136,27 @@ def publish(context: Path, revision: str, roots: dict[str, Path], owner: str) ->
     )
     if merged.returncode:
         raise ContractSyncError(f"Context commit is not merged into main: {revision}")
+    assert_remote_main(context, revision)
     replicas = expand_map(manifest, context_files(context, revision))
+    allowed_by_repo = {}
+    bases = {}
     for repository in REPOSITORIES:
         allowed = {
             replica.target for replica in replicas if replica.repository == repository
         }
         allowed.add(manifest["repositories"][repository]["revision"])
         prepare_branch(roots[repository], repository, allowed, context, manifest)
+        allowed_by_repo[repository] = allowed
+        bases[repository] = run("git", "rev-parse", "origin/main", cwd=roots[repository])
 
     impact = plan(manifest, context, revision, roots)
-    changed_sources: set[str] = set()
-    pull_requests: dict[str, str] = {}
+    changed_files = {}
     heads: dict[str, str] = {}
     for repository in REPOSITORIES:
         root = roots[repository]
         changes = impact["repositories"].get(repository, [])
         if changes:
             files = apply_plan(manifest, context, roots, impact, repository)
-            changed_sources.update(change["source"] for change in changes)
             run("git", "add", "--", *files, cwd=root)
             run("git", "-c", "user.name=refinvest-contract-bot",
                 "-c", "user.email=refinvest-contract-bot@users.noreply.github.com",
@@ -142,30 +164,41 @@ def publish(context: Path, revision: str, roots: dict[str, Path], owner: str) ->
         branch_diff = run(
             "git", "diff", "--name-only", "origin/main...HEAD", cwd=root
         ).splitlines()
+        outside = set(branch_diff) - allowed_by_repo[repository]
+        if outside:
+            raise ContractSyncError(f"Outgoing non-snapshot files in {repository}: {sorted(outside)}")
+        assert_remote_main(context, revision)
+        assert_remote_main(root, bases[repository])
         if branch_diff:
             run("git", "push", "origin", f"HEAD:refs/heads/{BRANCH}", cwd=root)
-            marker = root / manifest["repositories"][repository]["revision"]
-            upsert_pr(
-                root, owner, repository,
-                marker.read_text(encoding="ascii").strip(), branch_diff,
-            )
-            pull_requests[repository] = BRANCH
-            changed_sources.update(
-                replica.source for replica in replicas
-                if replica.repository == repository and replica.target in branch_diff
-            )
+            changed_files[repository] = branch_diff
         heads[repository] = run(
             "git", "rev-parse", "HEAD" if branch_diff else "origin/main", cwd=root
         )
 
     result = {
+        "schemaVersion": 2,
+        "repository": f"{owner}/integration",
+        "runId": int(os.environ["GITHUB_RUN_ID"]),
+        "runAttempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),
+        "workflowSha": os.environ["GITHUB_SHA"],
         "contextRevision": revision,
         "heads": heads,
-        "pullRequestBranches": pull_requests,
-        "runApiSmoke": any(
-            source.startswith(("openapi/", "fixtures/")) for source in changed_sources
-        ),
+        "bases": bases,
+        "changedFiles": changed_files,
+        "pullRequests": {},
+        "outcome": "pending",
+        "runApiSmoke": True,
     }
+    # Resolve the entire tuple before rendering any PR. A second pass links all PRs.
+    for repository in changed_files:
+        assert_remote_main(context, revision)
+        assert_remote_main(roots[repository], bases[repository])
+        result["pullRequests"][repository] = upsert_pr(roots[repository], owner, repository, result)
+    for repository in changed_files:
+        assert_remote_main(context, revision)
+        assert_remote_main(roots[repository], bases[repository])
+        upsert_pr(roots[repository], owner, repository, result)
     return result
 
 

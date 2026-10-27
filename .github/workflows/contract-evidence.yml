@@ -1,0 +1,92 @@
+name: Record candidate contract evidence
+
+on:
+  workflow_run:
+    workflows: [Propagate Context snapshots]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: contract-evidence-${{ github.event.workflow_run.id }}
+  cancel-in-progress: false
+
+jobs:
+  record:
+    if: >-
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.repository.full_name == github.repository &&
+      (github.event.workflow_run.event == 'workflow_dispatch' ||
+       github.event.workflow_run.event == 'repository_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Never check out the candidate or execute files from downloaded artifacts.
+      - name: Checkout trusted default branch
+        uses: actions/checkout@v4
+        with:
+          ref: refs/heads/main
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Create read-only Context token
+        id: context-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.REFINVEST_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: context
+          permission-contents: read
+
+      - name: Create evidence PR token
+        id: pr-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.REFINVEST_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            integration
+            core-api
+            compute-api
+            web
+          permission-contents: read
+          permission-pull-requests: write
+
+      - name: Collect completed jobs and link PR evidence
+        env:
+          GH_TOKEN: ${{ steps.pr-token.outputs.token }}
+          GH_CONTEXT_TOKEN: ${{ steps.context-token.outputs.token }}
+          GH_ACTIONS_TOKEN: ${{ github.token }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+          SOURCE_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          CONTRACT_REPORT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python -B scripts/contract_evidence.py \
+            --repository "$SOURCE_REPOSITORY" --run-id "$SOURCE_RUN_ID" \
+            --attempt "$SOURCE_ATTEMPT" --output "$RUNNER_TEMP/contract-evidence"
+
+      - name: Publish evidence summary
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/contract-evidence/contract-candidate-evidence.md" ]; then
+            cat "$RUNNER_TEMP/contract-evidence/contract-candidate-evidence.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo '후보 검증 증거를 수집하지 못했습니다. 성공으로 간주하지 말고 이 실행의 로그를 확인하세요.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload final candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-candidate-evidence-${{ github.event.workflow_run.id }}-${{ github.event.workflow_run.run_attempt }}
+          path: ${{ runner.temp }}/contract-evidence/
+          if-no-files-found: warn

@@ -1,6 +1,26 @@
 name: Contract sync
 
 on:
+  workflow_call:
+    inputs:
+      context_ref:
+        required: true
+        type: string
+      core_ref:
+        required: true
+        type: string
+      compute_ref:
+        required: true
+        type: string
+      web_ref:
+        required: true
+        type: string
+      integration_ref:
+        required: true
+        type: string
+    secrets:
+      REFINVEST_CI_APP_PRIVATE_KEY:
+        required: true
   pull_request:
   push:
     branches:
@@ -33,6 +53,7 @@ jobs:
     name: Verify Context/Core/Compute/Web snapshots
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout integration
         uses: actions/checkout@v4
@@ -95,6 +116,11 @@ jobs:
       - name: Install Analytics contract verifier dependencies
         run: python -m pip install -r integration/scripts/requirements-contract-sync.txt
 
+      - name: Test propagation policy and evidence binding
+        run: |
+          python -B -m unittest discover -s integration/scripts -p 'test_contract_*.py'
+          python -B -m unittest discover -s integration/scripts -p 'test_publish_contract_sync.py'
+
       - name: Verify OpenAPI snapshots
         id: contract-sync
         shell: pwsh
@@ -146,6 +172,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: contract-sync-compatibility-evidence
+          name: contract-sync-compatibility-evidence-${{ github.run_attempt }}
           path: integration/.integration-data/evidence/compatibility.json
           if-no-files-found: warn

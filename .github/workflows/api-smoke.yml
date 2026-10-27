@@ -1,6 +1,26 @@
 name: API smoke
 
 on:
+  workflow_call:
+    inputs:
+      context_ref:
+        required: true
+        type: string
+      core_ref:
+        required: true
+        type: string
+      compute_ref:
+        required: true
+        type: string
+      web_ref:
+        required: true
+        type: string
+      integration_ref:
+        required: true
+        type: string
+    secrets:
+      REFINVEST_CI_APP_PRIVATE_KEY:
+        required: true
   pull_request:
   push:
     branches:
@@ -27,7 +47,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: api-smoke-${{ github.workflow }}-${{ inputs.context_ref || github.ref }}
+  group: api-smoke-${{ github.workflow }}-${{ github.event_name }}-${{ inputs.context_ref && github.run_id || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -35,6 +55,7 @@ jobs:
     name: Core to Compute API smoke and Web browser acceptance
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     services:
       postgres:
         image: postgres:17-alpine
@@ -173,7 +194,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: api-smoke-and-web-acceptance-compatibility-evidence
+          name: api-smoke-and-web-acceptance-compatibility-evidence-${{ github.run_attempt }}
           path: integration/.integration-data/evidence/compatibility.json
           if-no-files-found: warn
 
@@ -181,6 +202,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: api-smoke-and-web-acceptance-logs
+          name: api-smoke-and-web-acceptance-logs-${{ github.run_attempt }}
           path: integration/.integration-data/logs
           if-no-files-found: warn
