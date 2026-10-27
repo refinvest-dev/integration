@@ -85,15 +85,23 @@ def db_connection(schema: str) -> psycopg.Connection:
     require(name == "refinvest_integration", "UNSAFE_DATABASE_NAME")
     require(schema == "public" or
             (schema.startswith("tnorm_") and schema[6:].isalnum()), "UNSAFE_DATABASE_SCHEMA")
-    connection = psycopg.connect(
-        host=os.environ["TRADING_RUNTIME_DB_HOST"],
-        port=int(os.environ["TRADING_RUNTIME_DB_PORT"]),
-        dbname=name,
-        user=os.environ["TRADING_RUNTIME_DB_USER"],
-        password=os.environ["TRADING_RUNTIME_DB_PASSWORD"],
-        options=f"-c search_path={schema}",
-        autocommit=True,
-    )
+    for attempt in range(3):
+        try:
+            connection = psycopg.connect(
+                host=os.environ["TRADING_RUNTIME_DB_HOST"],
+                port=int(os.environ["TRADING_RUNTIME_DB_PORT"]),
+                dbname=name,
+                user=os.environ["TRADING_RUNTIME_DB_USER"],
+                password=os.environ["TRADING_RUNTIME_DB_PASSWORD"],
+                options=f"-c search_path={schema}",
+                autocommit=True,
+            )
+            break
+        except psycopg.OperationalError as error:
+            # Retry connection establishment only; never replay a DB mutation.
+            if attempt == 2 or not any(code in str(error) for code in ("Bad address", "10014")):
+                raise
+            time.sleep(0.5)
     with connection.cursor() as cursor:
         cursor.execute("select current_database(), current_schema()")
         require(cursor.fetchone() == (name, schema), "UNSAFE_DATABASE_TARGET")
@@ -273,7 +281,8 @@ def verify_publication(args, evidence: dict, core: httpx.Client, compute: httpx.
                        connection: psycopg.Connection, compute_db: psycopg.Connection,
                        book: dict, session_id: str, run_id: str, job_id: str,
                        run: dict, job: dict, status: dict, descriptor: dict,
-                       payload: dict, result: dict, uploaded: dict, artifacts: dict) -> None:
+                       payload: dict, result: dict, uploaded: dict, artifacts: dict,
+                       pin_proxy=None) -> None:
     require(payload["attemptToken"] == descriptor["attemptToken"] == status["attemptToken"],
             "TERMINAL_ATTEMPT_DRIFT")
     attempt = row(connection, """select attempt_number,attempt_token::text,compute_job_id
@@ -412,20 +421,25 @@ def verify_publication(args, evidence: dict, core: httpx.Client, compute: httpx.
         "identity": "PASS", "evidenceReferences": "PASS"}
     require(ack["status"] == "PENDING", "ACK_FAULT_WINDOW_MISSED")
     scripts = args.test_root / "scripts"
-    process_script(scripts / "stop-integration.ps1", "-RegistryId", args.registry,
-                   "-Service", "compute-api")
+    if pin_proxy is None:
+        process_script(scripts / "stop-integration.ps1", "-RegistryId", args.registry,
+                       "-Service", "compute-api")
     failed_ack = poll(lambda: row(connection, """select status,attempt_count,last_failure_code
         from trading_normalization_ack_dispatches where run_id=%s::uuid""", (run_id,)),
         lambda a: a["attempt_count"] > 0 and a["last_failure_code"] is not None,
-        args.timeout, "ACK failure while Compute API stopped")
+        args.timeout, "ACK failure under controlled HTTP fault")
     require(failed_ack["status"] == "PENDING" and
             failed_ack["last_failure_code"] == "TEMPORARY_DEPENDENCY_FAILURE" and
             publication_counts(connection, revision_id, book["id"], run_id) == counts,
             "ACK_FAILURE_CHANGED_PUBLICATION")
-    process_script(scripts / "start-compute-api.ps1", "-EnvironmentFile",
-                   str(args.environment_file), "-ComputeApiPath", str(args.compute_path),
-                   "-Schema", args.compute_schema, "-Profile", args.registry,
-                   "-RegistryId", args.registry)
+    if pin_proxy is not None:
+        require(pin_proxy.injected_ack_failures > 0, "ACK_FAULT_NOT_OBSERVED")
+        pin_proxy.reject_acks = False
+    else:
+        process_script(scripts / "start-compute-api.ps1", "-EnvironmentFile",
+                       str(args.environment_file), "-ComputeApiPath", str(args.compute_path),
+                       "-Schema", args.compute_schema, "-Profile", args.registry,
+                       "-RegistryId", args.registry)
     poll(lambda: health_code(compute, f"{args.compute_url}/health"),
          lambda code: code == 200, args.timeout, "Compute API restart")
     completed_ack = poll(lambda: row(connection, """select status,attempt_count
@@ -481,7 +495,10 @@ def main() -> int:
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--result-integrity", action="store_true")
     parser.add_argument("--publication", action="store_true")
+    parser.add_argument("--result-version-pin", action="store_true")
     args = parser.parse_args()
+    if args.result_version_pin:
+        args.publication = True
     if args.result_integrity or args.publication:
         self_test(args.context_path)
     evidence: dict[str, object] = {
@@ -496,6 +513,14 @@ def main() -> int:
         evidence["resultFixedVector"] = "PASS"
         evidence["runtimeIdentityGate"] = os.environ.get("TRADING_RUNTIME_IDENTITY_GATE", "NOT_RUN")
         evidence["resultHashSpecificationVersion"] = SPEC
+    if args.result_version_pin:
+        evidence["versionPin"] = {"scenarios": {name: {"result": "NOT_RUN"} for name in (
+            "V1_PIN_PUBLICATION", "TR-ACC-IMPORT-ORCH-024", "TR-ACC-IMPORT-ORCH-025",
+            "TR-ACC-IMPORT-ORCH-026", "TR-ACC-IMPORT-ORCH-026-descriptor", "TR-ACC-IMPORT-ORCH-026-payload",
+            "TR-ACC-IMPORT-ORCH-027")}, "V2CorePublication": "OUT_OF_SCOPE"}
+        evidence["versionPin"]["scenarios"]["TR-ACC-IMPORT-ORCH-028"] = {
+            "result": "NOT_RUN_MISSING_CONTROL",
+            "reason": "Core admission/dispatch-only pause boundary unavailable"}
     vector_paths = {
         "context": args.context_path / "fixtures/trading-normalization/input-identity-v1.json",
         "core": args.core_path / "tradingreview/application/src/test/resources/trading-normalization/input-identity-v1.json",
@@ -522,11 +547,15 @@ def main() -> int:
     compute_db = None
     stage_lock = None
     fault_server = None
+    pin_proxy = None
     try:
         manifest = json.loads((args.fixture_root / "fixture-manifest.json").read_text(encoding="utf-8"))
         artifacts = {a["role"]: a for a in manifest["artifacts"]}
         connection = db_connection("public")
         compute_db = db_connection(os.environ["TRADING_RUNTIME_COMPUTE_SCHEMA"])
+        if args.result_version_pin:
+            from trading_normalization_version_pin import PinProxy
+            pin_proxy = PinProxy(sys.modules[__name__], args)
         token = os.environ["TRADING_RUNTIME_ACCESS_TOKEN"]
         key = os.environ["TRADING_RUNTIME_API_KEY"]
         csrf = "trading-runtime-csrf"
@@ -556,8 +585,9 @@ def main() -> int:
             current = request(core, "GET", f"{args.core_url}/trading-import-sessions/{session_id}", 200)
             require(current["canValidate"] and set(current["uploadedArtifactRoles"]) == set(artifacts),
                     "UPLOAD_INCOMPLETE")
+            validation_key = f"validate-{uuid.uuid4().hex}"
             validated = request(core, "POST", f"{args.core_url}/trading-import-sessions/{session_id}/validation",
-                                202, headers={"Idempotency-Key": f"validate-{uuid.uuid4().hex}"}, json={})
+                                202, headers={"Idempotency-Key": validation_key}, json={})
             require(validated["status"] == "VALIDATING", "SESSION_NOT_VALIDATING")
             run = poll(lambda: row(connection, """select id::text, input_fingerprint, logical_key,
                 input_identity_json, target_version_set_json, retry_policy_version,
@@ -565,6 +595,9 @@ def main() -> int:
                 where import_session_id=%s order by created_at desc limit 1""", (int(session_id),)),
                        lambda r: r["compute_job_id"] is not None or r["status"] == "TERMINAL_FAILURE",
                        args.timeout, "Core dispatch")
+            evidence["coreRunId"] = run["id"]
+            if run["compute_job_id"] is not None:
+                evidence["computeJobId"] = run["compute_job_id"]
             require(run["compute_job_id"] is not None,
                     str(run["last_failure_code"] or "CORE_DISPATCH_FAILED"))
             run_id, job_id = run["id"], run["compute_job_id"]
@@ -729,8 +762,15 @@ def main() -> int:
                 scenario_started = time.monotonic()
                 verify_publication(args, evidence, core, compute, connection, compute_db,
                                    book, session_id, run_id, job_id, run, job, status,
-                                   descriptor, payload, result, uploaded, artifacts)
+                                   descriptor, payload, result, uploaded, artifacts, pin_proxy)
                 mark_pass(evidence, scenario, scenario_started)
+                if args.result_version_pin:
+                    scenario = "result_version_pin"
+                    from trading_normalization_version_pin import verify_version_pin
+                    verify_version_pin(sys.modules[__name__], args, evidence, core, compute,
+                                       connection, compute_db, pin_proxy, book, account,
+                                       session_id, run_id, job_id, dispatch, original,
+                                       status, descriptor, payload, artifacts, validation_key)
                 return_code = 0
                 return return_code
 
@@ -1078,12 +1118,26 @@ def main() -> int:
         evidence["scenarios"][scenario] = "FAIL"
         evidence["safeFailureCode"] = error.code if isinstance(error, (ScenarioFailure, IntegrityFailure)) else type(error).__name__
         evidence["lastState"] = str(error) if isinstance(error, ScenarioFailure) else type(error).__name__
+        if args.result_version_pin:
+            import traceback
+            active_pin_scenario = evidence["versionPin"].pop("activeScenario", None)
+            if active_pin_scenario:
+                evidence["versionPin"]["scenarios"][active_pin_scenario] = {
+                    "result": "FAIL", "safeFailureCode": evidence["safeFailureCode"]}
+            evidence["failureLocation"] = [
+                {"file": Path(frame.filename).name, "line": frame.lineno, "function": frame.name}
+                for frame in traceback.extract_tb(error.__traceback__)]
         if args.publication:
             evidence["diagnosis"] = publication_diagnosis(connection, compute_db, evidence)
+        if pin_proxy is not None:
+            evidence["pinProxy"] = pin_proxy.evidence()
+            evidence["pinDiagnosis"] = pin_proxy.diagnosis()
         return_code = 1
     else:
         return_code = 0
     finally:
+        if pin_proxy is not None:
+            pin_proxy.close()
         if fault_server is not None:
             fault_server.shutdown()
             fault_server.server_close()

@@ -89,6 +89,42 @@ Compute API 중단으로 ACK의 일시 실패를 만들고, Revision 보존과 A
 inputSetHash에 포함되므로 실행 간 전체 resultHash 값은 고정되지 않는다. 매 실행마다
 Context 규칙으로 실제 hash를 독립 재계산해 일치 여부를 검증한다.
 
+## Trading Normalization result version pin E2E
+
+```powershell
+.\scripts\test-trading-normalization-result-version-pin.ps1 -CorePort 8680 -ComputePort 8681
+```
+
+기존 runtime/publication harness와 동일한 경로·환경·DB parameter를 받는다. 첫 실행 검사는
+`verify-contract-sync.ps1 -IncludeWeb`이며 DB는 loopback의 `refinvest_integration`만 허용한다.
+Core 공개 합성 Binance 업로드·validation부터 실제 durable create, accepted/status,
+terminal descriptor/payload, LedgerRevision 및 ACK까지 V1/V1 pin을 대조한다.
+기존 V1 fixed vector, 9개 section digest, 단일 publication과 ACK 실패·재시도를 재사용한다.
+loopback Integration 프록시가 ACK 요청 시 별도 DB connection에서 publication commit의
+가시성까지 확인한다. 이번 합성 작업의 ACK만 일시적으로 HTTP 503으로 거절한 뒤 해제해
+실제 Core outbox 재시도와 Revision 불변을 검증한다. 프록시는 capability URL·token·CSV body를 evidence에 저장하지 않는다.
+
+추가 검증은 ORCH-024(같은 key/request replay·다른 쌍 충돌), 025(3개 필드 누락,
+2개 교차 쌍, 3개 미지원 값), 026(descriptor와 payload 불일치 각각)을 포함한다.
+부정 응답은 해당 합성 Session으로만 주입하고 실제 서비스 코드는 변경하지 않는다.
+payload fault는 transport 길이·SHA-256을 맞춰 Core의 pin gate에 도달시킨다.
+실패 Session의 Revision·PERSISTED ACK 0건과 기존 Book latest 보존을 확인한다.
+
+ORCH-027은 새 `tnorm_legacycore*`/`tnorm_legacycompute*` schema에 실제 pre-pin migration을
+적용하고 이번 합성 publication만 복제한다. pin이 없는 Run/dispatch/Job과 옛 request fingerprint를
+준비한 뒤 실제 Core V9·Compute 0017 SQL을 실행한다. 이후 두 API를 해당 schema로 재시작해
+명시적 V1/V1 HTTP status·replay와 공개 validation replay, 기존 Revision·ACK 불변을 확인한다.
+실행 중인 원본 schema의 컬럼이나 trigger를 제거하지 않으며 schema·로그는 조사용으로 보존한다.
+
+결과는 `.integration-data/trading-normalization/<runId>/evidence.json`의 `versionPin`에
+시나리오별 실행 상태와 비민감 Run/Job/Revision/ACK ID로 남긴다. 재시작 전 로그는 같은 실행
+디렉터리의 `before-migration-logs/`에 보존한다. ORCH-028은 Core의 admission/dispatch 전용
+중지 기능이 없으므로 `NOT_RUN_MISSING_CONTROL`로 기록한다. 이 항목이 있는 실행의
+스크립트 성공은 **실행 가능한 V1 pin 검증**의 성공이며 공동 전환 전체의 PASS가 아니다.
+V2 Core publication은 이번 범위에서 제외한다.
+정확한 assertion, 공동 전환에 필요한 후속 기능과 V2 선행 구현 상태는
+[결과 버전 pin E2E 문서](docs/TRADING_NORMALIZATION_RESULT_VERSION_PIN_E2E.md)를 참조한다.
+
 ## Performance fixture
 
 The deterministic ten-year, five-asset synthetic fixture, six benchmark scenarios, expected-result
