@@ -19,7 +19,15 @@ concurrency:
 
 jobs:
   propagate:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      context_ref: ${{ steps.propagate.outputs.context_ref }}
+      core_ref: ${{ steps.propagate.outputs.core_ref }}
+      compute_ref: ${{ steps.propagate.outputs.compute_ref }}
+      web_ref: ${{ steps.propagate.outputs.web_ref }}
+      integration_ref: ${{ steps.propagate.outputs.integration_ref }}
     steps:
       - name: Create read-only Context token
         id: context-token
@@ -45,7 +53,6 @@ jobs:
             web
           permission-contents: write
           permission-pull-requests: write
-          permission-actions: write
 
       - name: Checkout integration
         uses: actions/checkout@v4
@@ -53,6 +60,7 @@ jobs:
           repository: ${{ github.repository_owner }}/integration
           token: ${{ steps.propagation-token.outputs.token }}
           path: integration
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
       - name: Checkout Context
@@ -109,35 +117,37 @@ jobs:
           echo "compute_ref=$(jq -r '.heads.computeApi' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
           echo "web_ref=$(jq -r '.heads.web' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
           echo "integration_ref=$(jq -r '.heads.integration' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
-          echo "run_api_smoke=$(jq -r '.runApiSmoke' "$RUNNER_TEMP/contract-propagation.json")" >> "$GITHUB_OUTPUT"
-
-      - name: Dispatch candidate contract verification
-        env:
-          GH_TOKEN: ${{ steps.propagation-token.outputs.token }}
-        run: |
-          gh workflow run contract-sync.yml --repo '${{ github.repository_owner }}/integration' \
-            -f context_ref='${{ steps.propagate.outputs.context_ref }}' \
-            -f core_ref='${{ steps.propagate.outputs.core_ref }}' \
-            -f compute_ref='${{ steps.propagate.outputs.compute_ref }}' \
-            -f web_ref='${{ steps.propagate.outputs.web_ref }}' \
-            -f integration_ref='${{ steps.propagate.outputs.integration_ref }}'
-
-      - name: Dispatch candidate API smoke
-        if: steps.propagate.outputs.run_api_smoke == 'true'
-        env:
-          GH_TOKEN: ${{ steps.propagation-token.outputs.token }}
-        run: |
-          gh workflow run api-smoke.yml --repo '${{ github.repository_owner }}/integration' \
-            -f context_ref='${{ steps.propagate.outputs.context_ref }}' \
-            -f core_ref='${{ steps.propagate.outputs.core_ref }}' \
-            -f compute_ref='${{ steps.propagate.outputs.compute_ref }}' \
-            -f web_ref='${{ steps.propagate.outputs.web_ref }}' \
-            -f integration_ref='${{ steps.propagate.outputs.integration_ref }}'
 
       - name: Upload propagation result
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: contract-propagation-result
+          name: contract-propagation-result-${{ github.run_attempt }}
           path: ${{ runner.temp }}/contract-propagation.json
           if-no-files-found: ignore
+
+  candidate-sync:
+    name: candidate-sync
+    needs: propagate
+    uses: ./.github/workflows/contract-sync.yml
+    with:
+      context_ref: ${{ needs.propagate.outputs.context_ref }}
+      core_ref: ${{ needs.propagate.outputs.core_ref }}
+      compute_ref: ${{ needs.propagate.outputs.compute_ref }}
+      web_ref: ${{ needs.propagate.outputs.web_ref }}
+      integration_ref: ${{ needs.propagate.outputs.integration_ref }}
+    secrets:
+      REFINVEST_CI_APP_PRIVATE_KEY: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
+
+  candidate-smoke:
+    name: candidate-smoke
+    needs: [propagate, candidate-sync]
+    uses: ./.github/workflows/api-smoke.yml
+    with:
+      context_ref: ${{ needs.propagate.outputs.context_ref }}
+      core_ref: ${{ needs.propagate.outputs.core_ref }}
+      compute_ref: ${{ needs.propagate.outputs.compute_ref }}
+      web_ref: ${{ needs.propagate.outputs.web_ref }}
+      integration_ref: ${{ needs.propagate.outputs.integration_ref }}
+    secrets:
+      REFINVEST_CI_APP_PRIVATE_KEY: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
