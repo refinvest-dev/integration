@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import threading
 import time
@@ -30,6 +31,36 @@ ITEMS = (
     "07-terminal-deletion-cancellation-recovery", "08-failed-http-keeps-paused",
     "09-verified-resume-same-public-keys", "10-no-duplicate-run-job-revision-ack",
 )
+WORKER_RECOVERIES = []
+
+
+def worker_poll(rt, args, fetch, accept, timeout, label, environment=None):
+    """Recover only the known host socket failure, retaining the failed worker log.
+
+    This starts the actual worker against the same durable schema; it never
+    changes a Job, lease, request identity, terminal result or retry budget.
+    """
+    def guarded_fetch():
+        stderr = args.test_root / ".integration-data/logs" / (args.registry + "-compute-worker.err.log")
+        failure = stderr.read_text(encoding="utf-8", errors="replace") if stderr.exists() else ""
+        if "Traceback" in failure and ("10014" in failure or "Bad address" in failure):
+            count = sum(e["registry"] == args.registry for e in WORKER_RECOVERIES)
+            rt.require(count < 3, "WORKER_SOCKET_RECOVERY_LIMIT")
+            archive = args.run_dir / "worker-recoveries"
+            archive.mkdir(exist_ok=True)
+            for suffix in ("out", "err"):
+                source = stderr.with_name(args.registry + f"-compute-worker.{suffix}.log")
+                if source.exists():
+                    shutil.copy2(source, archive / (args.registry + f"-{count+1}.{suffix}.log"))
+            service(rt, args, "stop-integration.ps1", "-RegistryId", args.registry, "-Service", "compute-worker")
+            service(rt, args, "start-compute-worker.ps1", "-EnvironmentFile", args.environment_file,
+                "-ComputeApiPath", args.compute_path, "-Schema", args.compute_schema, "-RegistryId", args.registry,
+                "-Profile", args.registry, "-TradingReview", environment=environment)
+            WORKER_RECOVERIES.append({"registry": args.registry, "reason": "WINDOWS_SOCKET_10014",
+                "attempt": count + 1, "phase": label, "preservedLogs": str(archive)})
+            (args.run_dir / "worker-recoveries.json").write_text(json.dumps(WORKER_RECOVERIES, indent=2), encoding="utf-8")
+        return fetch()
+    return rt.poll(guarded_fetch, accept, timeout, label)
 
 
 def service(rt, args, script, *arguments, environment=None):
@@ -127,6 +158,7 @@ def isolated_canary(rt, args, core, db, artifacts, checks):
     canary_args.compute_schema = compute_schema
     registry = args.registry + "-canary"
     env_file = environment_file(args, "canary", core_port, compute_port)
+    canary_args.registry, canary_args.environment_file = registry, env_file
     owner = rt.row(db, "select owner_member_id from trading_books order by id desc limit 1", ())["owner_member_id"]
     for name in (core_schema, compute_schema):
         db.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(name)))
@@ -172,8 +204,8 @@ def isolated_canary(rt, args, core, db, artifacts, checks):
             sid, _ = new_session(rt, canary_args, core, book, artifacts)
             canary_proxy.mode = ("descriptor", str(sid))
             validate(rt, canary_args, core, sid)
-            failed = rt.poll(lambda: state(rt, canary_args, core, sid),
-                lambda s: s["status"] in {"PROCESSING_FAILED", "ACCEPTED"}, args.timeout, "negative canary")
+            failed = worker_poll(rt, canary_args, lambda: state(rt, canary_args, core, sid),
+                lambda s: s["status"] in {"PROCESSING_FAILED", "ACCEPTED"}, args.timeout, "negative canary", environment)
             rt.require(failed["status"] == "PROCESSING_FAILED" and failed["failure"]["code"] == "RESULT_VERSION_PIN_MISMATCH",
                 "NEGATIVE_CANARY_NOT_REJECTED")
             rt.require(current(rt, db)["paused"] and current(rt, db)["verified_evidence"] is None, "FAILED_CANARY_RESUMED")
@@ -187,8 +219,8 @@ def isolated_canary(rt, args, core, db, artifacts, checks):
             sent, accepted = canary_proxy.creates[run_id]
             rt.require(pair(sent) == pair(accepted) == V1, "CANARY_CREATE_PAIR_DRIFT")
             with httpx.Client(timeout=20, headers={"X-Internal-Api-Key": os.environ["TRADING_RUNTIME_API_KEY"]}) as compute:
-                terminal = rt.poll(lambda: rt.request(compute, "GET", canary_args.compute_url + f"/trading-review/normalization-jobs/{job_id}", 200),
-                    lambda s: s["status"] in {"COMPLETED", "FAILED"}, args.timeout, "canary terminal")
+                terminal = worker_poll(rt, canary_args, lambda: rt.request(compute, "GET", canary_args.compute_url + f"/trading-review/normalization-jobs/{job_id}", 200),
+                    lambda s: s["status"] in {"COMPLETED", "FAILED"}, args.timeout, "canary terminal", environment)
                 rt.require(terminal["status"] == "COMPLETED" and pair(terminal) == V1, "CANARY_STATUS_FAILED")
                 descriptor = rt.request(compute, "GET", canary_args.compute_url + f"/trading-review/normalization-jobs/{job_id}/result", 200)
                 response = compute.get(canary_args.compute_url + "/trading-review/terminal-payloads/" + descriptor["payloadId"])
@@ -215,6 +247,7 @@ def isolated_canary(rt, args, core, db, artifacts, checks):
 def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, book, artifacts):
     checks = {name: {"result": "NOT_RUN"} for name in ITEMS}
     result = evidence["versionPin"]["cutover"] = {"assertions": checks, "result": "RUNNING"}
+    evidence["workerRecoveryEvents"] = WORKER_RECOVERIES
     def checkpoint():
         (args.run_dir / "evidence.json").write_text(json.dumps(evidence, indent=2, default=str) + "\n", encoding="utf-8")
     checkpoint()
@@ -243,7 +276,7 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
         ack_sid, _ = new_session(rt, args, core, book, artifacts)
         proxy.reject_acks = True
         validate(rt, args, core, ack_sid)
-        ack_public = rt.poll(lambda: state(rt, args, core, ack_sid),
+        ack_public = worker_poll(rt, args, lambda: state(rt, args, core, ack_sid),
             lambda s: s["status"] in {"ACCEPTED", "PROCESSING_FAILED", "REJECTED"}, args.timeout, "existing ACK publication")
         rt.require(ack_public["status"] == "ACCEPTED", "EXISTING_ACK_PUBLICATION_FAILED")
         ack_run = str(dispatch(rt, db, ack_sid)["run_id"])
@@ -343,7 +376,7 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
         service(rt, args, "start-compute-worker.ps1", "-EnvironmentFile", args.environment_file,
             "-ComputeApiPath", args.compute_path, "-Schema", args.compute_schema, "-RegistryId", args.registry,
             "-Profile", args.registry, "-TradingReview")
-        rt.poll(lambda: dispatch(rt, db, send_sid), lambda d: d and d["status"] == "RESULT_READY", args.timeout, "paused terminal polling")
+        worker_poll(rt, args, lambda: dispatch(rt, db, send_sid), lambda d: d and d["status"] == "RESULT_READY", args.timeout, "paused terminal polling")
         rt.poll(lambda: state(rt, args, core, cancel_sid), lambda s: s["status"] == "PROCESSING_FAILED", args.timeout, "paused cancellation terminal")
         for sid in (send_sid, unknown_sid):
             rt.require(rt.row(db, """select count(*) as n from trading_normalization_ack_dispatches where
@@ -382,8 +415,9 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
         checks[ITEMS[8]] = {"result": "PASS", "samePublicKeysAccepted": True, "verificationRef": reference}
         checkpoint()
         resumed = []
-        for sid, key, endpoint in ((received_sid, validation_key, "validation"), (retry_sid, retry_key, "retry"), (unsent_sid, None, None)):
-            published = rt.poll(lambda: state(rt, args, core, sid), lambda s: s["status"] == "ACCEPTED", args.timeout, "resumed publication")
+        for sid, key, endpoint in ((received_sid, validation_key, "validation"), (retry_sid, retry_key, "retry"),
+                (unsent_sid, None, None), (unknown_sid, None, None), (send_sid, None, None)):
+            published = worker_poll(rt, args, lambda: state(rt, args, core, sid), lambda s: s["status"] == "ACCEPTED", args.timeout, "resumed publication")
             item = dispatch(rt, db, sid)
             run_id = str(item["run_id"])
             rt.poll(lambda: rt.row(db, "select status from trading_normalization_ack_dispatches where run_id=%s::uuid", (run_id,)),
@@ -401,6 +435,7 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
             resumed.append({"sessionId": sid, "runId": run_id, "jobId": item["compute_job_id"],
                 "revisionId": published["createdLedgerRevisionId"], **counts, "jobs": jobs})
         checks[ITEMS[9]] = {"result": "PASS", "sessions": resumed}
+        rt.require(sum(a["sessionId"] == str(unknown_sid) for a in proxy.create_attempts) == 1, "RECOVERED_CREATE_RETRANSMITTED")
         rt.require(all(v["result"] == "PASS" for v in checks.values()), "ORCH028_INCOMPLETE")
         result.update(result="PASS", epoch=epoch, mainCombination=False,
             implementationCoreCommit=rt.git_revision(args.core_path), uncertainCreateReplayed=False)

@@ -637,7 +637,13 @@ def main() -> int:
             require(set(original["inputIdentity"]) == set(identity), "SERIALIZER_IDENTITY_SHAPE_DRIFT")
             require("artifactAccessGrants" not in original["inputIdentity"] and
                     len(original["artifactAccessGrants"]) == 2, "GRANTS_IN_LOGICAL_IDENTITY")
-            status = poll(lambda: request(compute, "GET",
+            terminal_poll = poll
+            if args.result_version_pin:
+                from trading_normalization_cutover import worker_poll, WORKER_RECOVERIES
+                evidence["workerRecoveryEvents"] = WORKER_RECOVERIES
+                terminal_poll = lambda fetch, accept, timeout, label: worker_poll(
+                    sys.modules[__name__], args, fetch, accept, timeout, label)
+            status = terminal_poll(lambda: request(compute, "GET",
                 f"{args.compute_url}/trading-review/normalization-jobs/{job_id}", 200),
                 lambda s: s["status"] in {"COMPLETED", "FAILED", "CANCELLED"},
                 args.timeout, "Compute terminal")

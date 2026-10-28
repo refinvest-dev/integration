@@ -26,6 +26,8 @@ migration을 적용한다. Core와 Compute source root를 복제하거나 서비
 별도 Core·Compute schema를 사용한다. 이전 실패의 paused/unknown dispatch를 자동으로 재개하지 않는다.
 실제 Core 실행 JAR을 한 번 빌드해 모든 instance/restart에 사용하고 JAR SHA-256을 증적과
 process identity에 기록한다. artifact가 바뀐 기존 process는 재사용하지 않는다.
+Windows worker의 fatal `10014 Bad address`만 registry별 최대 3회 같은 schema로 재기동하며
+실패 로그와 recovery event를 보존한다. 일반 오류나 create 요청은 이 경로에서 재전송하지 않는다.
 성공·실패 schema, 암호화 artifact와 로그는 조사용으로 보존하며 로컬 원본은 커밋하지 않는다.
 각 독립 정상 publication fixture는 새 Book을 사용한다. 동일 CSV를 이미 발행된 Book에 반복 import하여
 source overlap/conflict 시나리오와 혼합하지 않는다.

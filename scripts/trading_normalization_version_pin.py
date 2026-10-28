@@ -223,6 +223,7 @@ def verify_version_pin(rt, args, evidence, core, compute, db, compute_db, proxy,
                        session_id, run_id, job_id, dispatch, original, status, descriptor,
                        payload, artifacts, validation_key):
     checks = evidence["versionPin"]
+    from trading_normalization_cutover import worker_poll
 
     def begin(name):
         checks["activeScenario"] = name
@@ -318,7 +319,7 @@ def verify_version_pin(rt, args, evidence, core, compute, db, compute_db, proxy,
         proxy.mode = (mode, str(sid))
         rt.request(core, "POST", f"{args.core_url}/trading-import-sessions/{sid}/validation", 202,
                    headers={"Idempotency-Key": "pin-validate-" + uuid.uuid4().hex}, json={})
-        failed = rt.poll(lambda: rt.request(core, "GET", f"{args.core_url}/trading-import-sessions/{sid}", 200),
+        failed = worker_poll(rt, args, lambda: rt.request(core, "GET", f"{args.core_url}/trading-import-sessions/{sid}", 200),
             lambda s: s["status"] in {"PROCESSING_FAILED", "ACCEPTED", "REJECTED"}, args.timeout, "pin fault " + mode)
         rt.require(failed["status"] == "PROCESSING_FAILED" and
                    failed["failure"]["code"] == "RESULT_VERSION_PIN_MISMATCH" and
