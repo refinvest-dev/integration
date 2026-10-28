@@ -58,6 +58,7 @@ Write-Host "Database target verified: $dbHost`:$($values.INTEGRATION_POSTGRES_PO
 $runId = [guid]::NewGuid().ToString('N')
 $registry = "trading-normalization-$($runId.Substring(0,12))"
 $computeSchema = "tnorm_$($runId.Substring(0,12))"
+$coreSchema = if ($ResultVersionPin) { "tnorm_core$($runId.Substring(0,12))" } else { 'public' }
 $runDir = Join-Path $TestRoot ".integration-data\trading-normalization\$runId"
 New-Item -ItemType Directory -Force -Path $runDir | Out-Null
 $activeEnvironmentFile = $EnvironmentFile
@@ -154,7 +155,7 @@ try {
             $ErrorActionPreference = 'Continue'
             $appliedCoreMigrations = @(& $psql -h $dbHost -p $values.INTEGRATION_POSTGRES_PORT `
                 -U $values.POSTGRES_USER -d $DatabaseName -tA -v ON_ERROR_STOP=1 `
-                -c 'SELECT filename FROM integration_core_trading_migrations ORDER BY filename;' 2>$null)
+                -c "SELECT filename FROM $coreSchema.integration_core_trading_migrations ORDER BY filename;" 2>$null)
         } finally { $ErrorActionPreference = $previousErrorAction }
         if ($LASTEXITCODE -eq 0) { break }
         Start-Sleep -Milliseconds 250
@@ -162,7 +163,7 @@ try {
     if ($LASTEXITCODE -ne 0 -or
         (($expectedCoreMigrations -join ',') -cne (($appliedCoreMigrations | Sort-Object) -join ','))) {
         & (Join-Path $PSScriptRoot 'initialize-core-trading-schema.ps1') -EnvironmentFile $activeEnvironmentFile `
-            -CorePath $CorePath
+            -CorePath $CorePath -DatabaseSchema $coreSchema
         if ($LASTEXITCODE -ne 0) { throw 'Core trading migration failed.' }
     } else { Write-Host 'Core trading migrations are already applied in the integration database.' }
     if ($ResultVersionPin) {
@@ -175,6 +176,23 @@ try {
     }
     if ($LASTEXITCODE -ne 0) { throw 'Compute migration failed.' }
     Remove-Item Env:PGOPTIONS -ErrorAction SilentlyContinue
+    if ($ResultVersionPin) {
+        $env:GRADLE_USER_HOME = Join-Path $TestRoot '.integration-data\gradle'
+        $buildLog = Join-Path $runDir 'core-bootjar.log'
+        $previousDirectory = Get-Location
+        $previousErrorAction = $ErrorActionPreference
+        try {
+            Set-Location -LiteralPath $CorePath
+            $ErrorActionPreference = 'Continue'
+            & .\gradlew.bat :app:bootJar --console=plain --no-daemon *> $buildLog
+            $jarBuildExit = $LASTEXITCODE
+        } finally { Set-Location -LiteralPath $previousDirectory; $ErrorActionPreference = $previousErrorAction }
+        if ($jarBuildExit -ne 0) { throw 'Core executable JAR build failed; see core-bootjar.log.' }
+        $jars = @(Get-ChildItem -LiteralPath (Join-Path $CorePath 'app/build/libs') -Filter '*.jar' |
+            Where-Object { $_.Name -notmatch '-plain\.jar$' })
+        if ($jars.Count -ne 1) { throw 'Expected one Core executable JAR.' }
+        $env:TRADING_RUNTIME_CORE_JAR = $jars[0].FullName
+    }
     $scenario = 'startup'
     $started = $true
     if ($ResultVersionPin) {
@@ -183,7 +201,7 @@ try {
             -RegistryId $registry -EvidenceDirectory $runDir
         & (Join-Path $PSScriptRoot 'start-trading-normalization-service.ps1') -EnvironmentFile $activeEnvironmentFile `
             -CorePath $CorePath -RegistryId $registry -ComputeBaseUrl "http://127.0.0.1:$fixturePort" `
-            -EvidenceDirectory $runDir
+            -EvidenceDirectory $runDir -DatabaseSchema $coreSchema
     } else {
         & (Join-Path $PSScriptRoot 'start-compute-api.ps1') -EnvironmentFile $activeEnvironmentFile `
             -ComputeApiPath $ComputePath -Schema $computeSchema -Profile $registry -RegistryId $registry
@@ -217,7 +235,7 @@ try {
         }
     }
     $scenario = 'runtime'
-    $token = & (Join-Path $PSScriptRoot 'seed-core-member.ps1') -EnvironmentFile $activeEnvironmentFile -Tier PRO |
+    $token = & (Join-Path $PSScriptRoot 'seed-core-member.ps1') -EnvironmentFile $activeEnvironmentFile -Tier PRO -DatabaseSchema $coreSchema |
         Select-Object -Last 1
     if (-not $token) { throw 'Integration member token could not be minted.' }
     $env:TRADING_RUNTIME_ACCESS_TOKEN = $token
@@ -228,6 +246,7 @@ try {
     $env:TRADING_RUNTIME_DB_PASSWORD = $values.POSTGRES_PASSWORD
     $env:TRADING_RUNTIME_PSQL = $psql
     $env:TRADING_RUNTIME_COMPUTE_SCHEMA = $computeSchema
+    $env:TRADING_RUNTIME_CORE_SCHEMA = $coreSchema
     $env:TRADING_RUNTIME_API_KEY = $values.REFINVEST_INTERNAL_API_KEY
     $env:TRADING_RUNTIME_VERSION_SET = $versionJson
     $runtimeArguments = @()
@@ -238,11 +257,11 @@ try {
         --core-url "http://127.0.0.1:$CorePort" --compute-url "http://127.0.0.1:$ComputePort" `
         --fixture-root $fixtureRoot --context-path $ContextPath --run-dir $runDir `
         --fixture-port $fixturePort --test-root $TestRoot --environment-file $activeEnvironmentFile `
-        --core-path $CorePath --compute-path $ComputePath --compute-schema $computeSchema --registry $registry `
+        --core-path $CorePath --compute-path $ComputePath --web-path $WebPath --compute-schema $computeSchema --registry $registry `
         --timeout $TimeoutSeconds @runtimeArguments
     if ($LASTEXITCODE -ne 0) { throw 'Runtime contract scenario failed. See evidence and logs.' }
     if ($ResultVersionPin) {
-        Write-Host 'V1 result pin executable scenarios PASS; ORCH-028 NOT RUN (missing admission/dispatch pause control).'
+        Write-Host 'V1 result pin and ORCH-024~028 runtime assertions PASS.'
     }
     Write-Host "Trading Normalization runtime contract PASS. Evidence: $runDir"
 } catch {
@@ -251,7 +270,7 @@ try {
     Write-Host "Core log: $(Join-Path $TestRoot ".integration-data\logs\$registry-core-api.out.log")"
     Write-Host "Compute API log: $(Join-Path $TestRoot ".integration-data\logs\$registry-compute-api.out.log")"
     Write-Host "Compute worker log: $(Join-Path $TestRoot ".integration-data\logs\$registry-compute-worker.out.log")"
-    Write-Host "DB diagnosis: psql against verified $DatabaseName; inspect public.trading_normalization_runs and $computeSchema.trading_review_jobs by IDs in evidence."
+    Write-Host "DB diagnosis: psql against verified $DatabaseName; inspect $coreSchema.trading_normalization_runs and $computeSchema.trading_review_jobs by IDs in evidence."
     exit 1
 } finally {
     if ($started) {
@@ -261,4 +280,5 @@ try {
     Remove-Item Env:TRADING_RUNTIME_ACCESS_TOKEN -ErrorAction SilentlyContinue
     Remove-Item Env:TRADING_RUNTIME_DB_PASSWORD -ErrorAction SilentlyContinue
     Remove-Item Env:TRADING_RUNTIME_API_KEY -ErrorAction SilentlyContinue
+    Remove-Item Env:TRADING_RUNTIME_CORE_JAR -ErrorAction SilentlyContinue
 }

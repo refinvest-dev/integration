@@ -118,9 +118,10 @@ ORCH-027은 새 `tnorm_legacycore*`/`tnorm_legacycompute*` schema에 실제 pre-
 
 결과는 `.integration-data/trading-normalization/<runId>/evidence.json`의 `versionPin`에
 시나리오별 실행 상태와 비민감 Run/Job/Revision/ACK ID로 남긴다. 재시작 전 로그는 같은 실행
-디렉터리의 `before-migration-logs/`에 보존한다. ORCH-028은 Core의 admission/dispatch 전용
-중지 기능이 없으므로 `NOT_RUN_MISSING_CONTROL`로 기록한다. 이 항목이 있는 실행의
-스크립트 성공은 **실행 가능한 V1 pin 검증**의 성공이며 공동 전환 전체의 PASS가 아니다.
+디렉터리의 `before-migration-logs/`에 보존한다. ORCH-028은 두 Core 인스턴스의 admission/create
+중지, claim/send 경쟁, 재시작, 불명확 create 대조, terminal·삭제·취소·기존 ACK 재시도와
+격리 canary의 V1/V1 HTTP 검증 후 재개를 확인한다. 필요한 Core V10/control이 없는 조합은
+PASS가 아니다. 실행별 Core·Compute schema를 새로 만들며 실패 시 중지·보류 상태를 보존한다.
 V2 Core publication은 이번 범위에서 제외한다.
 정확한 assertion, 공동 전환에 필요한 후속 기능과 V2 선행 구현 상태는
 [결과 버전 pin E2E 문서](docs/TRADING_NORMALIZATION_RESULT_VERSION_PIN_E2E.md)를 참조한다.

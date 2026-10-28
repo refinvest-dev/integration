@@ -12,10 +12,12 @@ import json
 import os
 import subprocess
 import threading
+import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import httpx
+import psycopg
 from psycopg import sql
 
 
@@ -56,6 +58,12 @@ class PinProxy:
         self.reject_acks = True
         self.injected_ack_failures = 0
         self.core_schema = "public"
+        self.create_attempts = []
+        self.reject_create_sessions = set()
+        self.drop_response_sessions = set()
+        self.block_create_session = None
+        self.block_entered = threading.Event()
+        self.block_release = threading.Event()
         proxy = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -83,6 +91,25 @@ class PinProxy:
                     headers = {k: v for k, v in self.headers.items()
                                if k.lower() not in {"host", "connection", "content-length", "accept-encoding", "transfer-encoding"}}
                     headers["Accept-Encoding"] = "identity"
+                    is_create = self.command == "POST" and self.path.endswith("/normalization-jobs")
+                    if is_create:
+                        sent = json.loads(body)
+                        sid = str(sent["coreImportSessionId"])
+                        proxy.create_attempts.append({"sessionId": sid,
+                            "runId": sent["coreNormalizationRunId"], "at": time.monotonic()})
+                        if sid in proxy.reject_create_sessions:
+                            fault_body = encoded({"code": "TRADING_REVIEW_CAPACITY_EXCEEDED",
+                                "message": "Synthetic capacity fault", "traceId": uuid.uuid4().hex, "retryable": True})
+                            self.send_response(503)
+                            self.send_header("Content-Type", "application/json")
+                            self.send_header("Retry-After", "1")
+                            self.send_header("Content-Length", str(len(fault_body)))
+                            self.end_headers()
+                            self.wfile.write(fault_body)
+                            return
+                        if sid == proxy.block_create_session:
+                            proxy.block_entered.set()
+                            runtime.require(proxy.block_release.wait(12), "CREATE_BARRIER_TIMEOUT")
                     if self.command == "POST" and self.path.endswith("/acknowledgement"):
                         ack = json.loads(body)
                         # A separate connection must see the committed Revision before HTTP ACK.
@@ -117,6 +144,10 @@ class PinProxy:
                                 "runId": sent["coreNormalizationRunId"], "payloadId": None,
                                 "descriptorReads": 0, "payloadReads": 0}
                             proxy.mode = None
+                        if str(sent["coreImportSessionId"]) in proxy.drop_response_sessions:
+                            # Real Compute accepted; the caller receives no HTTP response.
+                            self.close_connection = True
+                            return
                     if response.status_code == 200 and self.path.endswith("/result"):
                         job_id = self.path.split("/")[-2]
                         fault = proxy.faults.get(job_id)
@@ -165,6 +196,7 @@ class PinProxy:
 
     def evidence(self):
         return {"ackRequests": self.acks, "errors": self.errors,
+                "createAttempts": self.create_attempts,
                 "upstreamUnavailableRequests": self.transport_failures,
                 "injectedAckFailures": self.injected_ack_failures,
                 "creates": {run: {"jobId": accepted["jobId"], "requestPair": pair(sent),
@@ -311,6 +343,10 @@ def verify_version_pin(rt, args, evidence, core, compute, db, compute_db, proxy,
 
     checks["proxy"] = proxy.evidence()
     rt.require(not proxy.errors, "PIN_PROXY_ERRORS")
+    begin("TR-ACC-IMPORT-ORCH-028")
+    from trading_normalization_cutover import verify_cutover
+    verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, book, artifacts)
+    passed("TR-ACC-IMPORT-ORCH-028", **checks.pop("cutover"))
     begin("TR-ACC-IMPORT-ORCH-027")
     migration_rehearsal(rt, args, checks, core, compute, db, compute_db, proxy,
                         book, account, session_id, run_id, job_id, sent, dispatch, validation_key)
@@ -376,7 +412,8 @@ def migration_rehearsal(rt, args, checks, core, compute, db, compute_db, proxy,
         migrate(legacy_compute, [p for p in compute_migrations if int(p.name[:4]) < 17])
         owner = rt.row(db, "select owner_member_id from trading_books where id=%s", (int(book["id"]),))["owner_member_id"]
         copy_rows(legacy_core, db, "members", "id=%s", (owner,))
-        legacy_core.execute("CREATE TABLE subscriptions (LIKE public.subscriptions INCLUDING ALL)")
+        legacy_core.execute(sql.SQL("CREATE TABLE subscriptions (LIKE {}.subscriptions INCLUDING ALL)").format(
+            sql.Identifier(os.environ.get("TRADING_RUNTIME_CORE_SCHEMA", "public"))))
         copy_rows(legacy_core, db, "subscriptions", "member_id=%s", (owner,))
         copy_rows(legacy_core, db, "trading_accounts", "id=%s", (int(account["id"]),))
         copy_rows(legacy_core, db, "trading_books", "id=%s", (int(book["id"]),),
@@ -421,7 +458,20 @@ def migration_rehearsal(rt, args, checks, core, compute, db, compute_db, proxy,
         revision_before = rt.row(legacy_core, "select * from trading_ledger_revisions where run_id=%s::uuid", (run_id,))
         job_before = rt.row(legacy_compute, "select * from trading_review_jobs where job_id=%s::uuid", (job_id,))
         ack_before = rt.row(legacy_core, "select * from trading_normalization_ack_dispatches where run_id=%s::uuid", (run_id,))
-        migrate(legacy_core, [p for p in core_migrations if int(p.name.split("__")[0][1:]) == 9])
+        # Diagnose the separate atomic-runner limitation against a real terminal Job.
+        # Always roll this attempt back, then use the existing statement runner below.
+        legacy_compute.execute("BEGIN")
+        try:
+            legacy_compute.execute((args.compute_path / "migrations/0017_pin_trading_normalization_result_pair.sql")
+                .read_text(encoding="utf-8"), prepare=False)
+            checks["migration"]["atomicRunner"] = {"result": "PASS", "rolledBackDiagnostic": True}
+        except psycopg.Error as error:
+            rt.require(error.sqlstate == "55006", "UNEXPECTED_ATOMIC_MIGRATION_FAILURE")
+            checks["migration"]["atomicRunner"] = {"result": "FAIL", "sqlstate": error.sqlstate,
+                "knownDeploymentLimitation": True, "rolledBackDiagnostic": True}
+        finally:
+            legacy_compute.execute("ROLLBACK")
+        migrate(legacy_core, [p for p in core_migrations if int(p.name.split("__")[0][1:]) >= 9])
         migrate(legacy_compute, [p for p in compute_migrations if int(p.name[:4]) == 17])
         for table, conn, field, identifier in (
             ("trading_normalization_runs", legacy_core, "id", run_id),
