@@ -119,6 +119,16 @@ try {
     foreach($secret in @('user-sentinel','password-sentinel','api-key-sentinel','jwt-sentinel','POSTGRES_PASSWORD','REFINVEST_INTERNAL_API_KEY')) {
         Assert-True ($serialized -notmatch [regex]::Escape($secret)) "metadata excludes $secret"
     }
+    $testJar = Join-Path $testRoot 'synthetic-core.jar'
+    [IO.File]::WriteAllBytes($testJar, [byte[]]@(1,2,3))
+    $jarIdentity = New-CoreIntegrationIdentity -Values $secretValues -EnvironmentFile (Join-Path $testRoot '.env.local') `
+        -CoreApiPath $integrationRoot -CoreJarPath $testJar -RegistryId 'jar-identity'
+    Register-IntegrationProcess -RootPath $testRoot -Name core-api -Process $current -Identity $jarIdentity -RegistryId 'jar-identity'
+    [IO.File]::WriteAllBytes($testJar, [byte[]]@(4,5,6))
+    $changedJarIdentity = New-CoreIntegrationIdentity -Values $secretValues -EnvironmentFile (Join-Path $testRoot '.env.local') `
+        -CoreApiPath $integrationRoot -CoreJarPath $testJar -RegistryId 'jar-identity'
+    Assert-ThrowsLike { Assert-IntegrationServiceStartAllowed -RootPath $testRoot -Name core-api `
+        -ExpectedIdentity $changedJarIdentity -RegistryId 'jar-identity' } '*MISMATCH*' 'changed executable artifact cannot reuse a process'
     "PASS: $passed process/configuration identity assertions"
 } finally {
     if ([IO.Path]::GetFullPath($testRoot).StartsWith([IO.Path]::GetFullPath((Join-Path $integrationRoot '.integration-data\tests')), [StringComparison]::OrdinalIgnoreCase)) {

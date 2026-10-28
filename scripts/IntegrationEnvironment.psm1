@@ -221,7 +221,8 @@ function New-CoreIntegrationIdentity {
     param(
         [hashtable]$Values, [string]$EnvironmentFile, [string]$CoreApiPath,
         [string]$Profile = 'default', [string]$RegistryId = 'default',
-        [string]$DatabaseSchema = 'public', [string]$ComputeBaseUrl, [switch]$Observability
+        [string]$DatabaseSchema = 'public', [string]$ComputeBaseUrl, [switch]$Observability,
+        [string]$CoreJarPath
     )
     $corePort = if ($Values['INTEGRATION_CORE_PORT']) { [int]$Values['INTEGRATION_CORE_PORT'] } else { 8080 }
     $computePort = if ($Values['INTEGRATION_COMPUTE_PORT']) { [int]$Values['INTEGRATION_COMPUTE_PORT'] } else { 8000 }
@@ -238,6 +239,10 @@ function New-CoreIntegrationIdentity {
         cookieSameSite = $Values['REFINVEST_COOKIE_SAME_SITE']
         observability = [bool]$Observability
         metricsEndpoint = if ($Observability) { "http://127.0.0.1:$corePort/actuator/prometheus" } else { $null }
+    }
+    if ($CoreJarPath) {
+        $configuration['launchMode'] = 'executable-jar'
+        $configuration['artifactSha256'] = (Get-FileHash -LiteralPath $CoreJarPath -Algorithm SHA256).Hash.ToLowerInvariant()
     }
     New-IntegrationServiceIdentity -ServiceRole 'core-api' -Profile $Profile -RegistryId $RegistryId `
         -RepositoryPath $CoreApiPath -Configuration $configuration
