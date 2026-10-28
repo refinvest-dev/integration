@@ -11,8 +11,9 @@
 
 기존 runtime/publication script와 같은 sibling 경로 parameter를 받는다.
 `verify-contract-sync.ps1 -IncludeWeb`을 프로세스·DB 변경 전에 실행한다.
-loopback PostgreSQL의 `refinvest_integration`만 허용하며 Core는 `public`, Compute는 실행별
-`tnorm_*` schema를 사용한다. V1 migration 복구 검증은 별도의 새 Core/Compute schema에서 수행한다.
+loopback PostgreSQL의 `refinvest_integration`만 허용하며 Core·Compute 모두 실행별
+`tnorm_*` schema를 사용한다. 두 번째 Core는 같은 Core schema를, canary는 별도 schema를 사용한다.
+V1 migration 복구 검증도 별도의 새 Core/Compute schema에서 수행한다.
 비민감 합성 Binance fixture만 업로드하고 정상 JWT·CSRF와 실제 HTTP/DB를 사용한다.
 
 기존 publication 시나리오의 transport 검증, 독립 hash 계산, 9개 section digest,
@@ -33,7 +34,7 @@ ACK가 먼저 성공할 수 있는 기존 테스트의 타이밍 경쟁을 피�
 | ORCH-026 descriptor | 실제 Compute V1 성공 결과의 descriptor만 V2/V2로 주입; Core `PROCESSING_FAILED`/Run·dispatch `TERMINAL_FAILURE`, `RESULT_VERSION_PIN_MISMATCH`/`WAIT_FOR_RECOVERY`; Revision·ACK 0, 기존 latest 보존 |
 | ORCH-026 payload | descriptor pin은 V1/V1로 유지하고 payload pin만 V2/V2로 변경; descriptor 길이·transport SHA-256은 변경 bytes와 일치시켜 pin 검증에 도달; 같은 차단 결과와 ACK 미수신 확인 |
 | ORCH-027 | 새 pre-pin schema에 이번 합성 publication만 복제; pin 없는 저장 Run/dispatch/Job, 이전 logical key·fingerprint로 시작; 실제 Core V9·Compute 0017 SQL 적용; 저장 pin·request/idempotency fingerprint 일치; 양 API 재시작 후 V1 status/terminal/replay 및 public validation replay; 같은 Run·Job·Revision·ACK와 기존 hash 보존 |
-| ORCH-028 | **미실행: 필요한 Core/운영 제어 부재. 공동 전환 PASS가 아님** |
+| ORCH-028 | 두 Core의 503·row 불변·create 0, admission/send와 PAUSE commit 경쟁, 재시작·미전송 보존, terminal·삭제·취소·복구·기존 ACK, 격리 HTTP 실패 시 중지 유지·성공 후 같은 key 재개와 중복 0 |
 
 ORCH-026의 fault는 새 합성 Session ID에 한정하며 status/Job pin은 실제 V1/V1을 유지한다.
 원본 Job/Run pin을 수정하거나 서비스 코드에 test flag를 넣지 않는다. payload fault는 pin gate의
@@ -41,7 +42,7 @@ ORCH-026의 fault는 새 합성 Session ID에 한정하며 status/Job pin은 실
 
 ORCH-027은 **저장 완료된 V1 publication**의 합성 pre-pin 복구 검증이다. 실행 중인 원본 schema를
 downgrade하지 않고, 새 schema에 실제 pre-pin migration을 적용한 뒤 fixture를 채운다.
-미결 create·pending 작업의 전체 fleet drain과 운영 중지/재개는 ORCH-028의 미검증 범위로 남긴다.
+미결 create·pending 작업의 중지·대조·재개는 별도 ORCH-028 assertion으로 검증한다.
 
 Compute 0017은 기존 `initialize-compute-schema.ps1`과 같은 `psql -f`의 statement별
 autocommit 경계로 실행한다. 저장된 terminal Job이 있을 때 0017 전체를 한 transaction으로
@@ -51,7 +52,9 @@ SQLSTATE `55006`(`ObjectInUse`)으로 실패하는 것을 별도로 재현했다
 비활성화하지 않았다. 원자적 migration runner를 사용하는 배포는 Compute 소유 SQL/runner 후속 검증이
 필요하며, 이 E2E의 migration PASS를 해당 배포 방식의 PASS로 해석하지 않는다.
 
-## 공동 전환 후속 작업
+## 이전 main의 미구현 범위 (2026-10-27 기록)
+
+아래는 당시 기록이다. 현재 제어와 검증은 다음 절을 따른다.
 
 Core main `0ee1053449280237dffb2fdb26124bd5a974fcc5` 기준:
 
@@ -68,6 +71,11 @@ Core main `0ee1053449280237dffb2fdb26124bd5a974fcc5` 기준:
   재개해야 한다. 검증 실패 시 중지를 유지하는 rollback/runbook과 권한·감사 근거가 필요하다.
 - 이후 ORCH-028 E2E에는 validation·retry 각각 503과 상태/row 불변, 새 dispatch/create 0,
   기존 terminal·삭제·취소 처리 지속, 실패 시 중지 유지, 성공 뒤 같은 public key 재사용을 추가해야 한다.
+
+## Joint cutover implementation
+
+현재 Core 제어와 ORCH-028의 항목별 assertion, 실행 절차·배포 제한은
+[공동 전환 E2E 문서](TRADING_NORMALIZATION_JOINT_CUTOVER_E2E.md)를 따른다.
 
 ## V2 선행 구현 상태
 

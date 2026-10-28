@@ -4,6 +4,7 @@ param(
     [string]$CoreApiPath = (Join-Path $PSScriptRoot '..\..\api\refinvest'),
     [string]$ComputeBaseUrl,
     [string]$DatabaseSchema,
+    [string]$JarPath,
     [string]$Profile = 'default',
     [string]$RegistryId = 'default',
     [switch]$Observability
@@ -16,7 +17,7 @@ $values = Get-IntegrationEnvironment $EnvironmentFile
 $schemaName = if ([string]::IsNullOrWhiteSpace($DatabaseSchema)) { 'public' } else { $DatabaseSchema }
 $identity = New-CoreIntegrationIdentity -Values $values -EnvironmentFile $EnvironmentFile -CoreApiPath $CoreApiPath `
     -Profile $Profile -RegistryId $RegistryId -DatabaseSchema $schemaName `
-    -ComputeBaseUrl $ComputeBaseUrl -Observability:$Observability
+    -ComputeBaseUrl $ComputeBaseUrl -Observability:$Observability -CoreJarPath $JarPath
 $port = if ($values['INTEGRATION_CORE_PORT']) { [int]$values['INTEGRATION_CORE_PORT'] } else { 8080 }
 $allowed = Assert-IntegrationServiceStartAllowed -RootPath (Join-Path $PSScriptRoot '..') `
     -Name 'core-api' -ExpectedIdentity $identity -RegistryId $RegistryId -Port $port
@@ -67,10 +68,16 @@ $startParameters = @{
     RedirectStandardError = Join-Path $logDir "$RegistryId-core-api.err.log"
     PassThru = $true
 }
+if ($JarPath) {
+    if (-not (Test-Path -LiteralPath $JarPath -PathType Leaf) -or
+        [IO.Path]::GetExtension($JarPath) -cne '.jar') { throw 'Core executable JAR is unavailable.' }
+    $startParameters.FilePath = (Get-Command java -ErrorAction Stop).Source
+    $startParameters.ArgumentList = @('-jar', ('"' + (Resolve-Path -LiteralPath $JarPath).Path + '"'), "--server.port=$port")
+}
 $runningOnWindows = [System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT
 if ($runningOnWindows) {
     $startParameters.WindowStyle = 'Hidden'
-} else {
+} elseif (-not $JarPath) {
     $startParameters.FilePath = (Get-Command bash -ErrorAction Stop).Source
     $startParameters.ArgumentList = @($gradleWrapper) + $gradleArguments
 }

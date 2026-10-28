@@ -16,6 +16,7 @@ if ($Service -eq 'core-api') {
     $uri = "http://127.0.0.1:$($values.INTEGRATION_CORE_PORT)/actuator/health"
     $arguments = @{ EnvironmentFile=$EnvironmentFile; CoreApiPath=$CorePath; ComputeBaseUrl=$ComputeBaseUrl
                     RegistryId=$RegistryId; Profile=$RegistryId }
+    if ($env:TRADING_RUNTIME_CORE_JAR) { $arguments.JarPath = $env:TRADING_RUNTIME_CORE_JAR }
     if ($DatabaseSchema) { $arguments.DatabaseSchema = $DatabaseSchema }
     $startScript = 'start-core-api.ps1'
 } else {

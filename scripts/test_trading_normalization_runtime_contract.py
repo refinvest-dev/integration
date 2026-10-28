@@ -81,6 +81,8 @@ def request(client: httpx.Client, method: str, url: str, expected: int, **kwargs
 
 
 def db_connection(schema: str) -> psycopg.Connection:
+    if schema == "public":
+        schema = os.environ.get("TRADING_RUNTIME_CORE_SCHEMA", "public")
     name = os.environ["TRADING_RUNTIME_DB_NAME"]
     require(name == "refinvest_integration", "UNSAFE_DATABASE_NAME")
     require(schema == "public" or
@@ -490,6 +492,7 @@ def main() -> int:
     parser.add_argument("--environment-file", type=Path, required=True)
     parser.add_argument("--core-path", type=Path, required=True)
     parser.add_argument("--compute-path", type=Path, required=True)
+    parser.add_argument("--web-path", type=Path)
     parser.add_argument("--compute-schema", required=True)
     parser.add_argument("--registry", required=True)
     parser.add_argument("--timeout", type=int, default=180)
@@ -508,7 +511,13 @@ def main() -> int:
         "computeCommit": git_revision(args.compute_path),
         "contractSync": "PASS", "fixedVector": "PASS", "scenarios": {},
         "computeSchema": os.environ["TRADING_RUNTIME_COMPUTE_SCHEMA"],
+        "coreSchema": os.environ.get("TRADING_RUNTIME_CORE_SCHEMA", "public"),
+        "integrationCommit": git_revision(args.test_root),
+        "webCommit": git_revision(args.web_path or args.test_root.parent / "web/web"),
     }
+    if os.environ.get("TRADING_RUNTIME_CORE_JAR"):
+        with Path(os.environ["TRADING_RUNTIME_CORE_JAR"]).open("rb") as jar:
+            evidence["coreArtifactSha256"] = hashlib.file_digest(jar, "sha256").hexdigest()
     if args.result_integrity:
         evidence["resultFixedVector"] = "PASS"
         evidence["runtimeIdentityGate"] = os.environ.get("TRADING_RUNTIME_IDENTITY_GATE", "NOT_RUN")
@@ -519,8 +528,7 @@ def main() -> int:
             "TR-ACC-IMPORT-ORCH-026", "TR-ACC-IMPORT-ORCH-026-descriptor", "TR-ACC-IMPORT-ORCH-026-payload",
             "TR-ACC-IMPORT-ORCH-027")}, "V2CorePublication": "OUT_OF_SCOPE"}
         evidence["versionPin"]["scenarios"]["TR-ACC-IMPORT-ORCH-028"] = {
-            "result": "NOT_RUN_MISSING_CONTROL",
-            "reason": "Core admission/dispatch-only pause boundary unavailable"}
+            "result": "NOT_RUN"}
     vector_paths = {
         "context": args.context_path / "fixtures/trading-normalization/input-identity-v1.json",
         "core": args.core_path / "tradingreview/application/src/test/resources/trading-normalization/input-identity-v1.json",
@@ -629,7 +637,13 @@ def main() -> int:
             require(set(original["inputIdentity"]) == set(identity), "SERIALIZER_IDENTITY_SHAPE_DRIFT")
             require("artifactAccessGrants" not in original["inputIdentity"] and
                     len(original["artifactAccessGrants"]) == 2, "GRANTS_IN_LOGICAL_IDENTITY")
-            status = poll(lambda: request(compute, "GET",
+            terminal_poll = poll
+            if args.result_version_pin:
+                from trading_normalization_cutover import worker_poll, WORKER_RECOVERIES
+                evidence["workerRecoveryEvents"] = WORKER_RECOVERIES
+                terminal_poll = lambda fetch, accept, timeout, label: worker_poll(
+                    sys.modules[__name__], args, fetch, accept, timeout, label)
+            status = terminal_poll(lambda: request(compute, "GET",
                 f"{args.compute_url}/trading-review/normalization-jobs/{job_id}", 200),
                 lambda s: s["status"] in {"COMPLETED", "FAILED", "CANCELLED"},
                 args.timeout, "Compute terminal")

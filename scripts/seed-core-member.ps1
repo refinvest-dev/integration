@@ -2,6 +2,7 @@
 param(
     [string]$EnvironmentFile = (Join-Path $PSScriptRoot "..\.env.local"),
     [string]$MemberId,
+    [string]$DatabaseSchema = 'public',
     [ValidateSet('FREE', 'PRO')]
     [string]$Tier = 'FREE'
 )
@@ -14,6 +15,10 @@ if ($memberId -notmatch '^\d+$') { throw 'Integration member ID must be a positi
 $env:INTEGRATION_MEMBER_ID = $memberId
 $sql = "INSERT INTO members (id, role, created_at) VALUES ($memberId, 'MEMBER', CURRENT_TIMESTAMP) ON CONFLICT (id) DO NOTHING; INSERT INTO subscriptions (member_id, tier) VALUES ($memberId, '$Tier') ON CONFLICT (member_id) DO UPDATE SET tier = EXCLUDED.tier;"
 $psql = Get-IntegrationPsql
+if ($DatabaseSchema -notmatch '^(public|tnorm_[a-z0-9]+)$' -or $values.POSTGRES_DB -cne 'refinvest_integration') {
+    throw 'Member seed requires a dedicated integration schema/database.'
+}
+$sql = "SET search_path TO $DatabaseSchema; " + $sql
 
 if ($psql) {
     $env:PGPASSWORD = $env:POSTGRES_PASSWORD
