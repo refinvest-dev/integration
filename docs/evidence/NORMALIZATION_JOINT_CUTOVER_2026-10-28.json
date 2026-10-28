@@ -1,0 +1,323 @@
+{
+  "scenario": "TR-ACC-IMPORT-ORCH-028",
+  "result": "PASS",
+  "combination": "candidate Core branch; not all-main",
+  "date": "2026-10-28",
+  "runId": "f54dc0d95d484b4db627d6a8534a6da3",
+  "sourceEvidence": ".integration-data/trading-normalization/f54dc0d95d484b4db627d6a8534a6da3",
+  "commits": {
+    "context": "06fdd057100917444aad36ff997e483f0f4f588b",
+    "core": "c956391a5e9e2f1af9a552f081b5281c1b4efcbe",
+    "compute": "0701c4ac07ac89281fa6f1b263bde294b0db6452",
+    "integration": "0017e37b17f696c730c2f638dfadec3fcbccbec9",
+    "web": "2ef516694dd45f79eba6ecfbb99f0a424f9aa4dc"
+  },
+  "coreArtifactSha256": "5ef1a475e8b753a03dc1809530d1a9d6d84f053de6525e8509e1fd1f738ed605",
+  "durationSeconds": 553.86,
+  "preflight": {
+    "contractSyncIncludeWeb": "PASS",
+    "coreContextDocSync": "PASS",
+    "V1V2FixedVectors": "PASS"
+  },
+  "coreTests": {
+    "fullGradleTest": "PASS",
+    "postgresStoreTests": 24,
+    "postgresSkipped": 0,
+    "flywayV1ThroughV10": "PASS",
+    "ArchUnit": "PASS"
+  },
+  "integrationChecks": {
+    "unittest": {
+      "result": "PASS",
+      "tests": 58
+    },
+    "processIdentity": {
+      "result": "PASS",
+      "assertions": 23
+    }
+  },
+  "scenarios": {
+    "V1_PIN_PUBLICATION": {
+      "ackCommitVisible": true,
+      "ackId": "7dea238a-e7e0-4729-b71e-ede20192d782",
+      "ackPayloadId": "6f07aef2-18aa-4a46-a4dc-065ab493ad9a",
+      "jobId": "093e523c-a3c9-430e-b3cc-b32ab3a7b3e2",
+      "pair": [
+        "TRADING_NORMALIZATION_RESULT_V1",
+        "TRADING_NORMALIZATION_RESULT_HASH_V1"
+      ],
+      "result": "PASS",
+      "revisionId": "1f1c6e00-30dc-4cee-9c50-06fbd17ee967",
+      "runId": "387b2037-06a9-4a9c-8e7d-faf07c4b2b8a"
+    },
+    "TR-ACC-IMPORT-ORCH-024": {
+      "exactReplay": 202,
+      "jobAndGrantsUnchanged": true,
+      "jobId": "093e523c-a3c9-430e-b3cc-b32ab3a7b3e2",
+      "otherPair": 409,
+      "result": "PASS"
+    },
+    "TR-ACC-IMPORT-ORCH-025": {
+      "cases": [
+        {
+          "case": "missing_both",
+          "code": "REQUEST_INVALID",
+          "status": 422
+        },
+        {
+          "case": "missing_schema",
+          "code": "REQUEST_INVALID",
+          "status": 422
+        },
+        {
+          "case": "missing_hash",
+          "code": "REQUEST_INVALID",
+          "status": 422
+        },
+        {
+          "case": "cross_v1_v2",
+          "code": "RESULT_VERSION_PAIR_INVALID",
+          "status": 422
+        },
+        {
+          "case": "cross_v2_v1",
+          "code": "RESULT_VERSION_PAIR_INVALID",
+          "status": 422
+        },
+        {
+          "case": "unsupported_schema",
+          "code": "RESULT_SCHEMA_UNSUPPORTED",
+          "status": 422
+        },
+        {
+          "case": "unsupported_hash",
+          "code": "RESULT_SCHEMA_UNSUPPORTED",
+          "status": 422
+        },
+        {
+          "case": "unsupported_both",
+          "code": "RESULT_SCHEMA_UNSUPPORTED",
+          "status": 422
+        }
+      ],
+      "jobsAndIdempotencyUnchanged": true,
+      "result": "PASS"
+    },
+    "TR-ACC-IMPORT-ORCH-026": {
+      "cases": [
+        "descriptor",
+        "payload"
+      ],
+      "result": "PASS"
+    },
+    "TR-ACC-IMPORT-ORCH-027": {
+      "atomicRunner": {
+        "knownDeploymentLimitation": true,
+        "result": "FAIL",
+        "rolledBackDiagnostic": true,
+        "sqlstate": "55006"
+      },
+      "beforeRestartLogDirectory": ".integration-data/trading-normalization/f54dc0d95d484b4db627d6a8534a6da3/before-migration-logs",
+      "computeMigration": "0017",
+      "computeMigrationRunner": "existing psql -f autocommit boundary",
+      "computeSchema": "tnorm_legacycomputef6c9fdbe7713",
+      "coreMigration": "V9",
+      "coreSchema": "tnorm_legacycoref6c9fdbe7713",
+      "explicitReplay": true,
+      "jobId": "093e523c-a3c9-430e-b3cc-b32ab3a7b3e2",
+      "migrationLogPath": ".integration-data/trading-normalization/f54dc0d95d484b4db627d6a8534a6da3/compute-pin-migration.err.log",
+      "result": "PASS",
+      "revisionAndAckUnchanged": true,
+      "revisionId": "1f1c6e00-30dc-4cee-9c50-06fbd17ee967",
+      "runId": "387b2037-06a9-4a9c-8e7d-faf07c4b2b8a",
+      "serviceRestart": true
+    },
+    "TR-ACC-IMPORT-ORCH-028": {
+      "assertions": {
+        "01-validation-and-retry-503": {
+          "result": "PASS"
+        },
+        "02-rejected-state-unchanged": {
+          "result": "PASS",
+          "rowCountsAndValuesUnchanged": true
+        },
+        "03-zero-create-while-paused": {
+          "canarySchemasExcluded": true,
+          "newCreateHttpRequests": 0,
+          "result": "PASS"
+        },
+        "04-two-core-instances": {
+          "coreInstances": 2,
+          "nodeIds": [
+            0,
+            1
+          ],
+          "result": "PASS"
+        },
+        "05-admission-and-send-races": {
+          "pauseWaitedForClaimSendReceiptAndAdmission": true,
+          "result": "PASS"
+        },
+        "06-restart-and-unsent-preserved": {
+          "epoch": 1,
+          "result": "PASS",
+          "unsentDispatchId": "76aff009-e19f-48fa-9617-7a91ee1b19ae"
+        },
+        "07-terminal-deletion-cancellation-recovery": {
+          "cancellation": true,
+          "deletion": true,
+          "existingAckRetry": true,
+          "newPersistedAcks": 0,
+          "result": "PASS",
+          "sameJobReconciled": "856828fc-7b68-496a-a75c-592fe1771e62",
+          "terminalPolling": true
+        },
+        "08-failed-http-keeps-paused": {
+          "httpFault": "RESULT_VERSION_PIN_MISMATCH",
+          "originalFleetPaused": true,
+          "result": "PASS"
+        },
+        "09-verified-resume-same-public-keys": {
+          "result": "PASS",
+          "samePublicKeysAccepted": true,
+          "verificationRef": "sha256/ba4894f233eae44433668fa7ec14f8daaaf66c583e712d368b421bbd5670e6bc"
+        },
+        "10-no-duplicate-run-job-revision-ack": {
+          "result": "PASS",
+          "sessions": [
+            {
+              "acks": 1,
+              "dispatches": 1,
+              "jobId": "1f0b35a0-56f2-4a5c-879e-ff1f34bdbedb",
+              "jobs": 1,
+              "revisionId": "85ca6bac-f737-4566-8e0f-e16cc1820a39",
+              "revisions": 1,
+              "runId": "004caefb-2d4c-4e87-a0be-df3823754bdd",
+              "runs": 1,
+              "sessionId": "373694570862477312"
+            },
+            {
+              "acks": 1,
+              "dispatches": 1,
+              "jobId": "03b16e92-e924-4a4a-916e-c9df7c5bb163",
+              "jobs": 1,
+              "revisionId": "3836f122-2a39-439f-a558-eb469585f36b",
+              "revisions": 1,
+              "runId": "77935ccc-edd3-438f-9e31-8ef87301e2e6",
+              "runs": 2,
+              "sessionId": "373694120079654912"
+            },
+            {
+              "acks": 1,
+              "dispatches": 1,
+              "jobId": "ac259e73-c150-4e56-baca-4007f549447e",
+              "jobs": 1,
+              "revisionId": "500e0bd5-fe11-4df2-89b1-ba43772ceac4",
+              "revisions": 1,
+              "runId": "7f0e0548-c55e-4e52-b219-99c17e942da1",
+              "runs": 1,
+              "sessionId": "373694571915247616"
+            },
+            {
+              "acks": 1,
+              "dispatches": 1,
+              "jobId": "856828fc-7b68-496a-a75c-592fe1771e62",
+              "jobs": 1,
+              "revisionId": "f4e56bf2-a00e-4379-91aa-cd9e21f51bc4",
+              "revisions": 1,
+              "runId": "7b75629b-5c61-4ddd-88d8-047b3bfa1f5d",
+              "runs": 1,
+              "sessionId": "373694573286785024"
+            },
+            {
+              "acks": 1,
+              "dispatches": 1,
+              "jobId": "cb4af1c9-8dc9-4e08-bf8c-feea85bcf352",
+              "jobs": 1,
+              "revisionId": "fc53d384-f916-401c-a14c-4233148c8e48",
+              "revisions": 1,
+              "runId": "4d96e424-146a-49a2-a323-f5a501a6f92c",
+              "runs": 1,
+              "sessionId": "373694594249916416"
+            }
+          ]
+        }
+      },
+      "canary": {
+        "commits": {
+          "compute": "0701c4ac07ac89281fa6f1b263bde294b0db6452",
+          "context": "06fdd057100917444aad36ff997e483f0f4f588b",
+          "core": "c956391a5e9e2f1af9a552f081b5281c1b4efcbe"
+        },
+        "computeSchema": "tnorm_canarycomputee32bff1996ef",
+        "coreSchema": "tnorm_canarycoree32bff1996ef",
+        "createAcceptedStatusTerminalReplay": "PASS",
+        "independentV1Integrity": "PASS",
+        "jobId": "e8214b46-e6d9-4321-b019-70c7942d5686",
+        "revisionId": "a548e106-2403-4766-ac9b-18de64f827fe",
+        "runId": "2b467235-b6b3-4d21-b2f6-05eb8a2b48cf"
+      },
+      "epoch": 1,
+      "implementationCoreCommit": "c956391a5e9e2f1af9a552f081b5281c1b4efcbe",
+      "mainCombination": false,
+      "result": "PASS",
+      "uncertainCreateReplayed": false
+    }
+  },
+  "atomicCompute0017": {
+    "knownDeploymentLimitation": true,
+    "result": "FAIL",
+    "rolledBackDiagnostic": true,
+    "sqlstate": "55006"
+  },
+  "deployment": {
+    "productionFleetInventory": "NOT_RUN",
+    "productionRoleGrants": "NOT_RUN",
+    "allMainORCH028": "NOT_RUN",
+    "atomicRunnerWithTerminalJobs": "BLOCKED",
+    "V2NewRunSelection": "NOT_RUN"
+  },
+  "workerRecoveryEvents": [
+    {
+      "attempt": 1,
+      "phase": "pin fault payload",
+      "preservedLogs": ".integration-data/trading-normalization/f54dc0d95d484b4db627d6a8534a6da3/worker-recoveries",
+      "reason": "WINDOWS_SOCKET_10014",
+      "registry": "trading-normalization-f54dc0d95d48"
+    },
+    {
+      "attempt": 2,
+      "phase": "existing ACK publication",
+      "preservedLogs": ".integration-data/trading-normalization/f54dc0d95d484b4db627d6a8534a6da3/worker-recoveries",
+      "reason": "WINDOWS_SOCKET_10014",
+      "registry": "trading-normalization-f54dc0d95d48"
+    }
+  ],
+  "failedAttempts": [
+    {
+      "run": "preflight-before-run-id",
+      "result": "FAIL",
+      "reason": "PowerShell promoted jsonschema deprecation warning; no service/DB mutation"
+    },
+    {
+      "runId": "224136b5285742948f6d2d6bc8b70e5b",
+      "result": "FAIL",
+      "reason": "harness referenced non-contract canRetry field; corrected to failure.retryable"
+    },
+    {
+      "runId": "a2d768d2b9b74dee8ecc80d39717d2d1",
+      "result": "FAIL",
+      "reason": "repeated source in a published Book caused RESULT_ITEM_CONFLICT; independent fixtures now use fresh Books"
+    },
+    {
+      "runId": "05761782dab3408d9e432d32e3edd35d",
+      "result": "FAIL",
+      "reason": "existing ACK retry budget exhausted during preparation; due-time fault now preserves pending ACK"
+    },
+    {
+      "runId": "aa5b00ec53fe4d5fa7dc6c873abea3a8",
+      "result": "FAIL",
+      "reason": "Compute worker fatal Windows socket 10014; owned-worker bounded recovery added"
+    }
+  ]
+}

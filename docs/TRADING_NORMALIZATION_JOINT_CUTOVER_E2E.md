@@ -86,3 +86,27 @@ gate는 이 Compute SQL 문제에 의존하지 않지만, 실제 배포가 atomi
 시나리오별 PASS/FAIL/NOT_RUN, 비민감 Session/Run/Job/Revision/ACK ID와 row count를 남긴다.
 증적은 서명 URI/token/CSV 본문을 저장하지 않는다. Core 후보 commit의 검증과 main 조합의 검증은
 별도로 표시한다. 최종 실행 결과와 제한은 검증 완료 후 아래에 추가한다.
+
+
+## 2026-10-28 Results
+
+검증된 조합은 Core feature branch와 Context/Compute/Web main이다. 전체 main 조합 또는 production
+전환 승인으로 해석하지 않는다. 정확한 commit과 시나리오·ID·count는
+[비민감 compatibility evidence](evidence/NORMALIZATION_JOINT_CUTOVER_2026-10-28.json)에 기록했다.
+
+| Scope | Result |
+|---|---|
+| OpenAPI·Core 문서·Web snapshot 및 V1/V2 fixed vector | PASS |
+| Core 전체 Gradle test·ArchUnit·실제 Flyway V1~V10 | PASS |
+| Core PostgreSQL store 24개 | PASS, skipped 0 |
+| Integration unit 58개 / process identity 23 assertions | PASS / PASS |
+| V1 publication·독립 integrity·version pin / ORCH-024~027 | PASS / PASS |
+| ORCH-028 항목 01~10, 두 Core 및 격리 canary | PASS |
+| 기존 terminal Job의 Compute 0017 atomic migration | FAIL, SQLSTATE 55006; atomic 배포 BLOCKED |
+| 현재 전체 main의 ORCH-028 / production fleet·운영 role | NOT_RUN / NOT_RUN |
+| V2 신규 Run 선택 활성화 | NOT_RUN, 범위 제외 |
+
+이전 실패 run은 성공으로 재분류하지 않았다. 원본 DB/schema/log를 보존하고 위 JSON에 실패 원인과
+run ID를 분리했다. 기존 psql statement runner의 ORCH-027 PASS는 atomic runner의 배포 통과를 뜻하지
+않는다. 이전 Core instance·무필드 producer 0, production 권한 부여 및 atomic runner 해결은 운영
+배포 선행 조건이며 Core/Integration PR은 저장소 정책에 따라 사람의 검토를 기다린다.
