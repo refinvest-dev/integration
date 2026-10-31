@@ -7,6 +7,7 @@ import os
 import re
 import subprocess
 import time
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -68,11 +69,17 @@ def run_process_control(script: Path, arguments: Sequence[str], run_dir: Path,
             if index + 1 < len(arguments):
                 entry[name] = arguments[index + 1]
     try:
-        result = subprocess.run(["powershell.exe", "-NoProfile", "-NonInteractive", "-File",
-            str(script), *arguments], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            check=False)
-        code = result.returncode
-        entry.update(returncode=code, stdout=redact(result.stdout), stderr=redact(result.stderr))
+        # Background JVMs may inherit PowerShell pipe handles. communicate() then waits
+        # for JVM shutdown even after the startup script has exited. File capture waits
+        # only for the controlling process, while keeping the same redacted diagnostics.
+        with tempfile.TemporaryFile(dir=directory) as stdout, tempfile.TemporaryFile(dir=directory) as stderr:
+            result = subprocess.run(["powershell.exe", "-NoProfile", "-NonInteractive", "-File",
+                str(script), *arguments], env=env, stdout=stdout, stderr=stderr,
+                stdin=subprocess.DEVNULL, check=False)
+            code = result.returncode
+            stdout.seek(0)
+            stderr.seek(0)
+            entry.update(returncode=code, stdout=redact(stdout.read()), stderr=redact(stderr.read()))
     except OSError as error:
         code = -1
         entry.update(returncode=code, errorType=type(error).__name__, stderr=redact(str(error)))
