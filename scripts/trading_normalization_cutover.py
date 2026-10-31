@@ -23,6 +23,7 @@ import psycopg
 from psycopg import sql
 
 from trading_normalization_version_pin import PinProxy, V1, pair
+from process_control import run_process_control
 
 
 ITEMS = (
@@ -64,9 +65,8 @@ def worker_poll(rt, args, fetch, accept, timeout, label, environment=None):
 
 
 def service(rt, args, script, *arguments, environment=None):
-    result = subprocess.run(["powershell.exe", "-NoProfile", "-NonInteractive", "-File",
-        str(args.test_root / "scripts" / script), *map(str, arguments)], env=environment,
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+    result = run_process_control(args.test_root / "scripts" / script,
+        list(map(str, arguments)), args.run_dir, environment)
     rt.require(result.returncode == 0, "CUTOVER_PROCESS_CONTROL_FAILED")
 
 
