@@ -73,6 +73,9 @@ class PinProxy:
             def do_POST(self):
                 self.forward()
 
+            def do_PUT(self):
+                self.forward()
+
             def forward(self):
                 try:
                     if self.headers.get("Transfer-Encoding", "").lower() == "chunked":

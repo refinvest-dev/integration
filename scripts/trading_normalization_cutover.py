@@ -288,6 +288,8 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
             where run_id=%s::uuid and status='PENDING'""", (ack_run,))
         # Leave queued Jobs pending to test actual cancellation and terminal drain after PAUSE.
         service(rt, args, "stop-integration.ps1", "-RegistryId", args.registry, "-Service", "compute-worker")
+        from trading_deletion_runtime import verify_queued_deletions
+        verify_queued_deletions(rt, args, evidence, core, compute, db, compute_db, proxy, book, artifacts)
         service(rt, args, "start-trading-normalization-service.ps1", "-EnvironmentFile", secondary_env_file,
             "-CorePath", args.core_path, "-RegistryId", secondary_registry, "-EvidenceDirectory", args.run_dir,
             "-DatabaseSchema", os.environ.get("TRADING_RUNTIME_CORE_SCHEMA", "public"),
