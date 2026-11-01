@@ -130,6 +130,28 @@ V2 Core publication은 이번 범위에서 제외한다.
 정확한 assertion, 공동 전환에 필요한 후속 기능과 V2 선행 구현 상태는
 [결과 버전 pin E2E 문서](docs/TRADING_NORMALIZATION_RESULT_VERSION_PIN_E2E.md)를 참조한다.
 
+## Trading raw policy clock E2E
+
+`scripts/test-trading-raw-policy-clocks.ps1`은 Core V16 정책 시계와 expiry 구현이 필요하다.
+[Core PR #103](https://github.com/refinvest-dev/core-api/pull/103)에 해당 구현과 배포 절차가 있다.
+기존 result version pin E2E에 선택형 assertion을 추가하며 기본 runner의 검증 범위는 바꾸지 않는다.
+
+```powershell
+.\scripts\test-trading-raw-policy-clocks.ps1 -CorePort 8680 -ComputePort 8681
+```
+
+실제 publication의 accepted 시각과 7일 raw 기한, validation replay의 기한 불변을 검사한다.
+실제 Compute worker가 중지된 구간에서 queued Job과 생성 응답 유실을 만든 뒤 synthetic artifact의
+`raw_expires_at`만 현재 시각으로 앞당긴다. Session/Run/generation/request/Compute 상태나 완료 증거를
+SQL로 만들어내지 않는다. 실제 expiry worker의 재업로드 필요 전이, 단일 raw-only 요청, runtime 부재
+receipt, 파일·key 부재, capacity 반환과 늦은 create 거절을 검증한다. Session metadata는 유지되어야 한다.
+
+중지·재개 검증 뒤 accepted raw도 같은 방식으로 만료시켜 기존 Revision·record·evidence·분석 입력과 Book이
+그대로인지 확인한다. 증적은 `evidence.json`의 `rawPolicyClocks`에 기록한다. 실제 15분 결과 lease의 만료를
+기다릴 수 있도록 기본 대기 한도는 1200초이며, assertion이나 제품 lease를 줄이지 않는다.
+추가 TTL 대기 동안 이미 실패한 합성 ACK의 `next_attempt_at`만 충분히 미래로 두고, 중지 검증에
+도달하면 즉시 해제한다. 제품의 retry 예산을 바꾸지 않으며 기본 runner의 20분 대기도 유지한다.
+
 ## Performance fixture
 
 The deterministic ten-year, five-asset synthetic fixture, six benchmark scenarios, expected-result
