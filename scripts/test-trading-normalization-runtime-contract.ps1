@@ -12,9 +12,11 @@ param(
     [int]$TimeoutSeconds = 180,
     [switch]$ResultIntegrity,
     [switch]$Publication,
-    [switch]$ResultVersionPin
+    [switch]$ResultVersionPin,
+    [switch]$RawPolicyClocks
 )
 $ErrorActionPreference = 'Stop'
+if ($RawPolicyClocks) { $ResultVersionPin = $true }
 if ($ResultVersionPin) { $Publication = $true }
 if (-not $TestRoot) { $TestRoot = Join-Path $PSScriptRoot '..' }
 if (-not $ContextPath) { $ContextPath = Join-Path $TestRoot '..\context' }
@@ -253,6 +255,7 @@ try {
     if ($ResultIntegrity) { $runtimeArguments += '--result-integrity' }
     if ($Publication) { $runtimeArguments += '--publication' }
     if ($ResultVersionPin) { $runtimeArguments += '--result-version-pin' }
+    if ($RawPolicyClocks) { $runtimeArguments += '--raw-policy-clocks' }
     & $python (Join-Path $PSScriptRoot 'test_trading_normalization_runtime_contract.py') `
         --core-url "http://127.0.0.1:$CorePort" --compute-url "http://127.0.0.1:$ComputePort" `
         --fixture-root $fixtureRoot --context-path $ContextPath --run-dir $runDir `

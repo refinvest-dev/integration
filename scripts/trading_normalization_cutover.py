@@ -290,6 +290,9 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
         service(rt, args, "stop-integration.ps1", "-RegistryId", args.registry, "-Service", "compute-worker")
         from trading_deletion_runtime import verify_queued_deletions
         verify_queued_deletions(rt, args, evidence, core, compute, db, compute_db, proxy, book, artifacts)
+        if getattr(args, "raw_policy_clocks", False):
+            from trading_raw_policy_clocks import queued_expiry
+            queued_expiry(rt, args, evidence, core, compute, db, compute_db, proxy, book, artifacts)
         service(rt, args, "start-trading-normalization-service.ps1", "-EnvironmentFile", secondary_env_file,
             "-CorePath", args.core_path, "-RegistryId", secondary_registry, "-EvidenceDirectory", args.run_dir,
             "-DatabaseSchema", os.environ.get("TRADING_RUNTIME_CORE_SCHEMA", "public"),

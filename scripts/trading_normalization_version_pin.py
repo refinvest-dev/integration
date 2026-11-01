@@ -226,6 +226,9 @@ def verify_version_pin(rt, args, evidence, core, compute, db, compute_db, proxy,
                        session_id, run_id, job_id, dispatch, original, status, descriptor,
                        payload, artifacts, validation_key):
     checks = evidence["versionPin"]
+    if getattr(args, "raw_policy_clocks", False):
+        from trading_raw_policy_clocks import accepted_clock
+        accepted_clock(rt, args, evidence, core, db, session_id, validation_key)
     from trading_normalization_cutover import worker_poll
 
     def begin(name):
@@ -351,6 +354,9 @@ def verify_version_pin(rt, args, evidence, core, compute, db, compute_db, proxy,
     from trading_normalization_cutover import verify_cutover
     verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, book, artifacts)
     passed("TR-ACC-IMPORT-ORCH-028", **checks.pop("cutover"))
+    if getattr(args, "raw_policy_clocks", False):
+        from trading_raw_policy_clocks import accepted_purge
+        accepted_purge(rt, args, evidence, core, db, session_id)
     begin("TR-ACC-IMPORT-ORCH-027")
     migration_rehearsal(rt, args, checks, core, compute, db, compute_db, proxy,
                         book, account, session_id, run_id, job_id, sent, dispatch, validation_key)
