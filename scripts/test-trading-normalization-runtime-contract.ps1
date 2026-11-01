@@ -32,6 +32,7 @@ $TestRoot = [IO.Path]::GetFullPath($TestRoot)
 if ($LASTEXITCODE -ne 0) { throw 'Contract preflight failed.' }
 
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
+. (Join-Path $PSScriptRoot 'PsqlConnectionRetry.ps1')
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Assert-IntegrationEnvironment $values @('POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD',
     'INTEGRATION_POSTGRES_PORT', 'REFINVEST_INTERNAL_API_KEY')
@@ -52,8 +53,9 @@ if ($fixturePort -gt 65535 -or $fixturePort -eq $CorePort) { throw 'Fixture port
 $psql = Get-IntegrationPsql
 if (-not $psql) { throw 'Local psql is required for the runtime database identity check.' }
 $env:PGPASSWORD = $values.POSTGRES_PASSWORD
-$dbTarget = (& $psql -h $dbHost -p $values.INTEGRATION_POSTGRES_PORT -U $values.POSTGRES_USER `
-    -d $DatabaseName -tA -v ON_ERROR_STOP=1 -c 'SELECT current_database();').Trim()
+[string]$dbTarget = (Invoke-IntegrationPsql $psql -h $dbHost -p $values.INTEGRATION_POSTGRES_PORT -U $values.POSTGRES_USER `
+    -d $DatabaseName -tA -v ON_ERROR_STOP=1 -c 'SELECT current_database();')
+$dbTarget = $dbTarget.Trim()
 if ($LASTEXITCODE -ne 0 -or $dbTarget -cne $DatabaseName) { throw 'Resolved PostgreSQL database is not the integration database.' }
 Write-Host "Database target verified: $dbHost`:$($values.INTEGRATION_POSTGRES_PORT)/$DatabaseName"
 
@@ -155,7 +157,7 @@ try {
         $previousErrorAction = $ErrorActionPreference
         try {
             $ErrorActionPreference = 'Continue'
-            $appliedCoreMigrations = @(& $psql -h $dbHost -p $values.INTEGRATION_POSTGRES_PORT `
+            $appliedCoreMigrations = @(Invoke-IntegrationPsql $psql -h $dbHost -p $values.INTEGRATION_POSTGRES_PORT `
                 -U $values.POSTGRES_USER -d $DatabaseName -tA -v ON_ERROR_STOP=1 `
                 -c "SELECT filename FROM $coreSchema.integration_core_trading_migrations ORDER BY filename;" 2>$null)
         } finally { $ErrorActionPreference = $previousErrorAction }
