@@ -284,8 +284,11 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
             lambda a: a and a["status"] == "PENDING" and a["attempt_count"] > 0, args.timeout, "existing ACK failure")
         # Keep the real, already-failed ACK pending across process startup without
         # exhausting its immutable retry budget. Only the synthetic due time changes.
-        db.execute("""update trading_normalization_ack_dispatches set next_attempt_at=clock_timestamp()+interval '20 minutes'
-            where run_id=%s::uuid and status='PENDING'""", (ack_run,))
+        # The opt-in TTL cases include additional bounded runtime deletion waits. Keep
+        # this synthetic ACK parked until the explicit release below, even on slow hosts.
+        ack_hold_seconds = max(1200, args.timeout * 12) if getattr(args, "raw_policy_clocks", False) else 1200
+        db.execute("""update trading_normalization_ack_dispatches set next_attempt_at=clock_timestamp()+(%s * interval '1 second')
+            where run_id=%s::uuid and status='PENDING'""", (ack_hold_seconds, ack_run))
         # Leave queued Jobs pending to test actual cancellation and terminal drain after PAUSE.
         service(rt, args, "stop-integration.ps1", "-RegistryId", args.registry, "-Service", "compute-worker")
         from trading_deletion_runtime import verify_queued_deletions
