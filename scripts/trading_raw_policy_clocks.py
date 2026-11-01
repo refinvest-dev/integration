@@ -40,7 +40,7 @@ def queued_expiry(rt, args, evidence, core, compute, db, compute_db, proxy, book
     results = evidence.setdefault("rawPolicyClocks", {})
     raw_root = Path(json.loads(os.environ["SPRING_APPLICATION_JSON"])["refinvest.trading-review.raw.root"])
     for unknown in (False, True):
-        capacity = rt.row(compute_db, "select count(*) as n from trading_review_jobs where status in ('PENDING','RUNNING')")["n"]
+        capacity = rt.row(compute_db, "select count(*) as n from trading_review_jobs where status in ('PENDING','RUNNING')", ())["n"]
         sid, _ = new_session(rt, args, core, book, artifacts)
         if unknown:
             proxy.drop_response_sessions.add(str(sid))
@@ -81,7 +81,7 @@ def queued_expiry(rt, args, evidence, core, compute, db, compute_db, proxy, book
             "EXPIRED_INPUT_PUBLISHED")
         rt.require(rt.row(db, "select count(*) as n from trading_normalization_ack_dispatches where run_id=%s::uuid and disposition='PERSISTED'", (run_id,))["n"] == 0,
             "EXPIRED_INPUT_PERSISTED_ACK")
-        rt.require(rt.row(compute_db, "select count(*) as n from trading_review_jobs where status in ('PENDING','RUNNING')")["n"] == capacity,
+        rt.require(rt.row(compute_db, "select count(*) as n from trading_review_jobs where status in ('PENDING','RUNNING')", ())["n"] == capacity,
             "TTL_CAPACITY_NOT_RELEASED")
         replay = rt.request(compute, "POST", args.compute_url + "/trading-review/normalization-jobs", 409,
             headers={"Idempotency-Key": item["compute_key"]}, json=sent)
@@ -100,7 +100,7 @@ def accepted_purge(rt, args, evidence, core, db, sid):
               "trading_ledger_analytics_supplement", "trading_books")
 
     def snapshot():
-        return {table: rt.row(db, f"select md5(coalesce(string_agg(to_jsonb(t)::text,',' order by to_jsonb(t)::text),'')) as hash from {table} t")["hash"]
+        return {table: rt.row(db, f"select md5(coalesce(string_agg(to_jsonb(t)::text,',' order by to_jsonb(t)::text),'')) as hash from {table} t", ())["hash"]
                 for table in tables}
 
     before = snapshot()
