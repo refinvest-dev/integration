@@ -133,6 +133,8 @@ V2 Core publication은 이번 범위에서 제외한다.
 ## Trading raw policy clock E2E
 
 `scripts/test-trading-raw-policy-clocks.ps1`은 Core V16 정책 시계와 expiry 구현이 필요하다.
+공개 삭제 상태 assertion에는 [Core PR #104](https://github.com/refinvest-dev/core-api/pull/104)의
+5c-1 checkpoint 기반 deletion projection도 필요하다.
 [Core PR #103](https://github.com/refinvest-dev/core-api/pull/103)에 해당 구현과 배포 절차가 있다.
 기존 result version pin E2E에 선택형 assertion을 추가하며 기본 runner의 검증 범위는 바꾸지 않는다.
 
@@ -145,12 +147,17 @@ V2 Core publication은 이번 범위에서 제외한다.
 `raw_expires_at`만 현재 시각으로 앞당긴다. Session/Run/generation/request/Compute 상태나 완료 증거를
 SQL로 만들어내지 않는다. 실제 expiry worker의 재업로드 필요 전이, 단일 raw-only 요청, runtime 부재
 receipt, 파일·key 부재, capacity 반환과 늦은 create 거절을 검증한다. Session metadata는 유지되어야 한다.
+공개 응답도 실제 checkpoint에 맞는 primary/object/runtime 상태를 반환해야 한다. Raw-only backup은
+NOT_APPLICABLE과 null due date, subtree backup은 별도 부재 증거 없이 IN_PROGRESS를 유지해야 한다.
+이 공개 상태 검사는 선택형 raw-policy runner에만 적용하며 기본 E2E 범위는 유지한다.
 
 중지·재개 검증 뒤 accepted raw도 같은 방식으로 만료시켜 기존 Revision·record·evidence·분석 입력과 Book이
 그대로인지 확인한다. 증적은 `evidence.json`의 `rawPolicyClocks`에 기록한다. 실제 15분 결과 lease의 만료를
 기다릴 수 있도록 기본 대기 한도는 1200초이며, assertion이나 제품 lease를 줄이지 않는다.
 추가 TTL 대기 동안 이미 실패한 합성 ACK의 `next_attempt_at`만 충분히 미래로 두고, 중지 검증에
 도달하면 즉시 해제한다. 제품의 retry 예산을 바꾸지 않으며 기본 runner의 20분 대기도 유지한다.
+ACK 대기 예약은 실제 실패 전송의 lease가 해제된 뒤 조건부 UPDATE로 수행해 진행 중 재예약과
+경합하지 않도록 한다. 상태·attempt·lease를 강제로 바꾸지 않는다.
 
 ## Performance fixture
 
