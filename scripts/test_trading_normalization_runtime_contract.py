@@ -499,7 +499,10 @@ def main() -> int:
     parser.add_argument("--result-integrity", action="store_true")
     parser.add_argument("--publication", action="store_true")
     parser.add_argument("--result-version-pin", action="store_true")
+    parser.add_argument("--raw-policy-clocks", action="store_true")
     args = parser.parse_args()
+    if args.raw_policy_clocks:
+        args.result_version_pin = True
     if args.result_version_pin:
         args.publication = True
     if args.result_integrity or args.publication:
