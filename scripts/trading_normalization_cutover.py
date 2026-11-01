@@ -280,15 +280,15 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
             lambda s: s["status"] in {"ACCEPTED", "PROCESSING_FAILED", "REJECTED"}, args.timeout, "existing ACK publication")
         rt.require(ack_public["status"] == "ACCEPTED", "EXISTING_ACK_PUBLICATION_FAILED")
         ack_run = str(dispatch(rt, db, ack_sid)["run_id"])
-        rt.poll(lambda: rt.row(db, "select status,attempt_count from trading_normalization_ack_dispatches where run_id=%s::uuid", (ack_run,)),
-            lambda a: a and a["status"] == "PENDING" and a["attempt_count"] > 0, args.timeout, "existing ACK failure")
-        # Keep the real, already-failed ACK pending across process startup without
-        # exhausting its immutable retry budget. Only the synthetic due time changes.
-        # The opt-in TTL cases include additional bounded runtime deletion waits. Keep
-        # this synthetic ACK parked until the explicit release below, even on slow hosts.
+        # Park only after the real failed HTTP attempt releases its lease. Observing
+        # PENDING/attempt_count alone can race the in-flight attempt's reschedule and
+        # lose this synthetic delay. The conditional UPDATE also fences a new claim.
         ack_hold_seconds = max(1200, args.timeout * 12) if getattr(args, "raw_policy_clocks", False) else 1200
-        db.execute("""update trading_normalization_ack_dispatches set next_attempt_at=clock_timestamp()+(%s * interval '1 second')
-            where run_id=%s::uuid and status='PENDING'""", (ack_hold_seconds, ack_run))
+        rt.poll(lambda: rt.row(db, """update trading_normalization_ack_dispatches
+            set next_attempt_at=clock_timestamp()+(%s * interval '1 second')
+            where run_id=%s::uuid and status='PENDING' and attempt_count>0
+            and lease_owner is null and lease_expires_at is null returning status""", (ack_hold_seconds, ack_run)),
+            lambda a: a is not None, args.timeout, "park failed ACK after lease release")
         # Leave queued Jobs pending to test actual cancellation and terminal drain after PAUSE.
         service(rt, args, "stop-integration.ps1", "-RegistryId", args.registry, "-Service", "compute-worker")
         from trading_deletion_runtime import verify_queued_deletions
@@ -346,8 +346,9 @@ def verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, boo
         rt.require(current(rt, db)["paused"], "STOP_NOT_DURABLE")
         proxy.reject_acks = False
         db.execute("update trading_normalization_ack_dispatches set next_attempt_at=clock_timestamp() where run_id=%s::uuid and status='PENDING'", (ack_run,))
-        rt.poll(lambda: rt.row(db, "select status from trading_normalization_ack_dispatches where run_id=%s::uuid", (ack_run,)),
-            lambda a: a and a["status"] == "ACKNOWLEDGED", args.timeout, "existing ACK retry while paused")
+        retried_ack = rt.poll(lambda: rt.row(db, "select status from trading_normalization_ack_dispatches where run_id=%s::uuid", (ack_run,)),
+            lambda a: a and a["status"] in {"ACKNOWLEDGED", "TERMINAL_FAILURE"}, args.timeout, "existing ACK retry while paused")
+        rt.require(retried_ack["status"] == "ACKNOWLEDGED", "PAUSED_ACK_RETRY_FAILED")
         checks[ITEMS[4]] = {"result": "PASS", "pauseWaitedForClaimSendReceiptAndAdmission": True}
         checkpoint()
         validation_key, retry_key = "paused-validation-" + uuid.uuid4().hex, "paused-retry-" + uuid.uuid4().hex
