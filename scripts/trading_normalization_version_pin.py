@@ -351,14 +351,15 @@ def verify_version_pin(rt, args, evidence, core, compute, db, compute_db, proxy,
     checks["proxy"] = proxy.evidence()
     rt.require(not proxy.errors, "PIN_PROXY_ERRORS")
     begin("TR-ACC-IMPORT-ORCH-028")
+    if getattr(args, "raw_policy_clocks", False):
+        from trading_deletion_counts import verify_count_snapshots
+        verify_count_snapshots(rt, args, evidence, core, db, artifacts)
     from trading_normalization_cutover import verify_cutover
     verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, book, artifacts)
     passed("TR-ACC-IMPORT-ORCH-028", **checks.pop("cutover"))
     if getattr(args, "raw_policy_clocks", False):
         from trading_raw_policy_clocks import accepted_purge
         accepted_purge(rt, args, evidence, core, db, session_id)
-        from trading_deletion_counts import verify_count_snapshots
-        verify_count_snapshots(rt, args, evidence, core, db, artifacts)
     begin("TR-ACC-IMPORT-ORCH-027")
     migration_rehearsal(rt, args, checks, core, compute, db, compute_db, proxy,
                         book, account, session_id, run_id, job_id, sent, dispatch, validation_key)
