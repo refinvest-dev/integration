@@ -357,6 +357,8 @@ def verify_version_pin(rt, args, evidence, core, compute, db, compute_db, proxy,
     if getattr(args, "raw_policy_clocks", False):
         from trading_raw_policy_clocks import accepted_purge
         accepted_purge(rt, args, evidence, core, db, session_id)
+        from trading_deletion_counts import verify_count_snapshots
+        verify_count_snapshots(rt, args, evidence, core, db, artifacts)
     begin("TR-ACC-IMPORT-ORCH-027")
     migration_rehearsal(rt, args, checks, core, compute, db, compute_db, proxy,
                         book, account, session_id, run_id, job_id, sent, dispatch, validation_key)

@@ -66,6 +66,8 @@ def queued_expiry(rt, args, evidence, core, compute, db, compute_db, proxy, book
         terminal = rt.poll(lambda: rt.request(core, "GET", args.core_url + f"/trading-deletion-requests/{request['id']}", 200),
             lambda d: d["state"] in {"COMPLETED", "FAILED"}, args.timeout, "verified TTL runtime absence")
         rt.require(terminal["state"] == "COMPLETED", "TTL_RUNTIME_NOT_REMOVED")
+        from trading_deletion_counts import counts
+        rt.require(terminal["affectedResources"] == counts(artifacts=1), "RAW_COUNT_SNAPSHOT_DRIFT")
         public_components = {name: terminal[name] for name in (
             "primaryPurgeStatus", "objectPurgeStatus", "computeRuntimePurgeStatus", "backupPurgeStatus")}
         rt.require(public_components == {"primaryPurgeStatus": "NOT_APPLICABLE", "objectPurgeStatus": "COMPLETED",
