@@ -40,6 +40,14 @@ def verify_queued_deletions(rt, args, evidence, core, compute, db, compute_db, p
             args.core_url + f"/trading-deletion-requests/{deletion['id']}", 200),
             lambda d: d["state"] in {"COMPLETED", "FAILED"}, args.timeout, "verified runtime deletion")
         rt.require(terminal["state"] == "COMPLETED", "RUNTIME_DELETION_NOT_COMPLETED")
+        public_components = None
+        if getattr(args, "raw_policy_clocks", False):
+            public_components = {name: terminal[name] for name in (
+                "primaryPurgeStatus", "objectPurgeStatus", "computeRuntimePurgeStatus", "backupPurgeStatus")}
+            rt.require(public_components == {"primaryPurgeStatus": "COMPLETED", "objectPurgeStatus": "COMPLETED",
+                "computeRuntimePurgeStatus": "COMPLETED", "backupPurgeStatus": "IN_PROGRESS"}
+                and terminal["retryable"] is False and terminal["failure"] is None,
+                "DELETION_PUBLIC_COMPONENT_PROGRESS_DRIFT")
         rt.require(rt.row(compute_db,
             "select count(*) as n from trading_review_jobs where core_normalization_run_id=%s", (run_id,))["n"] == 0,
             "DELETED_COMPUTE_JOB_REMAINS")
@@ -66,3 +74,5 @@ def verify_queued_deletions(rt, args, evidence, core, compute, db, compute_db, p
             "state": terminal["state"], "checkpoints": 6, "lateCreateRejected": True,
             "artifacts": sorted(value["id"] for value in uploaded.values()),
         }
+        if public_components is not None:
+            assertions["unknownCreate" if unknown else "queuedJob"]["publicComponents"] = public_components

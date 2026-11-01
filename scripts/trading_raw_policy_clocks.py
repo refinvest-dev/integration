@@ -66,6 +66,12 @@ def queued_expiry(rt, args, evidence, core, compute, db, compute_db, proxy, book
         terminal = rt.poll(lambda: rt.request(core, "GET", args.core_url + f"/trading-deletion-requests/{request['id']}", 200),
             lambda d: d["state"] in {"COMPLETED", "FAILED"}, args.timeout, "verified TTL runtime absence")
         rt.require(terminal["state"] == "COMPLETED", "TTL_RUNTIME_NOT_REMOVED")
+        public_components = {name: terminal[name] for name in (
+            "primaryPurgeStatus", "objectPurgeStatus", "computeRuntimePurgeStatus", "backupPurgeStatus")}
+        rt.require(public_components == {"primaryPurgeStatus": "NOT_APPLICABLE", "objectPurgeStatus": "COMPLETED",
+            "computeRuntimePurgeStatus": "COMPLETED", "backupPurgeStatus": "NOT_APPLICABLE"}
+            and terminal["backupPurgeDueAt"] is None and terminal["retryable"] is False and terminal["failure"] is None,
+            "TTL_PUBLIC_COMPONENT_PROGRESS_DRIFT")
         rt.poll(lambda: rt.row(db, """select count(*) as n from trading_source_artifacts where import_session_id=%s
             and retention_status='DELETED' and object_key is null and wrapped_dek is null and key_version is null and filename is null""",
             (int(sid),))["n"], lambda n: n == 2, args.timeout, "TTL raw/key absence")
@@ -91,7 +97,8 @@ def queued_expiry(rt, args, evidence, core, compute, db, compute_db, proxy, book
         rt.require(count == 1, "TTL_DUPLICATED_REQUEST")
         results["unknownCreateExpiry" if unknown else "queuedExpiry"] = {"result": "PASS", "sessionId": str(sid),
             "runId": run_id, "requestId": str(request["id"]), "state": terminal["state"], "lateCreateRejected": True,
-            "metadataRetained": True, "scenarioIds": ["TR-ACC-DELETE-009", "TR-ACC-IMPORT-ORCH-011"]}
+            "metadataRetained": True, "publicComponents": public_components,
+            "scenarioIds": ["TR-ACC-DELETE-009", "TR-ACC-IMPORT-ORCH-011"]}
         checkpoint(args, evidence)
 
 
