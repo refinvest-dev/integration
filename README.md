@@ -122,6 +122,10 @@ ORCH-027은 새 `tnorm_legacycore*`/`tnorm_legacycompute*` schema에 실제 pre-
 중지, claim/send 경쟁, 재시작, 불명확 create 대조, terminal·삭제·취소·기존 ACK 재시도와
 격리 canary의 V1/V1 HTTP 검증 후 재개를 확인한다. 필요한 Core V10/control이 없는 조합은
 PASS가 아니다. 실행별 Core·Compute schema를 새로 만들며 실패 시 중지·보류 상태를 보존한다.
+현재 삭제 후보 조합은 queued Job과 생성 응답을 잃은 Run을 실제 Core DELETE로 제거한다.
+`runtimeDeletion` 증적은 삭제 요청의 `COMPLETED`, component 체크포인트 6개, 원본 파일·primary·Compute Job
+부재, capacity 반환과 같은 요청의 늦은 create 거절을 함께 확인한다. 취소 접수나 404만으로 통과하지 않는다.
+프로세스 제어 실패는 `process-control/`에 종료 코드와 credential을 마스킹한 stdout/stderr를 남긴다.
 V2 Core publication은 이번 범위에서 제외한다.
 정확한 assertion, 공동 전환에 필요한 후속 기능과 V2 선행 구현 상태는
 [결과 버전 pin E2E 문서](docs/TRADING_NORMALIZATION_RESULT_VERSION_PIN_E2E.md)를 참조한다.

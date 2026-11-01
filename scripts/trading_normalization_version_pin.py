@@ -73,6 +73,9 @@ class PinProxy:
             def do_POST(self):
                 self.forward()
 
+            def do_PUT(self):
+                self.forward()
+
             def forward(self):
                 try:
                     if self.headers.get("Transfer-Encoding", "").lower() == "chunked":
@@ -473,7 +476,7 @@ def migration_rehearsal(rt, args, checks, core, compute, db, compute_db, proxy,
         finally:
             legacy_compute.execute("ROLLBACK")
         migrate(legacy_core, [p for p in core_migrations if int(p.name.split("__")[0][1:]) >= 9])
-        migrate(legacy_compute, [p for p in compute_migrations if int(p.name[:4]) == 17])
+        migrate(legacy_compute, [p for p in compute_migrations if int(p.name[:4]) >= 17])
         for table, conn, field, identifier in (
             ("trading_normalization_runs", legacy_core, "id", run_id),
             ("trading_normalization_dispatches", legacy_core, "run_id", run_id),
