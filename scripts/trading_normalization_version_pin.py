@@ -351,6 +351,9 @@ def verify_version_pin(rt, args, evidence, core, compute, db, compute_db, proxy,
     checks["proxy"] = proxy.evidence()
     rt.require(not proxy.errors, "PIN_PROXY_ERRORS")
     begin("TR-ACC-IMPORT-ORCH-028")
+    if getattr(args, "raw_policy_clocks", False):
+        from trading_deletion_counts import verify_count_snapshots
+        verify_count_snapshots(rt, args, evidence, core, db, artifacts)
     from trading_normalization_cutover import verify_cutover
     verify_cutover(rt, args, evidence, core, compute, db, compute_db, proxy, book, artifacts)
     passed("TR-ACC-IMPORT-ORCH-028", **checks.pop("cutover"))

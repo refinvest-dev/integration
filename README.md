@@ -133,6 +133,10 @@ V2 Core publication은 이번 범위에서 제외한다.
 ## Trading raw policy clock E2E
 
 `scripts/test-trading-raw-policy-clocks.ps1`은 Core V16 정책 시계와 expiry 구현이 필요하다.
+현재 count assertion에는 [Core PR #105](https://github.com/refinvest-dev/core-api/pull/105)의
+V17 요청 시점 count snapshot 구현도 필요하다. 실제 publication이 있는
+Book 삭제와 두 Book을 포함한 Account 삭제에서 일곱 count·snapshotStatus를 검사하고 purge 후 같은 키로
+DELETE를 replay해 원 snapshot이 보존되는지 확인한다. Session/raw-only count도 함께 검사한다.
 공개 삭제 상태 assertion에는 [Core PR #104](https://github.com/refinvest-dev/core-api/pull/104)의
 5c-1 checkpoint 기반 deletion projection도 필요하다.
 [Core PR #103](https://github.com/refinvest-dev/core-api/pull/103)에 해당 구현과 배포 절차가 있다.
@@ -158,6 +162,9 @@ NOT_APPLICABLE과 null due date, subtree backup은 별도 부재 증거 없이 I
 도달하면 즉시 해제한다. 제품의 retry 예산을 바꾸지 않으며 기본 runner의 20분 대기도 유지한다.
 ACK 대기 예약은 실제 실패 전송의 lease가 해제된 뒤 조건부 UPDATE로 수행해 진행 중 재예약과
 경합하지 않도록 한다. 상태·attempt·lease를 강제로 바꾸지 않는다.
+Bootstrap psql은 SQL 전송 전 초기 연결이 Windows 10014로 실패한 경우에만 최대 3회 재시도한다.
+SQL 오류·실행 중 연결 단절은 재시도하지 않는다. `python -m unittest discover -s scripts -p test_psql_connection_retry.py`
+로 네 subprocess 분류와 option/SQL 인자·종료 코드 보존을 검증한다.
 
 ## Performance fixture
 

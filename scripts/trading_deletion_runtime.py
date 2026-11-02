@@ -32,8 +32,9 @@ def verify_queued_deletions(rt, args, evidence, core, compute, db, compute_db, p
             rt.require(run["compute_job_id"] is None, "DELETION_UNKNOWN_JOB_WAS_ATTACHED")
         locators = db.execute("select object_key from trading_source_artifacts where import_session_id=%s",
             (int(sid),)).fetchall()
+        deletion_key = "runtime-delete-" + uuid.uuid4().hex
         deletion = rt.request(core, "DELETE", args.core_url + f"/trading-import-sessions/{sid}", 202,
-            headers={"Idempotency-Key": "runtime-delete-" + uuid.uuid4().hex})
+            headers={"Idempotency-Key": deletion_key})
         rt.require(core.get(args.core_url + f"/trading-import-sessions/{sid}").status_code == 410,
             "DELETION_ACCESS_NOT_REVOKED")
         terminal = rt.poll(lambda: rt.request(core, "GET",
@@ -42,6 +43,14 @@ def verify_queued_deletions(rt, args, evidence, core, compute, db, compute_db, p
         rt.require(terminal["state"] == "COMPLETED", "RUNTIME_DELETION_NOT_COMPLETED")
         public_components = None
         if getattr(args, "raw_policy_clocks", False):
+            from trading_deletion_counts import counts
+            expected_counts = counts(sessions=1, artifacts=2)
+            rt.require(deletion["affectedResources"] == expected_counts and terminal["affectedResources"] == expected_counts,
+                "SESSION_COUNT_SNAPSHOT_DRIFT")
+            replay = rt.request(core, "DELETE", args.core_url + f"/trading-import-sessions/{sid}", 202,
+                headers={"Idempotency-Key": deletion_key})
+            rt.require(replay["id"] == deletion["id"] and replay["affectedResources"] == expected_counts,
+                "SESSION_PURGED_REPLAY_CHANGED_COUNTS")
             public_components = {name: terminal[name] for name in (
                 "primaryPurgeStatus", "objectPurgeStatus", "computeRuntimePurgeStatus", "backupPurgeStatus")}
             rt.require(public_components == {"primaryPurgeStatus": "COMPLETED", "objectPurgeStatus": "COMPLETED",
