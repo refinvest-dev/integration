@@ -18,6 +18,16 @@ specific implementation combination that was tested against it.
 
 ## Trading Normalization runtime contract
 
+Core의 [schema 전환 PR #106](https://github.com/refinvest-dev/core-api/pull/106)은 전체 JPA schema를
+Flyway V1~V21로 생성하고 Hibernate validate로 기동한다. 일반 API/Web smoke는 이 자동 기동 경로를 사용한다.
+Trading fixture runner는 SQL을 직접 적용하는 별도 경로이며, 모든 feature persistence 모듈의 migration을
+숫자 순서로 적용·추적한 뒤 해당 fixture에서만 `spring.flyway.enabled=false`를 설정한다. Core의 기본
+Hibernate validate는 유지한다. 별도 canary와 pre-pin migration rehearsal도 같은 migration 집합을 사용한다.
+Flyway 이력을 임의로 만들어 이미 적용한 SQL을 감추지 않는다.
+
+`python -B -m unittest discover -s scripts -p test_core_migrations.py`는 PowerShell/Python의 동일 탐색 순서와
+중복 version·잘못된 이름·빈 집합의 거절을 검증한다. 이 검사는 계약 CI에도 포함한다.
+
 `scripts/test-trading-normalization-runtime-contract.ps1`는 Core public API의 합성 CSV
 업로드와 Validate 명령에서 시작하여 durable dispatch, 실제 Compute HTTP DTO, worker,
 terminal payload까지 검증한다. Context OpenAPI와 Core·Compute·Web snapshot, Context
