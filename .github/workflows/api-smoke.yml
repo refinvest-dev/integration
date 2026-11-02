@@ -42,6 +42,10 @@ on:
       integration_ref:
         description: Integration commit or ref
         type: string
+      trading_schema_regression:
+        description: Run the full Trading schema fixture regression as a separate job
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -205,3 +209,14 @@ jobs:
           name: api-smoke-and-web-acceptance-logs-${{ github.run_attempt }}
           path: integration/.integration-data/logs
           if-no-files-found: warn
+
+  trading-schema-regression:
+    if: inputs.trading_schema_regression == true
+    uses: ./.github/workflows/trading-schema-regression.yml
+    with:
+      context_ref: ${{ inputs.context_ref || 'main' }}
+      core_ref: ${{ inputs.core_ref || 'main' }}
+      compute_ref: ${{ inputs.compute_ref || 'main' }}
+      web_ref: ${{ inputs.web_ref || 'main' }}
+      integration_ref: ${{ inputs.integration_ref || github.sha }}
+    secrets: inherit

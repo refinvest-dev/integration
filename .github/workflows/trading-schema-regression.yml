@@ -1,0 +1,160 @@
+name: Trading schema regression
+
+on:
+  workflow_call:
+    inputs:
+      context_ref:
+        required: true
+        description: Context commit or ref for candidate verification
+        type: string
+      core_ref:
+        required: true
+        description: Core API commit or ref
+        type: string
+      compute_ref:
+        required: true
+        description: Compute API commit or ref
+        type: string
+      web_ref:
+        required: true
+        description: Web commit or ref
+        type: string
+      integration_ref:
+        required: true
+        description: Integration commit or ref
+        type: string
+
+    secrets:
+      REFINVEST_CI_APP_PRIVATE_KEY:
+        required: true
+
+permissions:
+  contents: read
+
+
+jobs:
+  smoke:
+    name: Full Trading fixture schema regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: refinvest_integration
+          POSTGRES_USER: refinvest
+          POSTGRES_PASSWORD: refinvest-ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U refinvest -d refinvest_integration"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
+
+    steps:
+      - name: Checkout integration
+        uses: actions/checkout@v4
+        with:
+          path: integration
+          ref: ${{ inputs.integration_ref || github.sha }}
+
+      - name: Create read-only sibling checkout token
+        id: sibling-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.REFINVEST_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REFINVEST_CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            context
+            core-api
+            compute-api
+            web
+          permission-contents: read
+
+      - name: Checkout context
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/context
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: context
+          ref: ${{ inputs.context_ref || 'main' }}
+          fetch-depth: 0
+
+      - name: Checkout Core API
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/core-api
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: api/refinvest
+          ref: ${{ inputs.core_ref || 'main' }}
+
+      - name: Checkout Compute API
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/compute-api
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: compute-api/refinvest
+          ref: ${{ inputs.compute_ref || 'main' }}
+
+      - name: Checkout Web
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/web
+          token: ${{ steps.sibling-token.outputs.token }}
+          path: web/web
+          ref: ${{ inputs.web_ref || 'main' }}
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+          cache-dependency-path: api/refinvest/**/*.gradle.kts
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Analytics contract verifier dependencies
+        run: python -m pip install -r integration/scripts/requirements-contract-sync.txt
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: compute-api/refinvest/uv.lock
+
+      - name: Install Compute dependencies
+        working-directory: compute-api/refinvest
+        run: uv sync --frozen
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install --yes postgresql-client
+
+      - name: Verify process-control diagnostics
+        working-directory: integration
+        run: |
+          PYTHONPATH=scripts ../compute-api/refinvest/.venv/bin/python -m pytest tests/test_process_control.py -q
+          python -B -m unittest discover -s scripts -p test_core_migrations.py
+
+      - name: Run full Trading raw-policy and schema regression
+        shell: pwsh
+        working-directory: integration
+        run: |
+          ./scripts/new-ci-environment.ps1
+          ./scripts/test-trading-raw-policy-clocks.ps1 -CorePort 18720 -ComputePort 18820 -TimeoutSeconds 1200
+
+      - name: Upload regression evidence and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trading-schema-regression-${{ github.run_attempt }}
+          path: |
+            integration/.integration-data/logs
+            integration/.integration-data/trading-normalization/**/evidence.json
+            integration/.integration-data/trading-normalization/**/process-control/*.json
+          if-no-files-found: warn

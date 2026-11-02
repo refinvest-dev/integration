@@ -196,7 +196,12 @@ try {
         try {
             Set-Location -LiteralPath $CorePath
             $ErrorActionPreference = 'Continue'
-            & .\gradlew.bat :app:bootJar --console=plain --no-daemon *> $buildLog
+            $wrapper = Get-IntegrationGradleWrapper -CoreApiPath $CorePath
+            if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+                & $wrapper :app:bootJar --console=plain --no-daemon *> $buildLog
+            } else {
+                & bash $wrapper :app:bootJar --console=plain --no-daemon *> $buildLog
+            }
             $jarBuildExit = $LASTEXITCODE
         } finally { Set-Location -LiteralPath $previousDirectory; $ErrorActionPreference = $previousErrorAction }
         if ($jarBuildExit -ne 0) { throw 'Core executable JAR build failed; see core-bootjar.log.' }

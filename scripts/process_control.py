@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import subprocess
 import time
 import tempfile
@@ -12,6 +13,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence
 from urllib.parse import quote, urlsplit
+
+
+def powershell_executable() -> str:
+    executable = shutil.which("powershell.exe") or shutil.which("pwsh")
+    if executable is None:
+        raise OSError("PowerShell executable unavailable")
+    return executable
 
 
 @dataclass(frozen=True)
@@ -73,7 +81,7 @@ def run_process_control(script: Path, arguments: Sequence[str], run_dir: Path,
         # for JVM shutdown even after the startup script has exited. File capture waits
         # only for the controlling process, while keeping the same redacted diagnostics.
         with tempfile.TemporaryFile(dir=directory) as stdout, tempfile.TemporaryFile(dir=directory) as stderr:
-            result = subprocess.run(["powershell.exe", "-NoProfile", "-NonInteractive", "-File",
+            result = subprocess.run([powershell_executable(), "-NoProfile", "-NonInteractive", "-File",
                 str(script), *arguments], env=env, stdout=stdout, stderr=stderr,
                 stdin=subprocess.DEVNULL, check=False)
             code = result.returncode
