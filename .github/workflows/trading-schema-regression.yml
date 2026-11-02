@@ -140,6 +140,7 @@ jobs:
         run: |
           PYTHONPATH=scripts ../compute-api/refinvest/.venv/bin/python -m pytest tests/test_process_control.py -q
           python -B -m unittest discover -s scripts -p test_core_migrations.py
+          pwsh -NoProfile -File scripts/test-integration-process-identity.ps1
 
       - name: Run full Trading raw-policy and schema regression
         shell: pwsh

@@ -28,6 +28,11 @@ Flyway 이력을 임의로 만들어 이미 적용한 SQL을 감추지 않는다
 `python -B -m unittest discover -s scripts -p test_core_migrations.py`는 PowerShell/Python의 동일 탐색 순서와
 중복 version·잘못된 이름·빈 집합의 거절을 검증한다. 이 검사는 계약 CI에도 포함한다.
 
+`API smoke` workflow의 수동 실행에서 다섯 candidate ref와 `trading_schema_regression=true`를 지정하면
+별도 Linux job이 전체 Trading raw-policy·canary·migration replay를 실행한다. 기본 PR/API/Web 검증 범위는
+유지한다. 프로세스 제어는 Windows PowerShell/pwsh와 소유권을 확인한 플랫폼별 종료 경로를 사용한다.
+증적 artifact에는 로그와 evidence/process-control JSON만 포함하며 환경 파일과 keystore는 포함하지 않는다.
+
 `scripts/test-trading-normalization-runtime-contract.ps1`는 Core public API의 합성 CSV
 업로드와 Validate 명령에서 시작하여 durable dispatch, 실제 Compute HTTP DTO, worker,
 terminal payload까지 검증한다. Context OpenAPI와 Core·Compute·Web snapshot, Context

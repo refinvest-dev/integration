@@ -34,7 +34,7 @@ class CandidateWorkflowTest(unittest.TestCase):
         for key, filename in (("candidate-sync", "contract-sync.yml"), ("candidate-smoke", "api-smoke.yml")):
             data = workflow(filename)
             self.assertTrue({"pull_request", "push", "workflow_dispatch", "workflow_call"} <= set(data["on"]))
-            uploads = [step["with"]["name"] for job in data["jobs"].values() for step in job["steps"]
+            uploads = [step["with"]["name"] for job in data["jobs"].values() for step in job.get("steps", [])
                        if step.get("uses", "").startswith("actions/upload-artifact")]
             self.assertIn(CHECKS[key][0] + "-${{ github.run_attempt }}", uploads)
 

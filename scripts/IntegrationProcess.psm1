@@ -413,6 +413,20 @@ function Assert-IntegrationTopology {
     $true
 }
 
+function Stop-IntegrationOwnedProcessTree {
+    param([int]$ProcessId)
+    if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+        & taskkill.exe /PID $ProcessId /T /F 2>$null | Out-Null
+    } else {
+        $process = Get-Process -Id $ProcessId -ErrorAction SilentlyContinue
+        if ($null -ne $process) {
+            $process.Kill($true)
+            if (-not $process.WaitForExit(5000)) { throw 'Owned process did not exit' }
+        }
+        $global:LASTEXITCODE = 0
+    }
+}
+
 function Stop-IntegrationRegisteredProcess {
     param([string]$RootPath, [string[]]$Name, [string]$RegistryId='default')
     $records = Get-IntegrationProcessRecords $RootPath $RegistryId
@@ -422,7 +436,7 @@ function Stop-IntegrationRegisteredProcess {
         if ($null -eq $record) { $results += [pscustomobject]@{ service=$service; result='not-registered' }; continue }
         $ownership = Get-IntegrationProcessOwnership $record
         if ($ownership.state -eq 'running') {
-            & taskkill.exe /PID $record.launcherPid /T /F 2>$null | Out-Null
+            Stop-IntegrationOwnedProcessTree -ProcessId $record.launcherPid
             Start-Sleep -Milliseconds 200
             $ownershipAfter = Get-IntegrationProcessOwnership $record
             $listenerAfter = Get-IntegrationListenerPid $record.port
@@ -431,7 +445,7 @@ function Stop-IntegrationRegisteredProcess {
                 try {
                     $serviceProcess = Get-Process -Id ([int]$record.servicePid) -ErrorAction Stop
                     if (-not $record.serviceStartedAt -or (Test-IntegrationStartTimeMatches -Actual $serviceProcess.StartTime -Recorded $record.serviceStartedAt)) {
-                        & taskkill.exe /PID $record.servicePid /T /F 2>$null | Out-Null
+                        Stop-IntegrationOwnedProcessTree -ProcessId $record.servicePid
                         Start-Sleep -Milliseconds 200
                         $listenerAfter = Get-IntegrationListenerPid $record.port
                     }
@@ -461,7 +475,7 @@ function Stop-IntegrationLegacyProcesses {
         $record = $property.Value
         $ownership = Get-IntegrationProcessOwnership $record
         if ($ownership.state -eq 'running') {
-            & taskkill.exe /PID $record.launcherPid /T /F | Out-Null
+            Stop-IntegrationOwnedProcessTree -ProcessId $record.launcherPid
             if ($LASTEXITCODE -ne 0) { throw "Could not stop owned legacy $service launcher PID $($record.launcherPid)." }
             $results += [pscustomobject]@{ service=$service; result='stopped-legacy' }
         } else { $results += [pscustomobject]@{ service=$service; result=$ownership.state } }
