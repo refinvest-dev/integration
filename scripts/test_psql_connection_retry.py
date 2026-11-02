@@ -22,6 +22,7 @@ class PsqlConnectionRetryTest(unittest.TestCase):
                 stub = root / 'psql_stub.py'
                 stub.write_text('''import pathlib,sys
 p=pathlib.Path(sys.argv[1]); mode=sys.argv[2]
+assert sys.argv[3:]==['-h','127.0.0.1','-p','5432','-v','ON_ERROR_STOP=1','-c','SELECT current_database();']
 n=int(p.read_text())+1 if p.exists() else 1; p.write_text(str(n))
 if mode.startswith('connect') and (mode=='connect_exhausted' or n<3):
  sys.stderr.write('psql: error: connection to server at "127.0.0.1" failed: Bad address (0x0000271E/10014)\\n'); sys.exit(2)
@@ -33,7 +34,7 @@ print('refinvest_integration')
                 driver.write_text('''param($Helper,$Executable,$Stub,$State,$Mode)
 $ErrorActionPreference='Stop'
 . $Helper
-Invoke-IntegrationPsql $Executable $Stub $State $Mode
+Invoke-IntegrationPsql $Executable $Stub $State $Mode -h 127.0.0.1 -p 5432 -v ON_ERROR_STOP=1 -c 'SELECT current_database();'
 exit $LASTEXITCODE
 ''', encoding='utf-8')
                 result = subprocess.run([PS, '-NoProfile', '-File', str(driver), str(helper),
