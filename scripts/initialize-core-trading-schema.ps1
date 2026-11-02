@@ -5,6 +5,7 @@ param([Parameter(Mandatory)][string]$EnvironmentFile,
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 . (Join-Path $PSScriptRoot 'PsqlConnectionRetry.ps1')
+. (Join-Path $PSScriptRoot 'CoreMigrations.ps1')
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Assert-IntegrationEnvironment $values @('POSTGRES_DB','POSTGRES_USER','POSTGRES_PASSWORD','INTEGRATION_POSTGRES_PORT')
 if ($values.POSTGRES_DB -cne 'refinvest_integration') { throw 'Core trading migrations require refinvest_integration.' }
@@ -24,9 +25,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Core integration schema creation failed.' }
 $previousPGOptions = $env:PGOPTIONS
 try {
 $env:PGOPTIONS = "-c search_path=$DatabaseSchema"
-$migrationRoot = Join-Path $CorePath 'tradingreview\adapter\persistence\src\main\resources\db\migration'
-$migrations = @(Get-ChildItem -LiteralPath $migrationRoot -Filter 'V*__*.sql' |
-    Sort-Object { [int]($_.Name -replace '^V([0-9]+)__.*$', '$1') })
+$migrations = @(Get-CoreIntegrationMigrations -CorePath $CorePath)
 if ($migrations.Count -lt 4) { throw 'Core trading migration set is incomplete.' }
 Invoke-IntegrationPsql $psql @args -c 'CREATE TABLE IF NOT EXISTS integration_core_trading_migrations (filename TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);' | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'Core migration tracking is unavailable.' }

@@ -169,8 +169,8 @@ def isolated_canary(rt, args, core, db, artifacts, checks):
                 sql.Identifier(table), sql.Identifier(source_schema), sql.Identifier(table)))
             canary_db.execute(sql.SQL("INSERT INTO {} SELECT * FROM {}.{} WHERE {}=%s").format(
                 sql.Identifier(table), sql.Identifier(source_schema), sql.Identifier(table), sql.Identifier(condition)), (owner,))
-        migration_root = args.core_path / "tradingreview/adapter/persistence/src/main/resources/db/migration"
-        for path in sorted(migration_root.glob("V*__*.sql"), key=lambda p: int(p.name.split("__")[0][1:])):
+        from core_migrations import core_migrations
+        for path in core_migrations(args.core_path):
             with canary_db.transaction():
                 canary_db.execute(path.read_text(encoding="utf-8"), prepare=False)
         for path in sorted((args.compute_path / "migrations").glob("*.sql")):
