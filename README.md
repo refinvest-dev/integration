@@ -16,6 +16,16 @@ own product contracts, domain rules, or service business code.
 `context` is the normative source. `compatibility.local.yaml` only records a
 specific implementation combination that was tested against it.
 
+## Core node configuration
+
+Core writer에는 0~1023 범위의 `SNOWFLAKE_NODE_ID`를 명시해야 한다. `.env.example`과 CI 환경은 primary에 0을
+사용한다. 기존 `.env.local`도 이 값을 추가해야 하며 동시에 실행하는 writer에는 서로 다른 값을 배정한다.
+전체 Trading fixture의 secondary와 canary는 Spring 설정으로 각각 1과 2를 사용한다.
+
+프로세스 identity는 Spring JSON override를 반영한 실제 node ID를 포함한다. Node ID가 바뀌면 기존
+프로세스 재사용을 거절하므로 소유한 프로세스를 중지한 뒤 새 설정으로 시작한다. Harness는 다른 호스트의
+중복 할당을 탐지하지 않는다. 배포·rollback의 writer 할당 절차는 Core의 `engineering/OPERATIONS_CONFIGURATION.md`를 따른다.
+
 ## Trading Normalization runtime contract
 
 Core의 [schema 전환 PR #106](https://github.com/refinvest-dev/core-api/pull/106)은 전체 JPA schema를
