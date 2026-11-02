@@ -29,8 +29,8 @@ def verify_count_snapshots(rt, args, evidence, core, db, artifacts):
         terminal = rt.poll(lambda: rt.request(core, "GET",
             args.core_url + f"/trading-deletion-requests/{initial['id']}", 200),
             lambda r: r["state"] in {"COMPLETED", "FAILED"}, args.timeout, "count fixture purge")
-        rt.require(terminal["state"] == "COMPLETED" and terminal["affectedResources"] == expected,
-            "PURGE_CHANGED_REQUEST_COUNTS")
+        rt.require(terminal["affectedResources"] == expected, "PURGE_CHANGED_REQUEST_COUNTS")
+        rt.require(terminal["state"] == "COMPLETED", "COUNT_FIXTURE_PURGE_FAILED")
         replay = rt.request(core, "DELETE", path, 202, headers={"Idempotency-Key": key})
         rt.require(replay["id"] == initial["id"] and replay["affectedResources"] == expected,
             "POST_PURGE_REPLAY_CHANGED_COUNTS")

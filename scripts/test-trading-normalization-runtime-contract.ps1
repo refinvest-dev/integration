@@ -139,6 +139,13 @@ try {
         $springConfig['refinvest.compute.ack-delay'] = 'PT20S'
         $springConfig['refinvest.compute.result-delay'] = 'PT1M'
     }
+    if ($RawPolicyClocks) {
+        # Revision purge must use the real encrypted store, not the unavailable fallback.
+        $springConfig['refinvest.trading-review.analytics-artifacts.root'] = Join-Path $runDir 'encrypted-analytics'
+        $springConfig['refinvest.trading-review.analytics-artifacts.keystore-path'] = $keystore
+        $springConfig['refinvest.trading-review.analytics-artifacts.keystore-password'] = $secret
+        $springConfig['refinvest.trading-review.analytics-artifacts.key-alias'] = 'integration-v1'
+    }
     $env:SPRING_APPLICATION_JSON = $springConfig | ConvertTo-Json -Depth 6 -Compress
     $env:REFINVEST_INTERNAL_API_KEY = $values.REFINVEST_INTERNAL_API_KEY
     $env:REFINVEST_TRADING_REVIEW_TZDB_VERSION = 'integration-pinned-tzdb-v1'
