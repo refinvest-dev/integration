@@ -380,8 +380,8 @@ def migration_rehearsal(rt, args, checks, core, compute, db, compute_db, proxy,
                            "runId": run_id, "jobId": job_id}
     for name in (core_schema, compute_schema):
         db.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(name)))
-    core_root = args.core_path / "tradingreview/adapter/persistence/src/main/resources/db/migration"
-    core_migrations = sorted(core_root.glob("V*__*.sql"), key=lambda p: int(p.name.split("__")[0][1:]))
+    from core_migrations import core_migrations as load_core_migrations
+    core_migrations = load_core_migrations(args.core_path)
     compute_migrations = sorted((args.compute_path / "migrations").glob("*.sql"))
 
     def migrate(connection, paths):

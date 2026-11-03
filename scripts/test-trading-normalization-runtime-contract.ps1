@@ -33,6 +33,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Contract preflight failed.' }
 
 Import-Module (Join-Path $PSScriptRoot 'IntegrationEnvironment.psm1') -Force
 . (Join-Path $PSScriptRoot 'PsqlConnectionRetry.ps1')
+. (Join-Path $PSScriptRoot 'CoreMigrations.ps1')
 $values = Get-IntegrationEnvironment $EnvironmentFile
 Assert-IntegrationEnvironment $values @('POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD',
     'INTEGRATION_POSTGRES_PORT', 'REFINVEST_INTERNAL_API_KEY')
@@ -127,6 +128,8 @@ try {
     $rawRoot = Join-Path $runDir 'encrypted-artifacts'
     New-Item -ItemType Directory -Force -Path $rawRoot | Out-Null
     $springConfig = @{
+        # This fixture runner applies and tracks SQL itself. Do not run a second migration owner.
+        'spring.flyway.enabled' = $false
         'refinvest.trading-review.raw.root' = $rawRoot
         'refinvest.trading-review.raw.keystore-path' = $keystore
         'refinvest.trading-review.raw.keystore-password' = $secret
@@ -156,9 +159,7 @@ try {
     $env:REFINVEST_TRADING_REVIEW_ACTIVE_JOB_LIMIT = '20'
 
     $scenario = 'migration'
-    $coreMigrationRoot = Join-Path $CorePath 'tradingreview\adapter\persistence\src\main\resources\db\migration'
-    $expectedCoreMigrations = @(Get-ChildItem -LiteralPath $coreMigrationRoot `
-        -Filter 'V*__*.sql' | Select-Object -ExpandProperty Name | Sort-Object)
+    $expectedCoreMigrations = @(Get-CoreIntegrationMigrations -CorePath $CorePath | Select-Object -ExpandProperty Name | Sort-Object)
     $appliedCoreMigrations = @()
     for ($inspection = 0; $inspection -lt 3; $inspection++) {
         $previousErrorAction = $ErrorActionPreference
@@ -195,7 +196,12 @@ try {
         try {
             Set-Location -LiteralPath $CorePath
             $ErrorActionPreference = 'Continue'
-            & .\gradlew.bat :app:bootJar --console=plain --no-daemon *> $buildLog
+            $wrapper = Get-IntegrationGradleWrapper -CoreApiPath $CorePath
+            if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+                & $wrapper :app:bootJar --console=plain --no-daemon *> $buildLog
+            } else {
+                & bash $wrapper :app:bootJar --console=plain --no-daemon *> $buildLog
+            }
             $jarBuildExit = $LASTEXITCODE
         } finally { Set-Location -LiteralPath $previousDirectory; $ErrorActionPreference = $previousErrorAction }
         if ($jarBuildExit -ne 0) { throw 'Core executable JAR build failed; see core-bootjar.log.' }

@@ -25,6 +25,7 @@ import httpx
 import jsonschema
 import psycopg
 import yaml
+from process_control import powershell_executable
 from trading_normalization_result_verifier import (
     SPEC,
     IntegrityFailure,
@@ -207,7 +208,7 @@ def source_fault_server(port: int, bodies: dict[str, bytes]) -> ThreadingHTTPSer
 
 def process_script(path: Path, *arguments: str) -> None:
     result = subprocess.run(
-        ["powershell.exe", "-NoProfile", "-NonInteractive", "-File", str(path), *arguments],
+        [powershell_executable(), "-NoProfile", "-NonInteractive", "-File", str(path), *arguments],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False,
     )
     require(result.returncode == 0, "PROCESS_CONTROL_FAILED")

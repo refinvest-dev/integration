@@ -126,9 +126,35 @@ function Test-IntegrationTcpListener {
     }
 }
 
+function Get-CoreIntegrationNodeId {
+    param([hashtable]$Values)
+    $value = $Values['SNOWFLAKE_NODE_ID']
+    if ($env:SPRING_APPLICATION_JSON) {
+        try { $config = $env:SPRING_APPLICATION_JSON | ConvertFrom-Json -ErrorAction Stop }
+        catch { throw 'Core Spring configuration JSON is invalid.' }
+        $property = $config.PSObject.Properties['refinvest.id.node-id']
+        if ($null -ne $property) { $value = $property.Value }
+        else {
+            $nested = $config
+            foreach ($key in @('refinvest','id','node-id')) {
+                if ($null -eq $nested) { break }
+                $entry = $nested.PSObject.Properties[$key]
+                $nested = if ($null -ne $entry) { $entry.Value } else { $null }
+            }
+            if ($null -ne $nested) { $value = $nested }
+        }
+    }
+    [long]$nodeId = 0
+    if (-not [long]::TryParse([string]$value, [ref]$nodeId) -or $nodeId -lt 0 -or $nodeId -gt 1023) {
+        throw 'Core requires an explicit SNOWFLAKE_NODE_ID or Spring node-id override between 0 and 1023.'
+    }
+    $nodeId
+}
+
 function Set-CoreIntegrationEnvironment {
     param([hashtable]$Values)
     Assert-IntegrationEnvironment $Values @('INTEGRATION_POSTGRES_PORT', 'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 'REFINVEST_JWT_ISSUER', 'REFINVEST_JWT_AUDIENCE', 'REFINVEST_JWT_SECRET', 'REFINVEST_INTERNAL_API_KEY')
+    $env:SNOWFLAKE_NODE_ID = [string](Get-CoreIntegrationNodeId $Values)
 
     $env:DATABASE_HOST = Get-IntegrationPostgresHost $Values
     $env:DATABASE_PORT = $Values['INTEGRATION_POSTGRES_PORT']
@@ -237,6 +263,7 @@ function New-CoreIntegrationIdentity {
         webOrigin = $Values['REFINVEST_WEB_ORIGIN']
         cookieSecure = $Values['REFINVEST_COOKIE_SECURE']
         cookieSameSite = $Values['REFINVEST_COOKIE_SAME_SITE']
+        nodeId = Get-CoreIntegrationNodeId $Values
         observability = [bool]$Observability
         metricsEndpoint = if ($Observability) { "http://127.0.0.1:$corePort/actuator/prometheus" } else { $null }
     }

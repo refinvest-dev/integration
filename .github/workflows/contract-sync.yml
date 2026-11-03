@@ -120,6 +120,7 @@ jobs:
         run: |
           python -B -m unittest discover -s integration/scripts -p 'test_contract_*.py'
           python -B -m unittest discover -s integration/scripts -p 'test_publish_contract_sync.py'
+          python -B -m unittest discover -s integration/scripts -p 'test_core_migrations.py'
 
       - name: Verify OpenAPI snapshots
         id: contract-sync

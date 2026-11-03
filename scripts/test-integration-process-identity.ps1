@@ -110,6 +110,7 @@ try {
 
     $secretValues = @{
         INTEGRATION_POSTGRES_HOST='localhost'; INTEGRATION_POSTGRES_PORT='5432'; POSTGRES_DB='refinvest_integration'
+        SNOWFLAKE_NODE_ID='0'
         POSTGRES_USER='user-sentinel'; POSTGRES_PASSWORD='password-sentinel'; REFINVEST_INTERNAL_API_KEY='api-key-sentinel'
         REFINVEST_JWT_SECRET='jwt-sentinel'; REFINVEST_SNAPSHOT_STORAGE_ROOT='.integration-data\snapshots'
     }
@@ -129,6 +130,30 @@ try {
         -CoreApiPath $integrationRoot -CoreJarPath $testJar -RegistryId 'jar-identity'
     Assert-ThrowsLike { Assert-IntegrationServiceStartAllowed -RootPath $testRoot -Name core-api `
         -ExpectedIdentity $changedJarIdentity -RegistryId 'jar-identity' } '*MISMATCH*' 'changed executable artifact cannot reuse a process'
+    [IO.File]::WriteAllBytes($testJar, [byte[]]@(1,2,3))
+    $otherNodeValues = $secretValues.Clone()
+    $otherNodeValues['SNOWFLAKE_NODE_ID'] = '1'
+    $otherNodeIdentity = New-CoreIntegrationIdentity -Values $otherNodeValues -EnvironmentFile (Join-Path $testRoot '.env.local') `
+        -CoreApiPath $integrationRoot -CoreJarPath $testJar -RegistryId 'jar-identity'
+    Assert-ThrowsLike { Assert-IntegrationServiceStartAllowed -RootPath $testRoot -Name core-api `
+        -ExpectedIdentity $otherNodeIdentity -RegistryId 'jar-identity' } '*MISMATCH*' 'changed node ID cannot reuse a process'
+    foreach ($invalidNode in @('', 'not-a-number', '-1', '1024')) {
+        $badValues = $secretValues.Clone(); $badValues['SNOWFLAKE_NODE_ID'] = $invalidNode
+        Assert-ThrowsLike { New-CoreIntegrationIdentity -Values $badValues -EnvironmentFile (Join-Path $testRoot '.env.local') `
+            -CoreApiPath $integrationRoot } '*explicit SNOWFLAKE_NODE_ID*' 'invalid node ID is rejected before launch'
+    }
+    $originalSpringConfig = $env:SPRING_APPLICATION_JSON
+    try {
+        foreach ($config in @('{"refinvest.id.node-id":2}', '{"refinvest":{"id":{"node-id":2}}}')) {
+            $env:SPRING_APPLICATION_JSON = $config
+            $overrideIdentity = New-CoreIntegrationIdentity -Values $secretValues -EnvironmentFile (Join-Path $testRoot '.env.local') `
+                -CoreApiPath $integrationRoot
+            Assert-True ($overrideIdentity.configuration.nodeId -eq 2) 'effective Spring node ID is recorded'
+        }
+    } finally {
+        if ($null -eq $originalSpringConfig) { Remove-Item Env:SPRING_APPLICATION_JSON -ErrorAction SilentlyContinue }
+        else { $env:SPRING_APPLICATION_JSON = $originalSpringConfig }
+    }
     "PASS: $passed process/configuration identity assertions"
 } finally {
     if ([IO.Path]::GetFullPath($testRoot).StartsWith([IO.Path]::GetFullPath((Join-Path $integrationRoot '.integration-data\tests')), [StringComparison]::OrdinalIgnoreCase)) {
