@@ -27,6 +27,12 @@ CHECKS = {
     "candidate-smoke": ("api-smoke-and-web-acceptance-compatibility-evidence",
                         "api-smoke-and-web-acceptance"),
 }
+# Exact primary names from the reusable workflows. An auxiliary job can share
+# the caller prefix without being the check that produced checkout evidence.
+CHECK_JOB_NAMES = {
+    "candidate-sync": "Verify Context/Core/Compute/Web snapshots",
+    "candidate-smoke": "Core to Compute API smoke and Web browser acceptance",
+}
 
 
 def gh_json(endpoint: str, *, payload: dict | None = None):
@@ -106,7 +112,8 @@ def evaluate(manifest: dict, run: dict, jobs: list, evidence: dict) -> dict:
     expected = {"context": manifest["contextRevision"], **manifest["heads"]}
     checks = {}
     for prefix, (_, verification_name) in CHECKS.items():
-        matches = [job for job in jobs if job["name"].startswith(prefix + " / ")]
+        expected_name = f"{prefix} / {CHECK_JOB_NAMES[prefix]}"
+        matches = [job for job in jobs if job["name"] == expected_name]
         item = {"outcome": "not-recorded", "url": run["html_url"], "errors": []}
         if len(matches) == 1:
             job = matches[0]

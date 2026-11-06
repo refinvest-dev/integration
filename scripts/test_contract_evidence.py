@@ -34,9 +34,13 @@ def completed_run():
 
 
 def completed_jobs():
-    return [{"name": f"{key} / {name}", "status": "completed", "conclusion": "success",
-             "html_url": f"https://example/jobs/{key}"}
-            for key, (_, name) in evidence.CHECKS.items()]
+    # Literal names from the reusable workflows, as returned by the Actions jobs API.
+    return [
+        {"name": "candidate-sync / Verify Context/Core/Compute/Web snapshots",
+         "status": "completed", "conclusion": "success", "html_url": "https://example/jobs/sync"},
+        {"name": "candidate-smoke / Core to Compute API smoke and Web browser acceptance",
+         "status": "completed", "conclusion": "success", "html_url": "https://example/jobs/smoke"},
+    ]
 
 
 def checkout_evidence(manifest):
@@ -64,10 +68,48 @@ class OutcomeTest(unittest.TestCase):
     def outcome(self):
         return evidence.evaluate(self.manifest, self.run, self.jobs, self.data)
 
+    def test_primary_names_match_workflow_job_declarations(self):
+        workflows = Path(__file__).resolve().parents[1] / ".github/workflows"
+        for prefix, filename in (("candidate-sync", "contract-sync.yml"),
+                                 ("candidate-smoke", "api-smoke.yml")):
+            with self.subTest(prefix=prefix):
+                text = (workflows / filename).read_text(encoding="utf-8")
+                # Job name is four-space indented; step names are nested further.
+                self.assertIn("\n    name: " + evidence.CHECK_JOB_NAMES[prefix] + "\n", text)
+
     def test_success_requires_completed_jobs_and_exact_five_checkout_shas(self):
         result = self.outcome()
         self.assertEqual(result["outcome"], "success")
         self.assertEqual(result["checks"]["candidate-sync"]["checkedOutRevisions"]["web"], "d" * 40)
+
+    def test_optional_schema_job_does_not_ambiguate_required_smoke(self):
+        for conclusion in ("skipped", "success"):
+            with self.subTest(conclusion=conclusion):
+                self.jobs = completed_jobs() + [{
+                    "name": "candidate-smoke / trading-schema-regression",
+                    "status": "completed", "conclusion": conclusion,
+                    "html_url": "https://example/jobs/schema",
+                }]
+                result = self.outcome()
+                self.assertEqual(result["outcome"], "success")
+                self.assertEqual(result["checks"]["candidate-smoke"]["url"], "https://example/jobs/smoke")
+
+    def test_auxiliary_job_cannot_substitute_for_missing_primary(self):
+        self.jobs[-1]["name"] = "candidate-smoke / trading-schema-regression"
+        self.assertEqual(self.outcome()["outcome"], "failure")
+
+    def test_successful_auxiliary_job_cannot_mask_primary_failure(self):
+        self.jobs[-1]["conclusion"] = "failure"
+        self.jobs.append({"name": "candidate-smoke / trading-schema-regression",
+                          "status": "completed", "conclusion": "success"})
+        self.run["conclusion"] = "failure"
+        self.assertEqual(self.outcome()["outcome"], "failure")
+
+    def test_executed_schema_failure_keeps_workflow_failed(self):
+        self.jobs.append({"name": "candidate-smoke / trading-schema-regression",
+                          "status": "completed", "conclusion": "failure"})
+        self.run["conclusion"] = "failure"
+        self.assertEqual(self.outcome()["outcome"], "failure")
 
     def test_dispatch_and_running_are_pending_even_with_previous_success_data(self):
         for state in ("queued", "in_progress"):
