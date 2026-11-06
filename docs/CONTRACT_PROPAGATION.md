@@ -75,6 +75,14 @@ Core/Compute/Web/integration SHA, 관련 PR, 변경 파일과 담당자 체크�
 
 ## Evidence and outcomes
 
+완료 수집기는 caller prefix만으로 job을 세지 않고 필수 job의 전체 이름을 식별한다.
+`candidate-sync / Verify Context/Core/Compute/Web snapshots`와
+`candidate-smoke / Core to Compute API smoke and Web browser acceptance`가 각각 하나씩
+완료·성공하고 실제 checkout 증거가 일치해야 한다. 선택적 `trading-schema-regression` job은
+필수 smoke를 대체하지 않으며 skipped 상태가 smoke 판정을 모호하게 만들지 않는다.
+선택적 검증을 실행해 실패하면 전파 workflow 자체가 실패하므로 전체 성공으로 판정하지 않는다.
+필수 job 이름 변경 시 `contract_evidence.py`의 이름 매핑과 테스트도 함께 갱신한다.
+
 | 결과물 | 내용 |
 | --- | --- |
 | 원래 전파 실행의 `contract-propagation-result-<attempt>` | `contract-propagation.json`: 원본 Context, 네 후보 head, 네 base main, 실제 PR 번호/head, 변경 파일, 실행 ID/attempt, 워크플로 소스 SHA. 처음 상태는 `pending`이다. |
