@@ -39,3 +39,17 @@ ADR, OpenAPI 계약 또는 개별 서비스의 business code를 소유하지 않
 - integration DB 이름은 production/development DB와 분리한다. 기본값은 `refinvest_integration`이다.
 - script는 integration DB 이외의 destructive database operation을 수행하지 않는다.
 - local PostgreSQL을 우선 지원하고, Docker Compose는 선택적인 대안이다.
+
+## PR 본문 형식
+
+`.github/pull_request_template.md`를 기준으로 Summary, Changes, Validation, Impact,
+Related Links를 항상 포함한다. 제목은 영어 H2(`## Summary`), 본문은 한국어로 작성하고
+전문 용어·식별자·명령은 원문을 사용한다. 빈 안내 문구는 실제 내용으로 바꾼다.
+해당 사항이 없으면 `해당 없음`과 간단한 이유를 적는다. Validation에는 실제 실행 명령/결과와
+미실행 검증을 구분하며, Impact에는 호환성·소유권·운영 영향 또는 영향 없음의 근거를 적는다.
+Related Links에는 관련 ADR/Use Case/문서/이슈/상대 저장소 PR을 연결한다.
+Migration Plan, Rollback, Evidence, Review Notes 등 추가 항목은 필요한 경우에만 영어 H2로 넣는다.
+Migration/배포 변경은 적용·복구 순서, E2E/성능 주장은 실제 증적을 추가한다.
+제목은 커밋 컨벤션을 따르고, 본문은 대화 이력 대신 최종 변경을 설명한다.
+API/CLI로 PR을 생성·갱신하는 자동화도 동일 형식을 적용한다. 이 문서와 template은 작성 기준이며
+CI에서 본문 형식을 자동 강제하는 기능이 이미 구축됐다는 의미는 아니다.
