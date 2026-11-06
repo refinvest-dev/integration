@@ -1,7 +1,8 @@
 # Trading Review Go integration 준비
 
-설계 정본은 context `docs/TRADING_REVIEW_SERVICE_BOUNDARY.md`/ADR-072,
-Go 구현 설계는 `../trading-review-api/trading-review-api/ARCHITECTURE.md`다.
+설계 정본은 context의 [서비스 경계](https://github.com/refinvest-dev/context/blob/main/docs/TRADING_REVIEW_SERVICE_BOUNDARY.md)/ADR-072,
+Go 구현 설계는 [ARCHITECTURE.md](https://github.com/refinvest-dev/trading-review-api/blob/main/ARCHITECTURE.md)다.
+로컬 checkout 경로는 integration 저장소 루트 기준 `../context`, `../trading-review-api/trading-review-api`다.
 이 문서는 integration 후속 작업만 소유한다. 현재 Go 서버/검증 자동화가 구현됐다는 의미가 아니다.
 
 ## 조합
@@ -22,4 +23,5 @@ Go 구현 설계는 `../trading-review-api/trading-review-api/ARCHITECTURE.md`�
 8. 사용자 위임·소유권·CSRF 경계를 포함한 Core→Go smoke와 기존 Backtest 회귀 유지.
 
 E2E 전에 계약 동기화 검사를 수행한다. 새 context 문서 변경 후 기존 snapshot은 별도 전파가
-필요하며 동기화되지 않은 조합을 성공으로 간주하지 않는다. remote/Go module 경로는 확정 전 추측하지 않는다.
+필요하며 동기화되지 않은 조합을 성공으로 간주하지 않는다. Go 원격 저장소는 연결되어 있지만
+Go module 경로와 CI의 실제 후보 revision은 별도로 확정·검증한다.
