@@ -30,6 +30,23 @@
       "targets": [{ "repository": "coreApi", "path": "docs/AI_AGENT.md" }]
     },
     {
+      "sourceDirectory": "openapi/drafts",
+      "files": [
+        "trading-review-owner-query.yaml",
+        "trading-review-member-authority.yaml"
+      ],
+      "mode": "text",
+      "targets": [{ "repository": "coreApi", "directory": "openapi/drafts" }]
+    },
+    {
+      "source": "fixtures/trading-review-member-authority-draft/authority-cases.json",
+      "mode": "text",
+      "targets": [{
+        "repository": "coreApi",
+        "path": "tradingreview/application/src/test/resources/trading-review-member-authority-draft/authority-cases.json"
+      }]
+    },
+    {
       "sourceDirectory": "docs",
       "files": "*.md",
       "mode": "text",

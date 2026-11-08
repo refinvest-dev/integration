@@ -13,6 +13,8 @@ its files are copied into sibling checkouts. It does not define product rules.
 | Normalization V1 fixtures | Core, Compute |
 | Normalization V2 result vector | Core, Compute, integration |
 | Analytics protocol fixtures | Core, Compute, integration |
+| Trading Review owner-query / Member authority draft OpenAPI | Core (`openapi/drafts/`) |
+| Member authority synthetic draft fixture | Core (test resources, CRLF/LF-normalized text) |
 
 `AGENTS.md`, Context verifier scripts, and the Analytics fixture verifier are
 informational: they have no copied snapshot. A new file under `openapi/`,
@@ -23,6 +25,20 @@ Core-owned document and is rejected.
 This classification only determines file copies. OpenAPI or normative document
 changes can require implementation in Core, Compute, or Web even when that
 repository has no copied file. Such work is reviewed separately.
+
+Trading Review 초안은 위 표에 명시한 파일만 복제한다. `openapi/drafts/` 전체를 자동 포함하거나
+informational로 제외하지 않는다. Core의 문서 snapshot에서 연결한 두 OpenAPI 초안의 상대 경로를
+보존하고 synthetic authority fixture는 test resources에 둔다. `verify-contract-sync.ps1`은
+초안 snapshot의 일치와 Context의 두 draft verifier를 함께 실행해 `x-contract-status: draft` 및
+`x-runtime-enabled: false`를 검사한다. 이는 ADR-074 채택이나 Core/Go route·인증 활성화가 아니다.
+Compute/Web의 복제 대상은 바뀌지 않으므로 mapped source가 동일하면 기존 revision을 보존한다.
+authority fixture는 JSON schema용 synthetic 사례이며 파일 전체가 canonical-byte oracle은 아니다.
+이 파일에만 text 비교를 적용하고 내부 delegation 문자열의 SHA-256 결속은 Context verifier로 검사한다.
+기존 Normalization/Analytics golden vector의 `bytes` 비교는 그대로 유지한다.
+
+검사 규칙과 sibling snapshot을 함께 변경할 때는 두 후보 SHA를 고정해 먼저 검증한다.
+Core snapshot PR을 먼저 반영한 뒤 integration PR의 기본 sibling-main CI를 다시 실행한다.
+후보 조합의 PASS와 모든 main의 PASS는 구분하며 이전 Context 기준의 자동 전파 PR을 중복 적용하지 않는다.
 
 ## Local impact plan
 

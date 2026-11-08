@@ -66,6 +66,14 @@ if ($IncludeWeb) {
 
 Write-Host "OpenAPI snapshots are synchronized with context."
 
+# Review-only drafts have their own namespace and never replace the runtime APIs.
+foreach ($name in @('trading-review-owner-query.yaml', 'trading-review-member-authority.yaml')) {
+    Assert-SameFile `
+        (Join-Path $ContextPath "openapi/drafts/$name") `
+        (Join-Path $CoreApiPath "openapi/drafts/$name")
+}
+Write-Host 'Trading Review draft OpenAPI snapshots are synchronized.'
+
 # Core owns document snapshots, including the result delivery policy and
 # acceptance/failure rules that are not represented in OpenAPI.
 $coreDocVerifier = Join-Path $CoreApiPath 'scripts/verify-context-doc-sync.ps1'
@@ -86,6 +94,21 @@ function Assert-SameBytes([string]$Source, [string]$Replica) {
     }
     Write-Host "OK  $Replica"
 }
+
+$authorityFixture = 'trading-review-member-authority-draft/authority-cases.json'
+# This synthetic JSON is schema input, not a canonical-byte golden vector.
+# Normalize checkout CRLF/LF only; the draft verifier checks the token's byte hash.
+Assert-SameFile `
+    (Join-Path $ContextPath "fixtures/$authorityFixture") `
+    (Join-Path $CoreApiPath "tradingreview/application/src/test/resources/$authorityFixture")
+foreach ($name in @('verify-trading-review-owner-query-draft.py',
+                     'verify-trading-review-member-authority-draft.py')) {
+    $verifier = Join-Path $ContextPath "scripts/$name"
+    if (-not (Test-Path -LiteralPath $verifier -PathType Leaf)) { throw "Missing Context draft verifier: $verifier" }
+    & python -B $verifier
+    if ($LASTEXITCODE -ne 0) { throw "Trading Review draft verification failed: $name" }
+}
+Write-Host 'Trading Review draft schemas/fixtures verified; no runtime authentication or routes enabled.'
 
 $revisionArguments = @(
     '-B', (Join-Path $PSScriptRoot 'contract_sync.py'), 'verify-revisions',
