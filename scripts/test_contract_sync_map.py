@@ -51,6 +51,30 @@ class ContractSyncMapTest(unittest.TestCase):
         with self.assertRaisesRegex(ContractSyncError, "Unclassified"):
             expand_map(self.manifest, self.sources | {"fixtures/new-protocol/vector.json"})
 
+    def test_review_drafts_have_core_snapshots_only(self):
+        for name in ("trading-review-owner-query.yaml", "trading-review-member-authority.yaml"):
+            source = "openapi/drafts/" + name
+            with self.subTest(source=source):
+                self.assertEqual(self.targets(source), {("coreApi", source)})
+                self.assertNotIn(source, self.manifest["informationalFiles"])
+        fixture = "fixtures/trading-review-member-authority-draft/authority-cases.json"
+        self.assertEqual(self.targets(fixture), {(
+            "coreApi",
+            "tradingreview/application/src/test/resources/trading-review-member-authority-draft/authority-cases.json",
+        )})
+        self.assertEqual(
+            {replica.mode for replica in self.replicas if replica.source == fixture},
+            {"text"},
+        )
+
+    def test_new_draft_contract_file_still_fails_closed(self):
+        for source in (
+            "openapi/drafts/new-service.yaml",
+            "fixtures/trading-review-member-authority-draft/new-cases.json",
+        ):
+            with self.subTest(source=source), self.assertRaisesRegex(ContractSyncError, "Unclassified"):
+                expand_map(self.manifest, self.sources | {source})
+
     def test_core_local_document_collision_fails_closed(self):
         with self.assertRaisesRegex(ContractSyncError, "collides"):
             expand_map(self.manifest, self.sources | {"docs/README.md"})
