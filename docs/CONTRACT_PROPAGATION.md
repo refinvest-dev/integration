@@ -84,6 +84,11 @@ integration `contract-propagation.yml`은 `main`에서만 실행하며,
 Core/Compute/Web/integration SHA, 관련 PR, 변경 파일과 담당자 체크리스트를 기록한다.
 제품 코드, 자동 승인, 자동 병합, 보호 규칙 우회 또는 LLM 병합 판정은 포함하지 않는다.
 
+생성 시점과 완료 evidence 갱신 시점 모두 PR 본문에 영어 H2 `Summary`, `Changes`,
+`Validation`, `Impact`, `Related Links`를 유지하고 본문은 한국어로 작성한다.
+Context source·Candidate set·Maintainer review 등 증적 항목은 추가 H2로 둔다.
+pending/failure와 실제 성공을 구분하며 snapshot 동기화를 새 계약 구현 완료로 표시하지 않는다.
+
 기존 bot 브랜치가 오래되어 main의 snapshot 갱신과 충돌하면, 먼저 현재·이전 Context의
 복제 규칙과 revision marker로 허용 파일을 한정하고 bot 브랜치에 제품 코드가 없는지 확인한다.
 허용된 snapshot 충돌만 main의 내용(삭제 포함)으로 해소하여 Git merge commit을 만들고,
