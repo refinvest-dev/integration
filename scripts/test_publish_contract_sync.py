@@ -140,6 +140,88 @@ class PublishingTest(unittest.TestCase):
         with self.assertRaisesRegex(ContractSyncError, "non-snapshot"):
             self.publish()
 
+    def test_stale_bot_snapshot_conflicts_refresh_without_losing_main_or_history(self):
+        root = self.roots["coreApi"]
+        git(root, "switch", "-c", publisher.BRANCH)
+        (root / "docs/RULE.md").write_text("pending bot snapshot\n")
+        (root / "CONTEXT_REVISION").write_text(self.second + "\n")
+        self.commit(root, "pending snapshot")
+        old_bot = git(root, "rev-parse", "HEAD")
+        git(root, "switch", "main")
+        (self.context / "docs/RULE.md").write_text("reviewed main snapshot\n")
+        self.commit(self.context, "reviewed policy")
+        third = git(self.context, "rev-parse", "HEAD")
+        (root / "docs/RULE.md").write_text("reviewed main snapshot\n")
+        (root / "CONTEXT_REVISION").write_text(third + "\n")
+        (root / "business.py").write_text("main business change\n")
+        self.commit(root, "main snapshot and business change")
+        main = git(root, "rev-parse", "HEAD")
+        (self.context / "docs/RULE.md").write_text("latest approved snapshot\n")
+        self.commit(self.context, "latest policy")
+        latest = git(self.context, "rev-parse", "HEAD")
+
+        # A new CI checkout has the remote bot branch but no local branch.
+        clone = self.root / "fresh-core"
+        git(self.root, "clone", "-q", str(self.root / "coreApi.git"), str(clone))
+        git(clone, "config", "user.name", "Contract test")
+        git(clone, "config", "user.email", "test@example.invalid")
+        self.roots["coreApi"] = clone
+        result = self.publish(latest)
+
+        self.assertEqual((clone / "docs/RULE.md").read_text(), "latest approved snapshot\n")
+        self.assertEqual((clone / "CONTEXT_REVISION").read_text().strip(), latest)
+        self.assertEqual((clone / "business.py").read_text(), "main business change\n")
+        self.assertEqual(git(clone, "ls-files", "--unmerged"), "")
+        for ancestor in [old_bot, main]:
+            git(clone, "merge-base", "--is-ancestor", ancestor, "HEAD")
+        self.assertEqual(set(result["changedFiles"]["coreApi"]),
+                         {"docs/RULE.md", "CONTEXT_REVISION"})
+        self.assertEqual(git(clone, "rev-parse", "origin/" + publisher.BRANCH),
+                         result["heads"]["coreApi"])
+
+    def conflicting_branches(self, filename, *, delete_on_main=False):
+        root = self.roots["coreApi"]
+        (root / filename).write_text("original\n")
+        self.commit(root, "shared base")
+        git(root, "switch", "-c", "merge-candidate")
+        (root / filename).write_text("candidate\n")
+        self.commit(root, "candidate version")
+        candidate = git(root, "rev-parse", "HEAD")
+        git(root, "switch", "main")
+        if delete_on_main:
+            (root / filename).unlink()
+        else:
+            (root / filename).write_text("main version\n")
+        self.commit(root, "main version")
+        git(root, "switch", "merge-candidate")
+        return root, candidate
+
+    def test_snapshot_removed_on_main_is_not_resurrected_by_merge(self):
+        root, candidate = self.conflicting_branches("docs/RULE.md", delete_on_main=True)
+        publisher.merge_snapshot_main(root, {"docs/RULE.md"})
+        self.assertFalse((root / "docs/RULE.md").exists())
+        self.assertEqual(git(root, "ls-files", "--unmerged"), "")
+        git(root, "merge-base", "--is-ancestor", candidate, "HEAD")
+        git(root, "merge-base", "--is-ancestor", "origin/main", "HEAD")
+
+    def test_conflict_outside_snapshot_allowlist_fails_without_push(self):
+        root, candidate = self.conflicting_branches("business.py")
+        with self.assertRaisesRegex(ContractSyncError, "non-snapshot conflicts"):
+            publisher.merge_snapshot_main(root, {"docs/RULE.md"})
+        self.assertEqual(git(root, "rev-parse", "HEAD"), candidate)
+        self.assertEqual(git(root, "rev-parse", "origin/merge-candidate"), candidate)
+        self.assertTrue(git(root, "ls-files", "--unmerged"))
+
+    def test_merge_error_without_conflicts_is_not_swallowed(self):
+        original_run = publisher.run
+        def fail_merge(*args, **kwargs):
+            if "merge" in args:
+                raise ContractSyncError("merge failed without conflicts")
+            return original_run(*args, **kwargs)
+        with patch.object(publisher, "run", side_effect=fail_merge):
+            with self.assertRaisesRegex(ContractSyncError, "merge failed without conflicts"):
+                publisher.merge_snapshot_main(self.roots["coreApi"], {"docs/RULE.md"})
+
     def test_remote_main_move_during_publishing_aborts_without_pr_writes(self):
         original = publisher.assert_remote_main
         checks = []

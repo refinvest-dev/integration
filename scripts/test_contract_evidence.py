@@ -187,9 +187,13 @@ class FreshnessTest(unittest.TestCase):
             self.assertIn(sha, body)
         self.assertIn("스냅샷 변경 없음", body)
         self.assertIn("**pending**", body)
-        for heading in ("Context source", "Candidate set", "Verification evidence",
-                        "Changed files", "Maintainer review"):
+        for heading in ("Summary", "Changes", "Validation", "Impact", "Related Links",
+                        "Context source", "Candidate set", "Maintainer review"):
             self.assertIn("## " + heading, body)
+        self.assertIn("제품 정책 채택과 runtime 구현·활성화는 별도", body)
+        self.assertIn("https://github.com/example/context/commit/" + self.context, body)
+        unchanged = evidence.render_body(self.manifest, "web")
+        self.assertIn("해당 없음 — 이 저장소는 변경 없는 main SHA", unchanged)
         pending = copy.deepcopy(self.manifest)
         pending["pullRequests"] = {}
         self.assertIn("스냅샷 PR 연결 대기 중", evidence.render_body(pending, "coreApi"))
