@@ -75,6 +75,18 @@ class ContractSyncMapTest(unittest.TestCase):
             with self.subTest(source=source), self.assertRaisesRegex(ContractSyncError, "Unclassified"):
                 expand_map(self.manifest, self.sources | {source})
 
+    def test_account_book_draft_mapping_before_and_after_source_exists(self):
+        source = "openapi/drafts/trading-review-account-book.yaml"
+        before = self.sources - {source}
+        self.assertFalse(any(r.source == source for r in expand_map(self.manifest, before)))
+        after = expand_map(self.manifest, before | {source})
+        self.assertEqual({(r.repository, r.target, r.mode) for r in after if r.source == source},
+                         {("coreApi", source, "text")})
+        for unknown in ("openapi/drafts/trading-review-account-book-extra.yaml",
+                        source + ".backup"):
+            with self.subTest(unknown=unknown), self.assertRaisesRegex(ContractSyncError, "Unclassified"):
+                expand_map(self.manifest, before | {unknown})
+
     def test_core_local_document_collision_fails_closed(self):
         with self.assertRaisesRegex(ContractSyncError, "collides"):
             expand_map(self.manifest, self.sources | {"docs/README.md"})

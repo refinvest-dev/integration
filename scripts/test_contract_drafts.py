@@ -14,6 +14,8 @@ CORE = WORKSPACE / "api/refinvest"
 OWNER = "openapi/drafts/trading-review-owner-query.yaml"
 AUTHORITY = "openapi/drafts/trading-review-member-authority.yaml"
 FIXTURE = "trading-review-member-authority-draft/authority-cases.json"
+ACCOUNT_BOOK = "openapi/drafts/trading-review-account-book.yaml"
+ACCOUNT_BOOK_CHECK = "scripts/verify-trading-review-account-book-draft.py"
 
 
 class DraftSnapshotGateTest(unittest.TestCase):
@@ -31,6 +33,8 @@ class DraftSnapshotGateTest(unittest.TestCase):
             "scripts/verify-trading-review-owner-query-draft.py",
             "scripts/verify-trading-review-member-authority-draft.py",
         ] + [path.relative_to(CONTEXT).as_posix() for path in (CONTEXT / "docs").glob("*.md")]
+        if (CONTEXT / ACCOUNT_BOOK).exists():
+            files += [ACCOUNT_BOOK, ACCOUNT_BOOK_CHECK]
         for name in files:
             destination = self.context / name
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -106,6 +110,26 @@ class DraftSnapshotGateTest(unittest.TestCase):
             self.assertIn("x-runtime-enabled: false", original)
             path.write_text(original.replace("x-runtime-enabled: false", "x-runtime-enabled: true", 1), encoding="utf-8")
         self.rejected_by("authority must remain unadopted")
+
+
+    @unittest.skipUnless((CONTEXT / ACCOUNT_BOOK).exists(), "candidate absent in pinned Context")
+    def test_account_book_missing_snapshot_is_rejected(self):
+        (self.core / ACCOUNT_BOOK).unlink()
+        self.rejected_by("Contract replica does not exist")
+
+    @unittest.skipUnless((CONTEXT / ACCOUNT_BOOK).exists(), "candidate absent in pinned Context")
+    def test_account_book_missing_checker_is_rejected(self):
+        (self.context / ACCOUNT_BOOK_CHECK).unlink()
+        self.rejected_by("Missing Context Account/Book draft verifier")
+
+    @unittest.skipUnless((CONTEXT / ACCOUNT_BOOK).exists(), "candidate absent in pinned Context")
+    def test_matching_account_book_runtime_activation_is_rejected(self):
+        for root in (self.context, self.core):
+            path = root / ACCOUNT_BOOK
+            original = path.read_text(encoding="utf-8")
+            self.assertIn("x-runtime-enabled: false", original)
+            path.write_text(original.replace("x-runtime-enabled: false", "x-runtime-enabled: true", 1), encoding="utf-8")
+        self.rejected_by("runtime enablement forbidden")
 
 
 if __name__ == "__main__":
