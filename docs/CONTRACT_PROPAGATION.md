@@ -14,6 +14,7 @@ its files are copied into sibling checkouts. It does not define product rules.
 | Normalization V2 result vector | Core, Compute, integration |
 | Analytics protocol fixtures | Core, Compute, integration |
 | Trading Review owner-query / Member authority draft OpenAPI | Core (`openapi/drafts/`) |
+| Trading Review Account/Book draft (exact file, when present) | Core (`openapi/drafts/`) |
 | Member authority synthetic draft fixture | Core (test resources, CRLF/LF-normalized text) |
 
 `AGENTS.md`, Context verifier scripts, and the Analytics fixture verifier are
@@ -244,3 +245,15 @@ bare Git remote 테스트는 GitHub App 설치, Actions job 이름, artifact 전
 설정 조회 결과, 권장 보호 설정과 적용 순서는
 [`CONTRACT_PROPAGATION_SETTINGS.md`](CONTRACT_PROPAGATION_SETTINGS.md)를 확인한다.
 이 구현에서 GitHub 저장소 설정을 변경하지 않는다.
+
+## Account/Book draft rollout
+
+`trading-review-account-book.yaml`만 이름이 정확히 맞을 때 text snapshot으로 Core에 복제한다.
+mapping의 files 문자열은 단일 literal pattern이며 기존 source가 없는 revision에서도 적용 가능하다.
+source가 있는 candidate부터 spec/checker·Core snapshot·draft/runtime-disabled gate를 요구한다.
+spec 또는 checker 하나만 남으면 검사를 건너뛰지 않는다. 다른 draft 파일과 `.backup`은 계속 fail closed다.
+이 규칙은 제품 schema/권한을 소유하거나 read-only audience를 write에 허용하지 않는다.
+
+새 Context 파일과 mapping PR은 의존 관계가 있다. Context impact CI가 integration main을 사용하면 mapping
+merge 전 새 source를 Unclassified로 거절할 수 있다. 이 실패를 무시하지 말고 선행 snapshot/mapping을
+반영한 뒤 재실행한다. 고정 SHA 후보 검사는 main drift 결과와 따로 보고하며 전파/HTTP/E2E 성공으로 확대하지 않는다.

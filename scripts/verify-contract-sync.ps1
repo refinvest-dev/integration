@@ -72,6 +72,20 @@ foreach ($name in @('trading-review-owner-query.yaml', 'trading-review-member-au
         (Join-Path $ContextPath "openapi/drafts/$name") `
         (Join-Path $CoreApiPath "openapi/drafts/$name")
 }
+# Exact reviewed Account/Book candidate: old Context revisions may not contain it yet.
+# If either its spec or checker exists, require both and the matching Core snapshot.
+$accountBookDraft = 'openapi/drafts/trading-review-account-book.yaml'
+$accountBookChecker = Join-Path $ContextPath 'scripts/verify-trading-review-account-book-draft.py'
+if ((Test-Path -LiteralPath (Join-Path $ContextPath $accountBookDraft)) -or
+    (Test-Path -LiteralPath $accountBookChecker)) {
+    Assert-SameFile (Join-Path $ContextPath $accountBookDraft) (Join-Path $CoreApiPath $accountBookDraft)
+    if (-not (Test-Path -LiteralPath $accountBookChecker -PathType Leaf)) {
+        throw 'Missing Context Account/Book draft verifier'
+    }
+    & python -B $accountBookChecker
+    if ($LASTEXITCODE -ne 0) { throw 'Account/Book draft verification failed' }
+    Write-Host 'Account/Book candidate checked; no runtime routes or scopes enabled.'
+}
 Write-Host 'Trading Review draft OpenAPI snapshots are synchronized.'
 
 # Core owns document snapshots, including the result delivery policy and
