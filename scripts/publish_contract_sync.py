@@ -40,6 +40,41 @@ def remote_branch_exists(root: Path) -> bool:
     return bool(run("git", "ls-remote", "--heads", "origin", BRANCH, cwd=root))
 
 
+def merge_snapshot_main(root: Path, allowed: set[str]) -> None:
+    """Keep both histories; only mapped snapshot conflicts may be refreshed.
+
+    The caller audits the existing bot branch before entering here. Main wins
+    temporarily for conflicting snapshots, then apply_plan copies the complete
+    pinned Context contract. Product-code conflicts never get auto-resolved.
+    """
+    author = ("-c", "user.name=refinvest-contract-bot",
+              "-c", "user.email=refinvest-contract-bot@users.noreply.github.com")
+    try:
+        run("git", *author, "merge", "--no-edit", "origin/main", cwd=root)
+    except ContractSyncError:
+        conflicts = set(filter(None, git(
+            root, "diff", "--name-only", "--diff-filter=U", "-z"
+        ).decode("utf-8").split("\0")))
+        if not conflicts:
+            raise
+        outside = conflicts - allowed
+        if outside:
+            raise ContractSyncError(
+                f"Cannot refresh non-snapshot conflicts: {sorted(outside)}"
+            ) from None
+        present = set(filter(None, git(
+            root, "ls-tree", "-r", "--name-only", "-z", "origin/main",
+            "--", *sorted(conflicts)
+        ).decode("utf-8").split("\0")))
+        if present:
+            run("git", "restore", "--source=origin/main", "--staged", "--worktree",
+                "--", *sorted(present), cwd=root)
+        removed = conflicts - present
+        if removed:
+            run("git", "rm", "--", *sorted(removed), cwd=root)
+        run("git", *author, "commit", "--no-edit", cwd=root)
+
+
 def prepare_branch(
     root: Path, repository: str, allowed: set[str],
     context: Path, manifest: dict,
@@ -68,9 +103,7 @@ def prepare_branch(
                 f"Bot branch contains non-snapshot files in {repository}: {outside}"
             )
         run("git", "switch", "-c", BRANCH, f"origin/{BRANCH}", cwd=root)
-        run("git", "-c", "user.name=refinvest-contract-bot",
-            "-c", "user.email=refinvest-contract-bot@users.noreply.github.com",
-            "merge", "--no-edit", "origin/main", cwd=root)
+        merge_snapshot_main(root, allowed)
     else:
         run("git", "switch", "-c", BRANCH, "origin/main", cwd=root)
 

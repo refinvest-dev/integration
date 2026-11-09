@@ -84,6 +84,18 @@ integration `contract-propagation.yml`은 `main`에서만 실행하며,
 Core/Compute/Web/integration SHA, 관련 PR, 변경 파일과 담당자 체크리스트를 기록한다.
 제품 코드, 자동 승인, 자동 병합, 보호 규칙 우회 또는 LLM 병합 판정은 포함하지 않는다.
 
+기존 bot 브랜치가 오래되어 main의 snapshot 갱신과 충돌하면, 먼저 현재·이전 Context의
+복제 규칙과 revision marker로 허용 파일을 한정하고 bot 브랜치에 제품 코드가 없는지 확인한다.
+허용된 snapshot 충돌만 main의 내용(삭제 포함)으로 해소하여 Git merge commit을 만들고,
+그 뒤 고정 Context SHA의 전체 복제 계획을 적용한다. 두 Git 이력을 유지하며 force-push하지 않는다.
+허용 범위 밖의 충돌이나 conflict 없는 Git 오류는 실패로 남긴다. main의 업무 코드 변경은 보존한다.
+이는 snapshot PR 브랜치 갱신이며, PR을 main에 자동 병합한다는 뜻은 아니다.
+
+전파 단계가 충돌로 중단되어 manifest가 생성되지 않았다면 뒤따른 `No propagation manifest`
+evidence 실패도 검증 미완료를 뜻한다. 먼저 원래 전파 실행을 복구한다. 수정 PR 병합 후
+`Propagate Context snapshots`를 현재 Context main SHA로 새로 dispatch해야 새 publisher가 적용된다.
+과거 run의 단순 rerun은 당시 workflow revision을 재사용하므로 수정 반영을 보장하지 않는다.
+
 검증은 별도 실행을 dispatch하고 끝내지 않고, 같은 전파 실행의 재사용 워크플로 job으로
 연결한다. `candidate-sync` 성공 후 `candidate-smoke`를 실행한다. 두 job 모두 다섯
 저장소를 **고정된 후보 SHA**로 checkout한다. 규범 문서만 변경되거나 스냅샷 PR이
