@@ -86,6 +86,20 @@ if ((Test-Path -LiteralPath (Join-Path $ContextPath $accountBookDraft)) -or
     if ($LASTEXITCODE -ne 0) { throw 'Account/Book draft verification failed' }
     Write-Host 'Account/Book candidate checked; no runtime routes or scopes enabled.'
 }
+# The Import candidate is optional in older Context revisions. If either half
+# exists, require the exact snapshot and execute Context's static checker.
+$importDraft = 'openapi/drafts/trading-review-import.yaml'
+$importChecker = Join-Path $ContextPath 'scripts/verify-trading-review-import-draft.py'
+if ((Test-Path -LiteralPath (Join-Path $ContextPath $importDraft)) -or
+    (Test-Path -LiteralPath $importChecker)) {
+    Assert-SameFile (Join-Path $ContextPath $importDraft) (Join-Path $CoreApiPath $importDraft)
+    if (-not (Test-Path -LiteralPath $importChecker -PathType Leaf)) {
+        throw 'Missing Context Import draft verifier'
+    }
+    & python -B $importChecker
+    if ($LASTEXITCODE -ne 0) { throw 'Import draft verification failed' }
+    Write-Host 'Import candidate checked; no runtime routes or scopes enabled.'
+}
 Write-Host 'Trading Review draft OpenAPI snapshots are synchronized.'
 
 # Core owns document snapshots, including the result delivery policy and

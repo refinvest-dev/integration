@@ -16,6 +16,8 @@ AUTHORITY = "openapi/drafts/trading-review-member-authority.yaml"
 FIXTURE = "trading-review-member-authority-draft/authority-cases.json"
 ACCOUNT_BOOK = "openapi/drafts/trading-review-account-book.yaml"
 ACCOUNT_BOOK_CHECK = "scripts/verify-trading-review-account-book-draft.py"
+IMPORT = "openapi/drafts/trading-review-import.yaml"
+IMPORT_CHECK = "scripts/verify-trading-review-import-draft.py"
 
 
 class DraftSnapshotGateTest(unittest.TestCase):
@@ -35,6 +37,8 @@ class DraftSnapshotGateTest(unittest.TestCase):
         ] + [path.relative_to(CONTEXT).as_posix() for path in (CONTEXT / "docs").glob("*.md")]
         if (CONTEXT / ACCOUNT_BOOK).exists():
             files += [ACCOUNT_BOOK, ACCOUNT_BOOK_CHECK]
+        if (CONTEXT / IMPORT).exists():
+            files += [IMPORT, IMPORT_CHECK]
         for name in files:
             destination = self.context / name
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -130,6 +134,43 @@ class DraftSnapshotGateTest(unittest.TestCase):
             self.assertIn("x-runtime-enabled: false", original)
             path.write_text(original.replace("x-runtime-enabled: false", "x-runtime-enabled: true", 1), encoding="utf-8")
         self.rejected_by("runtime enablement forbidden")
+
+    def import_gate_fixture(self, *, source=True, replica=True, checker=True):
+        # Exercise the real PowerShell wiring without reimplementing Context's
+        # product/schema verifier. All fixture files are isolated temporary paths.
+        for root, name in ((self.context, IMPORT), (self.core, IMPORT),
+                           (self.context, IMPORT_CHECK)):
+            (root / name).unlink(missing_ok=True)
+        for root, enabled in ((self.context, source), (self.core, replica)):
+            if enabled:
+                path = root / IMPORT
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("openapi: 3.0.3\n", encoding="utf-8")
+        if checker:
+            path = self.context / IMPORT_CHECK
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('print("IMPORT_CHECKER_EXECUTED")\nraise SystemExit(23)\n', encoding="utf-8")
+
+    def test_import_missing_snapshot_is_rejected(self):
+        self.import_gate_fixture(replica=False)
+        self.rejected_by("Contract replica does not exist")
+
+    def test_import_checker_without_source_is_rejected(self):
+        self.import_gate_fixture(source=False)
+        self.rejected_by("Contract source does not exist")
+
+    def test_import_source_without_checker_is_rejected(self):
+        self.import_gate_fixture(checker=False)
+        self.rejected_by("Missing Context Import draft verifier")
+
+    def test_import_checker_failure_is_propagated(self):
+        self.import_gate_fixture()
+        result = self.run_gate()
+        output = result.stdout + result.stderr
+        self.assertNotEqual(result.returncode, 0, output)
+        self.assertIn("IMPORT_CHECKER_EXECUTED", output)
+        self.assertIn("Import draft verification failed", output)
+        self.assertNotIn("Context revision provenance verification failed", output)
 
 
 if __name__ == "__main__":
