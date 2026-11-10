@@ -296,7 +296,7 @@ $analyticsContractVerifier = Join-Path $ContextPath 'scripts/verify-trading-anal
 if (-not (Test-Path -LiteralPath $analyticsContractVerifier -PathType Leaf)) {
     throw "Context Analytics contract verifier does not exist: $analyticsContractVerifier"
 }
-& python $analyticsContractVerifier
+& python -B $analyticsContractVerifier
 if ($LASTEXITCODE -ne 0) {
     throw 'Context Analytics create/replay contract verification failed.'
 }
