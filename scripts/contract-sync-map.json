@@ -83,6 +83,17 @@
       ]
     },
     {
+      "sourceDirectory": "openapi/drafts",
+      "files": "trading-review-import.yaml",
+      "mode": "text",
+      "targets": [
+        {
+          "repository": "coreApi",
+          "directory": "openapi/drafts"
+        }
+      ]
+    },
+    {
       "source": "fixtures/trading-review-member-authority-draft/authority-cases.json",
       "mode": "text",
       "targets": [
