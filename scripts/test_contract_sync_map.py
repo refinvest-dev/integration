@@ -25,6 +25,20 @@ class ContractSyncMapTest(unittest.TestCase):
             for replica in self.replicas if replica.source == source
         }
 
+    def test_analysis_draft_exact_optional_mapping(self):
+        names = {"openapi/drafts/trading-review-analysis-read.yaml", "openapi/drafts/trading-review-analysis.yaml"}
+        before = self.sources - names
+        self.assertFalse(any(r.source in names for r in expand_map(self.manifest, before)))
+        after = expand_map(self.manifest, before | names)
+        for name in names:
+            with self.subTest(name=name):
+                self.assertEqual({(r.repository, r.target, r.mode) for r in after if r.source == name},
+                                 {("coreApi", name, "text")})
+                self.assertNotIn(name, self.manifest["informationalFiles"])
+        for name in ("openapi/drafts/trading-review-analysis-extra.yaml", "openapi/drafts/trading-review-analysis.yaml.backup"):
+            with self.subTest(name=name), self.assertRaisesRegex(ContractSyncError, "Unclassified"):
+                expand_map(self.manifest, before | names | {name})
+
     def test_api_and_document_ownership(self):
         self.assertEqual(
             self.targets("openapi/core-api.yaml"),

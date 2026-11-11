@@ -100,6 +100,29 @@ if ((Test-Path -LiteralPath (Join-Path $ContextPath $importDraft)) -or
     if ($LASTEXITCODE -ne 0) { throw 'Import draft verification failed' }
     Write-Host 'Import candidate checked; no runtime routes or scopes enabled.'
 }
+# Optional in older Context revisions; either source/checker requires the complete pair.
+$analysisDrafts = @('openapi/drafts/trading-review-analysis-read.yaml', 'openapi/drafts/trading-review-analysis.yaml')
+$analysisChecker = Join-Path $ContextPath 'scripts/verify-trading-review-analysis-draft.py'
+$analysisPresent = Test-Path -LiteralPath $analysisChecker
+foreach ($analysisDraft in $analysisDrafts) {
+    if (Test-Path -LiteralPath (Join-Path $ContextPath $analysisDraft)) { $analysisPresent = $true }
+}
+if ($analysisPresent) {
+    foreach ($analysisDraft in $analysisDrafts) {
+        if (-not (Test-Path -LiteralPath (Join-Path $ContextPath $analysisDraft) -PathType Leaf)) {
+            throw "Analysis draft contract pair incomplete: $analysisDraft"
+        }
+    }
+    if (-not (Test-Path -LiteralPath $analysisChecker -PathType Leaf)) {
+        throw 'Missing Context Analysis draft verifier'
+    }
+    foreach ($analysisDraft in $analysisDrafts) {
+        Assert-SameFile (Join-Path $ContextPath $analysisDraft) (Join-Path $CoreApiPath $analysisDraft)
+    }
+    & python -B $analysisChecker
+    if ($LASTEXITCODE -ne 0) { throw 'Analysis draft verification failed' }
+    Write-Host 'Analysis candidates checked; no runtime routes, views or scopes enabled.'
+}
 Write-Host 'Trading Review draft OpenAPI snapshots are synchronized.'
 
 # Core owns document snapshots, including the result delivery policy and
