@@ -187,16 +187,42 @@ class FreshnessTest(unittest.TestCase):
             self.assertIn(sha, body)
         self.assertIn("스냅샷 변경 없음", body)
         self.assertIn("**pending**", body)
-        for heading in ("Summary", "Changes", "Validation", "Impact", "Related Links",
-                        "Context source", "Candidate set", "Maintainer review"):
+        for heading in ("Summary", "Changes", "Evidence"):
             self.assertIn("## " + heading, body)
-        self.assertIn("제품 정책 채택과 runtime 구현·활성화는 별도", body)
+        for heading in ("Validation", "Impact", "Related Links", "Context source",
+                        "Candidate set", "Maintainer review"):
+            self.assertNotIn("## " + heading, body)
+        self.assertLess(body.index("## Summary"), body.index("## Changes"))
+        self.assertLess(body.index("## Changes"), body.index("## Evidence"))
+        self.assertEqual(body.count("/actions/runs/"), 1)
         self.assertIn("https://github.com/example/context/commit/" + self.context, body)
         unchanged = evidence.render_body(self.manifest, "web")
-        self.assertIn("해당 없음 — 이 저장소는 변경 없는 main SHA", unchanged)
+        self.assertIn("이 저장소는 변경 없는 main SHA", unchanged)
+        self.assertNotIn("해당 없음", unchanged)
         pending = copy.deepcopy(self.manifest)
         pending["pullRequests"] = {}
         self.assertIn("스냅샷 PR 연결 대기 중", evidence.render_body(pending, "coreApi"))
+
+    def test_compact_body_preserves_failed_checks_and_stale_evidence(self):
+        for outcome in ("pending", "failure", "cancelled", "timed_out"):
+            with self.subTest(outcome=outcome):
+                result = {
+                    "outcome": outcome, "freshness": "stale",
+                    "checks": {"candidate-sync": {
+                        "url": "https://example/jobs/sync", "outcome": "evidence-mismatch",
+                        "errors": ["후보 checkout 불일치: web"],
+                    }},
+                    "freshnessErrors": ["Context main이 바뀌었습니다."],
+                    "reportUrl": "https://example/artifacts/report",
+                }
+                body = evidence.render_body(self.manifest, "coreApi", result)
+                self.assertTrue(body.startswith(evidence.marker(self.manifest)))
+                for text in (f"**{outcome}**", "**stale**", "**evidence-mismatch**",
+                             "후보 checkout 불일치: web", "Context main이 바뀌었습니다.",
+                             "https://example/jobs/sync", "https://example/artifacts/report"):
+                    self.assertIn(text, body)
+                for path in self.manifest["changedFiles"]["coreApi"]:
+                    self.assertIn(path, body)
 
     def test_pr_head_change_invalidates_existing_success(self):
         self.prs["coreApi"]["head"]["sha"] = "1" * 40

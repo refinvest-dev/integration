@@ -42,14 +42,15 @@ ADR, OpenAPI 계약 또는 개별 서비스의 business code를 소유하지 않
 
 ## PR 본문 형식
 
-`.github/pull_request_template.md`를 기준으로 Summary, Changes, Validation, Impact,
-Related Links를 항상 포함한다. 제목은 영어 H2(`## Summary`), 본문은 한국어로 작성하고
-전문 용어·식별자·명령은 원문을 사용한다. 빈 안내 문구는 실제 내용으로 바꾼다.
-해당 사항이 없으면 `해당 없음`과 간단한 이유를 적는다. Validation에는 실제 실행 명령/결과와
-미실행 검증을 구분하며, Impact에는 호환성·소유권·운영 영향 또는 영향 없음의 근거를 적는다.
-Related Links에는 관련 ADR/Use Case/문서/이슈/상대 저장소 PR을 연결한다.
-Migration Plan, Rollback, Evidence, Review Notes 등 추가 항목은 필요한 경우에만 영어 H2로 넣는다.
-Migration/배포 변경은 적용·복구 순서, E2E/성능 주장은 실제 증적을 추가한다.
-제목은 커밋 컨벤션을 따르고, 본문은 대화 이력 대신 최종 변경을 설명한다.
-API/CLI로 PR을 생성·갱신하는 자동화도 동일 형식을 적용한다. 이 문서와 template은 작성 기준이며
-CI에서 본문 형식을 자동 강제하는 기능이 이미 구축됐다는 의미는 아니다.
+`.github/pull_request_template.md`를 기준으로 `Summary`, `Changes`만 항상 포함한다.
+제목은 영어 H2(`## Summary`), 본문은 한국어로 작성하고 전문 용어·식별자·명령은 원문을 사용한다.
+Summary는 해결하는 문제와 변경 결과, Changes는 리뷰에 필요한 핵심 변경을 간결하게 설명한다.
+같은 내용을 여러 항목에 반복하거나 매번 동일한 영향 없음·링크·검증 문구를 넣지 않는다.
+
+Validation, Impact, Related Links, Migration Plan, Rollback, Evidence, Review Notes 등은
+이번 변경의 검토·적용 판단에 필요한 내용이 있을 때만 영어 H2로 추가한다. 해당 사항이 없으면
+항목 자체를 생략하며 `해당 없음`으로 채우지 않는다. 관련 링크는 필요한 설명에 직접 연결해도 된다.
+검증을 기재하면 실제 실행 결과와 실패·미실행·제약을 구분한다. 중요한 실패나 검증 공백,
+호환성 변경·선행 PR·반영/복구 순서는 형식을 줄인다는 이유로 생략하지 않는다.
+E2E/성능 주장에는 실제 증적을 연결한다. 제목은 커밋 컨벤션을 따르고 대화 이력 대신 최종 변경을 설명한다.
+API/CLI로 생성·갱신하는 PR도 같은 기준을 적용한다. 이 작성 규칙이 CI에서 자동 강제된다는 뜻은 아니다.
