@@ -183,13 +183,16 @@ def render_body(manifest: dict, key: str, result: dict | None = None) -> str:
     status = result["outcome"] if result else "pending"
     current = result.get("freshness", "unconfirmed") if result else "unconfirmed"
     lines = [marker(manifest), "## Summary", "",
-             "병합된 Context 정본의 변경을 복제 규칙에 따라 동기화하는 snapshot PR입니다.",
-             "제품 정책 채택과 runtime 구현·활성화는 별도 검토 대상입니다.", "",
-             "## Context source", "",
-             f"원본 Context SHA: `{manifest['contextRevision']}`",
-             f"이 PR의 후보 head SHA: `{manifest['heads'][key]}`", "",
-             "## Candidate set", "",
-             "변경이 없는 저장소도 고정 SHA로 검증합니다. 변경 묶음 전체를 검토하세요.", "",
+             f"[Context 변경](https://github.com/{owner}/context/commit/{manifest['contextRevision']})을 "
+             "복제 규칙에 따라 동기화합니다.", "", "## Changes", ""]
+    files = manifest.get("changedFiles", {}).get(key, [])
+    lines.extend(f"- `{path}`" for path in files)
+    if not files:
+        lines.append("이 저장소는 변경 없는 main SHA로 후보 검증에 참여합니다.")
+    lines += ["", "## Evidence", "",
+             f"후보 조합 검증: **{status}** / 최신성: **{current}**",
+             f"[검증 실행 및 artifact]({run_url}) · 실행 시도 `{manifest['runAttempt']}`",
+             f"워크플로 소스 SHA: `{manifest['workflowSha']}`", "",
              "| Repository | Candidate SHA | Snapshot PR |", "| --- | --- | --- |",
              f"| Context | `{manifest['contextRevision']}` | 원본 |"]
     for repo in REPOSITORIES:
@@ -198,12 +201,6 @@ def render_body(manifest: dict, key: str, result: dict | None = None) -> str:
                 if pr else "스냅샷 PR 연결 대기 중" if repo in manifest.get("changedFiles", {})
                 else "스냅샷 변경 없음 (main 고정)")
         lines.append(f"| {REMOTE_NAMES[repo]} | `{manifest['heads'][repo]}` | {link} |")
-    lines += ["", "## Validation", "",
-              f"후보 조합 검증: **{status}** / 최신성: **{current}**",
-              f"[검증 실행 및 artifact]({run_url}) · 실행 시도 `{manifest['runAttempt']}`",
-              f"워크플로 소스 SHA: `{manifest['workflowSha']}`",
-              "전파 시작이나 스냅샷 복사만으로 검증 성공을 뜻하지 않습니다.",
-              "완료 관찰 워크플로의 contract-candidate-evidence artifact에 최종 JSON/Markdown을 보관합니다."]
     if result:
         lines.append("")
         for name, check in result.get("checks", {}).items():
@@ -212,33 +209,11 @@ def render_body(manifest: dict, key: str, result: dict | None = None) -> str:
         lines.extend(f"- {error}" for error in result.get("freshnessErrors", []))
         if result.get("reportUrl"):
             lines.append(f"[완료 증거 artifact 및 요약]({result['reportUrl']})")
-    lines += ["", "## Changes", ""]
-    lines.extend(f"- `{path}`" for path in manifest.get("changedFiles", {}).get(key, []))
-    if not manifest.get("changedFiles", {}).get(key):
-        lines.append("해당 없음 — 이 저장소는 변경 없는 main SHA로 후보 검증에 참여합니다.")
-    lines += ["", "## Impact", "",
-              "복제된 문서·계약·fixture와 revision marker만 변경하며 업무 코드를 수정하지 않습니다.",
-              "호환성·테이블 소유권·배포 동작의 변경이 필요한지는 원본 Context diff와 구현을 별도로 검토해야 합니다.",
-              "정적 동기화나 기존 API smoke의 성공은 새 계약의 구현 완료를 뜻하지 않습니다.",
-              "", "## Related Links", "",
-              f"- [원본 Context diff/문서](https://github.com/{owner}/context/commit/{manifest['contextRevision']})",
-              f"- [전파·검증 실행]({run_url})",
-              f"- [복제 규칙과 반영 절차](https://github.com/{manifest['repository']}/blob/{manifest['workflowSha']}/docs/CONTRACT_PROPAGATION.md)",
-              "- 상대 저장소 PR과 고정 SHA는 Candidate set 표에 연결합니다."]
-    lines += ["", "## Maintainer review", "",
-              "- [ ] 원본 Context diff, 이 PR head, 모든 후보 SHA와 완료 증거가 일치하는지 병합 직전에 확인했습니다.",
-              "- [ ] 모든 필수 후보 검증이 success이며 최신성이 current인지 확인했습니다. pending/failure/cancelled/timed_out/미확인은 통과가 아닙니다.",
-              "- [ ] OpenAPI·규범 문서·fixture의 의미와 Core/Compute/Web 구현 영향을 검토했습니다. 파일 종류로 승인하지 않았습니다.",
-              "- [ ] 구현 PR, 중간 호환성, 병합 순서, 부분 실패 시 중단·복구 계획을 변경 묶음 전체에 기록했습니다.",
-              "- [ ] head/base/Context 변경 시 재검증했습니다. integration main drift 결과를 후보 성공과 구분했습니다.",
-              "- [ ] 필수 리뷰와 저장소 보호 규칙을 충족했으며 담당자가 수동 병합합니다.",
-              "", "절차: integration의 `docs/CONTRACT_PROPAGATION.md`를 확인하세요.", ""]
-    return "\n".join(lines)
+    return "\n".join(lines) + "\n"
 
 
 def render_report(manifest: dict, result: dict) -> str:
-    body = render_body(manifest, "integration", result).replace(
-        "이 PR의 후보 head SHA:", "integration 후보 SHA:", 1)
+    body = render_body(manifest, "integration", result)
     lines = [body, "## Files by repository", ""]
     for key, files in manifest.get("changedFiles", {}).items():
         lines.append(f"- {REMOTE_NAMES[key]}")
