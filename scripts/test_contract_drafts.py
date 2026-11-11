@@ -173,5 +173,70 @@ class DraftSnapshotGateTest(unittest.TestCase):
         self.assertNotIn("Context revision provenance verification failed", output)
 
 
+    def analysis_gate_fixture(self, *, source_count=2, replica_count=2, checker=True, exit_code=23):
+        names = ("openapi/drafts/trading-review-analysis-read.yaml", "openapi/drafts/trading-review-analysis.yaml")
+        verifier = "scripts/verify-trading-review-analysis-draft.py"
+        for root in (self.context, self.core):
+            for name in (*names, verifier):
+                (root / name).unlink(missing_ok=True)
+        for root, count in ((self.context, source_count), (self.core, replica_count)):
+            for name in names[:count]:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("openapi: 3.0.3\n", encoding="utf-8")
+        if checker:
+            path = self.context / verifier
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(f'print("ANALYSIS_CHECKER_EXECUTED")\nraise SystemExit({exit_code})\n', encoding="utf-8")
+
+    def test_analysis_old_context_remains_optional(self):
+        self.analysis_gate_fixture(source_count=0, replica_count=0, checker=False)
+        result = self.run_gate()
+        output = result.stdout + result.stderr
+        self.assertIn("Trading Review draft OpenAPI snapshots are synchronized", output)
+        self.assertNotIn("ANALYSIS_CHECKER_EXECUTED", output)
+
+    def test_analysis_checker_without_pair_is_rejected(self):
+        self.analysis_gate_fixture(source_count=0)
+        self.rejected_by("Analysis draft contract pair incomplete")
+
+    def test_analysis_partial_pair_is_rejected(self):
+        self.analysis_gate_fixture(source_count=1)
+        self.rejected_by("Analysis draft contract pair incomplete")
+
+    def test_analysis_source_without_checker_is_rejected(self):
+        self.analysis_gate_fixture(checker=False)
+        self.rejected_by("Missing Context Analysis draft verifier")
+
+    def test_analysis_missing_snapshot_is_rejected(self):
+        self.analysis_gate_fixture(replica_count=1)
+        self.rejected_by("Contract replica does not exist")
+
+    def test_analysis_snapshot_mismatch_is_rejected(self):
+        self.analysis_gate_fixture()
+        (self.core / "openapi/drafts/trading-review-analysis.yaml").write_text("different\n", encoding="utf-8")
+        self.rejected_by("Contract is out of sync")
+
+    def test_analysis_checker_failure_is_propagated(self):
+        self.analysis_gate_fixture()
+        result = self.run_gate()
+        output = result.stdout + result.stderr
+        self.assertNotEqual(result.returncode, 0, output)
+        self.assertIn("ANALYSIS_CHECKER_EXECUTED", output)
+        self.assertIn("Analysis draft verification failed", output)
+        self.assertNotIn("Context revision provenance verification failed", output)
+
+    def test_analysis_complete_pair_reaches_following_gates(self):
+        self.analysis_gate_fixture(exit_code=0)
+        path = self.core / "openapi/drafts/trading-review-analysis.yaml"
+        path.write_bytes(b"openapi: 3.0.3\r\n")
+        result = self.run_gate()
+        output = result.stdout + result.stderr
+        self.assertIn("ANALYSIS_CHECKER_EXECUTED", output)
+        self.assertIn("Analysis candidates checked; no runtime routes, views or scopes enabled.", output)
+        self.assertNotIn("Analysis draft verification failed", output)
+
+
+
 if __name__ == "__main__":
     unittest.main()
