@@ -116,6 +116,28 @@
       ]
     },
     {
+      "sourceDirectory": "openapi/drafts",
+      "files": "trading-review-reprocessing.yaml",
+      "mode": "text",
+      "targets": [
+        {
+          "repository": "coreApi",
+          "directory": "openapi/drafts"
+        }
+      ]
+    },
+    {
+      "sourceDirectory": "openapi/drafts",
+      "files": "trading-review-reprocessing-public.yaml",
+      "mode": "text",
+      "targets": [
+        {
+          "repository": "coreApi",
+          "directory": "openapi/drafts"
+        }
+      ]
+    },
+    {
       "source": "fixtures/trading-review-member-authority-draft/authority-cases.json",
       "mode": "text",
       "targets": [

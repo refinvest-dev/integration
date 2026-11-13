@@ -39,6 +39,36 @@ class ContractSyncMapTest(unittest.TestCase):
             with self.subTest(name=name), self.assertRaisesRegex(ContractSyncError, "Unclassified"):
                 expand_map(self.manifest, before | names | {name})
 
+    def test_reprocessing_drafts_are_optional_exact_core_snapshots(self):
+        names = {
+            "openapi/drafts/trading-review-reprocessing.yaml",
+            "openapi/drafts/trading-review-reprocessing-public.yaml",
+        }
+        before = self.sources - names
+        # Mapping must work before Context introduces either file. Pair integrity
+        # belongs to verify-contract-sync.ps1, not a mandatory list in the map.
+        original = expand_map(self.manifest, before)
+        self.assertFalse(any(r.source in names for r in original))
+        for additions in [set(), *({name} for name in sorted(names)), names]:
+            with self.subTest(additions=additions):
+                mapped = expand_map(self.manifest, before | additions)
+                self.assertEqual(
+                    {(r.source, r.repository, r.target, r.mode)
+                     for r in mapped if r.source in names},
+                    {(name, "coreApi", name, "text") for name in additions},
+                )
+                self.assertEqual([r for r in mapped if r.source not in names], original)
+        for name in names:
+            self.assertNotIn(name, self.manifest["informationalFiles"])
+        for extra in (
+            "openapi/drafts/trading-review-reprocessing-extra.yaml",
+            "openapi/drafts/trading-review-reprocessing.yaml.backup",
+            "openapi/drafts/trading-review-reprocessing-public.yaml.backup",
+            "openapi/drafts/nested/trading-review-reprocessing.yaml",
+        ):
+            with self.subTest(extra=extra), self.assertRaisesRegex(ContractSyncError, "Unclassified"):
+                expand_map(self.manifest, before | names | {extra})
+
     def test_api_and_document_ownership(self):
         self.assertEqual(
             self.targets("openapi/core-api.yaml"),

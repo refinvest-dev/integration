@@ -123,6 +123,30 @@ if ($analysisPresent) {
     if ($LASTEXITCODE -ne 0) { throw 'Analysis draft verification failed' }
     Write-Host 'Analysis candidates checked; no runtime routes, views or scopes enabled.'
 }
+# Optional until Context introduces the Reprocessing candidate. Any source or
+# checker requires both specs, both exact Core snapshots, and the Context checker.
+$reprocessingDrafts = @('openapi/drafts/trading-review-reprocessing.yaml', 'openapi/drafts/trading-review-reprocessing-public.yaml')
+$reprocessingChecker = Join-Path $ContextPath 'scripts/verify-trading-review-reprocessing-draft.py'
+$reprocessingPresent = Test-Path -LiteralPath $reprocessingChecker
+foreach ($reprocessingDraft in $reprocessingDrafts) {
+    if (Test-Path -LiteralPath (Join-Path $ContextPath $reprocessingDraft)) { $reprocessingPresent = $true }
+}
+if ($reprocessingPresent) {
+    foreach ($reprocessingDraft in $reprocessingDrafts) {
+        if (-not (Test-Path -LiteralPath (Join-Path $ContextPath $reprocessingDraft) -PathType Leaf)) {
+            throw "Reprocessing draft contract pair incomplete: $reprocessingDraft"
+        }
+    }
+    if (-not (Test-Path -LiteralPath $reprocessingChecker -PathType Leaf)) {
+        throw 'Missing Context Reprocessing draft verifier'
+    }
+    foreach ($reprocessingDraft in $reprocessingDrafts) {
+        Assert-SameFile (Join-Path $ContextPath $reprocessingDraft) (Join-Path $CoreApiPath $reprocessingDraft)
+    }
+    & python -B $reprocessingChecker
+    if ($LASTEXITCODE -ne 0) { throw 'Reprocessing draft verification failed' }
+    Write-Host 'Reprocessing candidates checked; no runtime routes or scopes enabled.'
+}
 Write-Host 'Trading Review draft OpenAPI snapshots are synchronized.'
 
 # Core owns document snapshots, including the result delivery policy and
