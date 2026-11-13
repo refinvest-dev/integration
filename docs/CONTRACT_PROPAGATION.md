@@ -15,6 +15,8 @@ its files are copied into sibling checkouts. It does not define product rules.
 | Analytics protocol fixtures | Core, Compute, integration |
 | Trading Review owner-query / Member authority draft OpenAPI | Core (`openapi/drafts/`) |
 | Trading Review Account/Book draft (exact file, when present) | Core (`openapi/drafts/`) |
+| Trading Review Import / Analysis drafts (exact files, when present) | Core (`openapi/drafts/`) |
+| Trading Review Reprocessing public/internal drafts (exact files, when present) | Core (`openapi/drafts/`) |
 | Member authority synthetic draft fixture | Core (test resources, CRLF/LF-normalized text) |
 
 `AGENTS.md`, Context verifier scripts, and the Analytics fixture verifier are
@@ -30,8 +32,9 @@ repository has no copied file. Such work is reviewed separately.
 Trading Review 초안은 위 표에 명시한 파일만 복제한다. `openapi/drafts/` 전체를 자동 포함하거나
 informational로 제외하지 않는다. Core의 문서 snapshot에서 연결한 두 OpenAPI 초안의 상대 경로를
 보존하고 synthetic authority fixture는 test resources에 둔다. `verify-contract-sync.ps1`은
-초안 snapshot의 일치와 Context의 두 draft verifier를 함께 실행해 `x-contract-status: draft` 및
-`x-runtime-enabled: false`를 검사한다. 이는 ADR-074 채택이나 Core/Go route·인증 활성화가 아니다.
+초안 snapshot의 일치와 해당 Context draft verifier를 함께 실행한다. draft 상태·runtime 비활성화 등
+제품 계약 검증은 Context verifier가 소유하며, integration은 누락이나 실패를 E2E 전에 차단한다.
+이는 ADR 채택이나 Core/Go route·인증 활성화가 아니다.
 Compute/Web의 복제 대상은 바뀌지 않으므로 mapped source가 동일하면 기존 revision을 보존한다.
 authority fixture는 JSON schema용 synthetic 사례이며 파일 전체가 canonical-byte oracle은 아니다.
 이 파일에만 text 비교를 적용하고 내부 delegation 문자열의 SHA-256 결속은 Context verifier로 검사한다.
@@ -275,3 +278,9 @@ spec 또는 checker 하나만 남으면 검사를 건너뛰지 않는다. 다른
 새 Context 파일과 mapping PR은 의존 관계가 있다. Context impact CI가 integration main을 사용하면 mapping
 merge 전 새 source를 Unclassified로 거절할 수 있다. 이 실패를 무시하지 말고 선행 snapshot/mapping을
 반영한 뒤 재실행한다. 고정 SHA 후보 검사는 main drift 결과와 따로 보고하며 전파/HTTP/E2E 성공으로 확대하지 않는다.
+
+## Reprocessing draft rollout
+
+[재처리 전파 준비](TRADING_REPROCESSING_DRAFT_PROPAGATION.md)는 public/internal 두 파일의
+정확한 분류·필수 조합과 Context 검사기 호출 경계를 설명한다. 새 Context YAML의 impact preview 전에
+integration mapping PR을 main에 반영해야 한다. 기존 삭제 계약은 해당 소유 draft에서 유지한다.
