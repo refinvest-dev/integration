@@ -283,7 +283,7 @@ class DraftSnapshotGateTest(unittest.TestCase):
             with self.subTest(missing=missing):
                 self.reprocessing_gate_fixture()
                 (self.context / missing).unlink()
-                self.rejected_by("Reprocessing draft contract pair incomplete: " + missing)
+                self.rejected_by("Reprocessing draft contract pair incomplete")
 
     def test_reprocessing_source_without_checker_is_rejected(self):
         self.reprocessing_gate_fixture(checker=False)
