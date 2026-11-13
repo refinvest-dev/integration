@@ -1,5 +1,6 @@
 """Exercise draft gates through the real PowerShell entrypoint, without services or DB."""
 
+import os
 import shutil
 import subprocess
 import tempfile
@@ -18,6 +19,11 @@ ACCOUNT_BOOK = "openapi/drafts/trading-review-account-book.yaml"
 ACCOUNT_BOOK_CHECK = "scripts/verify-trading-review-account-book-draft.py"
 IMPORT = "openapi/drafts/trading-review-import.yaml"
 IMPORT_CHECK = "scripts/verify-trading-review-import-draft.py"
+REPROCESSING = (
+    "openapi/drafts/trading-review-reprocessing.yaml",
+    "openapi/drafts/trading-review-reprocessing-public.yaml",
+)
+REPROCESSING_CHECK = "scripts/verify-trading-review-reprocessing-draft.py"
 
 
 class DraftSnapshotGateTest(unittest.TestCase):
@@ -55,12 +61,17 @@ class DraftSnapshotGateTest(unittest.TestCase):
         shutil.copyfile(CORE / "scripts/verify-context-doc-sync.ps1", verifier)
 
     def run_gate(self):
+        environment = dict(os.environ)
+        # Exercise the entrypoint's own -B protection, including imported helpers.
+        for key in ("PYTHONDONTWRITEBYTECODE", "PYTHONPYCACHEPREFIX", "PYTHONPATH"):
+            environment.pop(key, None)
         return subprocess.run([
             self.shell, "-NoProfile", "-File", str(INTEGRATION / "scripts/verify-contract-sync.ps1"),
             "-ContextPath", str(self.context), "-CoreApiPath", str(self.core),
             "-ComputeApiPath", str(WORKSPACE / "compute-api/refinvest"),
             "-WebPath", str(WORKSPACE / "web/web"), "-IncludeWeb",
-        ], cwd=INTEGRATION, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=60)
+        ], cwd=INTEGRATION, env=environment, text=True, capture_output=True,
+            encoding="utf-8", errors="replace", timeout=60)
 
     def rejected_by(self, message):
         # These gates run before provenance/ordinary fixtures. An unrelated later
@@ -235,6 +246,90 @@ class DraftSnapshotGateTest(unittest.TestCase):
         self.assertIn("ANALYSIS_CHECKER_EXECUTED", output)
         self.assertIn("Analysis candidates checked; no runtime routes, views or scopes enabled.", output)
         self.assertNotIn("Analysis draft verification failed", output)
+
+    def reprocessing_gate_fixture(self, *, checker=True, exit_code=23):
+        # Synthetic plumbing inputs; no product schema or runtime acceptance.
+        for root in (self.context, self.core):
+            for name in REPROCESSING:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("openapi: 3.0.3\n", encoding="utf-8")
+        if checker:
+            helper = self.context / "scripts/reprocessing_probe_helper.py"
+            helper.write_text('VALUE = "REPROCESSING_CHECKER_EXECUTED"\n', encoding="utf-8")
+            (self.context / REPROCESSING_CHECK).write_text(
+                "import reprocessing_probe_helper\nprint(reprocessing_probe_helper.VALUE)\n"
+                f"raise SystemExit({exit_code})\n", encoding="utf-8")
+
+    def checkout_bytes(self):
+        return {str(path): path.read_bytes() for root in (self.context, self.core)
+                for path in root.rglob("*") if path.is_file()}
+
+    def test_reprocessing_old_context_remains_optional(self):
+        result = self.run_gate()
+        output = result.stdout + result.stderr
+        self.assertIn("Trading Review draft OpenAPI snapshots are synchronized", output)
+        self.assertIn("Context revision provenance verification failed", output)
+        self.assertNotIn("Reprocessing candidates checked", output)
+
+    def test_reprocessing_checker_without_pair_is_rejected(self):
+        self.reprocessing_gate_fixture()
+        for name in REPROCESSING:
+            (self.context / name).unlink()
+        self.rejected_by("Reprocessing draft contract pair incomplete")
+
+    def test_reprocessing_either_partial_source_is_rejected(self):
+        for missing in REPROCESSING:
+            with self.subTest(missing=missing):
+                self.reprocessing_gate_fixture()
+                (self.context / missing).unlink()
+                self.rejected_by("Reprocessing draft contract pair incomplete: " + missing)
+
+    def test_reprocessing_source_without_checker_is_rejected(self):
+        self.reprocessing_gate_fixture(checker=False)
+        self.rejected_by("Missing Context Reprocessing draft verifier")
+
+    def test_reprocessing_either_missing_snapshot_is_rejected(self):
+        for missing in REPROCESSING:
+            with self.subTest(missing=missing):
+                self.reprocessing_gate_fixture()
+                (self.core / missing).unlink()
+                self.rejected_by("Contract replica does not exist")
+
+    def test_reprocessing_either_snapshot_drift_is_rejected(self):
+        for changed in REPROCESSING:
+            with self.subTest(changed=changed):
+                self.reprocessing_gate_fixture()
+                (self.core / changed).write_text("different\n", encoding="utf-8")
+                self.rejected_by("Contract is out of sync")
+
+    def test_reprocessing_checker_failure_propagates_without_writes(self):
+        self.reprocessing_gate_fixture()
+        before = self.checkout_bytes()
+        result = self.run_gate()
+        output = result.stdout + result.stderr
+        self.assertNotEqual(result.returncode, 0, output)
+        self.assertIn("REPROCESSING_CHECKER_EXECUTED", output)
+        self.assertIn("Reprocessing draft verification failed", output)
+        self.assertNotIn("Context revision provenance verification failed", output)
+        self.assertEqual(self.checkout_bytes(), before, "Checker imports must not create bytecode")
+
+    def test_reprocessing_complete_pair_reaches_following_gates_without_writes(self):
+        self.reprocessing_gate_fixture(exit_code=0)
+        # Text snapshots accept checkout newline differences in both specs.
+        for name in REPROCESSING:
+            (self.core / name).write_bytes(b"openapi: 3.0.3\r\n")
+        before = self.checkout_bytes()
+        result = self.run_gate()
+        output = result.stdout + result.stderr
+        self.assertIn("REPROCESSING_CHECKER_EXECUTED", output)
+        self.assertIn("Reprocessing candidates checked; no runtime routes or scopes enabled.", output)
+        self.assertNotIn("Reprocessing draft verification failed", output)
+        # The intentionally partial checkout has no revision marker. Passing
+        # this draft gate must not bypass the remaining sync/provenance gates.
+        self.assertNotEqual(result.returncode, 0, output)
+        self.assertIn("Context revision provenance verification failed", output)
+        self.assertEqual(self.checkout_bytes(), before, "Successful checks must also leave files unchanged")
 
 
 
