@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADR-085 Import Normalization pin hash oracle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixtureVersion",
+    "specificationVersion",
+    "validCases",
+    "equivalentInputs",
+    "relationships",
+    "invalidInputs"
+  ],
+  "properties": {
+    "fixtureVersion": {
+      "const": 1
+    },
+    "specificationVersion": {
+      "const": "TRADING_IMPORT_NORMALIZATION_PIN_HASH_V1"
+    },
+    "validCases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "inputVersionSet",
+          "normalizer",
+          "reconstruction",
+          "composite"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inputVersionSet": {
+            "$ref": "#/$defs/pin"
+          },
+          "normalizer": {
+            "$ref": "#/$defs/step"
+          },
+          "reconstruction": {
+            "$ref": "#/$defs/step"
+          },
+          "composite": {
+            "$ref": "#/$defs/step"
+          }
+        }
+      }
+    },
+    "equivalentInputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "baseCaseID",
+          "rawJson"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "baseCaseID": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rawJson": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "left",
+          "right",
+          "normalizerEqual",
+          "reconstructionEqual",
+          "compositeEqual"
+        ],
+        "properties": {
+          "left": {
+            "type": "string",
+            "minLength": 1
+          },
+          "right": {
+            "type": "string",
+            "minLength": 1
+          },
+          "normalizerEqual": {
+            "type": "boolean"
+          },
+          "reconstructionEqual": {
+            "type": "boolean"
+          },
+          "compositeEqual": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "invalidInputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "expectedFailure"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rawJson": {
+            "type": "string",
+            "minLength": 1
+          },
+          "utf8Hex": {
+            "type": "string",
+            "minLength": 2,
+            "pattern": "^(?:[0-9a-f]{2})+$"
+          },
+          "expectedFailure": {
+            "enum": [
+              "normalizer-hash",
+              "reconstruction-hash",
+              "composite-hash",
+              "shape",
+              "json",
+              "unicode",
+              "duplicate-key"
+            ]
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "rawJson"
+            ],
+            "not": {
+              "required": [
+                "utf8Hex"
+              ]
+            }
+          },
+          {
+            "required": [
+              "utf8Hex"
+            ],
+            "not": {
+              "required": [
+                "rawJson"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "sha": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "pin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalizer",
+        "reconstruction",
+        "versionSetHash"
+      ],
+      "properties": {
+        "normalizer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sourceDialectVersionsByArtifactRole",
+            "adapterVersion",
+            "normalizerVersion",
+            "canonicalSchemaVersion",
+            "implementationDigest",
+            "versionSetHash"
+          ],
+          "properties": {
+            "sourceDialectVersionsByArtifactRole": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "TRADE_HISTORY",
+                "POSITION_HISTORY"
+              ],
+              "properties": {
+                "TRADE_HISTORY": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "POSITION_HISTORY": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            },
+            "adapterVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "normalizerVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "canonicalSchemaVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "implementationDigest": {
+              "type": "string",
+              "minLength": 1
+            },
+            "versionSetHash": {
+              "$ref": "#/$defs/sha"
+            }
+          }
+        },
+        "reconstruction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "instrumentTermsVersionByInstrument",
+            "reconstructionPolicyVersion",
+            "reconciliationVersion",
+            "reviewUnitSchemaVersion",
+            "evidenceSchemaVersion",
+            "implementationDigest",
+            "versionSetHash"
+          ],
+          "properties": {
+            "instrumentTermsVersionByInstrument": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "type": "string",
+                "minLength": 1
+              },
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "reconstructionPolicyVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "reconciliationVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "reviewUnitSchemaVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "evidenceSchemaVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "implementationDigest": {
+              "type": "string",
+              "minLength": 1
+            },
+            "versionSetHash": {
+              "$ref": "#/$defs/sha"
+            }
+          }
+        },
+        "versionSetHash": {
+          "$ref": "#/$defs/sha"
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection",
+        "canonicalJson",
+        "canonicalUtf8Hex",
+        "expectedSha256"
+      ],
+      "properties": {
+        "projection": {
+          "type": "object"
+        },
+        "canonicalJson": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonicalUtf8Hex": {
+          "type": "string",
+          "minLength": 2,
+          "pattern": "^(?:[0-9a-f]{2})+$"
+        },
+        "expectedSha256": {
+          "$ref": "#/$defs/sha"
+        }
+      }
+    }
+  }
+}
