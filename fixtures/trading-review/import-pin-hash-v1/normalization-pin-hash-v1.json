@@ -1,0 +1,702 @@
+{
+  "fixtureVersion": 1,
+  "specificationVersion": "TRADING_IMPORT_NORMALIZATION_PIN_HASH_V1",
+  "validCases": [
+    {
+      "id": "ascii",
+      "inputVersionSet": {
+        "normalizer": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+          "versionSetHash": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+        },
+        "reconstruction": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+          "versionSetHash": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+        },
+        "versionSetHash": "30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253"
+      },
+      "normalizer": {
+        "projection": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5"
+        },
+        "canonicalJson": "{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"}}",
+        "canonicalUtf8Hex": "7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d7d",
+        "expectedSha256": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+      },
+      "reconstruction": {
+        "projection": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb"
+        },
+        "canonicalJson": "{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\"}",
+        "canonicalUtf8Hex": "7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631227d",
+        "expectedSha256": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+      },
+      "composite": {
+        "projection": {
+          "normalizer": {
+            "sourceDialectVersionsByArtifactRole": {
+              "TRADE_HISTORY": "TRADE_V1",
+              "POSITION_HISTORY": "POSITION_V1"
+            },
+            "adapterVersion": "ADAPTER_V1",
+            "normalizerVersion": "NORMALIZER_V1",
+            "canonicalSchemaVersion": "CANONICAL_V1",
+            "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+            "versionSetHash": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+          },
+          "reconstruction": {
+            "instrumentTermsVersionByInstrument": {
+              "instrument-example": "TERMS_V1"
+            },
+            "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+            "reconciliationVersion": "RECONCILIATION_V1",
+            "reviewUnitSchemaVersion": "REVIEW_V1",
+            "evidenceSchemaVersion": "EVIDENCE_V1",
+            "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+            "versionSetHash": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+          }
+        },
+        "canonicalJson": "{\"normalizer\":{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"},\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"}}",
+        "canonicalUtf8Hex": "7b226e6f726d616c697a6572223a7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d2c2276657273696f6e53657448617368223a2231393164363063643234666261393265306464333139633938643637313132633338643062303639633931316432643330386263363334326338346466393532227d2c227265636f6e737472756374696f6e223a7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631222c2276657273696f6e53657448617368223a2233623933366539303338383939313664393063633137646138643930613137323363343836353534353436663065353839323439366463333232393034386537227d7d",
+        "expectedSha256": "30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253"
+      }
+    },
+    {
+      "id": "unicode-nfc",
+      "inputVersionSet": {
+        "normalizer": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+          "versionSetHash": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+        },
+        "reconstruction": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-": "TERMS_PRIVATE_V1",
+            "instrument-𐀀": "TERMS_SUPPLEMENTARY_V1",
+            "instrument-é": "TERMS_CAFÉ_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+          "versionSetHash": "03829a3cce19344ec2e423edda45bd1d4dad23a02693fea96f4e0f866b695c6e"
+        },
+        "versionSetHash": "3fac0a85ee51adc35b25bdfe34c6f412189e2acb5db1150060bdb590850aa0a9"
+      },
+      "normalizer": {
+        "projection": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5"
+        },
+        "canonicalJson": "{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"}}",
+        "canonicalUtf8Hex": "7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d7d",
+        "expectedSha256": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+      },
+      "reconstruction": {
+        "projection": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-": "TERMS_PRIVATE_V1",
+            "instrument-𐀀": "TERMS_SUPPLEMENTARY_V1",
+            "instrument-é": "TERMS_CAFÉ_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb"
+        },
+        "canonicalJson": "{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-é\":\"TERMS_CAFÉ_V1\",\"instrument-𐀀\":\"TERMS_SUPPLEMENTARY_V1\",\"instrument-\":\"TERMS_PRIVATE_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\"}",
+        "canonicalUtf8Hex": "7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742dc3a9223a225445524d535f434146c3895f5631222c22696e737472756d656e742df0908080223a225445524d535f535550504c454d454e544152595f5631222c22696e737472756d656e742dee8080223a225445524d535f505249564154455f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631227d",
+        "expectedSha256": "03829a3cce19344ec2e423edda45bd1d4dad23a02693fea96f4e0f866b695c6e"
+      },
+      "composite": {
+        "projection": {
+          "normalizer": {
+            "sourceDialectVersionsByArtifactRole": {
+              "TRADE_HISTORY": "TRADE_V1",
+              "POSITION_HISTORY": "POSITION_V1"
+            },
+            "adapterVersion": "ADAPTER_V1",
+            "normalizerVersion": "NORMALIZER_V1",
+            "canonicalSchemaVersion": "CANONICAL_V1",
+            "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+            "versionSetHash": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+          },
+          "reconstruction": {
+            "instrumentTermsVersionByInstrument": {
+              "instrument-": "TERMS_PRIVATE_V1",
+              "instrument-𐀀": "TERMS_SUPPLEMENTARY_V1",
+              "instrument-é": "TERMS_CAFÉ_V1"
+            },
+            "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+            "reconciliationVersion": "RECONCILIATION_V1",
+            "reviewUnitSchemaVersion": "REVIEW_V1",
+            "evidenceSchemaVersion": "EVIDENCE_V1",
+            "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+            "versionSetHash": "03829a3cce19344ec2e423edda45bd1d4dad23a02693fea96f4e0f866b695c6e"
+          }
+        },
+        "canonicalJson": "{\"normalizer\":{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"},\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-é\":\"TERMS_CAFÉ_V1\",\"instrument-𐀀\":\"TERMS_SUPPLEMENTARY_V1\",\"instrument-\":\"TERMS_PRIVATE_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"versionSetHash\":\"03829a3cce19344ec2e423edda45bd1d4dad23a02693fea96f4e0f866b695c6e\"}}",
+        "canonicalUtf8Hex": "7b226e6f726d616c697a6572223a7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d2c2276657273696f6e53657448617368223a2231393164363063643234666261393265306464333139633938643637313132633338643062303639633931316432643330386263363334326338346466393532227d2c227265636f6e737472756374696f6e223a7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742dc3a9223a225445524d535f434146c3895f5631222c22696e737472756d656e742df0908080223a225445524d535f535550504c454d454e544152595f5631222c22696e737472756d656e742dee8080223a225445524d535f505249564154455f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631222c2276657273696f6e53657448617368223a2230333832396133636365313933343465633265343233656464613435626431643464616432336130323639336665613936663465306638363662363935633665227d7d",
+        "expectedSha256": "3fac0a85ee51adc35b25bdfe34c6f412189e2acb5db1150060bdb590850aa0a9"
+      }
+    },
+    {
+      "id": "unicode-nfd",
+      "inputVersionSet": {
+        "normalizer": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+          "versionSetHash": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+        },
+        "reconstruction": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-": "TERMS_PRIVATE_V1",
+            "instrument-𐀀": "TERMS_SUPPLEMENTARY_V1",
+            "instrument-é": "TERMS_CAFÉ_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+          "versionSetHash": "196a9a00d923cc856b1788efa059196bfdbfd3a1ceacc9ab80a3b767b180fd3f"
+        },
+        "versionSetHash": "41a5be2aed3e2e99c3f4f062e67ea77fd09f666afce64486c7740cc42c1a7131"
+      },
+      "normalizer": {
+        "projection": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5"
+        },
+        "canonicalJson": "{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"}}",
+        "canonicalUtf8Hex": "7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d7d",
+        "expectedSha256": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+      },
+      "reconstruction": {
+        "projection": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-": "TERMS_PRIVATE_V1",
+            "instrument-𐀀": "TERMS_SUPPLEMENTARY_V1",
+            "instrument-é": "TERMS_CAFÉ_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb"
+        },
+        "canonicalJson": "{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-é\":\"TERMS_CAFÉ_V1\",\"instrument-𐀀\":\"TERMS_SUPPLEMENTARY_V1\",\"instrument-\":\"TERMS_PRIVATE_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\"}",
+        "canonicalUtf8Hex": "7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742dc3a9223a225445524d535f43414645cc815f5631222c22696e737472756d656e742df0908080223a225445524d535f535550504c454d454e544152595f5631222c22696e737472756d656e742dee8080223a225445524d535f505249564154455f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631227d",
+        "expectedSha256": "196a9a00d923cc856b1788efa059196bfdbfd3a1ceacc9ab80a3b767b180fd3f"
+      },
+      "composite": {
+        "projection": {
+          "normalizer": {
+            "sourceDialectVersionsByArtifactRole": {
+              "TRADE_HISTORY": "TRADE_V1",
+              "POSITION_HISTORY": "POSITION_V1"
+            },
+            "adapterVersion": "ADAPTER_V1",
+            "normalizerVersion": "NORMALIZER_V1",
+            "canonicalSchemaVersion": "CANONICAL_V1",
+            "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+            "versionSetHash": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+          },
+          "reconstruction": {
+            "instrumentTermsVersionByInstrument": {
+              "instrument-": "TERMS_PRIVATE_V1",
+              "instrument-𐀀": "TERMS_SUPPLEMENTARY_V1",
+              "instrument-é": "TERMS_CAFÉ_V1"
+            },
+            "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+            "reconciliationVersion": "RECONCILIATION_V1",
+            "reviewUnitSchemaVersion": "REVIEW_V1",
+            "evidenceSchemaVersion": "EVIDENCE_V1",
+            "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+            "versionSetHash": "196a9a00d923cc856b1788efa059196bfdbfd3a1ceacc9ab80a3b767b180fd3f"
+          }
+        },
+        "canonicalJson": "{\"normalizer\":{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"},\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-é\":\"TERMS_CAFÉ_V1\",\"instrument-𐀀\":\"TERMS_SUPPLEMENTARY_V1\",\"instrument-\":\"TERMS_PRIVATE_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"versionSetHash\":\"196a9a00d923cc856b1788efa059196bfdbfd3a1ceacc9ab80a3b767b180fd3f\"}}",
+        "canonicalUtf8Hex": "7b226e6f726d616c697a6572223a7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d2c2276657273696f6e53657448617368223a2231393164363063643234666261393265306464333139633938643637313132633338643062303639633931316432643330386263363334326338346466393532227d2c227265636f6e737472756374696f6e223a7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742dc3a9223a225445524d535f43414645cc815f5631222c22696e737472756d656e742df0908080223a225445524d535f535550504c454d454e544152595f5631222c22696e737472756d656e742dee8080223a225445524d535f505249564154455f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631222c2276657273696f6e53657448617368223a2231393661396130306439323363633835366231373838656661303539313936626664626664336131636561636339616238306133623736376231383066643366227d7d",
+        "expectedSha256": "41a5be2aed3e2e99c3f4f062e67ea77fd09f666afce64486c7740cc42c1a7131"
+      }
+    },
+    {
+      "id": "normalizer-change",
+      "inputVersionSet": {
+        "normalizer": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V2",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+          "versionSetHash": "7ddaba71edb9456f5fdb5cfcbe11393d628b258f0bbc00762b2756e7c0adddf3"
+        },
+        "reconstruction": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+          "versionSetHash": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+        },
+        "versionSetHash": "6e8390b7073469a128cbe81dc3a770ff022259e02720efffe9cf557b3bd0d33d"
+      },
+      "normalizer": {
+        "projection": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V2",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5"
+        },
+        "canonicalJson": "{\"adapterVersion\":\"ADAPTER_V2\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"}}",
+        "canonicalUtf8Hex": "7b226164617074657256657273696f6e223a22414441505445525f5632222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d7d",
+        "expectedSha256": "7ddaba71edb9456f5fdb5cfcbe11393d628b258f0bbc00762b2756e7c0adddf3"
+      },
+      "reconstruction": {
+        "projection": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb"
+        },
+        "canonicalJson": "{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\"}",
+        "canonicalUtf8Hex": "7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631227d",
+        "expectedSha256": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+      },
+      "composite": {
+        "projection": {
+          "normalizer": {
+            "sourceDialectVersionsByArtifactRole": {
+              "TRADE_HISTORY": "TRADE_V1",
+              "POSITION_HISTORY": "POSITION_V1"
+            },
+            "adapterVersion": "ADAPTER_V2",
+            "normalizerVersion": "NORMALIZER_V1",
+            "canonicalSchemaVersion": "CANONICAL_V1",
+            "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+            "versionSetHash": "7ddaba71edb9456f5fdb5cfcbe11393d628b258f0bbc00762b2756e7c0adddf3"
+          },
+          "reconstruction": {
+            "instrumentTermsVersionByInstrument": {
+              "instrument-example": "TERMS_V1"
+            },
+            "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+            "reconciliationVersion": "RECONCILIATION_V1",
+            "reviewUnitSchemaVersion": "REVIEW_V1",
+            "evidenceSchemaVersion": "EVIDENCE_V1",
+            "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+            "versionSetHash": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+          }
+        },
+        "canonicalJson": "{\"normalizer\":{\"adapterVersion\":\"ADAPTER_V2\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"},\"versionSetHash\":\"7ddaba71edb9456f5fdb5cfcbe11393d628b258f0bbc00762b2756e7c0adddf3\"},\"reconstruction\":{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"}}",
+        "canonicalUtf8Hex": "7b226e6f726d616c697a6572223a7b226164617074657256657273696f6e223a22414441505445525f5632222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d2c2276657273696f6e53657448617368223a2237646461626137316564623934353666356664623563666362653131333933643632386232353866306262633030373632623237353665376330616464646633227d2c227265636f6e737472756374696f6e223a7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631222c2276657273696f6e53657448617368223a2233623933366539303338383939313664393063633137646138643930613137323363343836353534353436663065353839323439366463333232393034386537227d7d",
+        "expectedSha256": "6e8390b7073469a128cbe81dc3a770ff022259e02720efffe9cf557b3bd0d33d"
+      }
+    },
+    {
+      "id": "terms-change",
+      "inputVersionSet": {
+        "normalizer": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+          "versionSetHash": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+        },
+        "reconstruction": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V2"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+          "versionSetHash": "17a2d67ed8d5655b9b72163204126eba64a4b6dce5ab45bbe2a6d0dd0156bc45"
+        },
+        "versionSetHash": "0ff609719dc67295f7956a99cfeb88ffd43be630d0dc690aa27b5e89fbcebab6"
+      },
+      "normalizer": {
+        "projection": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5"
+        },
+        "canonicalJson": "{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"}}",
+        "canonicalUtf8Hex": "7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d7d",
+        "expectedSha256": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+      },
+      "reconstruction": {
+        "projection": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V2"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb"
+        },
+        "canonicalJson": "{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V2\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\"}",
+        "canonicalUtf8Hex": "7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5632227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631227d",
+        "expectedSha256": "17a2d67ed8d5655b9b72163204126eba64a4b6dce5ab45bbe2a6d0dd0156bc45"
+      },
+      "composite": {
+        "projection": {
+          "normalizer": {
+            "sourceDialectVersionsByArtifactRole": {
+              "TRADE_HISTORY": "TRADE_V1",
+              "POSITION_HISTORY": "POSITION_V1"
+            },
+            "adapterVersion": "ADAPTER_V1",
+            "normalizerVersion": "NORMALIZER_V1",
+            "canonicalSchemaVersion": "CANONICAL_V1",
+            "implementationDigest": "sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5",
+            "versionSetHash": "191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952"
+          },
+          "reconstruction": {
+            "instrumentTermsVersionByInstrument": {
+              "instrument-example": "TERMS_V2"
+            },
+            "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+            "reconciliationVersion": "RECONCILIATION_V1",
+            "reviewUnitSchemaVersion": "REVIEW_V1",
+            "evidenceSchemaVersion": "EVIDENCE_V1",
+            "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+            "versionSetHash": "17a2d67ed8d5655b9b72163204126eba64a4b6dce5ab45bbe2a6d0dd0156bc45"
+          }
+        },
+        "canonicalJson": "{\"normalizer\":{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"},\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V2\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"versionSetHash\":\"17a2d67ed8d5655b9b72163204126eba64a4b6dce5ab45bbe2a6d0dd0156bc45\"}}",
+        "canonicalUtf8Hex": "7b226e6f726d616c697a6572223a7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d2c2276657273696f6e53657448617368223a2231393164363063643234666261393265306464333139633938643637313132633338643062303639633931316432643330386263363334326338346466393532227d2c227265636f6e737472756374696f6e223a7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5632227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631222c2276657273696f6e53657448617368223a2231376132643637656438643536353562396237323136333230343132366562613634613462366463653561623435626265326136643064643031353662633435227d7d",
+        "expectedSha256": "0ff609719dc67295f7956a99cfeb88ffd43be630d0dc690aa27b5e89fbcebab6"
+      }
+    },
+    {
+      "id": "escaped-strings",
+      "inputVersionSet": {
+        "normalizer": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "digest/quoted\"x\\path<&>line sep replacement�tail",
+          "versionSetHash": "cec5bb1e09145bc6e5a7e7b0a4884b8f5601562b70718bfbd040dae75ad31169"
+        },
+        "reconstruction": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+          "versionSetHash": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+        },
+        "versionSetHash": "5bb9e8adb5eabd4c93c688946b9d940f5d4edf3467be116aa0f7c1ca96e2536b"
+      },
+      "normalizer": {
+        "projection": {
+          "sourceDialectVersionsByArtifactRole": {
+            "TRADE_HISTORY": "TRADE_V1",
+            "POSITION_HISTORY": "POSITION_V1"
+          },
+          "adapterVersion": "ADAPTER_V1",
+          "normalizerVersion": "NORMALIZER_V1",
+          "canonicalSchemaVersion": "CANONICAL_V1",
+          "implementationDigest": "digest/quoted\"x\\path<&>line sep replacement�tail"
+        },
+        "canonicalJson": "{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"digest/quoted\\\"x\\\\path<&>line sep replacement�tail\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"}}",
+        "canonicalUtf8Hex": "7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a226469676573742f71756f7465645c22785c5c706174683c263e6c696e65e280a8736570e280a97265706c6163656d656e74efbfbd7461696c222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d7d",
+        "expectedSha256": "cec5bb1e09145bc6e5a7e7b0a4884b8f5601562b70718bfbd040dae75ad31169"
+      },
+      "reconstruction": {
+        "projection": {
+          "instrumentTermsVersionByInstrument": {
+            "instrument-example": "TERMS_V1"
+          },
+          "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+          "reconciliationVersion": "RECONCILIATION_V1",
+          "reviewUnitSchemaVersion": "REVIEW_V1",
+          "evidenceSchemaVersion": "EVIDENCE_V1",
+          "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb"
+        },
+        "canonicalJson": "{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\"}",
+        "canonicalUtf8Hex": "7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631227d",
+        "expectedSha256": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+      },
+      "composite": {
+        "projection": {
+          "normalizer": {
+            "sourceDialectVersionsByArtifactRole": {
+              "TRADE_HISTORY": "TRADE_V1",
+              "POSITION_HISTORY": "POSITION_V1"
+            },
+            "adapterVersion": "ADAPTER_V1",
+            "normalizerVersion": "NORMALIZER_V1",
+            "canonicalSchemaVersion": "CANONICAL_V1",
+            "implementationDigest": "digest/quoted\"x\\path<&>line sep replacement�tail",
+            "versionSetHash": "cec5bb1e09145bc6e5a7e7b0a4884b8f5601562b70718bfbd040dae75ad31169"
+          },
+          "reconstruction": {
+            "instrumentTermsVersionByInstrument": {
+              "instrument-example": "TERMS_V1"
+            },
+            "reconstructionPolicyVersion": "RECONSTRUCTION_V1",
+            "reconciliationVersion": "RECONCILIATION_V1",
+            "reviewUnitSchemaVersion": "REVIEW_V1",
+            "evidenceSchemaVersion": "EVIDENCE_V1",
+            "implementationDigest": "sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb",
+            "versionSetHash": "3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7"
+          }
+        },
+        "canonicalJson": "{\"normalizer\":{\"adapterVersion\":\"ADAPTER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"digest/quoted\\\"x\\\\path<&>line sep replacement�tail\",\"normalizerVersion\":\"NORMALIZER_V1\",\"sourceDialectVersionsByArtifactRole\":{\"POSITION_HISTORY\":\"POSITION_V1\",\"TRADE_HISTORY\":\"TRADE_V1\"},\"versionSetHash\":\"cec5bb1e09145bc6e5a7e7b0a4884b8f5601562b70718bfbd040dae75ad31169\"},\"reconstruction\":{\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"}}",
+        "canonicalUtf8Hex": "7b226e6f726d616c697a6572223a7b226164617074657256657273696f6e223a22414441505445525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a226469676573742f71756f7465645c22785c5c706174683c263e6c696e65e280a8736570e280a97265706c6163656d656e74efbfbd7461696c222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631222c2254524144455f484953544f5259223a2254524144455f5631227d2c2276657273696f6e53657448617368223a2263656335626231653039313435626336653561376537623061343838346238663536303135363262373037313862666264303430646165373561643331313639227d2c227265636f6e737472756374696f6e223a7b2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5631227d2c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631222c2276657273696f6e53657448617368223a2233623933366539303338383939313664393063633137646138643930613137323363343836353534353436663065353839323439366463333232393034386537227d7d",
+        "expectedSha256": "5bb9e8adb5eabd4c93c688946b9d940f5d4edf3467be116aa0f7c1ca96e2536b"
+      }
+    }
+  ],
+  "equivalentInputs": [
+    {
+      "id": "reordered-pretty",
+      "baseCaseID": "unicode-nfc",
+      "rawJson": "{\n    \"versionSetHash\": \"3fac0a85ee51adc35b25bdfe34c6f412189e2acb5db1150060bdb590850aa0a9\",\n    \"reconstruction\": {\n        \"instrumentTermsVersionByInstrument\": {\n            \"instrument-\": \"TERMS_PRIVATE_V1\",\n            \"instrument-𐀀\": \"TERMS_SUPPLEMENTARY_V1\",\n            \"instrument-é\": \"TERMS_CAFÉ_V1\"\n        },\n        \"reconstructionPolicyVersion\": \"RECONSTRUCTION_V1\",\n        \"reconciliationVersion\": \"RECONCILIATION_V1\",\n        \"reviewUnitSchemaVersion\": \"REVIEW_V1\",\n        \"evidenceSchemaVersion\": \"EVIDENCE_V1\",\n        \"implementationDigest\": \"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\n        \"versionSetHash\": \"03829a3cce19344ec2e423edda45bd1d4dad23a02693fea96f4e0f866b695c6e\"\n    },\n    \"normalizer\": {\n        \"sourceDialectVersionsByArtifactRole\": {\n            \"TRADE_HISTORY\": \"TRADE_V1\",\n            \"POSITION_HISTORY\": \"POSITION_V1\"\n        },\n        \"adapterVersion\": \"ADAPTER_V1\",\n        \"normalizerVersion\": \"NORMALIZER_V1\",\n        \"canonicalSchemaVersion\": \"CANONICAL_V1\",\n        \"implementationDigest\": \"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\n        \"versionSetHash\": \"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"\n    }\n}"
+    },
+    {
+      "id": "unicode-escapes",
+      "baseCaseID": "unicode-nfc",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-\\ue000\":\"TERMS_PRIVATE_V1\",\"instrument-\\ud800\\udc00\":\"TERMS_SUPPLEMENTARY_V1\",\"instrument-\\u00e9\":\"TERMS_CAF\\u00c9_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"03829a3cce19344ec2e423edda45bd1d4dad23a02693fea96f4e0f866b695c6e\"},\"versionSetHash\":\"3fac0a85ee51adc35b25bdfe34c6f412189e2acb5db1150060bdb590850aa0a9\"}"
+    },
+    {
+      "id": "escaped-slash",
+      "baseCaseID": "escaped-strings",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"digest\\/quoted\\\"x\\\\path<&>line sep replacement�tail\",\"versionSetHash\":\"cec5bb1e09145bc6e5a7e7b0a4884b8f5601562b70718bfbd040dae75ad31169\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"5bb9e8adb5eabd4c93c688946b9d940f5d4edf3467be116aa0f7c1ca96e2536b\"}"
+    }
+  ],
+  "relationships": [
+    {
+      "left": "ascii",
+      "right": "normalizer-change",
+      "normalizerEqual": false,
+      "reconstructionEqual": true,
+      "compositeEqual": false
+    },
+    {
+      "left": "ascii",
+      "right": "terms-change",
+      "normalizerEqual": true,
+      "reconstructionEqual": false,
+      "compositeEqual": false
+    },
+    {
+      "left": "unicode-nfc",
+      "right": "unicode-nfd",
+      "normalizerEqual": true,
+      "reconstructionEqual": false,
+      "compositeEqual": false
+    }
+  ],
+  "invalidInputs": [
+    {
+      "id": "normalizer-hash",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"091d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "normalizer-hash"
+    },
+    {
+      "id": "reconstruction-hash",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"0b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "reconstruction-hash"
+    },
+    {
+      "id": "composite-hash",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"00a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "composite-hash"
+    },
+    {
+      "id": "changed-adapter-unhashed",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V2\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "normalizer-hash"
+    },
+    {
+      "id": "changed-terms-unhashed",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V2\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "reconstruction-hash"
+    },
+    {
+      "id": "analytics-null",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\",\"analytics\":null}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "missing-reconstruction",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "unknown-component-field",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\",\"ignored\":\"value\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "missing-role",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "empty-terms",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "numeric-version",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":1,\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "null-component",
+      "rawJson": "{\"normalizer\":null,\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "uppercase-hash",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "hashes-only-composite",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"8761a5f50f09ba971937d41fe1b92e53b7aeb67adbed162ff68f040ae2d83570\"}",
+      "expectedFailure": "composite-hash"
+    },
+    {
+      "id": "recursive-hash-drop",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"c445668168b1bdbbc35ec92766b7114f8e5f03b8c6846cc150d45e31fa7b2e12\"}",
+      "expectedFailure": "composite-hash"
+    },
+    {
+      "id": "duplicate-root",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "duplicate-key"
+    },
+    {
+      "id": "duplicate-escaped-role",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TR\\u0041DE_HISTORY\":\"OTHER_V1\",\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "duplicate-key"
+    },
+    {
+      "id": "lone-surrogate",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"\\uD800\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "unicode"
+    },
+    {
+      "id": "invalid-utf8",
+      "utf8Hex": "ff7b226e6f726d616c697a6572223a7b22736f757263654469616c65637456657273696f6e7342794172746966616374526f6c65223a7b2254524144455f484953544f5259223a2254524144455f5631222c22504f534954494f4e5f484953544f5259223a22504f534954494f4e5f5631227d2c226164617074657256657273696f6e223a22414441505445525f5631222c226e6f726d616c697a657256657273696f6e223a224e4f524d414c495a45525f5631222c2263616e6f6e6963616c536368656d6156657273696f6e223a2243414e4f4e4943414c5f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a35333635613961366635386533366435333937363334323333393035323338306266393337343964353765656537383362343937656261363533316364336635222c2276657273696f6e53657448617368223a2231393164363063643234666261393265306464333139633938643637313132633338643062303639633931316432643330386263363334326338346466393532227d2c227265636f6e737472756374696f6e223a7b22696e737472756d656e745465726d7356657273696f6e4279496e737472756d656e74223a7b22696e737472756d656e742d6578616d706c65223a225445524d535f5631227d2c227265636f6e737472756374696f6e506f6c69637956657273696f6e223a225245434f4e535452554354494f4e5f5631222c227265636f6e63696c696174696f6e56657273696f6e223a225245434f4e43494c494154494f4e5f5631222c22726576696577556e6974536368656d6156657273696f6e223a225245564945575f5631222c2265766964656e6365536368656d6156657273696f6e223a2245564944454e43455f5631222c22696d706c656d656e746174696f6e446967657374223a227368613235363a34353033666462383939323438616531376630313065653233333765363931306231306664616536653032663139383465386430346266336361633030636662222c2276657273696f6e53657448617368223a2233623933366539303338383939313664393063633137646138643930613137323363343836353534353436663065353839323439366463333232393034386537227d2c2276657273696f6e53657448617368223a2233306133353834373735623465323635646438646136356137376662303532343933373431313463623763326431323439326531303636366162343334323533227d",
+      "expectedFailure": "unicode"
+    },
+    {
+      "id": "trailing-json",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"} null",
+      "expectedFailure": "json"
+    },
+    {
+      "id": "bom",
+      "rawJson": "﻿{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"191d60cd24fba92e0dd319c98d67112c38d0b069c911d2d308bc6342c84df952\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"30a3584775b4e265dd8da65a77fb05249374114cb7c2d12492e10666ab434253\"}",
+      "expectedFailure": "json"
+    },
+    {
+      "id": "mutable-version",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"latest\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"735ea98c8d92e8a487773fd9fdf7a3ed3533e24f4ed05fb1b6c4fdabee067741\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"5088ced9e8239f15dbcfb119e7bdf9e8dd5dd37ccb67030955b0ad8d79d85074\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "trimmed-version",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\" ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"sha256:5365a9a6f58e36d53976342339052380bf93749d57eee783b497eba6531cd3f5\",\"versionSetHash\":\"885c75686f3a0ab0194c41c05823376672aaa6795b6a1568a59da9b513e62894\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"ad77dc78eb2ac57d17fdf4099fd8ca86f2eeac993a2a39ecec102dace13a392b\"}",
+      "expectedFailure": "shape"
+    },
+    {
+      "id": "control-digest",
+      "rawJson": "{\"normalizer\":{\"sourceDialectVersionsByArtifactRole\":{\"TRADE_HISTORY\":\"TRADE_V1\",\"POSITION_HISTORY\":\"POSITION_V1\"},\"adapterVersion\":\"ADAPTER_V1\",\"normalizerVersion\":\"NORMALIZER_V1\",\"canonicalSchemaVersion\":\"CANONICAL_V1\",\"implementationDigest\":\"digest\\tvalue\",\"versionSetHash\":\"09fe9821a548c975dd6606a314a94e9665846051d23588832872190f41922564\"},\"reconstruction\":{\"instrumentTermsVersionByInstrument\":{\"instrument-example\":\"TERMS_V1\"},\"reconstructionPolicyVersion\":\"RECONSTRUCTION_V1\",\"reconciliationVersion\":\"RECONCILIATION_V1\",\"reviewUnitSchemaVersion\":\"REVIEW_V1\",\"evidenceSchemaVersion\":\"EVIDENCE_V1\",\"implementationDigest\":\"sha256:4503fdb899248ae17f010ee2337e6910b10fdae6e02f1984e8d04bf3cac00cfb\",\"versionSetHash\":\"3b936e903889916d90cc17da8d90a1723c486554546f0e5892496dc3229048e7\"},\"versionSetHash\":\"67a804097c2930d58736203f6ddf51ceccdbc5c4f4e79ea4303a3211c9a0769f\"}",
+      "expectedFailure": "shape"
+    }
+  ]
+}
