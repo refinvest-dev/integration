@@ -91,6 +91,35 @@ class ContractSyncMapTest(unittest.TestCase):
             {"coreApi", "computeApi", "integration"},
         )
 
+    def test_import_pin_vectors_are_optional_exact_byte_snapshots(self):
+        directory = "fixtures/trading-import-pins/"
+        names = {directory + name for name in (
+            "README.md", "normalization-pin-hash-v1.json",
+            "normalization-pin-hash-v1.schema.json",
+        )}
+        before = self.sources - names
+        original = expand_map(self.manifest, before)
+        targets = {
+            "coreApi": "tradingreview/application/src/test/resources/trading-import-pins/v1",
+            "computeApi": "tests/fixtures/trading_review/import_pin_hash/v1",
+            "integration": "fixtures/trading-review/import-pin-hash-v1",
+        }
+        for additions in [set(), *({name} for name in sorted(names)), names]:
+            with self.subTest(additions=additions):
+                mapped = expand_map(self.manifest, before | additions)
+                self.assertEqual(
+                    {(r.source, r.repository, r.target, r.mode) for r in mapped if r.source in names},
+                    {(source, repo, dest + "/" + source.rsplit("/", 1)[1], "bytes")
+                     for source in additions for repo, dest in targets.items()},
+                )
+                self.assertEqual([r for r in mapped if r.source not in names], original)
+        for extra in (
+            "new-vector.json", "normalization-pin-hash-v1.json.backup",
+            "nested/normalization-pin-hash-v1.json",
+        ):
+            with self.subTest(extra=extra), self.assertRaisesRegex(ContractSyncError, "Unclassified"):
+                expand_map(self.manifest, before | names | {directory + extra})
+
     def test_unknown_contract_file_fails_closed(self):
         with self.assertRaisesRegex(ContractSyncError, "Unclassified"):
             expand_map(self.manifest, self.sources | {"fixtures/new-protocol/vector.json"})

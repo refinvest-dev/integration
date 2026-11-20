@@ -226,6 +226,63 @@
           "directory": "fixtures/trading-review/analytics-protocol-v1"
         }
       ]
+    },
+    {
+      "sourceDirectory": "fixtures/trading-import-pins",
+      "files": "README.md",
+      "mode": "bytes",
+      "targets": [
+        {
+          "repository": "coreApi",
+          "directory": "tradingreview/application/src/test/resources/trading-import-pins/v1"
+        },
+        {
+          "repository": "computeApi",
+          "directory": "tests/fixtures/trading_review/import_pin_hash/v1"
+        },
+        {
+          "repository": "integration",
+          "directory": "fixtures/trading-review/import-pin-hash-v1"
+        }
+      ]
+    },
+    {
+      "sourceDirectory": "fixtures/trading-import-pins",
+      "files": "normalization-pin-hash-v1.json",
+      "mode": "bytes",
+      "targets": [
+        {
+          "repository": "coreApi",
+          "directory": "tradingreview/application/src/test/resources/trading-import-pins/v1"
+        },
+        {
+          "repository": "computeApi",
+          "directory": "tests/fixtures/trading_review/import_pin_hash/v1"
+        },
+        {
+          "repository": "integration",
+          "directory": "fixtures/trading-review/import-pin-hash-v1"
+        }
+      ]
+    },
+    {
+      "sourceDirectory": "fixtures/trading-import-pins",
+      "files": "normalization-pin-hash-v1.schema.json",
+      "mode": "bytes",
+      "targets": [
+        {
+          "repository": "coreApi",
+          "directory": "tradingreview/application/src/test/resources/trading-import-pins/v1"
+        },
+        {
+          "repository": "computeApi",
+          "directory": "tests/fixtures/trading_review/import_pin_hash/v1"
+        },
+        {
+          "repository": "integration",
+          "directory": "fixtures/trading-review/import-pin-hash-v1"
+        }
+      ]
     }
   ],
   "unmappedContractPrefixes": [
