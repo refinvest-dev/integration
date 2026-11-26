@@ -53,11 +53,11 @@ Go의 drain/join·자원 종료 순서는 별도 Go 테스트/CI에서 검증한
 
 ## 확인한 실행
 
-[2026-11-27 payload-free 요약](../evidence/owner-query-service/2026-11-27.json)에 실제 서비스 시나리오11개 PASS와
+[2026-11-27 payload-free 요약](../evidence/owner-query-service/2026-11-27.json)에 최종 격리 서비스 시나리오11개 PASS와
 source/binary hash·정리 범위를 기록했다. 첫 sync120초 timeout과 후속 Core TLS probe 실패는 성공으로 계산하지 않는다.
 sync600초·소유 process tree 정리/단계 기록, fixture CA/leaf subject 분리·PKCS12 alias·probe 원인 기록을 보완한 뒤 통과했다.
-최초 성공 당시 integration은 기록한 base 위 working tree였으므로 source hash로 검증한 harness bytes를 고정한다.
-그 뒤 추가한 spool sweeper 제외·JVM temp 격리의 최종 replay는 증적의 source/격리 범위를 별도로 확인한다.
+초기 기능 수용 뒤 spool sweeper 제외·JVM temp 격리를 추가하고, 세 저장소의 고정 commit에서 다시 실행했다.
+최종 증적은 Go23c1216·Coree6f13be·integration5211525와 실제 binary/source SHA를 기록하며 세 working tree는 clean이었다.
 
 integration CI의 기존 authority 부정 검사는 ADR-086 후 바뀐 오류 문구 대신 과거 `unadopted`를 기대해 실패했다.
 기대 문구를 현재 Context verifier에 맞췄으며 runtime flag를 true로 바꾸는 mutation이 실제로 거절되는 조건은 유지한다.

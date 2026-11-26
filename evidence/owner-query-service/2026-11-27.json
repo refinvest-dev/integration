@@ -4,15 +4,16 @@
   "result": "PASS",
   "revisions": {
     "context": "8f00652381ef3c81b9fd11b7e4e452c8f98c451c",
-    "core": "2c9edaf049fa0106ac6f81205f2d6ff038670412",
-    "go": "34bf2c7608d866127601981c4db66362785e2912",
-    "integration": "05e1bfd6643b0881b9da73cbb5cf27384d91669e"
+    "core": "e6f13bed65a2d21f591ce59ab7cd74777d06d8e9",
+    "go": "23c1216d257efb8da49c0d6270b518e5b132ced0",
+    "integration": "5211525f43922463c18b43576089edc4868c26a9"
   },
-  "harnessWorkingTreeChanges": true,
-  "harnessSourceSha256": "6ceced5f14aa6c909d16dfa0812b4901bf5de32e508ef941edc639b527b84c39",
+  "harnessWorkingTreeChanges": false,
+  "harnessSourceSha256": "09fd7de083375900d7687fb8c05d7daf93330cd83189a57001b666ddc5150f21",
+  "jvmTemporaryDirectoryIsolated": true,
   "goBinary": {
     "platform": "windows-amd64",
-    "sha256": "395a3a9c9822d2a6f508f12e7f5ebffb2c3e62f0d2db72605383abbf1a245030"
+    "sha256": "de4d083622b9e36393889ef4e130232c896a0714463ac0dd9d61300a7f899cca"
   },
   "contractSync": "PASS",
   "coreMigrationFiles": [
@@ -73,9 +74,8 @@
   "limits": [
     "Core uses a test-classpath launcher with real production components; not production Bean provisioning",
     "Go cmd/api is an actual separate process; TLS certificates and all credentials are synthetic",
-    "Harness fixes were in the working tree above the recorded integration base; source hash fixes the tested bytes",
+    "Tested harness source bytes are fixed by the recorded integration revision and source SHA-256",
     "Windows forced process exit is not graceful drain evidence",
-    "No Web UI, operational key rotation, member backfill, production DB/writer handover or backup restore acceptance",
-    "Initial functional acceptance before explicit spool-sweeper exclusion and JVM temp isolation; isolated replay pending"
+    "No Web UI, operational key rotation, member backfill, production DB/writer handover or backup restore acceptance"
   ]
 }
