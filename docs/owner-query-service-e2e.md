@@ -29,6 +29,7 @@ Python CLI는 `--core-port`, `--go-port`, `--timeout-seconds`, `--output-root`�
 3. TLS CA·서버 key pair 둘·별도 RS256 signing key와 credential·browser HS256 secret을 생성한다.
    Core 위임 private key는 Go trust file에 넣지 않는다. private 파일은 `.integration-data/owner-query-service/`에만 보관한다.
 4. Core TR/Compute worker를 끄고 실제 인증·중계/authority capability를 fixture에서 명시 조립한다.
+   무조건 등록되는 spool sweeper는 fixture에서 제외하고 JVM temp도 실행 폴더로 제한한다.
 5. 소유한 process만 종료하고 자신이 생성한 schema만 제거한다. port 점유자를 찾아 임의 종료하거나 기존 process를 재사용하지 않는다.
 
 Windows startup의 알려진 10014/Bad address listen 오류만 최대3회 기록 후 재시도한다. 일반 startup/HTTP/SQL/assertion 실패를
@@ -49,3 +50,15 @@ Go의 drain/join·자원 종료 순서는 별도 Go 테스트/CI에서 검증한
 `evidence.json`에는 source revision·Go binary SHA·pass/fail·시도·소유 process·정리 결과만 기록한다.
 환경/키/keystore·원 JWT·subject/jti/hash·거래 payload를 artifact에 올리지 않는다. 로그도 private local 산출물이다.
 운영 회원 초기화/backfill·권한/키 교체/철회·신뢰 ACL·실제 DB history/ID·Core TR writer 인계·backup restore·전체 부하 수용은 별도다.
+
+## 확인한 실행
+
+[2026-11-27 payload-free 요약](../evidence/owner-query-service/2026-11-27.json)에 실제 서비스 시나리오11개 PASS와
+source/binary hash·정리 범위를 기록했다. 첫 sync120초 timeout과 후속 Core TLS probe 실패는 성공으로 계산하지 않는다.
+sync600초·소유 process tree 정리/단계 기록, fixture CA/leaf subject 분리·PKCS12 alias·probe 원인 기록을 보완한 뒤 통과했다.
+최초 성공 당시 integration은 기록한 base 위 working tree였으므로 source hash로 검증한 harness bytes를 고정한다.
+그 뒤 추가한 spool sweeper 제외·JVM temp 격리의 최종 replay는 증적의 source/격리 범위를 별도로 확인한다.
+
+integration CI의 기존 authority 부정 검사는 ADR-086 후 바뀐 오류 문구 대신 과거 `unadopted`를 기대해 실패했다.
+기대 문구를 현재 Context verifier에 맞췄으며 runtime flag를 true로 바꾸는 mutation이 실제로 거절되는 조건은 유지한다.
+기존 API/Web smoke와 새로운 서비스 E2E를 같은 검증으로 합산하지 않는다.

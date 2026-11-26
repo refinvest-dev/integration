@@ -1,0 +1,81 @@
+{
+  "kind": "synthetic owner-query service acceptance",
+  "date": "2026-11-27",
+  "result": "PASS",
+  "revisions": {
+    "context": "8f00652381ef3c81b9fd11b7e4e452c8f98c451c",
+    "core": "2c9edaf049fa0106ac6f81205f2d6ff038670412",
+    "go": "34bf2c7608d866127601981c4db66362785e2912",
+    "integration": "05e1bfd6643b0881b9da73cbb5cf27384d91669e"
+  },
+  "harnessWorkingTreeChanges": true,
+  "harnessSourceSha256": "6ceced5f14aa6c909d16dfa0812b4901bf5de32e508ef941edc639b527b84c39",
+  "goBinary": {
+    "platform": "windows-amd64",
+    "sha256": "395a3a9c9822d2a6f508f12e7f5ebffb2c3e62f0d2db72605383abbf1a245030"
+  },
+  "contractSync": "PASS",
+  "coreMigrationFiles": [
+    "V1__trading_account_book.sql",
+    "V2__trading_import_artifacts.sql",
+    "V3__trading_normalization_dispatch.sql",
+    "V4__trading_normalization_input_identity.sql",
+    "V5__trading_normalization_publication.sql",
+    "V6__trading_result_delivery_policy.sql",
+    "V7__trading_result_stage_order.sql",
+    "V8__trading_analytics_input_supplement.sql",
+    "V9__trading_normalization_result_pin.sql",
+    "V10__trading_normalization_transition.sql",
+    "V11__backtest_capacity_reservations.sql",
+    "V12__refresh_session_family_fence.sql",
+    "V13__trading_deletion_checkpoints.sql",
+    "V14__trading_deletion_execution_leases.sql",
+    "V15__trading_raw_retention_retry.sql",
+    "V16__trading_raw_policy_clocks.sql",
+    "V17__trading_deletion_count_snapshot.sql",
+    "V18__subscription_schema.sql",
+    "V19__authentication_schema.sql",
+    "V20__strategy_schema.sql",
+    "V21__backtest_schema.sql"
+  ],
+  "scenarios": {
+    "authenticated_principal_delegation_authority_and_bigint_metadata": "PASS",
+    "foreign_absent_and_admin_ownership": "PASS",
+    "browser_auth_csrf_and_untrusted_headers": "PASS",
+    "member_block_commit_and_no_positive_cache": "PASS",
+    "key_revocation_authority_unavailable_and_readiness": "PASS",
+    "eight_concurrent_callbacks_with_four_core_servlet_threads": "PASS",
+    "go_query_deadline_maps_to_public_504": "PASS",
+    "browser_disconnect_is_bounded_not_durable_job_cancellation": "PASS",
+    "archived_metadata_and_current_parent_deletion_guard": "PASS",
+    "internal_auth_failure_maps_to_502_without_legacy_fallback": "PASS",
+    "trace_children_without_baggage_or_durable_admission": "PASS"
+  },
+  "startupAttempts": [
+    {
+      "service": "core",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-reconfigured",
+      "attempt": 1,
+      "result": "READY"
+    }
+  ],
+  "ownedProcessesStopped": true,
+  "ownedSchemaRemoved": true,
+  "limits": [
+    "Core uses a test-classpath launcher with real production components; not production Bean provisioning",
+    "Go cmd/api is an actual separate process; TLS certificates and all credentials are synthetic",
+    "Harness fixes were in the working tree above the recorded integration base; source hash fixes the tested bytes",
+    "Windows forced process exit is not graceful drain evidence",
+    "No Web UI, operational key rotation, member backfill, production DB/writer handover or backup restore acceptance",
+    "Initial functional acceptance before explicit spool-sweeper exclusion and JVM temp isolation; isolated replay pending"
+  ]
+}

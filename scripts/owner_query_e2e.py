@@ -83,9 +83,10 @@ def identities(directory):
         .not_valid_after(now + timedelta(days=1)).add_extension(x509.BasicConstraints(ca=True, path_length=0), True) \
         .sign(ca_key, hashes.SHA256())
 
-    def server():
+    def server(label):
         key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-        certificate = x509.CertificateBuilder().subject_name(name).issuer_name(name).public_key(key.public_key()) \
+        subject = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, label)])
+        certificate = x509.CertificateBuilder().subject_name(subject).issuer_name(name).public_key(key.public_key()) \
             .serial_number(x509.random_serial_number()).not_valid_before(now - timedelta(minutes=1)) \
             .not_valid_after(now + timedelta(days=1)).add_extension(x509.BasicConstraints(ca=False, path_length=None), True) \
             .add_extension(x509.SubjectAlternativeName([x509.IPAddress(ipaddress.ip_address("127.0.0.1"))]), False) \
@@ -95,8 +96,8 @@ def identities(directory):
     pem = lambda cert: cert.public_bytes(serialization.Encoding.PEM).decode("ascii")
     private = lambda key: key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
                                           serialization.NoEncryption()).decode("ascii")
-    go_key, go_certificate = server()
-    core_key, core_certificate = server()
+    go_key, go_certificate = server("Go integration TLS")
+    core_key, core_certificate = server("Core integration TLS")
     signing = rsa.generate_private_key(public_exponent=65537, key_size=2048)
     public = signing.public_key().public_bytes(serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo).decode("ascii")
     ca_pem = pem(ca)
@@ -203,6 +204,7 @@ INSERT INTO trading_books(id,account_id,owner_member_id,venue,display_name,produ
             "server.address": "127.0.0.1", "server.port": self.core_port, "server.ssl.enabled": True,
             "server.ssl.key-store": str(self.directory / "core.p12"), "server.ssl.key-store-type": "PKCS12",
             "server.ssl.key-store-password": "fixture-only", "server.tomcat.threads.max": 4, "server.tomcat.threads.min-spare": 2,
+            "server.ssl.key-alias": "core-fixture",
             "refinvest.id.node-id": 0, "refinvest.security.issuer": "https://browser.integration.invalid", "refinvest.security.audience": "integration-browser",
             "refinvest.security.jwt-secret": self.browser_secret, "refinvest.security.web-origin": "https://web.integration.invalid",
             "refinvest.compute.enabled": False, "refinvest.trading-review.retention-enabled": False, "refinvest.trading-review.deletion-enabled": False,
@@ -210,6 +212,7 @@ INSERT INTO trading_books(id,account_id,owner_member_id,venue,display_name,produ
             "trading-review.owner-query-proxy.enabled": True, "trading-review.owner-query-proxy.request-timeout": "8s"}
         self.core_env = dict(os.environ, SPRING_APPLICATION_JSON=json.dumps(settings),
                              REFINVEST_OWNER_QUERY_FIXTURE_FILE=str(self.directory / "core-fixture.json"))
+        self.core_env["SPRING_PROFILES_ACTIVE"] = ""
         self.secrets.add(self.go_env["TRADING_REVIEW_DATABASE_URL"])
 
     def build(self):
@@ -228,14 +231,24 @@ INSERT INTO trading_books(id,account_id,owner_member_id,venue,display_name,produ
         require(self.args.go_binary.is_file(), "GO_BINARY_MISSING")
         classpath = (self.args.core_path / "app/build/owner-query-fixture-classpath.txt").read_text(encoding="utf-8")
         quoted = classpath.replace("\\", "\\\\").replace('"', '\\"')
-        private_write(self.directory / "core.args", '-cp\n"' + quoted + '"\ncom.refinvestfixture.ownerquery.OwnerQueryServiceFixtureKt\n--spring.config.import=\n')
+        temporary = self.directory / "jvm-tmp"
+        temporary.mkdir(mode=0o700)
+        quoted_temp = str(temporary).replace("\\", "\\\\").replace('"', '\\"')
+        private_write(self.directory / "core.args", '"-Djava.io.tmpdir=' + quoted_temp + '"\n-cp\n"' + quoted +
+                      '"\ncom.refinvestfixture.ownerquery.OwnerQueryServiceFixtureKt\n--spring.config.import=\n')
         self.evidence["goBinarySha256"] = hashlib.sha256(self.args.go_binary.read_bytes()).hexdigest()
+        self.evidence["harnessSourceSha256"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+        self.evidence["jvmTemporaryDirectoryIsolated"] = True
         self.evidence["revisions"] = {}
+        self.evidence["sourceDirty"] = {}
         for name in ("context", "core", "go", "integration"):
             root = getattr(self.args, name + "_path")
             result = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True, timeout=15)
             require(result.returncode == 0, "SOURCE_REVISION_UNAVAILABLE")
             self.evidence["revisions"][name] = result.stdout.strip()
+            changed = subprocess.run(["git", "-C", str(root), "diff", "--name-only", "HEAD"], capture_output=True, text=True, timeout=15)
+            require(changed.returncode == 0, "SOURCE_STATE_UNAVAILABLE")
+            self.evidence["sourceDirty"][name] = bool(changed.stdout.strip())
 
     def spawn(self, name, command, env):
         log = self.directory / (name + ".log")
@@ -265,19 +278,22 @@ INSERT INTO trading_books(id,account_id,owner_member_id,venue,display_name,produ
         for attempt in range(1, 4):
             process, log = self.spawn(name + "-" + str(len(self.children)), command, env)
             deadline = time.monotonic() + self.args.timeout_seconds
+            last_probe = "NOT_CONNECTED"
             while process.poll() is None and time.monotonic() < deadline:
                 try:
-                    if self.session.get(ready, timeout=(2, 3)).status_code == 200:
+                    response = self.session.get(ready, timeout=(2, 3))
+                    last_probe = "HTTP_" + str(response.status_code)
+                    if response.status_code == 200:
                         self.evidence["startupAttempts"].append({"service": name, "attempt": attempt, "result": "READY"})
                         return process
-                except requests.RequestException:
-                    pass
+                except requests.RequestException as error:
+                    last_probe = type(error).__name__
                 time.sleep(0.25)
             self.stop(process)
             text = log.read_text(encoding="utf-8", errors="replace")
             known = os.name == "nt" and ("Bad address: listen" in text or "os_error_code\":10014" in text or "os_error_code\": 10014" in text)
             self.evidence["startupAttempts"].append({"service": name, "attempt": attempt,
-                "result": "WINDOWS_LISTEN_FAILED" if known else "STARTUP_FAILED"})
+                "result": "WINDOWS_LISTEN_FAILED" if known else "STARTUP_FAILED", "lastProbe": last_probe})
             require(known and attempt < 3, "SERVICE_STARTUP_FAILED")
         raise AcceptanceFailure("SERVICE_STARTUP_FAILED")
 
