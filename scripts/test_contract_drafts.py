@@ -124,7 +124,7 @@ class DraftSnapshotGateTest(unittest.TestCase):
             original = path.read_text(encoding="utf-8")
             self.assertIn("x-runtime-enabled: false", original)
             path.write_text(original.replace("x-runtime-enabled: false", "x-runtime-enabled: true", 1), encoding="utf-8")
-        self.rejected_by("authority must remain unadopted")
+        self.rejected_by("authority design must remain draft and runtime disabled")
 
 
     @unittest.skipUnless((CONTEXT / ACCOUNT_BOOK).exists(), "candidate absent in pinned Context")
