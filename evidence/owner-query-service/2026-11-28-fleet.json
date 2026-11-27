@@ -1,0 +1,288 @@
+{
+  "result": "PASS",
+  "coreMode": "synthetic-fleet",
+  "coreNodes": 2,
+  "goNodes": 2,
+  "testInitializer": false,
+  "topology": "Core nodes -> fixed loopback TLS metadata relay -> Go nodes -> fixed loopback TLS authority relay -> Core nodes",
+  "binaryVersionSkew": false,
+  "operationalActivation": false,
+  "scenarios": {
+    "two_core_two_go_eight_callback_combinations_and_both_metadata_resources": "PASS",
+    "unprepared_but_ready_node_is_excluded_and_unknown_kid_has_no_fallback": "PASS",
+    "new_key_is_verified_before_all_issuers_switch_and_both_credentials_overlap": "PASS",
+    "last_old_issuer_drains_and_unexpired_old_delegation_remains_verify_only": "PASS",
+    "invalid_replacements_exit_unready_without_mutating_existing_runtime_snapshots": "PASS",
+    "member_block_commit_applies_across_current_fleet_without_positive_cache": "PASS",
+    "ingress_caller_block_commit_applies_across_authority_nodes": "PASS",
+    "revoked_old_kid_is_denied_while_verifiers_still_hold_public_key": "PASS",
+    "specific_jti_revocation_commits_without_blocking_fresh_delegations": "PASS",
+    "real_clock_wait_covers_ttl_both_skews_and_fixture_request_budget": "PASS",
+    "retired_directional_credentials_are_rejected_and_new_credentials_remain_usable": "PASS",
+    "fresh_old_key_attack_is_rejected_before_authority_after_public_key_retirement": "PASS",
+    "fleet_reads_create_no_idempotency_or_job_and_token_slots_are_cleared": "PASS"
+  },
+  "matrices": [
+    {
+      "phase": "initial-diagnostic-confirmation",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "mixed-signers-and-two-way-credential-overlap",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "all-new-issuers-with-old-key-verify-only",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "file-mutation-does-not-reload-running-processes",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "serving-fleet-survives-rejected-replacements",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "member-explicit-fixture-restoration",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "fresh-new-delegations-before-specific-revocation",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "fresh-jti-is-not-overblocked",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "only-new-material-after-retirement",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    },
+    {
+      "phase": "final-confirmed-fleet",
+      "combinations": 8,
+      "resources": 2,
+      "successfulRequests": 16,
+      "metadataHops": 16,
+      "authorityHops": 16
+    }
+  ],
+  "rollouts": [
+    {
+      "node": "core-a",
+      "revision": 2,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "core-b",
+      "revision": 2,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "go-a",
+      "revision": 2,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "go-b",
+      "revision": 2,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "core-a",
+      "revision": 3,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "go-b",
+      "revision": 3,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "core-b",
+      "revision": 3,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "go-a",
+      "revision": 3,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "go-b",
+      "revision": 4,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "core-a",
+      "revision": 4,
+      "confirmedByMetadata": true
+    },
+    {
+      "node": "core-b",
+      "revision": 4,
+      "confirmedByMetadata": true
+    }
+  ],
+  "revisions": {
+    "context": "8f00652381ef3c81b9fd11b7e4e452c8f98c451c",
+    "core": "0f8491d21e63ed5534ed59cc7749b0fe400ac27a",
+    "go": "67e5e0df6885a2619b5c484a1f2ee5d58e7cd6cf",
+    "integration": "208889a01af8d867aa8d620600d304d2e1182a6b"
+  },
+  "sourceDirty": {
+    "context": false,
+    "core": false,
+    "go": false,
+    "integration": false
+  },
+  "startupAttempts": [
+    {
+      "service": "core-a-r1",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-b-r1",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-a-r1",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-b-r1",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-a-r2",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-b-r2",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-a-r2",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-b-r2",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-a-r3",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-b-r3",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-b-r3",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-a-r3",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-b-r4",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-a-r4",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-b-r4",
+      "attempt": 1,
+      "result": "READY"
+    }
+  ],
+  "goBinarySha256": "0f95e5259cf791536e94c4e995072ff1b46ca0ac3e8c5bd0da5266666096f968",
+  "coreBootJarSha256": "c97ac0e43dcf6ce58ac0a5e7422f713b47cbe038adf5579dcd01d8df63ad445b",
+  "fleetHarnessSources": {
+    "owner_query_e2e.py": "ff2922c7ef7e77a21a22b424504689af9ee55821501352860b6f81de3846ede7",
+    "owner_query_main_e2e.py": "3ffd5629264b885c16219edb53a27a3340bd41b8518bcc29a62a1814f96441df",
+    "owner_query_fleet_e2e.py": "9020dd02247119f87db394fdaf97e3d2d152c9c842e9ac13015e3cae9fc779ea",
+    "owner_query_fleet_scenarios.py": "fdf7795608f44cddcbd033cc541a03822d4b310b4174ab4d1e2f814aa9e40e91",
+    "owner_query_fleet_relay.py": "a3df56cfbdce0a55bfab1f0703099d0f93c552e7a491f3ff7730dc345f7436bc"
+  },
+  "retirementWindow": {
+    "ttlSeconds": 60,
+    "leewayEachDirectionSeconds": 5,
+    "longestFixtureRequestBudgetSeconds": 12,
+    "elapsedAfterOldIssuerStoppedSeconds": 82.0,
+    "operationalDurationSelected": false
+  },
+  "relaysStopped": true,
+  "delegationSlotsCleared": true,
+  "ownedProcessesStopped": true,
+  "ownedSchemaRemoved": true,
+  "date": "2026-11-28",
+  "scenarioCount": 13,
+  "contractSync": "PASS",
+  "rejectedReplacements": {
+    "core": "SNAPSHOT failure, nonzero exit and no READY",
+    "go": "resources failure, nonzero exit and no READY"
+  },
+  "lifecycle": "Core routing exclusion and ordinary Spring shutdown confirmed; Go process cleanup may be forced",
+  "earlierAttempt": "Development run passed 7 checkpoints then the adversarial fixture probe was correctly rejected: renewed iat/exp retained stale nbf. Fixed in harness with regression test; development source was not fixed and is not acceptance evidence.",
+  "limitations": [
+    "Same service binaries with different trust snapshots; not old/new binary compatibility",
+    "Fixture routing membership, not production LB/node inventory or deployment acknowledgement",
+    "Same-host clocks and shared fixture TLS leaves; not skewed-host, TLS CA/certificate, KMS/ACL/secret destruction acceptance",
+    "No operational DB/member/writer handover/backup restore/load acceptance"
+  ]
+}

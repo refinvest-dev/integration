@@ -82,3 +82,16 @@ matrix와 checkpoint·startup 시도·정리 결과만 담는다. 키·환경·�
 실제 secret 공급/폐기·보호 mount/ACL·TLS 인증서/CA 교체·clock-skewed host·구/신 binary 호환성·production routing·
 긴급 fleet 전파/미확인 node 완전 차단·DB history/회원 초기화·Core TR 단일 writer 인계·backup restore·운영 부하는 별도다.
 기본 health-only·proxy 비활성화와 운영 전환 gate는 유지한다. 선택된 두 metadata GET의 증거를 쓰기/Worker에 확대하지 않는다.
+
+
+## 고정 source 수용
+
+[2026-11-28 증적](../evidence/owner-query-service/2026-11-28-fleet.json)에13개 시나리오 PASS와 정상 matrix10회
+(각8조합·2 resource·실제 metadata/authority hop16개), node 교체·설정 거절·retirement·정리를 기록했다.
+Core `0f8491d21e63ed5534ed59cc7749b0fe400ac27a`, Go `67e5e0df6885a2619b5c484a1f2ee5d58e7cd6cf`, harness `208889a01af8d867aa8d620600d304d2e1182a6b`의
+tracked source가 clean인 상태로 실행했다. 실제 bootJar/Go binary·5개 harness source SHA도 기록한다.
+기존 fixture11개/일반 Main16개와 합산하지 않는다.
+
+개발 실행에서는 공격 fixture의 nbf 갱신 누락을 서버가 올바르게 거절했다. harness의 시간 profile을 수정하고
+9개 안전 검사를 통과한 뒤 위 고정 source로 전체를 다시 검증했다. 실패한 개발 실행은 성공 근거로 사용하지 않는다.
+startup 재시도 유무는 증적의 전체 시도를 따른다. 운영 전환 gate는 유지한다.
