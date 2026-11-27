@@ -144,14 +144,18 @@ class TransportServiceAcceptance(MainServiceAcceptance):
                        "0", "BODY_DRAIN_PRIMARY_SESSIONS_REMAIN")
 
     def healthy_body_drain(self):
+        self.checkpoint("HEALTHY_BODY_DRAIN_START")
         fault = self.body_faults.arm("partial")
         log = self.core_log()
         with ThreadPoolExecutor(max_workers=1) as workers:
             pending = workers.submit(self.request, "/trading-accounts/" + ACCOUNT)
             try:
                 self.entered(fault)
+                self.checkpoint("HEALTHY_BODY_DRAIN_HELD")
                 self.request("/trading-books/" + BOOK, 503, "OWNER_QUERY_UNAVAILABLE")
+                self.checkpoint("HEALTHY_BODY_DRAIN_SHUTDOWN")
                 self.trigger_shutdown()
+                self.checkpoint("HEALTHY_BODY_DRAIN_SIGNALLED")
                 deadline = time.monotonic() + 1.5
                 while "Owner query draining" not in log.read_text(encoding="utf-8", errors="replace") and time.monotonic() < deadline:
                     time.sleep(0.025)
