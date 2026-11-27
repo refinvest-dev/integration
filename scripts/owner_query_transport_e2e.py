@@ -8,6 +8,7 @@ import shutil
 import socket
 import ssl
 import time
+import traceback
 from pathlib import Path
 
 from owner_query_body_fault import BodyFaults
@@ -19,6 +20,21 @@ from owner_query_main_e2e import MainServiceAcceptance
 class TransportServiceAcceptance(MainServiceAcceptance):
     body_faults = None
     metadata_relay = None
+
+    def execute(self):
+        try:
+            super().execute()
+        except Exception as error:
+            # Only source locations/types; exception messages may contain credentials or URLs.
+            self.evidence["failureFrames"] = [{"file": Path(frame.filename).name, "function": frame.name, "line": frame.lineno}
+                for frame in traceback.extract_tb(error.__traceback__)]
+            self.evidence["failureTypes"] = []
+            seen = set()
+            while error is not None and id(error) not in seen:
+                seen.add(id(error))
+                self.evidence["failureTypes"].append(type(error).__name__)
+                error = error.__cause__ or error.__context__
+            raise
 
     def configure(self):
         super().configure()
