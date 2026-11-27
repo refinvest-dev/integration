@@ -85,12 +85,15 @@ class TokenSlot:
 
 
 class FleetRelay:
-    def __init__(self, role, ca, certificate, private_key):
+    def __init__(self, role, ca, certificate, private_key, *, body_fault=None):
+        if body_fault is not None and role != "metadata":
+            raise ValueError("Body faults are restricted to metadata")
         import requests
 
         if role not in ("metadata", "authority"):
             raise ValueError("Unknown relay role")
         self.role = role
+        self._body_fault = body_fault
         self.targets = ServingTargets()
         self.token = TokenSlot()
         self.counts = {"forwarded": 0, "diagnostic": 0}
@@ -146,13 +149,21 @@ class FleetRelay:
                             relay.counts["diagnostic"] += int(diagnostic)
                         if metadata and response.status_code == 200:
                             relay.token.put(headers.get("X-RefInvest-User-Delegation"))
+                        fault = relay._body_fault.take() if metadata and response.status_code == 200 and relay._body_fault else None
+                        if fault:
+                            self.protocol_version = fault.protocol
                         self.send_response(response.status_code)
                         for name in ("Content-Type", "Cache-Control", "X-Content-Type-Options"):
                             if name in response.headers:
                                 self.send_header(name, response.headers[name])
-                        self.send_header("Content-Length", str(len(payload)))
+                        framing = fault.headers(payload) if fault else {"Content-Length": str(len(payload))}
+                        for name, value in framing.items():
+                            self.send_header(name, value)
                         self.end_headers()
-                        self.wfile.write(payload)
+                        if fault:
+                            fault.write(self, payload)
+                        else:
+                            self.wfile.write(payload)
                 except (requests.RequestException, OSError, ValueError):
                     try:
                         self.send_error(502)

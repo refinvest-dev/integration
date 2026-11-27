@@ -22,6 +22,7 @@ sibling 경로는 모두 parameter로 교체할 수 있다.
 
 Python CLI는 `--core-port`, `--go-port`, `--timeout-seconds`, `--output-root`, `--core-jar`도 받는다.
 키·양방향 자격의 순차 교체와 여러 node 조합은 별도의 [fleet 검증](owner-query-fleet-e2e.md)을 `-CoreMode fleet`로 실행한다.
+본문 deadline·상한·socket/slot 취소는 [transport 검증](owner-query-transport-e2e.md)을 `-CoreMode transport`로 실행한다.
 `-CoreJar`/`--core-jar`를 생략하면 `app/build/libs`의 유일한 bootJar를 선택한다.
 manifest의 일반 Main과 test fixture class 부재를 검사한다. `-SkipBuild`는 jar/source 일치 증명이 아니므로
 리뷰용 최종 실행 전에 고정 source에서 빌드하고 SHA를 함께 확인한다.

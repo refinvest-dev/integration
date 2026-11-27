@@ -1,0 +1,271 @@
+{
+  "result": "PASS",
+  "scenarios": {
+    "ordinary_main_runtime_root_and_six_legacy_workers_absent": "PASS",
+    "actual_core_go_authority_and_both_metadata_resources_before_faults": "PASS",
+    "partial_body_uses_whole_core_deadline_cancels_wire_and_releases_single_slot": "PASS",
+    "truncate_maps_to_502_without_fallback_and_releases_slot": "PASS",
+    "declared_oversize_maps_to_502_without_fallback_and_releases_slot": "PASS",
+    "stream_overflow_maps_to_502_without_fallback_and_releases_slot": "PASS",
+    "browser_disconnect_bounds_body_wait_and_returns_slot_without_job_cancellation": "PASS",
+    "completed_body_drains_before_core_connector_and_primary_pool_close": "PASS",
+    "forced_body_drain_cancels_physical_transport_and_reports_incomplete_even_with_exit_zero": "PASS"
+  },
+  "coreMode": "ordinary-main-transport",
+  "topology": "Core Main -> metadata fault TLS relay -> Go Main -> authority TLS observer -> Core Main",
+  "testInitializer": false,
+  "operationalActivation": false,
+  "fixtureBudgets": {
+    "coreRequestSeconds": 3,
+    "goRequestSeconds": 2,
+    "authoritySeconds": 1,
+    "coreMaxInFlight": 1
+  },
+  "revisions": {
+    "context": "8f00652381ef3c81b9fd11b7e4e452c8f98c451c",
+    "core": "97248c5087a45ec7f72c997d373f379a5f28ac64",
+    "go": "e4086b355df2cd8e29e5518c27b86645de3f491e",
+    "integration": "7da419fe62c2ba4044f9a216073b11c5b67599fc"
+  },
+  "sourceDirty": {
+    "context": false,
+    "core": false,
+    "go": false,
+    "integration": false
+  },
+  "startupAttempts": [
+    {
+      "service": "core",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-transport-short-drain",
+      "attempt": 1,
+      "result": "READY"
+    }
+  ],
+  "transportHarnessSources": {
+    "owner_query_e2e.py": "a02dd28af46a360f03d61a3a729be3f2bd310b73905a4d838b21d2864a45b395",
+    "owner_query_main_e2e.py": "3ffd5629264b885c16219edb53a27a3340bd41b8518bcc29a62a1814f96441df",
+    "owner_query_authority_observer.py": "069f4712b1c5f7c57bf025304cd414ad4c511fa00b141850064545bfdcc64aa4",
+    "owner_query_fleet_relay.py": "5675810b667460da57e482eff9bc4269e62267bdba23a804814f2fe0d4c0c4ac",
+    "owner_query_body_fault.py": "1ee24aba37b5f796e8642be500a968d6d8838cd287cc5d6312f82b01b0ffe6ee",
+    "owner_query_transport_e2e.py": "14fe85c19940850cb4a31b0aa66f4fbe3796de6652d6740b9980b18300b26301"
+  },
+  "goBinarySha256": "82511f5696f76e3c43db2fc099e8665e6df5346478428ce11c75717378d11fb1",
+  "coreBootJarSha256": "cd568206dbdd056be2a5024fc67176eeb7ba5255abc2ade9670dede69ce6a097",
+  "transportFaults": [
+    {
+      "kind": "partial",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "truncate",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": false,
+      "peerCloseSource": null,
+      "peerClosedBeforeRelease": false,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "declared_oversize",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "stream_overflow",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "partial",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "partial",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": false,
+      "peerCloseSource": null,
+      "peerClosedBeforeRelease": false,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "partial",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    }
+  ],
+  "partialBodyDeadlineElapsedSeconds": 3.08,
+  "healthyBodyPendingDuringDrain": true,
+  "durableAdmissionRowsCreated": false,
+  "metadataRelayStopped": true,
+  "observerStopped": true,
+  "ownedProcessesStopped": true,
+  "ownedSchemaRemoved": true,
+  "date": "2026-11-28",
+  "scenarioCount": 9,
+  "contractSync": "PASS",
+  "regressionBeforeFix": {
+    "result": "FAIL",
+    "failure": "CORE_DID_NOT_CLOSE_BODY_TRANSPORT",
+    "passedCheckpoints": 4,
+    "revisions": {
+      "context": "8f00652381ef3c81b9fd11b7e4e452c8f98c451c",
+      "core": "1a16ed92bfb9dea85e58553b9673ce23018d1d9f",
+      "go": "e4086b355df2cd8e29e5518c27b86645de3f491e",
+      "integration": "e82a82ab69e56582e0b1d8ee4cecbc9159eeebeb"
+    },
+    "startupAttempts": [
+      {
+        "service": "core",
+        "attempt": 1,
+        "result": "WINDOWS_LISTEN_FAILED",
+        "lastProbe": "ConnectTimeout"
+      },
+      {
+        "service": "core",
+        "attempt": 2,
+        "result": "READY"
+      },
+      {
+        "service": "go",
+        "attempt": 1,
+        "result": "READY"
+      }
+    ],
+    "cause": "Header rejection completed as public502 while the configured peer TLS body exchange stayed open; explicit subscriber cancellation fixes it"
+  },
+  "limitations": [
+    "Faults alter the transport framing/body delivery of an actual Go response; authority verdicts remain real",
+    "Peer-close observations apply to the configured Core-to-relay TLS hop, not every production network hop",
+    "Fixture budgets and limited payload probes are not whole-heap/OS/SLO or production deployment acceptance",
+    "No production DB/history/member/writer/secret/LB/backup restore handover; Go cleanup may be forced"
+  ],
+  "intermediateFailures": [
+    {
+      "result": "FAIL",
+      "failure": "ConnectionError",
+      "phase": "BODY_FAULTS",
+      "scenarios": {
+        "ordinary_main_runtime_root_and_six_legacy_workers_absent": "PASS",
+        "actual_core_go_authority_and_both_metadata_resources_before_faults": "PASS",
+        "partial_body_uses_whole_core_deadline_cancels_wire_and_releases_single_slot": "PASS",
+        "truncate_maps_to_502_without_fallback_and_releases_slot": "PASS",
+        "declared_oversize_maps_to_502_without_fallback_and_releases_slot": "PASS",
+        "stream_overflow_maps_to_502_without_fallback_and_releases_slot": "PASS",
+        "browser_disconnect_bounds_body_wait_and_returns_slot_without_job_cancellation": "PASS"
+      },
+      "startupAttempts": [
+        {
+          "service": "core",
+          "attempt": 1,
+          "result": "READY"
+        },
+        {
+          "service": "go",
+          "attempt": 1,
+          "result": "READY"
+        }
+      ],
+      "revisions": {
+        "context": "8f00652381ef3c81b9fd11b7e4e452c8f98c451c",
+        "core": "97248c5087a45ec7f72c997d373f379a5f28ac64",
+        "go": "e4086b355df2cd8e29e5518c27b86645de3f491e",
+        "integration": "e82a82ab69e56582e0b1d8ee4cecbc9159eeebeb"
+      },
+      "ownedProcessesStopped": true,
+      "ownedSchemaRemoved": true
+    },
+    {
+      "result": "FAIL",
+      "failure": "UNEXPECTED_PUBLIC_STATUS_503",
+      "phase": "SCENARIOS",
+      "scenarios": {
+        "ordinary_main_runtime_root_and_six_legacy_workers_absent": "PASS"
+      },
+      "startupAttempts": [
+        {
+          "service": "core",
+          "attempt": 1,
+          "result": "READY"
+        },
+        {
+          "service": "go",
+          "attempt": 1,
+          "result": "WINDOWS_LISTEN_FAILED",
+          "lastProbe": "ConnectTimeout"
+        },
+        {
+          "service": "go",
+          "attempt": 2,
+          "result": "WINDOWS_LISTEN_FAILED",
+          "lastProbe": "ConnectTimeout"
+        },
+        {
+          "service": "go",
+          "attempt": 3,
+          "result": "READY"
+        }
+      ],
+      "revisions": {
+        "context": "8f00652381ef3c81b9fd11b7e4e452c8f98c451c",
+        "core": "97248c5087a45ec7f72c997d373f379a5f28ac64",
+        "go": "e4086b355df2cd8e29e5518c27b86645de3f491e",
+        "integration": "c815ba19556fa9189e94e94fb260aae53c886542"
+      },
+      "ownedProcessesStopped": true,
+      "ownedSchemaRemoved": true
+    }
+  ]
+}
