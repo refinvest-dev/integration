@@ -667,3 +667,5 @@ Core only, never Compute directly.
 Go DB Guard를 연결한다. 기본 mode는 일반 Core bootJar/opt-in Runtime이며 기존 test launcher는 명시 fixture mode로 유지한다.
 격리 schema·생성한 테스트 키로 DB fault·callback drain을 검증하며 운영 활성화/인계와 구분한다.
 `scripts/test-trading-owner-query-service.ps1`은 계약 sync를 선행하고 자신의 process/schema만 정리한다.
+
+[키·양방향 자격 fleet 검증](docs/owner-query-fleet-e2e.md)은 `-CoreMode fleet`로 일반 Core/Go 각2개와 서로 다른 trust snapshot의 순차 교체를 검증한다.

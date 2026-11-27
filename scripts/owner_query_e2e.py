@@ -489,7 +489,7 @@ def main():
         parser.add_argument("--" + name + "-path", type=Path, default=root.parent / suffix)
     parser.add_argument("--output-root", type=Path, default=root / ".integration-data/owner-query-service")
     parser.add_argument("--go-binary", type=Path)
-    parser.add_argument("--core-mode", choices=("main", "fixture"), default="main")
+    parser.add_argument("--core-mode", choices=("main", "fixture", "fleet"), default="main")
     parser.add_argument("--core-jar", type=Path)
     parser.add_argument("--java", type=Path)
     parser.add_argument("--psql", type=Path)
@@ -500,7 +500,10 @@ def main():
     args = parser.parse_args()
     run = None
     try:
-        if args.core_mode == "main":
+        if args.core_mode == "fleet":
+            from owner_query_fleet_e2e import FleetServiceAcceptance
+            run = FleetServiceAcceptance(args)
+        elif args.core_mode == "main":
             from owner_query_main_e2e import MainServiceAcceptance
             run = MainServiceAcceptance(args)
         else:
