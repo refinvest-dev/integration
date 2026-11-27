@@ -9,7 +9,7 @@ param(
     [string]$PythonPath = 'python',
     [string]$JavaPath,
     [string]$GoBinary,
-    [ValidateSet('main', 'fixture')][string]$CoreMode = 'main',
+    [ValidateSet('main', 'fixture', 'fleet')][string]$CoreMode = 'main',
     [string]$CoreJar,
     [switch]$SkipBuild
 )
