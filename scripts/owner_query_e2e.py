@@ -214,6 +214,7 @@ INSERT INTO trading_books(id,account_id,owner_member_id,venue,display_name,produ
                              REFINVEST_OWNER_QUERY_FIXTURE_FILE=str(self.directory / "core-fixture.json"))
         self.core_env["SPRING_PROFILES_ACTIVE"] = ""
         self.secrets.add(self.go_env["TRADING_REVIEW_DATABASE_URL"])
+        return material, settings
 
     def build(self):
         if not self.args.skip_build:
@@ -222,13 +223,7 @@ INSERT INTO trading_books(id,account_id,owner_member_id,venue,display_name,produ
             with (self.directory / "core-build.log").open("w", encoding="utf-8") as output:
                 result = subprocess.run(command, cwd=self.args.core_path, stdout=output, stderr=subprocess.STDOUT, timeout=600)
             require(result.returncode == 0, "CORE_FIXTURE_BUILD_FAILED")
-        if self.args.go_binary is None:
-            self.args.go_binary = self.directory / ("trading-review-api.exe" if os.name == "nt" else "trading-review-api")
-            with (self.directory / "go-build.log").open("w", encoding="utf-8") as output:
-                result = subprocess.run(["go", "build", "-o", str(self.args.go_binary), "./cmd/api"], cwd=self.args.go_path,
-                                        stdout=output, stderr=subprocess.STDOUT, timeout=300)
-            require(result.returncode == 0, "GO_BUILD_FAILED")
-        require(self.args.go_binary.is_file(), "GO_BINARY_MISSING")
+        self.build_go()
         classpath = (self.args.core_path / "app/build/owner-query-fixture-classpath.txt").read_text(encoding="utf-8")
         quoted = classpath.replace("\\", "\\\\").replace('"', '\\"')
         temporary = self.directory / "jvm-tmp"
@@ -236,6 +231,18 @@ INSERT INTO trading_books(id,account_id,owner_member_id,venue,display_name,produ
         quoted_temp = str(temporary).replace("\\", "\\\\").replace('"', '\\"')
         private_write(self.directory / "core.args", '"-Djava.io.tmpdir=' + quoted_temp + '"\n-cp\n"' + quoted +
                       '"\ncom.refinvestfixture.ownerquery.OwnerQueryServiceFixtureKt\n--spring.config.import=\n')
+        self.record_sources()
+
+    def build_go(self):
+        if self.args.go_binary is None:
+            self.args.go_binary = self.directory / ("trading-review-api.exe" if os.name == "nt" else "trading-review-api")
+            with (self.directory / "go-build.log").open("w", encoding="utf-8") as output:
+                result = subprocess.run(["go", "build", "-o", str(self.args.go_binary), "./cmd/api"], cwd=self.args.go_path,
+                                        stdout=output, stderr=subprocess.STDOUT, timeout=300)
+            require(result.returncode == 0, "GO_BUILD_FAILED")
+        require(self.args.go_binary.is_file(), "GO_BINARY_MISSING")
+
+    def record_sources(self):
         self.evidence["goBinarySha256"] = hashlib.sha256(self.args.go_binary.read_bytes()).hexdigest()
         self.evidence["harnessSourceSha256"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
         self.evidence["jvmTemporaryDirectoryIsolated"] = True
@@ -377,10 +384,13 @@ INSERT INTO trading_books(id,account_id,owner_member_id,venue,display_name,produ
         self.mark("internal_auth_failure_maps_to_502_without_legacy_fallback")
         require(self.sql("SELECT count(*) FROM trading_idempotency;") == "0", "READ_CREATED_IDEMPOTENCY")
         require(self.sql("SELECT count(*) FROM trading_import_sessions;") == "0", "READ_CREATED_JOB")
-        observations = [json.loads(line) for line in (self.directory / "authority-observations.jsonl").read_text().splitlines()]
+        observations = self.observations()
         require(len(observations) >= 15 and all(r["parent"].startswith("00-" + TRACE_ID + "-") and
                 r["parent"] != TRACE_PARENT and not r["baggagePresent"] for r in observations), "TRACE_PROPAGATION")
         self.mark("trace_children_without_baggage_or_durable_admission")
+
+    def observations(self):
+        return [json.loads(line) for line in (self.directory / "authority-observations.jsonl").read_text().splitlines()]
 
     def deadline_and_abort(self):
         env = dict(self.pg_env, PGOPTIONS="-c search_path=" + self.schema)
@@ -479,6 +489,8 @@ def main():
         parser.add_argument("--" + name + "-path", type=Path, default=root.parent / suffix)
     parser.add_argument("--output-root", type=Path, default=root / ".integration-data/owner-query-service")
     parser.add_argument("--go-binary", type=Path)
+    parser.add_argument("--core-mode", choices=("main", "fixture"), default="main")
+    parser.add_argument("--core-jar", type=Path)
     parser.add_argument("--java", type=Path)
     parser.add_argument("--psql", type=Path)
     parser.add_argument("--go-port", type=int, default=0)
@@ -488,7 +500,11 @@ def main():
     args = parser.parse_args()
     run = None
     try:
-        run = ServiceAcceptance(args)
+        if args.core_mode == "main":
+            from owner_query_main_e2e import MainServiceAcceptance
+            run = MainServiceAcceptance(args)
+        else:
+            run = ServiceAcceptance(args)
         run.execute()
     except Exception as error:
         code = str(error) if isinstance(error, AcceptanceFailure) else type(error).__name__
@@ -508,4 +524,5 @@ def main():
 
 
 if __name__ == "__main__":
+    sys.modules.setdefault("owner_query_e2e", sys.modules[__name__])
     raise SystemExit(main())
