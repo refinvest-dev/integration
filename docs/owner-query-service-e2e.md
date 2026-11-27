@@ -90,3 +90,16 @@ sync600초·소유 process tree 정리/단계 기록, fixture CA/leaf subject �
 integration CI의 기존 authority 부정 검사는 ADR-086 후 바뀐 오류 문구 대신 과거 `unadopted`를 기대해 실패했다.
 기대 문구를 현재 Context verifier에 맞췄으며 runtime flag를 true로 바꾸는 mutation이 실제로 거절되는 조건은 유지한다.
 기존 API/Web smoke와 새로운 서비스 E2E를 같은 검증으로 합산하지 않는다.
+
+## 일반 Main 고정 실행
+
+[2026-11-27 일반 Main 증적](../evidence/owner-query-service/2026-11-27-main.json)은 별도의16개 시나리오 PASS다.
+Core `090e8e608228a5aba54974a53403480dfa9eb6e0`·Go `67e5e0df6885a2619b5c484a1f2ee5d58e7cd6cf`·harness `cc086f3f30e976bda18f3a997a61d7ccdb56b21c`에서
+tracked source가 clean인 상태로 실행했다. 일반 bootJar/Go binary와 세 harness source의 SHA를 함께 기록한다.
+별도의 fixture11개를 더해27개로 합산하지 않는다. 최초 개발 실행도16개를 통과했지만 실행 중 source 수정이 있어
+고정 source 수용 증적으로 사용하지 않았다. 최종 실행의 짧은 drain용 Core 재기동에서 Windows10014 listen 실패가1회
+발생했고 허용된 두 번째 startup에서 READY가 됐다. 실패 시도도 증적에 보존하며 원인 해결이나 무실패 실행으로 해석하지 않는다.
+
+Core 정상 drain과 짧은 예산의 명시 incomplete를 구분해 확인했고, 두 Core 종료 후 이름으로 식별한 primary DB session이
+0개임을 확인했다. 중계기·소유 process를 정리한 다음 생성한 schema를 제거했다. full production key/회원 준비,
+rotation/fleet·실제 DB history·Core TR writer 인계·backup restore·운영 부하는 미실행이다.

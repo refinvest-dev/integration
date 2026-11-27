@@ -1,0 +1,92 @@
+{
+  "result": "PASS",
+  "scenarios": {
+    "ordinary_main_runtime_root_and_six_legacy_workers_absent": "PASS",
+    "authenticated_principal_delegation_authority_and_bigint_metadata": "PASS",
+    "foreign_absent_and_admin_ownership": "PASS",
+    "browser_auth_csrf_and_untrusted_headers": "PASS",
+    "member_block_commit_and_no_positive_cache": "PASS",
+    "key_revocation_authority_unavailable_and_readiness": "PASS",
+    "eight_concurrent_callbacks_with_four_core_servlet_threads": "PASS",
+    "go_query_deadline_maps_to_public_504": "PASS",
+    "browser_disconnect_is_bounded_not_durable_job_cancellation": "PASS",
+    "archived_metadata_and_current_parent_deletion_guard": "PASS",
+    "internal_auth_failure_maps_to_502_without_legacy_fallback": "PASS",
+    "trace_children_without_baggage_or_durable_admission": "PASS",
+    "primary_hikari_pool_exhaustion_is_bounded_and_recovers": "PASS",
+    "primary_authority_sql_timeout_releases_connection_and_recovers": "PASS",
+    "ordinary_main_drains_late_callback_before_connector_and_primary_pool": "PASS",
+    "ordinary_main_forced_budget_reports_incomplete_even_with_exit_zero": "PASS"
+  },
+  "coreMode": "ordinary-main",
+  "authorityHop": "Core Main -> Go Main -> local TLS observer -> Core Main",
+  "testInitializer": false,
+  "operationalActivation": false,
+  "contractSync": "PASS",
+  "sourceDirty": {
+    "context": false,
+    "core": false,
+    "go": false,
+    "integration": false
+  },
+  "revisions": {
+    "context": "8f00652381ef3c81b9fd11b7e4e452c8f98c451c",
+    "core": "090e8e608228a5aba54974a53403480dfa9eb6e0",
+    "go": "67e5e0df6885a2619b5c484a1f2ee5d58e7cd6cf",
+    "integration": "cc086f3f30e976bda18f3a997a61d7ccdb56b21c"
+  },
+  "goBinarySha256": "0f95e5259cf791536e94c4e995072ff1b46ca0ac3e8c5bd0da5266666096f968",
+  "coreBootJarSha256": "c97ac0e43dcf6ce58ac0a5e7422f713b47cbe038adf5579dcd01d8df63ad445b",
+  "harnessSources": {
+    "owner_query_e2e.py": "cfbaaba3416a0fa3944b28ed42f3ceb554017f4603a3c82f6e41fdf94bcb1010",
+    "owner_query_main_e2e.py": "bbeefda60b9a6cb34e2c53a2fff6318aea60832b659e5fcae2a7765c1ba92ef8",
+    "owner_query_authority_observer.py": "6fe7e1ee84cb37cfb8103bf87ad65612249ab17e8a8ce858a8d5ab08a0b68008"
+  },
+  "jvmTemporaryDirectoryIsolated": true,
+  "startupAttempts": [
+    {
+      "service": "core",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-reconfigured",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-authority-faults",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-short-drain",
+      "attempt": 1,
+      "result": "WINDOWS_LISTEN_FAILED",
+      "lastProbe": "ConnectTimeout"
+    },
+    {
+      "service": "core-short-drain",
+      "attempt": 2,
+      "result": "READY"
+    }
+  ],
+  "observerStopped": true,
+  "ownedProcessesStopped": true,
+  "ownedSchemaRemoved": true,
+  "date": "2026-11-27",
+  "scenarioCount": 16,
+  "database": "loopback refinvest_integration; fresh owned schema removed",
+  "termination": "Core ordinary Spring shutdown: healthy drain and explicitly incomplete short-budget case; Go cleanup remains forced",
+  "limitations": [
+    "Synthetic loopback trust and fixture authority DDL; no operational activation/history/backfill/rotation/fleet/writer handover/restore/load acceptance",
+    "Browser disconnect is bounded by Go request deadline, not immediate cancellation",
+    "Authority observation hop forwards real Core decisions; not production LB/routing evidence"
+  ],
+  "earlierAttempt": "trial1 passed 16 cases; source was edited during its execution, so only the final fixed-source replay is acceptance evidence"
+}
