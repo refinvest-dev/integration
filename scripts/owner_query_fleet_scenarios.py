@@ -18,6 +18,10 @@ def token_parts(token):
     return [json.loads(base64.urlsafe_b64decode(part + "=" * (-len(part) % 4))) for part in token.split(".")[:2]]
 
 
+def renewed_probe_claims(source, issued_at, token_id):
+    return dict(source, iat=issued_at, nbf=issued_at, exp=issued_at + 60, jti=token_id)
+
+
 class FleetScenarios:
     def scenarios(self):
         from owner_query_fleet_e2e import OLD_KID, NEW_KID
@@ -181,7 +185,7 @@ class FleetScenarios:
 
         header, claims = token_parts(source)
         issued_at = int(time.time())
-        claims.update(iat=issued_at, exp=issued_at + 60, jti=uuid.uuid4().hex)
+        claims = renewed_probe_claims(claims, issued_at, uuid.uuid4().hex)
         encode = lambda value: base64.urlsafe_b64encode(json.dumps(value, separators=(",", ":")).encode()).decode().rstrip("=")
         signing = encode(header) + "." + encode(claims)
         key = serialization.load_pem_private_key(self.keys[OLD_KID]["private"].encode("ascii"), password=None)

@@ -2,9 +2,20 @@
 import unittest
 
 from owner_query_fleet_relay import ServingTargets, TokenSlot, loopback_origin
+from owner_query_fleet_scenarios import renewed_probe_claims
 
 
 class FleetSafetyTest(unittest.TestCase):
+    def test_retired_key_probe_renews_the_entire_time_profile_without_changing_identity(self):
+        source = {"iat": 100, "nbf": 100, "exp": 160, "jti": "previous", "sub": "synthetic", "scope": "fixed"}
+        probe = renewed_probe_claims(source, 500, "fresh")
+        self.assertEqual(500, probe["iat"])
+        self.assertEqual(probe["iat"], probe["nbf"])
+        self.assertEqual(60, probe["exp"] - probe["iat"])
+        self.assertEqual("fresh", probe["jti"])
+        self.assertEqual((source["sub"], source["scope"]), (probe["sub"], probe["scope"]))
+        self.assertEqual((100, 100, 160), (source["iat"], source["nbf"], source["exp"]))
+
     def test_forwarding_targets_cannot_escape_loopback_or_add_paths(self):
         self.assertEqual("https://127.0.0.1:1234", loopback_origin("https://127.0.0.1:1234"))
         for origin in ("http://127.0.0.1:1", "https://localhost:1", "https://example.invalid:443",
