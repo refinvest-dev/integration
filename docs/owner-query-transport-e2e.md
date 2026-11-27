@@ -50,3 +50,18 @@ Core signing private key는 Go에 공급하지 않는다. `.env`·example은 변
 소유 fault/relay handler·process 정리 뒤 자신이 만든 integration schema만 제거한다. Go cleanup은 Windows에서 강제 종료일 수 있다.
 Core worker 부재는 fixture 검사이며 실제 Core HTTP command/외부 writer 중단은 별도 인계 조건이다.
 기존 일반 Main16개·fleet13개와 이번 전송 검증을 하나의 완료 숫자로 합산하지 않는다.
+
+
+## 고정 실행과 발견한 회귀
+
+[2026-11-28 증적](../evidence/owner-query-service/2026-11-28-transport.json)은9개 시나리오 PASS와7개 one-shot fault,
+peer-close/release 순서·정상/강제 종료·소유 process/relay/schema 정리를 기록한다.
+Core `97248c5087a45ec7f72c997d373f379a5f28ac64`·Go `e4086b355df2cd8e29e5518c27b86645de3f491e`·harness `7da419fe62c2ba4044f9a216073b11c5b67599fc`의
+tracked source가 clean인 상태에서 실행했고 실제 binary/source SHA를 고정했다.
+
+첫 고정 실행은4개 checkpoint 이후 선언 길이 초과 header의 public502 뒤에도 peer 전송이 닫히지 않아 실패했다.
+Core BodyHandler가 예외를 던지는 경로를 명시적 subscription 취소로 바꾸고 실제 TLS 회귀를 추가했다.
+Core 대상25개·안전 검사13개 통과 뒤 위 고정 source에서 전체를 다시 실행했다. 첫 실패와 당시 Windows startup 재시도도
+별도로 보존하며 성공 실행으로 합산하지 않는다. 구/신 다른 binary fleet·운영 부하/heap·실제 인계는 미실행이다.
+수정 후 중간 실행의 종료 단계 ConnectionError와 Windows listen 재시도 뒤 정상 조회503도 실패로 남겼다.
+두 실패의 원인을 확정하지 않으며, 마지막 PASS 실행과 별도로 `intermediateFailures`에 고정한다.

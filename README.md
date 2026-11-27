@@ -669,3 +669,5 @@ Go DB Guard를 연결한다. 기본 mode는 일반 Core bootJar/opt-in Runtime�
 `scripts/test-trading-owner-query-service.ps1`은 계약 sync를 선행하고 자신의 process/schema만 정리한다.
 
 [키·양방향 자격 fleet 검증](docs/owner-query-fleet-e2e.md)은 `-CoreMode fleet`로 일반 Core/Go 각2개와 서로 다른 trust snapshot의 순차 교체를 검증한다.
+
+[실제 Main transport 검증](docs/owner-query-transport-e2e.md)은 `-CoreMode transport`로 본문 deadline/상한·소켓 취소·slot 반환·정상/강제 drain을 확인한다.
