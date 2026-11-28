@@ -5,11 +5,18 @@ import unittest
 from owner_query_account_list_fault import LIST_LIMIT, ListFaults, mutated_page
 from owner_query_body_fault import MAX_BODY, BodyFault, overflow_payload
 from owner_query_fleet_relay import FleetRelay, read_path
-from owner_query_account_list_e2e import AccountListServiceAcceptance
+from owner_query_account_list_e2e import AccountListServiceAcceptance, transport_error_codes
 from owner_query_e2e import TRACE_PARENT
 
 
 class AccountListFixtureSafetyTest(unittest.TestCase):
+    def test_diagnostics_keep_only_numeric_codes_and_handle_cause_cycles(self):
+        cause = OSError(10014,"private token or URL must not be recorded")
+        outer = RuntimeError("private outer message")
+        outer.__cause__, cause.__cause__ = cause, outer
+        self.assertEqual([{"errno":10014}],transport_error_codes(outer))
+        self.assertNotIn("private",json.dumps(transport_error_codes(outer)))
+
     def test_direct_go_probe_participates_in_the_same_trace_as_public_probes(self):
         captured = {}
 

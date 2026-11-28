@@ -25,6 +25,17 @@ def claims(compact):
     return json.loads(base64.urlsafe_b64decode(raw + "=" * (-len(raw) % 4)))
 
 
+def transport_error_codes(error):
+    codes, seen = [], set()
+    while error is not None and id(error) not in seen and len(seen) < 16:
+        seen.add(id(error))
+        code = {name:value for name in ("errno","winerror") if type(value := getattr(error,name,None)) is int}
+        if code:
+            codes.append(code)
+        error = error.__cause__ or error.__context__
+    return codes
+
+
 class AccountListServiceAcceptance(TransportServiceAcceptance):
     primary_path = LIST + "?size=100"
     secondary_path = LIST + "?size=100"
@@ -32,6 +43,13 @@ class AccountListServiceAcceptance(TransportServiceAcceptance):
     def __init__(self, args):
         super().__init__(args)
         self.pg_env["PGCLIENTENCODING"] = "UTF8"
+
+    def execute(self):
+        try:
+            super().execute()
+        except Exception as error:
+            self.evidence["transportErrorCodes"] = transport_error_codes(error)
+            raise
 
     def configure(self):
         MainServiceAcceptance.configure(self)
