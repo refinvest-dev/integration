@@ -1,0 +1,260 @@
+{
+  "result": "PASS",
+  "scenarios": {
+    "ordinary_main_runtime_root_and_six_legacy_workers_absent": "PASS",
+    "actual_kotlin_list_delegation_go_authority_pg_max_page_big_id_and_visibility": "PASS",
+    "public_internal_query_boundaries_canonical_defaults_and_int64_offset": "PASS",
+    "member_caller_key_jti_commit_revocation_no_positive_cache_and_readiness_separation": "PASS",
+    "foreign_admin_deleted_tombstone_and_book_only_visibility": "PASS",
+    "browser_hs256_csrf_and_unauthenticated_no_store": "PASS",
+    "independent_three_main_modes_two_kotlin_scopes_and_caller_permission_no_fallback": "PASS",
+    "synthetic_decoder_longmax_overflow_structure_echo_ids_order_utf8_after_real_go_response": "PASS",
+    "partial_body_uses_whole_core_deadline_cancels_wire_and_releases_single_slot": "PASS",
+    "truncate_maps_to_502_without_fallback_and_releases_slot": "PASS",
+    "declared_oversize_maps_to_502_without_fallback_and_releases_slot": "PASS",
+    "stream_overflow_maps_to_502_without_fallback_and_releases_slot": "PASS",
+    "browser_disconnect_bounds_body_wait_and_returns_slot_without_job_cancellation": "PASS",
+    "trace_children_no_baggage_and_no_durable_admission": "PASS",
+    "completed_body_drains_before_core_connector_and_primary_pool_close": "PASS",
+    "forced_body_drain_cancels_physical_transport_and_reports_incomplete_even_with_exit_zero": "PASS"
+  },
+  "contractSync": "PASS",
+  "revisions": {
+    "context": "41d68dc735e3912932f56f098dd3dbad48034181",
+    "core": "674b82e66087719f57f45d76a264cfd7b3e9eb1c",
+    "go": "fc836c7ee9bbdb6e60f362a4597d03db5ed0f7e8",
+    "integration": "df96ac239b81a9c9616aa0c544fe0ca7e0429ff8"
+  },
+  "contractCheckoutRevisions": {
+    "compute": "34dd189b458e379522014b68ef0a051e771b00d8",
+    "web": "9ff421396a1afad814e29c746457115897a679d7"
+  },
+  "sourceDirty": {
+    "context": false,
+    "core": false,
+    "go": false,
+    "integration": false
+  },
+  "goBinarySha256": "062c2cfdc47ff0d69c644440ed33b211513697a0b9f90819c3730e25156dd6d9",
+  "coreBootJarSha256": "cc8f5d76749fe47c7fcd850c3f766fd7f95b51166da014e46b1714b6ea8583b4",
+  "harnessSources": {
+    "owner_query_e2e.py": "33b8403ee21c972bcb560ce50eee352be42bfee555648eaefcbcdce9671fcf3c",
+    "owner_query_main_e2e.py": "3ffd5629264b885c16219edb53a27a3340bd41b8518bcc29a62a1814f96441df",
+    "owner_query_authority_observer.py": "069f4712b1c5f7c57bf025304cd414ad4c511fa00b141850064545bfdcc64aa4"
+  },
+  "transportHarnessSources": {
+    "owner_query_e2e.py": "33b8403ee21c972bcb560ce50eee352be42bfee555648eaefcbcdce9671fcf3c",
+    "owner_query_main_e2e.py": "3ffd5629264b885c16219edb53a27a3340bd41b8518bcc29a62a1814f96441df",
+    "owner_query_authority_observer.py": "069f4712b1c5f7c57bf025304cd414ad4c511fa00b141850064545bfdcc64aa4",
+    "owner_query_fleet_relay.py": "c2c9ac292c94563b61eabdfe01a6b8829cce2d1118061429e8532764a03974df",
+    "owner_query_body_fault.py": "4f134d3e2759991256c012ceafbd7dd67ce6497a89f5b603071ed94145dec74f",
+    "owner_query_transport_e2e.py": "e245ee4bfa8178fb836f4d9212785bd3976bb7656040c36b071f9ee27dd4ba5d"
+  },
+  "accountListHarnessSources": {
+    "owner_query_account_list_e2e.py": "8e301c461c8b45f6d784b993af9a6e67b478fb5c977f3730f7dc723924673d40",
+    "owner_query_account_list_fault.py": "4c1bea6d399b0493089b6f69ba68adc42c47f93c2dfba6d375f99960dedab0d6"
+  },
+  "startupAttempts": [
+    {
+      "service": "core",
+      "attempt": 1,
+      "result": "WINDOWS_LISTEN_FAILED",
+      "lastProbe": "ConnectTimeout"
+    },
+    {
+      "service": "core",
+      "attempt": 2,
+      "result": "READY"
+    },
+    {
+      "service": "go",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-both",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-both",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-read-only-permission",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "go-metadata-only",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-metadata-only",
+      "attempt": 1,
+      "result": "WINDOWS_LISTEN_FAILED",
+      "lastProbe": "ConnectTimeout"
+    },
+    {
+      "service": "core-metadata-only",
+      "attempt": 2,
+      "result": "READY"
+    },
+    {
+      "service": "go-list-only-again",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-list-only-again",
+      "attempt": 1,
+      "result": "READY"
+    },
+    {
+      "service": "core-list-short-drain",
+      "attempt": 1,
+      "result": "READY"
+    }
+  ],
+  "fixtureBudgets": {
+    "coreRequestSeconds": 3,
+    "goRequestSeconds": 2,
+    "authoritySeconds": 1,
+    "coreListMaxInFlight": 1
+  },
+  "coreMode": "ordinary-main-account-list",
+  "testInitializer": false,
+  "operationalActivation": false,
+  "browserUIExecuted": false,
+  "topology": "Core Main -> list transport TLS relay -> Go Main -> authority TLS observer -> Core Main",
+  "healthyBodyPendingDuringDrain": true,
+  "listTransportFaults": [
+    {
+      "kind": "partial",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "truncate",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": false,
+      "peerCloseSource": null,
+      "peerClosedBeforeRelease": false,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "declared_oversize",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "stream_overflow",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "partial",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "partial",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": false,
+      "peerCloseSource": null,
+      "peerClosedBeforeRelease": false,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    },
+    {
+      "kind": "partial",
+      "started": true,
+      "prefixSent": true,
+      "peerClosed": true,
+      "peerCloseSource": "eof",
+      "peerClosedBeforeRelease": true,
+      "releaseRequested": true,
+      "guardExpired": false,
+      "ioFailure": false,
+      "finished": true
+    }
+  ],
+  "decoderMutations": [
+    "longmax",
+    "overflow_total",
+    "duplicate_field",
+    "unknown_field",
+    "missing_field",
+    "wrong_echo",
+    "duplicate_id",
+    "unsorted",
+    "invalid_utf8"
+  ],
+  "partialBodyDeadlineElapsedSeconds": 3.11,
+  "ownedProcessesStopped": true,
+  "ownedSchemaRemoved": true,
+  "observerStopped": true,
+  "metadataRelayStopped": true,
+  "termination": "owned process termination; Windows forced exit is not graceful-drain evidence",
+  "date": "2026-11-29",
+  "scope": "ADR-087 ordinary Main Account list; isolated synthetic state",
+  "priorFixedFailure": {
+    "result": "FAIL",
+    "reason": "ConnectionError in query matrix; original OS code not recorded; cause unconfirmed",
+    "passedScenarios": 2,
+    "ownedProcessesStopped": true,
+    "ownedSchemaRemoved": true
+  },
+  "priorDevelopmentFailure": {
+    "result": "FAIL",
+    "reason": "LIST_TRACE: direct Go probes omitted traceparent",
+    "passedScenarios": 13,
+    "sourceEditedDuringExecution": true,
+    "ownedProcessesStopped": true,
+    "ownedSchemaRemoved": true
+  },
+  "openAcceptance": [
+    "Web UI/lossless numeric consumer",
+    "all writer/concurrent deletion service races",
+    "complete raw ingress and authority mismatch matrix",
+    "actual raw deletion workflow",
+    "operational fleet/heap/load/key/member/DB history/writer handover/restore"
+  ]
+}

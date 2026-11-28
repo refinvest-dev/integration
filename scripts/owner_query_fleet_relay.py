@@ -11,6 +11,15 @@ AUTHORITY_PATH = "/internal/trading-review/v1/delegations/check"
 METADATA_PATH = re.compile(r"/internal/trading-review/v1/(accounts|books)/[1-9][0-9]{0,18}")
 
 
+def read_path(path, account_list=False):
+    if METADATA_PATH.fullmatch(path):
+        return True
+    if not account_list:
+        return False
+    match = re.fullmatch(r"/internal/trading-review/v1/accounts\?page=(0|[1-9][0-9]{0,9})&size=([1-9][0-9]{0,2})", path)
+    return bool(match and int(match[1]) <= 2147483647 and int(match[2]) <= 100)
+
+
 def loopback_origin(value):
     parsed = urlsplit(value)
     if (parsed.scheme != "https" or parsed.hostname != "127.0.0.1" or not parsed.port or parsed.path or
@@ -85,8 +94,8 @@ class TokenSlot:
 
 
 class FleetRelay:
-    def __init__(self, role, ca, certificate, private_key, *, body_fault=None):
-        if body_fault is not None and role != "metadata":
+    def __init__(self, role, ca, certificate, private_key, *, body_fault=None, account_list=False):
+        if (body_fault is not None or account_list) and role != "metadata":
             raise ValueError("Body faults are restricted to metadata")
         import requests
 
@@ -121,7 +130,7 @@ class FleetRelay:
                 self.forward()
 
             def forward(self):
-                metadata = role == "metadata" and self.command == "GET" and METADATA_PATH.fullmatch(self.path)
+                metadata = role == "metadata" and self.command == "GET" and read_path(self.path, account_list)
                 authority = role == "authority" and self.command == "POST" and self.path == AUTHORITY_PATH
                 length = self.headers.get("Content-Length", "0")
                 names = ("Authorization", "X-RefInvest-User-Delegation", "Content-Type", "Accept", "Cache-Control",
@@ -140,8 +149,10 @@ class FleetRelay:
                     headers["Connection"] = "close"
                     with relay._session.request(self.command, origin + self.path, data=body or None, headers=headers,
                                                 timeout=(2, 8), allow_redirects=False, stream=True) as response:
-                        payload = response.raw.read(8193, decode_content=True)
-                        if len(payload) > 8192:
+                        list_request = account_list and self.path.startswith("/internal/trading-review/v1/accounts?")
+                        limit = 2 * 1024 * 1024 if list_request else 8192
+                        payload = response.raw.read(limit + 1, decode_content=True)
+                        if len(payload) > limit:
                             self.send_error(502)
                             return
                         with relay._lock:
@@ -149,7 +160,8 @@ class FleetRelay:
                             relay.counts["diagnostic"] += int(diagnostic)
                         if metadata and response.status_code == 200:
                             relay.token.put(headers.get("X-RefInvest-User-Delegation"))
-                        fault = relay._body_fault.take() if metadata and response.status_code == 200 and relay._body_fault else None
+                        fault_eligible = metadata and (not account_list or list_request)
+                        fault = relay._body_fault.take() if fault_eligible and response.status_code == 200 and relay._body_fault else None
                         if fault:
                             self.protocol_version = fault.protocol
                         self.send_response(response.status_code)

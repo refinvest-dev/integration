@@ -41,6 +41,10 @@ class DraftSnapshotGateTest(unittest.TestCase):
             "scripts/verify-trading-review-owner-query-draft.py",
             "scripts/verify-trading-review-member-authority-draft.py",
         ] + [path.relative_to(CONTEXT).as_posix() for path in (CONTEXT / "docs").glob("*.md")]
+        # ADR-087's owner verifier imports this helper from the same pinned checkout.
+        # Older Context checkouts without that import remain supported.
+        if (CONTEXT / "scripts/account_list_contract.py").exists():
+            files += ["scripts/account_list_contract.py"]
         if (CONTEXT / ACCOUNT_BOOK).exists():
             files += [ACCOUNT_BOOK, ACCOUNT_BOOK_CHECK]
         if (CONTEXT / IMPORT).exists():
@@ -124,7 +128,11 @@ class DraftSnapshotGateTest(unittest.TestCase):
             original = path.read_text(encoding="utf-8")
             self.assertIn("x-runtime-enabled: false", original)
             path.write_text(original.replace("x-runtime-enabled: false", "x-runtime-enabled: true", 1), encoding="utf-8")
-        self.rejected_by("authority design must remain draft and runtime disabled")
+        # ADR-087's owner verifier checks the shared authority flag before the
+        # authority entrypoint. Both stages must reject actual activation.
+        message = ("authority policy/runtime" if (self.context / "scripts/account_list_contract.py").exists()
+                   else "authority design must remain draft and runtime disabled")
+        self.rejected_by(message)
 
 
     @unittest.skipUnless((CONTEXT / ACCOUNT_BOOK).exists(), "candidate absent in pinned Context")

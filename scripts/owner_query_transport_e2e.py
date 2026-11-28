@@ -20,6 +20,8 @@ from owner_query_main_e2e import MainServiceAcceptance
 class TransportServiceAcceptance(MainServiceAcceptance):
     body_faults = None
     metadata_relay = None
+    primary_path = "/trading-accounts/" + ACCOUNT
+    secondary_path = "/trading-books/" + BOOK
 
     def execute(self):
         try:
@@ -105,12 +107,12 @@ class TransportServiceAcceptance(MainServiceAcceptance):
         fault = self.body_faults.arm("partial")
         started = time.monotonic()
         with ThreadPoolExecutor(max_workers=1) as workers:
-            pending = workers.submit(self.request, "/trading-accounts/" + ACCOUNT, 504, "REQUEST_DEADLINE_EXCEEDED")
+            pending = workers.submit(self.request, self.primary_path, 504, "REQUEST_DEADLINE_EXCEEDED")
             try:
                 self.entered(fault)
                 require(fault.prefix_sent, "PARTIAL_BODY_NOT_SENT")
                 before = self.metadata_relay.counts["forwarded"]
-                self.request("/trading-books/" + BOOK, 503, "OWNER_QUERY_UNAVAILABLE")
+                self.request(self.secondary_path, 503, "OWNER_QUERY_UNAVAILABLE")
                 require(self.metadata_relay.counts["forwarded"] == before, "EXHAUSTED_CORE_SLOT_REACHED_GO")
                 pending.result(timeout=8)
                 self.peer_cancelled(fault)
@@ -123,7 +125,7 @@ class TransportServiceAcceptance(MainServiceAcceptance):
     def rejected_body(self, kind):
         fault = self.body_faults.arm(kind)
         try:
-            self.request("/trading-books/" + BOOK, 502, "UPSTREAM_SERVICE_ERROR")
+            self.request(self.secondary_path, 502, "UPSTREAM_SERVICE_ERROR")
             self.entered(fault)
             if kind != "truncate":
                 self.peer_cancelled(fault)
@@ -139,7 +141,7 @@ class TransportServiceAcceptance(MainServiceAcceptance):
         context = ssl.create_default_context(cafile=str(self.directory / "root-ca.pem"))
         connection = context.wrap_socket(socket.create_connection(("127.0.0.1", self.core_port), timeout=3), server_hostname="127.0.0.1")
         try:
-            message = f"GET /trading-accounts/{ACCOUNT} HTTP/1.1\r\nHost: 127.0.0.1\r\nCookie: REFINVEST_ACCESS_TOKEN={self.browser_token()}\r\ntraceparent: {TRACE_PARENT}\r\nConnection: close\r\n\r\n"
+            message = f"GET {self.primary_path} HTTP/1.1\r\nHost: 127.0.0.1\r\nCookie: REFINVEST_ACCESS_TOKEN={self.browser_token()}\r\ntraceparent: {TRACE_PARENT}\r\nConnection: close\r\n\r\n"
             connection.sendall(message.encode("ascii"))
             self.entered(fault)
             connection.close()
@@ -164,11 +166,11 @@ class TransportServiceAcceptance(MainServiceAcceptance):
         fault = self.body_faults.arm("partial")
         log = self.core_log()
         with ThreadPoolExecutor(max_workers=1) as workers:
-            pending = workers.submit(self.request, "/trading-accounts/" + ACCOUNT)
+            pending = workers.submit(self.request, self.primary_path)
             try:
                 self.entered(fault)
                 self.checkpoint("HEALTHY_BODY_DRAIN_HELD")
-                self.request("/trading-books/" + BOOK, 503, "OWNER_QUERY_UNAVAILABLE")
+                self.request(self.secondary_path, 503, "OWNER_QUERY_UNAVAILABLE")
                 self.checkpoint("HEALTHY_BODY_DRAIN_SHUTDOWN")
                 self.trigger_shutdown()
                 self.checkpoint("HEALTHY_BODY_DRAIN_SIGNALLED")
@@ -194,7 +196,7 @@ class TransportServiceAcceptance(MainServiceAcceptance):
         fault = self.body_faults.arm("partial")
         log = self.core_log()
         with ThreadPoolExecutor(max_workers=1) as workers:
-            pending = workers.submit(self.request, "/trading-accounts/" + ACCOUNT, 503, "OWNER_QUERY_UNAVAILABLE")
+            pending = workers.submit(self.request, self.primary_path, 503, "OWNER_QUERY_UNAVAILABLE")
             try:
                 self.entered(fault)
                 self.trigger_shutdown()

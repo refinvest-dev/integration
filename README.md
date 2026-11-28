@@ -671,3 +671,6 @@ Go DB Guard를 연결한다. 기본 mode는 일반 Core bootJar/opt-in Runtime�
 [키·양방향 자격 fleet 검증](docs/owner-query-fleet-e2e.md)은 `-CoreMode fleet`로 일반 Core/Go 각2개와 서로 다른 trust snapshot의 순차 교체를 검증한다.
 
 [실제 Main transport 검증](docs/owner-query-transport-e2e.md)은 `-CoreMode transport`로 본문 deadline/상한·소켓 취소·slot 반환·정상/강제 drain을 확인한다.
+
+[Account 목록 Main 검증](docs/account-list-service-e2e.md)은 `-CoreMode account-list`로 독립 선택·목록 위임/페이지/가시성·본문 cap/취소·drain을 검사한다.
+[고정 실행 증적](evidence/account-list-service/2026-11-29-main.json)에16개 PASS와 실패/재시도·정리 범위를 기록했다. 실제 Web UI·운영 수용과 구분한다.
