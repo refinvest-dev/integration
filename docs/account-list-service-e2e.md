@@ -61,4 +61,29 @@ Core 선택 client별 admission과 Go 공통 Gate의 범위도 구분한다. 유
 기존 contract-sync CI가 같은 pattern으로 실행하며 서비스 E2E 자체가 CI에서 자동 실행된다는 뜻은 아니다.
 `evidence.json`은 source revision·source/binary SHA·시나리오 결과·startup 시도·정리 여부만 보관한다.
 실패 실행은 성공으로 계산하지 않는다. Windows10014의 제한된 startup 재시도도 기록한다.
-최종 payload-free 증적과 실제 수행/미수행 범위는 고정 실행 후 연결한다.
+## 고정 실행 결과
+
+[2026-11-29 목록 Main 증적](../evidence/account-list-service/2026-11-29-main.json)은16개 시나리오 PASS다.
+Core `674b82e66087719f57f45d76a264cfd7b3e9eb1c`·Go `fc836c7ee9bbdb6e60f362a4597d03db5ed0f7e8`·
+harness `df96ac239b81a9c9616aa0c544fe0ca7e0429ff8`와 Context `41d68dc735e3912932f56f098dd3dbad48034181`에서 실행했다.
+네 저장소의 tracked source가 clean일 때 빌드했으며 jar/binary·harness SHA와 Web/Compute 계약 checkout ref를 함께 기록했다.
+기존 사용자·환경 파일20개와 다른 저장소 변경을 보존했다. Web의 기존 AGENTS 변경을 clean 상태로 주장하지 않는다.
+
+- metadata-only/list-only/both를 일반 Main에서 재시작해 확인했다. 기존 metadata 성공 건수와 합산하지 않는다.
+- 실제100개 페이지·2^53 초과 string ID·foreign/삭제 가시성·query/권한/오류/trace·body cap/취소/slot을 통과했다.
+  Long.MAX_VALUE total 등 decoder mutation은 실제 Go200 뒤의 합성 probe다.
+- 정상 body 완료 뒤 Core Runtime/client→connector→Hikari 종료 순서와 DB session0을 확인했다.
+  짧은 예산의 강제 종료는 물리 연결 취소·명시 incomplete로 확인했으며 exit0을 정상 drain으로 처리하지 않았다.
+- 소유 process·두 TLS 중계기 종료와 소유 schema 제거를 확인했다. Go의 마지막 소유 process 강제 정리는 graceful Go 종료 증거가 아니다.
+
+최종 실행의 Core 첫 시작과 metadata-only 재시작에서 알려진 Windows listen 실패가 각각1회 발생했다.
+허용된 다음 startup에서 READY가 됐으며 모든 시도를 보존했다. Windows 네트워크 문제 해결이나 무실패 실행을 주장하지 않는다.
+
+개발 실행은 직접 Go probe의 traceparent 누락으로13개 통과 뒤 LIST_TRACE에 실패했다. 요청 header와 회귀 검사를 수정했다.
+첫 고정 실행은2개 통과 뒤 query matrix의 ConnectionError로 중단됐다. 당시 숫자 OS 코드를 수집하지 않아 원인은 미확정이다.
+원문 오류 없이 errno/winerror만 남기는 진단을 추가한 새 커밋에서 최종 실행했다. 두 실패 모두 process/중계기/schema 정리를 완료했다.
+실패를 성공으로 계산하거나 일반 HTTP/assertion 자동 재시도를 추가하지 않았다.
+
+harness 안전성20개도 통과했다. 실제 Web UI/lossless consumer, 모든 writer의 동시 삭제, 실제 raw 삭제 workflow,
+전체 ingress/authority mismatch matrix와 운영 fleet/부하/heap·DB history/키/회원·Core TR writer 인계/restore는 미실행이다.
+AL-A 전체 완료 또는 운영 활성화로 판정하지 않는다.
