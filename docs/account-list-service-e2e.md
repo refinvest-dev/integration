@@ -87,3 +87,8 @@ harness `df96ac239b81a9c9616aa0c544fe0ca7e0429ff8`와 Context `41d68dc735e391293
 harness 안전성20개도 통과했다. 실제 Web UI/lossless consumer, 모든 writer의 동시 삭제, 실제 raw 삭제 workflow,
 전체 ingress/authority mismatch matrix와 운영 fleet/부하/heap·DB history/키/회원·Core TR writer 인계/restore는 미실행이다.
 AL-A 전체 완료 또는 운영 활성화로 판정하지 않는다.
+
+PR 최초 계약 CI는 격리 `test_contract_drafts.py` fixture가 ADR-087 verifier의 새 helper를 복사하지 않아5개 실패했다.
+같은 고정 Context checkout의 `account_list_contract.py`를 함께 복사하도록 보완했다. authority 활성화 거절은 새 owner verifier의
+공유 authority 검사에서 먼저 발생하므로 기대 메시지도 그 지점에 맞췄다. 수정한 두 활성화 거절 테스트를 통과했다.
+runtime 활성화 거절·동기화/출처 gate와 bytecode 미생성 assertion을 완화하지 않았으며 서비스 runtime/harness 동작은 변경하지 않았다.
