@@ -10,14 +10,19 @@ MAX_BODY = 16 * 1024
 KINDS = frozenset(("partial", "truncate", "declared_oversize", "stream_overflow"))
 
 
-def overflow_payload(payload):
-    return payload + b" " * max(0, MAX_BODY + 1 - len(payload))
+def overflow_payload(payload, max_body=MAX_BODY):
+    if max_body not in (MAX_BODY, 2 * 1024 * 1024):
+        raise ValueError("Unknown fixture body limit")
+    return payload + b" " * max(0, max_body + 1 - len(payload))
 
 
 class BodyFault:
-    def __init__(self, kind):
+    def __init__(self, kind, max_body=MAX_BODY):
         if kind not in KINDS:
             raise ValueError("Unknown metadata fault")
+        if max_body not in (MAX_BODY, 2 * 1024 * 1024):
+            raise ValueError("Unknown fixture body limit")
+        self.max_body = max_body
         self.kind = kind
         self.entered = threading.Event()
         self.release = threading.Event()
@@ -34,7 +39,7 @@ class BodyFault:
     def headers(self, payload):
         if self.kind == "stream_overflow":
             return {"Transfer-Encoding": "chunked", "Connection": "close"}
-        length = MAX_BODY + 1 if self.kind == "declared_oversize" else len(payload)
+        length = self.max_body + 1 if self.kind == "declared_oversize" else len(payload)
         return {"Content-Length": str(length), "Connection": "close"}
 
     def _closed(self, source):
@@ -73,7 +78,7 @@ class BodyFault:
         self.started = True
         try:
             if self.kind == "stream_overflow":
-                body = overflow_payload(payload)
+                body = overflow_payload(payload, self.max_body)
                 self._send(handler, format(len(body), "x").encode("ascii") + b"\r\n" + body + b"\r\n")
             else:
                 prefix = payload[:max(1, len(payload) // 2)] if self.kind == "truncate" else payload[:1]
@@ -108,13 +113,16 @@ class BodyFault:
 
 
 class BodyFaults:
-    def __init__(self):
+    def __init__(self, max_body=MAX_BODY):
+        if max_body not in (MAX_BODY, 2 * 1024 * 1024):
+            raise ValueError("Unknown fixture body limit")
+        self.max_body = max_body
         self._pending = None
         self.records = []
         self._lock = threading.Lock()
 
     def arm(self, kind):
-        fault = BodyFault(kind)
+        fault = BodyFault(kind, self.max_body)
         with self._lock:
             if self._pending is not None or len(self.records) >= 16:
                 raise ValueError("Metadata fault already pending or fixture budget exhausted")
